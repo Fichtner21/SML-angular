@@ -1,0 +1,23 @@
+<div class="wrapper">
+  <h1>MoH: Spearhead <br> Mix League</h1>
+  <div *ngIf="idOne$ | async as idones;" class="team-ids">
+    <div class="team-cont">
+      <h2>TEAM 1</h2>
+      <div *ngFor="let idone of idones; let i = index;" class="character-card">
+          <div>{{ idone.team1players.name | json }}</div>
+          <div>{{ idone.team1players.elo | json }}</div>          
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="idTwo$ | async as idtwos;" class="team-ids">
+    <div class="team-cont">
+      <h2>TEAM 1</h2>
+      <div *ngFor="let idtwo of idtwos; let i = index;" class="character-card">
+          <div>{{ idtwo.team2players.name | json }}</div>
+          <div>{{ idtwo.team2players.elo | json }}</div>          
+      </div>
+    </div>  
+  </div>
+</div>
+

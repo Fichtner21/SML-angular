@@ -1,0 +1,40 @@
+.example {
+  background-color: #010141;
+}
+
+.container {
+  padding-top: 15px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 15px;
+}
+
+.ranking-head, .character-card {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  gap: 15px;
+  color: #ffffc0;
+}
+
+.character-card {
+  background-color: #40415f;
+  padding: 5px;
+}
+
+.character-card {
+  &:nth-child(n){
+    background-color: #2f3060;
+    border-right: 1px solid #010141;
+  }
+
+  &:last-child {
+    border: none;
+  }
+
+  &:nth-child(2n){
+    background-color: #40415f;
+  }
+}
+

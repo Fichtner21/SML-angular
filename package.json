@@ -19,7 +19,11 @@
     "@angular/platform-browser": "~9.1.9",
     "@angular/platform-browser-dynamic": "~9.1.9",
     "@angular/router": "~9.1.9",
+    "ng-google-sheets-db": "^2.0.0",
+    "ngx-pagination": "^5.0.0",
+    "node-sass": "^4.14.1",
     "rxjs": "~6.5.4",
+    "sass": "^1.37.5",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },

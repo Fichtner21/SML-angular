@@ -1,0 +1,39 @@
+nav {
+  background-color: #ffffc8;
+  padding: 15px;
+  a {
+    margin-right: 15px;
+    font-weight: 700;
+    font-size: 20px;
+    color: #010140;
+  }
+}
+
+.container {  
+  background-color: #000; 
+  justify-content: center;
+}
+
+.info {
+  padding: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid darkred;
+  color: #fff;
+  background-color: #000;  
+  text-align: center;
+  font-weight: 700;
+  font-size: 22px;
+  max-width: 800px;
+  margin: 50px;
+}
+
+.crew {
+  color: #fff;
+  font-weight: 400;
+  font-style: italic;
+  border: 2px solid #fff;
+  padding: 15px;
+  margin-left: 20px;
+}

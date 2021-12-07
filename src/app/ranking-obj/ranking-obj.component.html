@@ -13,13 +13,13 @@
           {{ i+1 }}
         </div>        
         <div class="name">
-          {{ player.playerName }}          
+          <a routerLink="/obj-ranking/{{player.username}}">{{ player.playername }} </a>         
         </div>
         <div class="name">          
           {{ player.ranking }}
         </div>
         <div class="name">          
-          {{ player.warCount }}
+          {{ player.warcount }}
         </div> 
         <div class="name">          
           {{ player.nationality }}

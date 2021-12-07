@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GoogleSheetsDbService } from 'ng-google-sheets-db';
-import { Players, playerAttributesMapping } from '../players.model';
 import { RankObjService } from './rank-obj.service';
+import { Players } from './ranking.model';
 
 
 @Component({
@@ -17,9 +17,9 @@ export class RankingObjComponent implements OnInit {
   constructor(private rankObjService: RankObjService) { }
 
   ngOnInit(): void {
-    this.rankObjService.getRanking().subscribe(res => {
-      console.log('res =>', res.values);
-    })
+    // this.rankObjService.getRanking().subscribe(res => {
+    //   console.log('res =>', res.values);
+    // })
     // this.players$ = this.GoogleSheetsDbService.get<Players>('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 1, playerAttributesMapping);
     // const subscribePlayers = this.players$.subscribe(res => {
     //   res.map((item) => {
@@ -29,6 +29,7 @@ export class RankingObjComponent implements OnInit {
     //   })
     // })
 
+    this.players$ = this.rankObjService.fetchPlayers();
     
 
     let playerFlag2 = '';

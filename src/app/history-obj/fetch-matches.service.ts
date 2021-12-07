@@ -10,9 +10,9 @@ import { Matches } from './matches.model';
   providedIn: 'root'
 })
 export class FetchMatchesService {
-  public HISTORY = this.matches.matches$;
+  // public HISTORY = this.matches.matches$;
 
-  constructor(private matches: HistoryObjComponent, private httpClient: HttpClient) { }  
+  // constructor(private matches: HistoryObjComponent, private httpClient: HttpClient) { }  
 
   // getSingleMatch(idwar: string): Observable<any> {
   //   // return this.httpClient.get(this.HISTORY).pipe(

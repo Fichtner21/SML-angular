@@ -1,11 +1,10 @@
 <section class="">
   <div class="container">  
-   
     <div *ngIf="matches$ | async as matches;">
       <div *ngFor="let i = index; let match of matches.reverse() | paginate: { itemsPerPage: 20, currentPage: p} ">
         <div class="match-row">
           <div class="match-row__date">
-            <div>{{ match.Timestamp | dateFormatPipe }}</div>
+            <div>{{ match.Timestamp }}</div>
             <!-- <div>#{{ match.idwar }}</div>  -->
             <!-- <a (click)=showSingle(match.idwar)>#{{ match.idwar }}</a>           -->
             <!-- <a (click)=showSingle(match.idwar)>#{{ match.idwar }}</a>           -->

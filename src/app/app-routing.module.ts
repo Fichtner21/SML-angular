@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { RankingObjComponent } from './ranking-obj/ranking-obj.component';
-import { HistoryObjComponent } from './history-obj/history-obj.component';
 
 
 
@@ -16,7 +15,7 @@ const routes: Routes = [{
 },
 {
   path: 'obj-matches',
-  component: HistoryObjComponent,
+  loadChildren: () => import('./history-obj/history-obj.module').then(m => m.HistoryObjModule)
 }, 
 {
   path: '',

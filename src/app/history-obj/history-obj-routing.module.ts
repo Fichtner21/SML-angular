@@ -9,17 +9,17 @@ const routes: Routes = [
   { 
     path: '', 
     component: HistoryObjComponent,
-    children: [
-      // {
-      //   path: 'list',
-      //   component: WebsiteListComponent,
-      // },
-      {
-        path: ':idwar',
-        component: SingleMatchComponent,
-      }
-    ]
-   }
+    // children: [
+    //   // {
+    //   //   path: 'list',
+    //   //   component: WebsiteListComponent,
+    //   // },
+    // ],
+  },
+  {
+    path: ':idwar',
+    component: SingleMatchComponent,
+  }
 ];
 
 @NgModule({

@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { MatchesDetailsService } from '../matches-details.service';
 import { Matches } from '../matches.model';
 import { FetchMatchesService } from '../fetch-matches.service';
+import { Observable } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-single-match',
@@ -10,7 +12,7 @@ import { FetchMatchesService } from '../fetch-matches.service';
   styleUrls: ['./single-match.component.scss']
 })
 export class SingleMatchComponent implements OnInit {
-  public match: Matches;
+  public match$:Observable<Matches>;
   public errorMessage: string;
 
 
@@ -18,7 +20,7 @@ export class SingleMatchComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private matchesDetail: MatchesDetailsService, private fetchMatch: FetchMatchesService   
     ) { 
-      console.log('activatedRoute =>', ActivatedRoute); 
+      console.log('activatedRoute =>', this.activatedRoute); 
     }
 
   // async ngOnInit(): Promise<void> {
@@ -33,6 +35,13 @@ export class SingleMatchComponent implements OnInit {
     //   this.match = res;
     //   console.log('match 707 =>', res);
     // })
+    this.activatedRoute.params.pipe(
+      take(1), 
+      tap(params => {
+        // console.log('params', params);
+        this.match$ = this.fetchMatch.getSingleMatch(params.idwar);
+      })
+    ).subscribe();
   }
 
 }

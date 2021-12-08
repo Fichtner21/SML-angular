@@ -1,11 +1,12 @@
 
 <ng-container *ngIf="player$ | async as player;">
   <section class="">
-    <div class="container">
+    <div class="container">      
       <div>
-        <div>Playername: {{ player.playername }}</div>  
-        <div>Warcount: {{ player.warcount }}</div>  
-        <div>Nationality: {{ player.nationality }}</div> 
+        <div class="info">Playername: <div class="highlight">{{ player.playername }}</div></div>  
+        <div class="info">Current ranking: <div class="highlight">{{player.ranking }}</div></div>
+        <div class="info">Warcount: <div class="highlight">{{ player.warcount }}</div></div>  
+        <div class="info">Nationality: <div class="highlight">{{ player.nationality }}</div></div> 
       </div>       
     </div>
   </section>

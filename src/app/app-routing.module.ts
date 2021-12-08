@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { RankingObjComponent } from './ranking-obj/ranking-obj.component';
+// import { RankingObjComponent } from './ranking-obj/ranking-obj.component';
 
 
 
 const routes: Routes = [{
-  path: 'home',
+  path: '',
   component: HomeComponent,
 },
 {
   path: 'obj-ranking',
-  component: RankingObjComponent,
+  loadChildren: () => import('./ranking-obj/ranking-obj.module').then(m => m.RankingObjModule)
 },
 {
   path: 'obj-matches',

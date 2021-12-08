@@ -24,6 +24,14 @@ export class RankObjService {
     )
   }
 
+  // fetchPlayersFlag(nationality: string){
+  //   return this.GoogleSheetsDbService.get<Players>('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Players', playerAttributesMapping).pipe(
+  //     map((value:Players[]) => {
+  //       return value.find((player:Players) => player.nationality === nationality)
+  //     })
+  //   )
+  // }
+
   getSinglePlayer(username: string):Observable<Players>{
     return this.players$.pipe(
       map((value:Players[]) => {

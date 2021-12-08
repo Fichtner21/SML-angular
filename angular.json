@@ -29,7 +29,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/fonts.css"
+              "src/assets/font/rajdhaniFont.css"
             ],
             "scripts": []
           },

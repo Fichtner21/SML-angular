@@ -4,9 +4,12 @@
       <div class="ranking-head">
         <div class="">Place</div>
         <div class="">Player Name</div>
+        <div class=""></div>
         <div class="">Ranking</div>
-        <div class="">War Count</div>
-        <div class="">Nationality</div>
+        <div class="">Frags</div>
+        <div class="">Wars</div>
+        <div class="">Last War</div>
+        <div class="">Act</div>
       </div>      
       <div *ngFor="let player of players; let i = index;" class="character-card">
         <div class="name">
@@ -16,14 +19,25 @@
           <a routerLink="/obj-ranking/{{player.username}}">{{ player.playername }} </a>         
         </div>
         <div class="name">          
+          <img [src]='"assets/images/flags/" + player.nationality + ".gif"'>
+        </div> 
+        <div class="name">          
           {{ player.ranking }}
+        </div>
+        <div class="name name-blur" title="Currently not available">          
+          999
         </div>
         <div class="name">          
           {{ player.warcount }}
         </div> 
-        <div class="name">          
-          {{ player.nationality }}
-        </div>             
+        <div class="name name-blur" title="Currently not available">          
+          6.12.2021, 22:26
+        </div> 
+        <div class="name name-blur" title="Currently not available">          
+          <div class="green6_10"></div>
+        </div> 
+         
+
       </div>
     </div>
     <!-- <div *ngIf="players$ | async as players; else loading">

@@ -1,4 +1,4 @@
-@font-face {
+/* @font-face {
   font-family: Poppins;
   src: url('./assets/font/Poppins-Regular.ttf') format("truetype");
 }
@@ -6,5 +6,16 @@
 @font-face {
   font-family: Poppins;
   src: url('./assets/font/Poppins-Bold.ttf') format("truetype");
+  font-weight: bold;
+} */
+
+@font-face {
+  font-family: Rajdhani;
+  src: url('./assets/font/Rajdhani-Regular.ttf') format("truetype");
+}
+
+@font-face {
+  font-family: Rajdhani;
+  src: url('./assets/font/Rajdhani-Bold.ttf') format("truetype");
   font-weight: bold;
 }

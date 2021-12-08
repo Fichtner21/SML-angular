@@ -5,6 +5,7 @@ import { Matches, matchesAttributesMapping } from './matches.model';
 import { MatchesDetailsService } from './matches-details.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { FetchMatchesService } from './fetch-matches.service';
 
 @Component({
   selector: 'app-history-obj',
@@ -22,27 +23,28 @@ export class HistoryObjComponent implements OnInit {
   test: any;
   public match: Matches;
   
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private MatchDetail: MatchesDetailsService, private activatedRoute: ActivatedRoute, private router: Router, private httpClient: HttpClient) { }
+  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private MatchDetail: MatchesDetailsService, private activatedRoute: ActivatedRoute, private router: Router, private httpClient: HttpClient, private fetchMatches: FetchMatchesService) { }
   // constructor(private matchesService: MatchesDetailsService) { }
 
   // showSingle(idwar:string): void {
   //   this.router.navigateByUrl('/obj-matches/'+idwar)
   // }
-
-  
-  
+ 
 
   ngOnInit(): void {
-    this.matches$ = this.GoogleSheetsDbService.get<Matches>('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Match+History', matchesAttributesMapping);
-    const subscribeMatches = this.matches$.subscribe(res => {
-      console.log('res idwar =>', res);      
-      res.forEach((el, index) => {       
-        const idWar = el.idwar;
-        // console.log('ID WAR => ', idWar); 
-        const t1p1nameA =  el.t1p1preelo;
-        this.t1p1nameB = Number(t1p1nameA).toFixed(2);
-      });
-    }); 
+    // this.matches$ = this.GoogleSheetsDbService.get<Matches>('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Match+History', matchesAttributesMapping);
+    // const subscribeMatches = this.matches$.subscribe(res => {
+    //   console.log('res idwar =>', res);      
+    //   res.forEach((el, index) => {       
+    //     const idWar = el.idwar;
+    //     // console.log('ID WAR => ', idWar); 
+    //     const t1p1nameA =  el.t1p1preelo;
+    //     this.t1p1nameB = Number(t1p1nameA).toFixed(2);
+    //   });
+    //  this.idwar$ = this.GoogleSheetsDbService.get< 
+
+      this.matches$ = this.fetchMatches.fetchMatches();
+    }; 
     
     
 
@@ -58,5 +60,5 @@ export class HistoryObjComponent implements OnInit {
     //     matches.push(rowObject);
     //   }      
     // })    
-  }
+  // }
 }

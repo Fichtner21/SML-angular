@@ -3,7 +3,7 @@ section {
 }
 
 .container {
-  padding-top: 15px;
+  padding-top: 70px;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -45,4 +45,16 @@ section {
 
 .my-pagination {
   background-color: #ffffc8 !important;
+
+  a {
+    color: #ffffc0;
+  }
 } 
+
+::ng-deep .ngx-pagination {
+  background-color: #ffffc8 !important;
+}
+
+a {
+  color: #ffffc0;
+}

@@ -1,27 +1,34 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
+import { GoogleSheetsDbService } from 'ng-google-sheets-db';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { flatMap, map, tap } from 'rxjs/operators';
 import { HistoryObjComponent } from './history-obj.component';
-import { Matches } from './matches.model';
+import { Matches, matchesAttributesMapping } from './matches.model';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class FetchMatchesService {
-  // public HISTORY = this.matches.matches$;
+export class FetchMatchesService { 
+  private matchesSubject = new BehaviorSubject<Matches[]>([]);
+  public matches$: Observable<Matches[]> = this.matchesSubject.asObservable();
 
-  // constructor(private matches: HistoryObjComponent, private httpClient: HttpClient) { }  
+  constructor(private GoogleSheetsDbService: GoogleSheetsDbService){}
 
-  // getSingleMatch(idwar: string): Observable<any> {
-  //   // return this.httpClient.get(this.HISTORY).pipe(
-  //   //   map((result) => result)
-  //   //   )
-  // }
+  fetchMatches(){
+    return this.GoogleSheetsDbService.get<Matches>('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Match+History', matchesAttributesMapping).pipe(
+      tap((value:Matches[]) => {
+        this.matchesSubject.next(value);
+      })
+    )    
+  }
 
-  // public async getSingleMatcha(idwar: string): Promise<Matches>{   
-  //   const response = this.httpClient.get<Matches>(FetchMatchesService.this.HISTORY).pipe(flatMap(jsonContent => jsonContent.data), filter(data => data.idwar === idwar)).toPromise();
-  //   return response;
-  // }
+  getSingleMatch(idwar: string):Observable<Matches>{
+    return this.matches$.pipe(
+      map((value:Matches[]) => {
+        return value.find((match:Matches) => match.idwar === idwar)
+      })
+    )
+  }  
 }

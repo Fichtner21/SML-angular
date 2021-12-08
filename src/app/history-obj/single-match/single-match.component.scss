@@ -1,0 +1,48 @@
+section {
+  background-color: #010141;
+}
+
+.container {
+  padding-top: 70px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.match-row {
+  display: grid;
+  grid-template-columns: 0.3fr 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 15px;
+  color: #ffffc8;  
+  margin-bottom: 15px;
+
+  &__date {
+    background-color: #40415f;
+    padding: 15px;
+  }
+
+  .roundswon {
+    text-align: center;
+    padding-bottom: 15px;
+    font-size: 32px;
+    font-weight: 700;
+    border-bottom: 3px solid #ffffc8;
+  }
+
+  &__team {
+    background-color: #2f3060;
+    padding: 15px;
+
+    &--player {
+      display: grid;
+      grid-template-columns: 1fr 1fr 0.5fr 1fr;
+      grid-template-rows: auto;
+      gap: 0 10px;
+    }
+  }
+}
+
+.my-pagination {
+  background-color: #ffffc8 !important;
+} 

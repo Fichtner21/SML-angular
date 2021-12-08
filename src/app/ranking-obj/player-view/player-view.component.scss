@@ -1,0 +1,18 @@
+
+  .container {  
+    padding: 70px 15px 0 15px;
+  }
+
+  .info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+
+    .highlight {
+      margin-left: 3px;
+      padding: 5px;
+      background-color: #40415f;
+      color: #ffffc0;
+      font-weight: 700;
+    }
+  }

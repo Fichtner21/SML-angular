@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DateFormatPipePipe } from './history-obj/date-format-pipe.pipe';
 import { HomeComponent } from './home/home.component';
+// import { InactiveObjComponent } from './inactive-obj/inactive-obj.component';
 // import { RankingObjComponent } from './ranking-obj/ranking-obj.component';
 // import { PlayerViewComponent } from './ranking-obj/player-view/player-view.component';
 
@@ -17,6 +18,7 @@ import { HomeComponent } from './home/home.component';
     HomeComponent,
     // RankingObjComponent,
     DateFormatPipePipe,
+    // InactiveObjComponent,
     // PlayerViewComponent,    
   ],
   imports: [

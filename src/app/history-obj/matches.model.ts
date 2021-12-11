@@ -1,27 +1,31 @@
-import { NgModule } from "@angular/core"
-import { RouterModule, Routes } from "@angular/router"
+// import { NgModule } from "@angular/core"
+// import { RouterModule, Routes } from "@angular/router"
 // import { HistoryObjComponent } from "./history-obj.component"
-import { SingleMatchComponent } from "./single-match/single-match.component"
+// import { SingleMatchComponent } from "./single-match/single-match.component"
 
-const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: HistoryObjComponent,
-  //   children: [
-      {
-        path: ':id',
-        component: SingleMatchComponent
-      },
-    // ],
-  // },
-];
+// TODO We need this class? 
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
+// const routes: Routes = [
+//   // {
+//   //   path: '',
+//   //   component: HistoryObjComponent,
+//   //   children: [
+//       // {
+//       //   path: ':id',
+//       //   component: SingleMatchComponent
+//       // },
+//     // ],
+//   // },
+// ];
 
-export class MatchesRoutingModule {}
+// @NgModule({
+//   imports: [RouterModule.forChild(routes)],
+//   exports: [RouterModule],
+// })
+
+// export class MatchesRoutingModule {}
+
+
 
 export const matchesAttributesMapping = {
   Timestamp: 'timestamp',

@@ -1,3 +1,5 @@
+
+
 <section class="example">
   <div class="container">    
     <div *ngIf="players$ | async as players; else loading">
@@ -66,4 +68,18 @@
     </ng-template>
   </div>
 </section>
-<router-outlet></router-outlet>
+
+
+<ng-container *ngIf="playersTest$ | async as playersTest">
+
+  <ng-container *ngIf="playersTest.length > 0">
+    <h1>Show some stuff</h1>
+    <p>This code will be not rendered if players array will be empty. You can do everything here</p>
+  </ng-container>
+  
+
+</ng-container>
+
+
+
+<!-- <router-outlet></router-outlet> -->

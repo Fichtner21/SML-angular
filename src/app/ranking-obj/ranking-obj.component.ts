@@ -1,5 +1,7 @@
+import { map, mergeAll, tap, flatMap } from 'rxjs/operators';
+import { PlayersApiService } from './../services/players-api.service';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { GoogleSheetsDbService } from 'ng-google-sheets-db';
 import { RankObjService } from './rank-obj.service';
 import { Players } from './ranking.model';
@@ -15,10 +17,24 @@ export class RankingObjComponent implements OnInit {
   players$: Observable<Players[]>;
   nat: string;
   randomAct:string;
+
+  public playersTest$: Observable<any>;
   
-  constructor(private rankObjService: RankObjService, private getFlag: GetflagService) { }
+  constructor(
+    private rankObjService: RankObjService,
+    private playersApiService: PlayersApiService
+    ) { }
 
   ngOnInit(): void {
+    this.playersTest$ = this.playersApiService.getPlayers('Players').pipe(
+      map((response: any) => {
+        let allPlayers: any[] = [];
+        response.values.forEach((player: string, index: number) => {
+          allPlayers = allPlayers.concat(response.values[index])
+        })
+        return allPlayers;
+      }),
+    );
     // this.rankObjService.getRanking().subscribe(res => {
     //   console.log('res =>', res.values);
     // })

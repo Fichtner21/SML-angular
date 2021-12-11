@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HistoryObjComponent } from './history-obj.component';
+import { SingleMatchResolve } from './single-match/resolver/single-match.resolver';
 import { SingleMatchComponent } from './single-match/single-match.component';
 
 
@@ -19,6 +20,7 @@ const routes: Routes = [
   {
     path: ':idwar',
     component: SingleMatchComponent,
+    resolve: { match: SingleMatchResolve }
   }
 ];
 

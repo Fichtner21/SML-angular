@@ -3,7 +3,7 @@
 }
 
 .container {
-  padding-top: 70px;
+  padding-top: 100px;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -69,6 +69,164 @@ a {
 .character-card {
   background-color: #40415f;
   // margin: 5px;
+
+  .item {
+    padding: 5px 3px;
+    position: relative;   
+    
+    a {
+      position: relative;      
+    }
+      
+    .down-streak {
+      position: absolute;
+      right: -5px;
+      top: 10px;  
+      outline:4px red solid;
+      outline-offset:-6px;
+    
+      &:after {
+        position: absolute;    
+        margin-left: 2px;
+        content: "";
+        background-image: url('/assets/images/downrate.gif');
+        width: 10px;
+        height: 5px;
+        z-index: 9;
+      }
+
+      [data-title]:hover:before {
+        opacity: 1;
+        transition: all 0.1s ease 0.5s;
+        visibility: visible;
+      }
+      /* box for title text */
+      [data-title]:before {
+        content: attr(data-title);
+        /* position for title view box */
+        position: absolute;
+        // bottom: -1.6em;  	
+        // left: 120%;
+        top: -100%;
+        left: 0;
+        z-index: 99999;
+        // visibility: hidden;
+        visibility: visible;
+        font-weight: 400 !important;
+        /* optional */
+        white-space: nowrap;
+        /* stilization */
+        background-color: red;
+        color: #111;
+        font-size: 150%;
+        padding: 1px 5px 2px 5px;
+        box-shadow: 1px 1px 3px #222222;
+        opacity: 0;
+        border: 1px solid #111111;
+      }
+      [data-title] {
+        position: relative;
+      }
+    } 
+    
+    .up-streak {
+      position: absolute;  
+      right: -2px;  
+      top: 10px;    
+      outline:4px green solid;  
+      outline-offset:-6px; 
+    
+      &:after {    
+        position: absolute;     
+        margin-left: 5px;    
+        content: " ";    
+        background-image: url("/assets/images/uprate.gif");    
+        width: 10px;    
+        height: 5px; 
+        z-index: 9; 
+      }
+      [data-title]:hover:before {
+        opacity: 1;
+        transition: all 0.1s ease 0.5s;
+        visibility: visible;
+      }
+      /* box for title text */
+      [data-title]:before {
+        content: attr(data-title);
+        /* position for title view box */
+        position: absolute;
+        top: -100%; 	
+        left: 0;
+        z-index: 99999;
+        font-weight: 400 !important;
+        // visibility: hidden;
+        visibility: visible;
+        /* optional */
+        white-space: nowrap;
+        /* stilization */
+        background-color: #00FF00;
+        color: #111;
+        font-size: 150%;
+        padding: 1px 5px 2px 5px;
+        box-shadow: 1px 1px 3px #222222;
+        opacity: 0;
+        border: 1px solid #111111;
+      }
+      [data-title] {
+        position: relative;
+      }
+    }
+    
+    .draw-streak {
+      position: absolute;  
+      right: -2px;  
+      top: 10px;    
+      outline:4px green solid;  
+      outline-offset:-6px;  
+    
+      &:after {    
+        position: absolute;        
+        margin-left: 5px;    
+        content: " ";    
+        background-color: #000;    
+        width: 10px;    
+        height: 4px;  
+        z-index: 9;
+      }
+      [data-title]:hover:before {
+        opacity: 1;
+        transition: all 0.1s ease 0.5s;
+        visibility: visible;
+      }
+      /* box for title text */
+      [data-title]:before {
+        content: attr(data-title);
+        /* position for title view box */
+        position: absolute;
+        // bottom: -1.6em;  	
+        // left: 120%;
+        top: -100%;
+        left: 0;
+        z-index: 99999;
+        // visibility: hidden;
+        font-weight: 400 !important;
+        visibility: visible;
+        /* optional */
+        white-space: nowrap;
+        /* stilization */
+        background-color: gray;
+        color: #111;
+        font-size: 150%;
+        padding: 1px 5px 2px 5px;
+        box-shadow: 1px 1px 3px #222222;
+        opacity: 0;
+        border: 1px solid #111111;
+      }
+      [data-title] {
+        position: relative;
+      }
+    }
+  }
 
   .name {
     // display: flex;
@@ -149,3 +307,21 @@ a {
   }
 }
 
+.new {
+ 
+}
+
+.new-head {
+  position: relative;
+
+  &:before {
+    position: absolute;
+    content: 'NEW!';
+    background-color: red;
+    padding: 3px;
+    color: #fff;
+    transform:rotate(315deg);
+    top: -40px;
+    right: 0;
+  }
+}

@@ -4,7 +4,7 @@
       <div *ngFor="let i = index; let match of matches.reverse() | paginate: { itemsPerPage: 20, currentPage: p} ">
         <div class="match-row">
           <div class="match-row__date">
-            <div>{{ match.Timestamp }}</div>
+            <div>{{ match.Timestamp | date:'dd.MM.yyyy HH:mm' }}</div>
             <!-- <div>#{{ match.idwar }}</div>  -->
             <!-- <a (click)=showSingle(match.idwar)>#{{ match.idwar }}</a>           -->
             <!-- <a (click)=showSingle(match.idwar)>#{{ match.idwar }}</a>           -->
@@ -17,24 +17,38 @@
               <div>{{ match.t1p1name }}</div>
               <div>{{ match.t1p1score }}</div>
               <div>{{ match.t1p1postelo | number: '.1-2' }}</div>
+              <div>{{ match.t1p1postelo - match.t1p1preelo | number: '.1-2'}}</div>
             </div>
             <div class="match-row__team--player">
               <div>{{ match.t1p2preelo | number: '.1-2' }}</div>
               <div>{{ match.t1p2name }}</div>
               <div>{{ match.t1p2score }}</div>
               <div>{{ match.t1p2postelo | number: '.1-2' }}</div>
+              <div>{{ match.t1p2postelo - match.t1p2preelo | number: '.1-2' }}</div>
             </div>
             <div class="match-row__team--player">
               <div>{{ match.t1p3preelo | number: '.1-2' }}</div>
               <div>{{ match.t1p3name }}</div>
               <div>{{ match.t1p3score }}</div>
               <div>{{ match.t1p3postelo | number: '.1-2' }}</div>
+              <div>{{ match.t1p3postelo - match.t1p3preelo| number: '.1-2' }}</div>
             </div>
-            <div class="match-row__team--player">
+            <div class="match-row__team--player"  *ngIf="match.t1p4name !== ''">
               <div>{{ match.t1p4preelo | number: '.1-2' }}</div>
               <div>{{ match.t1p4name }}</div>
               <div>{{ match.t1p4score }}</div>
               <div>{{ match.t1p4postelo | number: '.1-2' }}</div>
+              <!-- <ng-container *ngIf="(match.t1p4postelo - match.t1p4preelo | number: '.1-2') > 0; else second">
+                <div class="won"> match.t1p4postelo - match.t1p4preelo | number: '.1-2' }}</div>
+              </ng-container>
+              <ng-template #second> -->
+                <!-- <ng-container *ngIf="match.t1p4postelo - match.t1p4preelo | number < 0; else third">
+                  <div class="lost"> match.t1p4postelo - match.t1p4preelo | number: '.1-2' }}</div>
+                </ng-container>
+              </ng-template>
+              <ng-template #third>
+                <div class="zero"> match.t1p4postelo - match.t1p4preelo | number: '.1-2' }}</div> -->
+              <!-- </ng-template>  -->
             </div>
             <div class="match-row__team--player">
               <div>{{ match.t1p5preelo | number: '.1-2' }}</div>

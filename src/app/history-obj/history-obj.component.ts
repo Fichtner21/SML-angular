@@ -44,6 +44,7 @@ export class HistoryObjComponent implements OnInit {
     //  this.idwar$ = this.GoogleSheetsDbService.get< 
 
       this.matches$ = this.fetchMatches.fetchMatches();
+      
     }; 
     
     

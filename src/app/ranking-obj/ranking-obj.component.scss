@@ -307,21 +307,18 @@ a {
   }
 }
 
-.new {
- 
-}
 
-.new-head {
-  position: relative;
+// .new-head {
+//   position: relative;
 
-  &:before {
-    position: absolute;
-    content: 'NEW!';
-    background-color: red;
-    padding: 3px;
-    color: #fff;
-    transform:rotate(315deg);
-    top: -40px;
-    right: 0;
-  }
-}
+//   &:before {
+//     position: absolute;
+//     content: 'NEW!';
+//     background-color: red;
+//     padding: 3px;
+//     color: #fff;
+//     transform:rotate(315deg);
+//     top: -40px;
+//     right: 0;
+//   }
+// }

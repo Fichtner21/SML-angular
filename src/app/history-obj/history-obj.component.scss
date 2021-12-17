@@ -17,9 +17,18 @@ section {
   color: #ffffc8;  
   margin-bottom: 15px;
 
+  >:nth-child(2){
+    border-left: 5px solid transparent;
+  }
+
+  >:nth-child(3){
+    border-right: 5px solid transparent;
+  }
+
   &__date {
     background-color: #40415f;
     padding: 15px;
+    font-size: 20px;
   }
 
   .roundswon {
@@ -30,6 +39,28 @@ section {
     border-bottom: 3px solid #ffffc8;
   }
 
+  .roundswon_row {
+    border-color:green;
+  }
+
+  .roundslose_row {
+    border-color:red;
+  }
+
+  .roundsdraw_row {
+    border-color: gray;
+  }
+
+  // .roundsdraw_row {
+  //   &:first-of-type {      
+  //     border-left: 5px solid gray;      
+  //   }
+
+  //   &:last-of-type {
+  //     border-right: 5px solid gray
+  //   }    
+  // }
+
   &__team {
     background-color: #2f3060;
     padding: 15px;
@@ -39,6 +70,52 @@ section {
       grid-template-columns: 1fr 1fr 0.5fr 1fr 1fr;
       grid-template-rows: auto;
       gap: 0 10px;
+      position: relative;  
+      
+      >div{
+        display: flex;
+        align-items: center;
+      }
+
+      .won {
+        position: relative;
+       
+        span {
+          &:after {
+            position: absolute;
+            top: 10px;
+            margin-left: 5px;
+            content: " ";
+            background-image: url("/assets/images/uprate.gif");
+            width: 10px;
+            height: 5px;
+          }
+        }        
+      }
+
+      .lost {
+        position: relative;
+
+        span {
+          &:after {
+            position: absolute;
+            top: 10px;
+            margin-left: 5px;
+            content: "";
+            background-image: url("/assets/images/downrate.gif");
+            width: 10px;
+            height: 5px;
+          }
+        }       
+      }
+
+      &__name {
+        font-size: 20px;
+      }
+
+      &__score {
+        font-size: 20px;
+      }
     }
   }
 }

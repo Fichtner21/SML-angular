@@ -92,19 +92,16 @@ export class RankingObjComponent implements OnInit {
 
     this.lastWarOfPlayer$ =  combineLatest([this.playersTest$, this.historyMatches$]).pipe(
       map(([v1, v2]) => {
-        // console.log('players =>', v1, 'matches => ', v2);
+        console.log('players =>', v1, 'matches => ', v2);
         let lastWarDate;
         let playerRowArray: any[] = [];
         for( let name of v1){ 
-          const strikeArray = this.generateSmallStrike(name.username, v2);
-          const strikeResults = strikeArray.slice(strikeArray.length - 2);
-          // console.log('stir', strikeResults);
-          const strikeResults1 = strikeArray.slice(-1)[0];
-          const strikeResults2 = strikeArray.slice(-2)[0];
+          const foundPlayerArray = this.filterUsername(name.username, v2);
+          console.log('foundPlayerArray', foundPlayerArray);
+                  
+          const strikeResults1 = foundPlayerArray.slice(-1)[0];
+          const strikeResults2 = foundPlayerArray.slice(-2)[0];         
          
-          // console.log('strikeResults1', strikeResults1);
-          // console.log('strikeResults2', strikeResults2);
-
           const strikesArrayToCompare = [];
 
           const destructObj1 = Object.values(strikeResults1);
@@ -126,51 +123,34 @@ export class RankingObjComponent implements OnInit {
           })
 
           const resultCompare = resultCompareArr[0] - resultCompareArr[1];
-          // strikeResults1.forEach((el, i) => {
-          //   let destructObj = Object.values(el);
-          //   if(destructObj === name.username){
-          //     strikesArrayToCompare.push(destructObj[i + 1])
-          //   }
-          // })
-
-          // strikeResults2.forEach((el, i) => {
-          //   let destructObj = Object.values(el);
-          //   if(destructObj === name.username){
-          //     strikesArrayToCompare.push(destructObj[i + 1])
-          //   }
-          // })
-          let finalStreak = resultCompare.toFixed(2);
-          // if(resultCompare > 0){
-          //   finalStreak = `<div class="up-streak"><span [data-title]="finalStreak pc in last war."></span></div>`
-          // } else if (resultCompare < 0){
-          //   finalStreak = `<div class="down-streak"><span data-title="finalStreak pc in last war."></span></div>`;
-          // } else {
-          //   finalStreak = `<div class="draw-streak"><span data-title="finalStreak pc in last war."></span></div>`
-          // }
+         
+          let finalStreak = resultCompare.toFixed(2);         
 
           if(Number(finalStreak) > 0){
             finalStreak = `+${finalStreak}`
           }
 
-          console.log('STRIKES ARR:', strikesArrayToCompare);
-          // strikeResults.forEach((el, i) => {
-          //   const indexesPostelo = [];
-          //   const destructObj = Object.values(el);
-          //   if(destructObj === name.username){
-          //     indexesPostelo.push(destructObj[i + 1])
-          //   }
-            
-          //   // destructObj.forEach((item, index) => {             
-          //   //   if(item === name.username){           
-          //   //     indexesPostelo.push(destructObj[index + 1]);
-          //   //     console.log('indexesPostelo', indexesPostelo);              
-          //   //   }
-          //   // })         
-            
-          // })
+          // Frags
 
-          // const strike = parseInt(strikeResults[1]) - parseInt(strikeResults[0]);         
-          // console.log('Last war for', name.username + ': ' + this.findPlayerLastWar(name.username, v2));
+          const fragsPerPlayerArray = [];
+          const destructObjPlayers1 = Object.values(foundPlayerArray);
+          // console.log('DEST =>', destructObjPlayers1);
+          destructObjPlayers1.forEach((el, i) => {
+            // console.log('EL =>', el);
+            if(Object.values(el).includes(name.username) ){
+              fragsPerPlayerArray.push(destructObjPlayers1[i + 2])
+            }
+            // return matches.filter(m => {             
+            //   return Object.values(m).includes(name);
+            //  })
+            // if(el === name.username){
+            //   fragsPerPlayerArray.push(destructObjPlayers1[i + 2])
+            // }
+          })
+
+          // console.log('fragsPerPlayerArray =>', fragsPerPlayerArray);
+
+          
           lastWarDate = {
             lastWarDate:this.findPlayerLastWar(name.username, v2),
             username:name.username,
@@ -180,7 +160,7 @@ export class RankingObjComponent implements OnInit {
             wars:name.warcount,
             flag:name.nationality,
             strike: finalStreak
-              
+            // fragsperwar:  
                   
           };
           playerRowArray.push(lastWarDate);          
@@ -218,7 +198,7 @@ export class RankingObjComponent implements OnInit {
     this.randomAct = actSquares[Math.floor(Math.random()*actSquares.length)]; 
   }
 
-  private generateSmallStrike(name:string, matches:any[]){
+  private filterUsername(name:string, matches:any[]){
     return matches.filter(m => {             
       return Object.values(m).includes(name);
      })

@@ -1,60 +1,5 @@
 
 
-<section class="example" style="display: none;">
-  <div class="container">     
-    <div *ngIf="players$ | async as players; else loading">
-      <div class="ranking-head">
-        <div class="">Place</div>
-        <div class="">Player Name</div>
-        <div class=""></div>
-        <div class="">Ranking</div>
-        <div class="">Frags</div>
-        <div class="">Wars</div>
-        <div class="">Last War</div>
-        <div class="">Act</div>
-      </div>      
-      <div *ngFor="let player of players; let i = index;" class="character-card">
-        <div class="name">
-          {{ i+1 }}
-        </div>        
-        <div class="name">
-          <a routerLink="/obj-ranking/{{player.username}}">{{ player.playername }} </a>         
-        </div>
-        <div class="name">          
-          <img [src]='"assets/images/flags/" + player.nationality + ".gif"'>
-        </div> 
-        <div class="name">          
-          {{ player.ranking }}
-        </div>
-        <div class="name" title="Currently not available">          
-          999
-        </div>
-        <div class="name">          
-          {{ player.warcount }}
-        </div> 
-        <div class="name" title="Currently not available">          
-          6.12.2021, 22:26
-        </div> 
-        <div class="name" title="Currently not available">          
-          <div class="green6_10"></div>
-        </div> 
-         
-
-      </div>
-    </div>   
-    <ng-template #loading>
-      <div class="loading">
-        <div class="lds-ripple">
-          <div></div>
-          <div></div>
-        </div>
-      </div>
-    </ng-template>
-  </div>
-</section>
-<div style="display:none; border:5px solid red; padding: 100px; color: red;">{{ numOfPlayers }}</div>
-
-
 <ng-container *ngIf="lastWarOfPlayer$ | async as lastWarOfPlayers" >
   <ng-container *ngIf="lastWarOfPlayers.length > 0">
     <section class="example">
@@ -65,7 +10,7 @@
             <div class="">Player Name</div>
             <div class=""></div>
             <div class="">Ranking</div>
-            <div class="">Frags</div>
+            <div class="" title="Frags per War">FpW</div>
             <div class="">Wars</div>
             <div class="new-head">Last War</div>
             <div class="">Act</div>
@@ -85,7 +30,7 @@
               <img [src]='"assets/images/flags/" + player.flag + ".gif"'>
             </div>
             <div class="item">{{ player.ranking }}</div>
-            <div class="item name-blur">999</div>
+            <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">{{ player.fragsperwar }}</div>
             <div class="item">{{ player.wars }}</div>
             <div class="item new">{{ player.lastWarDate }}</div>
             <div class="item name name-blur"><div class="green6_10"></div></div>
@@ -107,5 +52,15 @@
     </section>
   </ng-container>
 </ng-container>
+<ng-http-loader 
+    [backdrop]="false"
+    [backgroundColor]="'#010141'"
+    [debounceDelay]="100"
+    [extraDuration]="300"
+    [minDuration]="300"
+    [opacity]=".6"
+    [backdropBackgroundColor]="'#777777'"
+    [spinner]="spinkit.skWave">
+</ng-http-loader>
 
 <!-- <router-outlet></router-outlet> -->

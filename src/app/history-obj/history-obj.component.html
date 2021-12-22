@@ -1,4 +1,142 @@
-<section class="">
+<section>
+  <div class="container">
+    <ng-container *ngIf="historyObj$ | async as historyObj">
+      <ng-container *ngIf="historyObj.length > 0">
+        <div>          
+          <div *ngFor="let i = index; let match of historyObj.reverse() | paginate: {itemsPerPage: 20, currentPage: p}">
+            <div class="match-row">
+              <div class="match-row__date">
+                <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>                
+                <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>          
+              </div>
+              <div class="match-row__team">
+                <div class="teamrounds">{{ match.t1roundswon }}</div>
+                <div class="teaminfo">
+                  <div>preRANK</div>
+                  <div>Name</div>
+                  <div>Frags</div>
+                  <div>postRANK</div>
+                  <div>PC</div>
+                </div>
+                <div class="match-row__team--player">
+                  <div>{{ match.t1p1preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p1username}}">{{ match.t1p1playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p1score }} </div>
+                  <div>{{ match.t1p1postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p1postelo - match.t1p1preelo) > 0, 'lost': (match.t1p1postelo - match.t1p1preelo) < 0, 'draw': (match.t1p1postelo - match.t1p1preelo === 0) }"><span>{{ match.t1p1postelo - match.t1p1preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player">
+                  <div>{{ match.t1p2preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p2username}}">{{ match.t1p2playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p2score }} </div>
+                  <div>{{ match.t1p2postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p2postelo - match.t1p2preelo) > 0, 'lost': (match.t1p2postelo - match.t1p2preelo) < 0, 'draw': (match.t1p2postelo - match.t1p2preelo === 0) }"><span>{{ match.t1p2postelo - match.t1p2preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player">
+                  <div>{{ match.t1p3preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p3username}}">{{ match.t1p3playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p3score }} </div>
+                  <div>{{ match.t1p3postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p3postelo - match.t1p3preelo) > 0, 'lost': (match.t1p3postelo - match.t1p3preelo) < 0, 'draw': (match.t1p3postelo - match.t1p3preelo === 0) }"><span>{{ match.t1p3postelo - match.t1p3preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p4playername !== ''">
+                  <div>{{ match.t1p4preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p4playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p4score }} </div>
+                  <div>{{ match.t1p4postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p4postelo - match.t1p4preelo) > 0, 'lost': (match.t1p4postelo - match.t1p4preelo) < 0, 'draw': (match.t1p4postelo - match.t1p4preelo === 0) }"><span>{{ match.t1p4postelo - match.t1p4preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p5playername !== ''">
+                  <div>{{ match.t1p5preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p5playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p5score }} </div>
+                  <div>{{ match.t1p5postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p5postelo - match.t1p5preelo) > 0, 'lost': (match.t1p5postelo - match.t1p5preelo) < 0, 'draw': (match.t1p5postelo - match.t1p5preelo === 0) }"><span>{{ match.t1p5postelo - match.t1p5preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p6playername !== ''">
+                  <div>{{ match.t1p6preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p6username}}">{{ match.t1p6playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p6score }} </div>
+                  <div>{{ match.t1p6postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p6postelo - match.t1p6preelo) > 0, 'lost': (match.t1p6postelo - match.t1p6preelo) < 0, 'draw': (match.t1p6postelo - match.t1p6preelo === 0) }"><span>{{ match.t1p6postelo - match.t1p6preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p7playername !== ''">
+                  <div>{{ match.t1p7preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p7username}}">{{ match.t1p7playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p7score }} </div>
+                  <div>{{ match.t1p7postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p7postelo - match.t1p7preelo) > 0, 'lost': (match.t1p7postelo - match.t1p7preelo) < 0, 'draw': (match.t1p7postelo - match.t1p7preelo === 0) }"><span>{{ match.t1p7postelo - match.t1p7preelo | number: '.1-2'}}</span></div>
+                </div>
+              </div>
+              <div class="match-row__team">
+                <div class="teamrounds">{{ match.t2roundswon }}</div>
+                <div class="teaminfo">
+                  <div>preRANK</div>
+                  <div>Name</div>
+                  <div>Frags</div>
+                  <div>postRANK</div>
+                  <div>PC</div>
+                </div>
+                <div class="match-row__team--player">
+                  <div>{{ match.t2p1preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p1username}}">{{ match.t2p1playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p1score }} </div>
+                  <div>{{ match.t2p1postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p1postelo - match.t2p1preelo) > 0, 'lost': (match.t2p1postelo - match.t2p1preelo) < 0, 'draw': (match.t2p1postelo - match.t2p1preelo === 0) }"><span>{{ match.t2p1postelo - match.t2p1preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p2username !== ''">
+                  <div>{{ match.t2p2preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p2username}}">{{ match.t2p2playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p2score }} </div>
+                  <div>{{ match.t2p2postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p2postelo - match.t2p2preelo) > 0, 'lost': (match.t2p2postelo - match.t2p2preelo) < 0, 'draw': (match.t2p2postelo - match.t2p2preelo === 0) }"><span>{{ match.t2p2postelo - match.t2p2preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p3username !== ''">
+                  <div>{{ match.t2p3preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p3username}}">{{ match.t2p3playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p3score }} </div>
+                  <div>{{ match.t2p3postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p3postelo - match.t2p3preelo) > 0, 'lost': (match.t2p3postelo - match.t2p3preelo) < 0, 'draw': (match.t2p3postelo - match.t2p3preelo === 0) }"><span>{{ match.t2p3postelo - match.t2p3preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p4username !== ''">
+                  <div>{{ match.t2p4preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p4username}}">{{ match.t2p4playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p4score }} </div>
+                  <div>{{ match.t2p4postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p4postelo - match.t2p4preelo) > 0, 'lost': (match.t2p4postelo - match.t2p4preelo) < 0, 'draw': (match.t2p4postelo - match.t2p4preelo === 0) }"><span>{{ match.t2p4postelo - match.t2p4preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p5username !== ''">
+                  <div>{{ match.t2p5preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p5username}}">{{ match.t2p5playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p5score }} </div>
+                  <div>{{ match.t2p5postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p5postelo - match.t2p5preelo) > 0, 'lost': (match.t2p5postelo - match.t2p5preelo) < 0, 'draw': (match.t2p5postelo - match.t2p5preelo === 0) }"><span>{{ match.t2p5postelo - match.t2p5preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p6username !== ''">
+                  <div>{{ match.t2p6preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p6username}}">{{ match.t2p6playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p6score }} </div>
+                  <div>{{ match.t2p6postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p6postelo - match.t2p6preelo) > 0, 'lost': (match.t2p6postelo - match.t2p6preelo) < 0, 'draw': (match.t2p6postelo - match.t2p6preelo === 0) }"><span>{{ match.t2p6postelo - match.t2p6preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p7username !== ''">
+                  <div>{{ match.t2p7preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p7username}}">{{ match.t2p7playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p7score }} </div>
+                  <div>{{ match.t2p7postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p7postelo - match.t2p7preelo) > 0, 'lost': (match.t2p7postelo - match.t2p7preelo) < 0, 'draw': (match.t2p7postelo - match.t2p7preelo === 0) }"><span>{{ match.t2p7postelo - match.t2p7preelo | number: '.1-2'}}</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <pagination-controls (pageChange)="p = $event" class="my-pagination"></pagination-controls>          
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</section>   
+
+<section class="" style="display: none;">
   <div class="container">  
     <div *ngIf="matches$ | async as matches;">
       <div *ngFor="let i = index; let match of matches.reverse() | paginate: { itemsPerPage: 20, currentPage: p} ">
@@ -10,15 +148,32 @@
             <!-- <a (click)=showSingle(match.idwar)>#{{ match.idwar }}</a>           -->
             <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>          
           </div>
-          <pre>
+          <div class="match-row__team">
+            <div class="teamrounds">{{ match.t1roundswon }}</div>
+            <div class="teaminfo">
+              <div>preRANK</div>
+              <div>Name</div>
+              <div>Frags</div>
+              <div>postRANK</div>
+              <div>PC</div>
+            </div>
+          </div>         
+          <!-- <pre>
             <p>1 -> {{match.t1roundswon | number}}</p>
             <p>2 -> {{match.t2roundswon | number}}</p>
             {{ (match.t1roundswon | number) > (match.t2roundswon | number ) }}
             {{ (match.t1roundswon | number) < (match.t2roundswon | number ) }}
             {{ (match.t1roundswon | number) == (match.t2roundswon | number ) }}
-          </pre>
-          <div class="match-row__team" [ngClass]="{ 'roundswon_row': (((match.t1roundswon | number) > (match.t2roundswon | number )) || ((match.t2roundswon | number) < (match.t1roundwon))), 'roundslose_row': (((match.t1roundswon | number) < (match.t2roundswon | number)) || ((match.t2roundswon | number) > (match.t1roundswon))), 'roundsdraw_row': (((match.t1roundswon | number) == (match.t2roundswon | number)) || ((match.t2roundswon | number) == (match.t1roundswon)))}">
-            <div class="roundswon">{{ match.t1roundswon }}</div>
+          </pre> -->
+          <div class="match-row__team">
+            <div class="teamrounds">{{ match.t1roundswon }}</div>
+            <div class="teaminfo">
+              <div>preRANK</div>
+              <div>Name</div>
+              <div>Frags</div>
+              <div>postRANK</div>
+              <div>PC</div>
+            </div>
             <div class="match-row__team--player">
               <div>{{ match.t1p1preelo | number: '.1-2' }}</div>
               <div class="match-row__team--player__name">{{ match.t1p1name }}</div>
@@ -69,49 +224,63 @@
               <div [ngClass]="{ 'won': (match.t1p7postelo - match.t1p7preelo) > 0, 'lost': (match.t1p7postelo - match.t1p7preelo) < 0, 'draw': (match.t1p7postelo - match.t1p7preelo === 0) }"><span>{{ match.t1p7postelo - match.t1p7preelo | number: '.1-2' }}</span></div>
             </div>
           </div>
-          <div class="match-row__team" [ngClass]="{ 'roundswon_row': ((match.t2roundswon | number) > (match.t1roundswon | number )), 'roundslose_row': ((match.t1roundswon | number) > (match.t2roundswon | number)), 'roundsdraw_row': ((match.t2roundswon | number) == (match.t1roundswon | number))}">
-            <div class="roundswon">{{ match.t2roundswon }}</div>
+          <div class="match-row__team" [ngClass]="">
+            <div class="teamrounds">{{ match.t2roundswon }}</div>
+            <div class="teaminfo">
+              <div class="teaminfo__pre">preRANK</div>
+              <div class="teaminfo__name">Name</div>
+              <div class="teaminfo__frags">Frags</div>
+              <div class="teaminfo__post">postRANK</div>
+              <div class="teaminfo__pc">PC</div>
+            </div>
             <div class="match-row__team--player">
               <div>{{ match.t2p1preelo | number: '.1-2' }}</div>
               <div class="match-row__team--player__name">{{ match.t2p1name }}</div>
               <div class="match-row__team--player__score">{{ match.t2p1score }}</div>
               <div>{{ match.t2p1postelo | number: '.1-2' }}</div>
+              <div [ngClass]="{ 'won': (match.t2p1postelo - match.t2p1preelo) > 0, 'lost': (match.t2p1postelo - match.t2p1preelo) < 0, 'draw': (match.t2p1postelo - match.t2p1preelo === 0) }"><span>{{ match.t2p1postelo - match.t2p1preelo | number: '.1-2' }}</span></div>
             </div>
             <div class="match-row__team--player">
               <div>{{ match.t2p2preelo | number: '.1-2' }}</div>
               <div class="match-row__team--player__name">{{ match.t2p2name }}</div>
               <div class="match-row__team--player__score">{{ match.t2p2score }}</div>
               <div>{{ match.t2p2postelo | number: '.1-2' }}</div>
+              <div [ngClass]="{ 'won': (match.t2p2postelo - match.t2p2preelo) > 0, 'lost': (match.t2p2postelo - match.t2p2preelo) < 0, 'draw': (match.t2p2postelo - match.t2p2preelo === 0) }"><span>{{ match.t2p2postelo - match.t2p2preelo | number: '.1-2' }}</span></div>
             </div>
-            <div class="match-row__team--player">
+            <div class="match-row__team--player" *ngIf="match.t2p3name !== ''">
               <div>{{ match.t2p3preelo | number: '.1-2' }}</div>
               <div class="match-row__team--player__name">{{ match.t2p3name }}</div>
               <div class="match-row__team--player__score">{{ match.t2p3score }}</div>
               <div>{{ match.t2p3postelo | number: '.1-2' }}</div>
+              <div [ngClass]="{ 'won': (match.t2p3postelo - match.t2p3preelo) > 0, 'lost': (match.t2p3postelo - match.t2p3preelo) < 0, 'draw': (match.t2p3postelo - match.t2p3preelo === 0) }"><span>{{ match.t2p3postelo - match.t2p3preelo | number: '.1-2' }}</span></div>
             </div>
-            <div class="match-row__team--player">
+            <div class="match-row__team--player" *ngIf="match.t2p4name !== ''">
               <div>{{ match.t2p4preelo | number: '.1-2' }}</div>
               <div class="match-row__team--player__name">{{ match.t2p4name }}</div>
               <div class="match-row__team--player__score">{{ match.t2p4score }}</div>
               <div>{{ match.t2p4postelo | number: '.1-2' }}</div>
+              <div [ngClass]="{ 'won': (match.t2p4postelo - match.t2p4preelo) > 0, 'lost': (match.t2p4postelo - match.t2p4preelo) < 0, 'draw': (match.t2p4postelo - match.t2p4preelo === 0) }"><span>{{ match.t2p4postelo - match.t2p4preelo | number: '.1-2' }}</span></div>
             </div>
-            <div class="match-row__team--player">
+            <div class="match-row__team--player" *ngIf="match.t2p5name !== ''">
               <div>{{ match.t2p5preelo | number: '.1-2' }}</div>
               <div class="match-row__team--player__name">{{ match.t2p5name }}</div>
               <div class="match-row__team--player__score">{{ match.t2p5score }}</div>
               <div>{{ match.t2p5postelo | number: '.1-2' }}</div>
+              <div [ngClass]="{ 'won': (match.t2p5postelo - match.t2p5preelo) > 0, 'lost': (match.t2p5postelo - match.t2p5preelo) < 0, 'draw': (match.t2p5postelo - match.t2p5preelo === 0) }"><span>{{ match.t2p5postelo - match.t2p5preelo | number: '.1-2' }}</span></div>
             </div>
-            <div class="match-row__team--player">
+            <div class="match-row__team--player" *ngIf="match.t2p6name !== ''">
               <div>{{ match.t2p6preelo | number: '.1-2' }}</div>
               <div class="match-row__team--player__name">{{ match.t2p6name }}</div>
               <div class="match-row__team--player__score">{{ match.t2p6score }}</div>
               <div>{{ match.t2p6postelo | number: '.1-2' }}</div>
+              <div [ngClass]="{ 'won': (match.t2p6postelo - match.t2p6preelo) > 0, 'lost': (match.t2p6postelo - match.t2p6preelo) < 0, 'draw': (match.t2p6postelo - match.t2p6preelo === 0) }"><span>{{ match.t2p6postelo - match.t2p6preelo | number: '.1-2' }}</span></div>
             </div>
-            <div class="match-row__team--player">
+            <div class="match-row__team--player" *ngIf="match.t2p7name !== ''">
               <div>{{ match.t2p7preelo | number: '.1-2' }}</div>
               <div class="match-row__team--player__name">{{ match.t2p7name }}</div>
               <div class="match-row__team--player__score">{{ match.t2p7score }}</div>
               <div>{{ match.t2p7postelo | number: '.1-2' }}</div>
+              <div [ngClass]="{ 'won': (match.t2p7postelo - match.t2p7preelo) > 0, 'lost': (match.t2p7postelo - match.t2p7preelo) < 0, 'draw': (match.t2p7postelo - match.t2p7preelo === 0) }"><span>{{ match.t2p7postelo - match.t2p7preelo | number: '.1-2' }}</span></div>
             </div>
             
           </div>
@@ -122,3 +291,13 @@
     
   </div>
 </section>
+<ng-http-loader 
+    [backdrop]="false"
+    [backgroundColor]="'#010141'"
+    [debounceDelay]="100"
+    [extraDuration]="300"
+    [minDuration]="300"
+    [opacity]=".6"
+    [backdropBackgroundColor]="'#777777'"
+    [spinner]="spinkit.skWave">
+</ng-http-loader>

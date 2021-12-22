@@ -8,7 +8,7 @@ import { Players } from './ranking.model';
 import { GetflagService } from '../services/getflag.service';
 import { MatchesApiService } from '../services/matches-api.service';
 import { Matches } from '../history-obj/matches.model';
-
+import { Spinkit } from 'ng-http-loader';
 
 
 @Component({
@@ -17,10 +17,10 @@ import { Matches } from '../history-obj/matches.model';
   styleUrls: ['./ranking-obj.component.scss']
 })
 export class RankingObjComponent implements OnInit {
+  public spinkit = Spinkit;
   players$: Observable<Players[]>;
   nat: string;
-  randomAct:string;
-  public numOfPlayers: number;
+  randomAct:string;  
   public playersRow: any;
   public lastWarOfPlayer$: any;  
 
@@ -36,8 +36,7 @@ export class RankingObjComponent implements OnInit {
   ngOnInit(): void {     
 
     this.playersTest$ = this.playersApiService.getPlayers('Players').pipe(
-      map((response: any) => {
-        // console.log('response =>', response.values);
+      map((response: any) => {        
         let batchRowValues = response.values;
         let players: any[] = [];
         for(let i = 1; i < batchRowValues.length; i++){
@@ -47,35 +46,13 @@ export class RankingObjComponent implements OnInit {
           }
           players.push(rowObject);
         }
-
-        // console.log('players =>', players);
-        // console.log('count players =>', Object.keys(players).length);
-        this.numOfPlayers = Object.keys(players).length; 
-        // console.log('numerOfPlayers =>', this.numOfPlayers);       
-
-        // this.playersRow = players.forEach((el, index) => {
-        //   const item = document.createElement('div');
-        //   item.classList.add('row');
-        //   item.innerHTML +=
-        //     `<div class="item">${++index}</div>` +
-        //     `<div class="item item-player item-${el.username}">${el.username}</div>`;          
-        // })
-
-        // let allPlayers: any[] = [];
-        // response.values.forEach((player: string, index: number) => {
-        //   allPlayers = allPlayers.concat(response.values[index])
-        // })
-        // console.log('this.playersTest$ =>', allPlayers);
-        // return allPlayers;
+        
         return players;
       }),
-    );    
-
-    // console.log('playersTest$', this.playersTest$);
+    );       
 
     this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
-      map((response: any) => {
-        // console.log('response history => ', response.values);
+      map((response: any) => {        
         let batchRowValuesHistory = response.values;
         let historyMatches: any[] = [];
         for(let i = 1; i < batchRowValuesHistory.length; i++){
@@ -84,27 +61,24 @@ export class RankingObjComponent implements OnInit {
             rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
           }
           historyMatches.push(rowObject);
-        }
-        // console.log('hisotryRanking => ', historyMatches);
+        }        
         return historyMatches;
       }),
     );
 
-    this.lastWarOfPlayer$ =  combineLatest([this.playersTest$, this.historyMatches$]).pipe(
+    this.lastWarOfPlayer$ = combineLatest([this.playersTest$, this.historyMatches$]).pipe(
       map(([v1, v2]) => {
-        console.log('players =>', v1, 'matches => ', v2);
+        
         let lastWarDate;
         let playerRowArray: any[] = [];
         for( let name of v1){ 
           const foundPlayerArray = this.filterUsername(name.username, v2);
-          console.log('foundPlayerArray', foundPlayerArray);
-                  
+                           
           const strikeResults1 = foundPlayerArray.slice(-1)[0];
           const strikeResults2 = foundPlayerArray.slice(-2)[0];         
-         
           const strikesArrayToCompare = [];
 
-          const destructObj1 = Object.values(strikeResults1);
+          const destructObj1 = Object.values(strikeResults1);          
           destructObj1.forEach((el, i) => {
             if(el === name.username){
               strikesArrayToCompare.push(destructObj1[i + 3])
@@ -131,25 +105,25 @@ export class RankingObjComponent implements OnInit {
           }
 
           // Frags
+          const fragsPerPlayerArray:any[] = [];
 
-          const fragsPerPlayerArray = [];
-          const destructObjPlayers1 = Object.values(foundPlayerArray);
-          // console.log('DEST =>', destructObjPlayers1);
-          destructObjPlayers1.forEach((el, i) => {
-            // console.log('EL =>', el);
-            if(Object.values(el).includes(name.username) ){
-              fragsPerPlayerArray.push(destructObjPlayers1[i + 2])
-            }
-            // return matches.filter(m => {             
-            //   return Object.values(m).includes(name);
-            //  })
-            // if(el === name.username){
-            //   fragsPerPlayerArray.push(destructObjPlayers1[i + 2])
-            // }
-          })
-
-          // console.log('fragsPerPlayerArray =>', fragsPerPlayerArray);
-
+          foundPlayerArray.forEach((el) => {            
+            const destructObjPlayers1 = Object.values(el);
+            destructObjPlayers1.forEach((item:any[], i) => {
+              if(item.includes(name.username) ){
+                fragsPerPlayerArray.push(Number(destructObjPlayers1[i + 2]));
+              }
+            })
+          }) 
+          
+          let fragsToDisplay;
+          if (Array.isArray(fragsPerPlayerArray) && fragsPerPlayerArray.length) {
+            fragsToDisplay = fragsPerPlayerArray.reduce((a, b) => a + b);
+          } else {
+            fragsToDisplay = 0;
+          }
+          
+          //Activity
           
           lastWarDate = {
             lastWarDate:this.findPlayerLastWar(name.username, v2),
@@ -159,38 +133,18 @@ export class RankingObjComponent implements OnInit {
             ranking:name.ranking,
             wars:name.warcount,
             flag:name.nationality,
-            strike: finalStreak
-            // fragsperwar:  
-                  
+            strike: finalStreak,
+            fragsperwar: (fragsToDisplay / name.warcount).toFixed(2),
+            maxfragsperwar: Math.max(...fragsPerPlayerArray),
+            minfragsperwar: Math.min(...fragsPerPlayerArray),
+            // activity:      
           };
           playerRowArray.push(lastWarDate);          
         }       
-        // console.log('playerRowArray =>', playerRowArray);
-        return playerRowArray;  
         
+        return playerRowArray;         
       })
     )   
-   
-    // this.playersTest$.pipe(
-    //   withLatestFrom(this.historyMatches$),
-    //   tap(([v1, v2]) => {
-    //     console.log('players =>', v1, 'matches => ', v2);
-    //   }) 
-    // ).subscribe();
-
-    // console.log('historyMatches$', this.historyMatches$);
-    
-    // this.rankObjService.getRanking().subscribe(res => {
-    //   console.log('res =>', res.values);
-    // })
-    // this.players$ = this.GoogleSheetsDbService.get<Players>('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 1, playerAttributesMapping);
-    // const subscribePlayers = this.players$.subscribe(res => {
-    //   res.map((item) => {
-    //     console.log(item.nationality);
-    //     let natio = item.nationality;
-    //     this.nat = getPlayerFlag(natio);
-    //   })
-    // })
 
     this.players$ = this.rankObjService.fetchPlayers();
 

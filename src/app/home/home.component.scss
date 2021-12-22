@@ -150,26 +150,126 @@ video {
   top: 50%;
   transform: translate(-50%,-50%);
   z-index: 5;
+  font-size: 20px;
 
   .teamsNext {
-    font-size: 22px;
+    font-size: 28px;
     background-image: linear-gradient(0deg, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2) 100%);
     background-size: 12px 12px; 
     color: #ffffc8;
     font-weight: 700;
-    padding: 5px;
+    padding: 5px 30px;
+  }
+
+  .teamsDivide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
+    background-color: rgba(0,0,0,0.5);
+    color: #ffffc8;
+    font-weight: 700;
+    padding: 0 30px;
+    
+    div {
+      text-decoration: underline;
+    }
   }
 
   .teamsCont {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    column-gap: 2rem;
     max-width: 600px;
     margin: 0 auto;   
     background-color: rgba(0,0,0,0.5);
     color: #ffffc8;    
-    padding: 30px;
+    padding: 5px 30px;
     font-size: 20px;
+
+    a {
+      text-decoration: none;
+      color: #ffffc8;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .teamsCumulative {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
+    max-width: 600px;
+    color: #ffffc8;
+    padding: 5px 30px;
+    background-image: linear-gradient(0deg, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2) 100%);
+    background-size: 12px 12px; 
+
+    .teamFavorite {
+      // animation: pulsate 2.5s infinite alternate;  
+    }
+
+    .teamNotFavorite {
+      // animation: pulsate2 2.5s infinite alternate;  
+    }
+
+    .teamWithoutFavorite {
+
+    }
+
+    @keyframes pulsate {
+      100% {
+        /* Larger blur radius */
+        text-shadow:
+          0 0 4px #fff,
+          0 0 11px #fff,
+          0 0 19px #fff,
+          0 0 40px #0fa,
+          0 0 80px #0fa,
+          0 0 90px #0fa,
+          0 0 100px #0fa,
+          0 0 150px #0fa;
+      }
+      0% {
+        /* Smaller blur radius */
+        text-shadow:
+          0 0 2px #fff,
+          0 0 4px #fff,
+          0 0 6px #fff,
+          0 0 10px #0fa,
+          0 0 45px #0fa,
+          0 0 55px #0fa,
+          0 0 70px #0fa,
+          0 0 80px #0fa;
+      }
+    }
+    @keyframes pulsate2 {
+      100% {
+        /* Larger blur radius */
+        text-shadow:
+          0 0 4px #fff,
+          0 0 11px #fff,
+          0 0 19px #fff,
+          0 0 40px #F72119,
+          0 0 80px #F72119,
+          0 0 90px #F72119,
+          0 0 100px #F72119,
+          0 0 150px #F72119;
+      }
+      0% {
+        /* Smaller blur radius */
+        text-shadow:
+          0 0 2px #fff,
+          0 0 4px #fff,
+          0 0 6px #fff,
+          0 0 10px #F72119,
+          0 0 45px #F72119,
+          0 0 55px #F72119,
+          0 0 70px #F72119,
+          0 0 80px #F72119;
+      }
+    }
   }
 }
 

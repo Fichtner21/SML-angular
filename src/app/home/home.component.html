@@ -38,8 +38,24 @@
 </div>
 <div class="teams-container">
   <div class="teamsNext">Next war</div>
-  <div class="teamsCont">
-    <div *ngIf="idOne$ | async as idones;">
+  <div class="teamsDivide">
+    <div>Team 1</div>
+    <div>Team 2</div>
+  </div>
+  <div class="teamsCont">  
+    <ng-container *ngIf="teamSelections$ | async as teamOneSelection;">
+      <ng-container *ngFor="let teamOne of teamOneSelection; let i = index;">
+        <div class="teamIdOne">
+          <div class="teamIdOne__playerElo">{{ teamOne.t1preelo }}</div>
+          <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t1username}}">{{ teamOne.t1playername }}</a></div>                 
+        </div>        
+        <div class="teamIdOne">
+          <div class="teamIdOne__playerElo">{{ teamOne.t2preelo }}</div>
+          <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t2username}}">{{ teamOne.t2playername }}</a></div> 
+        </div>        
+      </ng-container>
+    </ng-container>
+    <!-- <div *ngIf="idOne$ | async as idones;">
       <div *ngFor="let idone of idones; let i = index;">
         <div class="teamIdOne">
           <div class="teamIdOne__playerName">{{ idone.Team1Players }}</div> 
@@ -55,6 +71,22 @@
           <div class="teamIdOne__playerElo">{{ idone.ELO2 }}</div> 
         </div>        
       </div>
-    </div>
+    </div> -->
+  </div>
+  <div class="teamsCumulative">
+    <div>Cumulative: {{ teamOneCumulative }}</div>
+    <div>Cumulative: {{ teamTwoCumulative }}</div>
+    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">Chance: {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>
+    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShow > chanceOfWinTeamOneShow), 'teamNotFavorite': (chanceOfWinTeamTwoShow < chanceOfWinTeamOneShow), 'teamWithoutFavorite': (chanceOfWinTeamTwoShow == chanceOfWinTeamOneShow) }">Chance: {{ chanceOfWinTeamTwoShow | number : '.2-2' }} %</div>
   </div>
 </div>
+<ng-http-loader 
+    [backdrop]="false"
+    [backgroundColor]="'#fff'"
+    [debounceDelay]="100"
+    [extraDuration]="300"
+    [minDuration]="300"
+    [opacity]=".6"
+    [backdropBackgroundColor]="'#777777'"
+    [spinner]="spinkit.skWave">
+</ng-http-loader>

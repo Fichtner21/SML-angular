@@ -1,6 +1,6 @@
 <section class="example">
   <div class="container">    
-    <div *ngIf="players$ | async as players; else loading">
+    <div *ngIf="players$ | async as players; ">
       <div class="ranking-head">
         <div class="">Place</div>
         <div class="">Player Name</div>
@@ -55,15 +55,17 @@
           {{ player.warCount }}
         </div>
       </div>
-    </div> -->
-    <ng-template #loading>
-      <div class="loading">
-        <div class="lds-ripple">
-          <div></div>
-          <div></div>
-        </div>
-      </div>
-    </ng-template>
+    </div> -->    
   </div>
 </section>
+<ng-http-loader 
+    [backdrop]="false"
+    [backgroundColor]="'#010141'"
+    [debounceDelay]="100"
+    [extraDuration]="300"
+    [minDuration]="300"
+    [opacity]=".6"
+    [backdropBackgroundColor]="'#777777'"
+    [spinner]="spinkit.skWave">
+</ng-http-loader>
 <!-- <router-outlet></router-outlet> -->

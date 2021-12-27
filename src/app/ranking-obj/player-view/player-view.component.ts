@@ -18,6 +18,7 @@ export class PlayerViewComponent implements OnInit {
   public playerDetail$: Observable<any>;
   public historyMatches$: Observable<any>;
   public playerUsername$: Observable<any>;
+  public playersTab$: Observable<any>;
   
   constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService) {
     console.log('activatedRoute PlayerView =>', this.activatedRoute);  
@@ -40,6 +41,21 @@ export class PlayerViewComponent implements OnInit {
       }),
     );
 
+    this.playersTab$ = this.playersApiService.getPlayers('Players').pipe(
+      map((response: any) => {        
+        let batchRowValues = response.values;
+        let players: any[] = [];
+        for(let i = 1; i < batchRowValues.length; i++){
+          const rowObject: object = {};
+          for(let j = 0; j < batchRowValues[i].length; j++){
+            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+          }
+          players.push(rowObject);
+        }          
+        return players;
+      }),
+    );
+
     this.player$ = this.activatedRoute.data.pipe(
       map(data => data.player)
       // map((data) => {
@@ -58,34 +74,47 @@ export class PlayerViewComponent implements OnInit {
       map((data) => {
       return data.player.username;
       })
-    )
-
-    // console.log('PLAYER', this.playerUsername);   
+    ) 
    
-    this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$]).pipe(
-      map(([player, matches]) => {
+    this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$, this.playersTab$]).pipe(
+      map(([player, matches, players]) => {
         let playerArray: any[] = [];
-        let debutArray: any[] = [];
+        let timestampArray: any[] = [];
+        let playerName: string;
+        let warCount: string;
+        let nationality: string;
+        let ranking: string;
+        let clanHistory: string;
 
         matches.forEach((el) => {
-          // const oldTimestampEl = el.timestamp;
-          // const newTimestampEl = new Date(oldTimestampEl).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-          
-
           if(Object.values(el).includes(player)){
-            playerArray.push(el.idwar);
-            debutArray.push(el.timestamp);
-          }
-        })
 
+            playerArray.push([el.idwar, el.timestamp]);
+            timestampArray.push(new Date(el.timestamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }));
+          }
+        });
         
+        players.forEach((el) => {
+         if(el.username === player){
+           playerName = el.playername;
+           warCount = el.warcount;
+           nationality = el.nationality;
+           ranking = el.ranking;
+           clanHistory = el.clanhistory;
+         }         
+        })
        
         let playerCard;
         
         playerCard = {
           username: player,
+          playername: playerName,
+          warcount: warCount,
+          nationality: nationality,
+          ranking: ranking,
+          clanhistory: clanHistory,
           wars: playerArray,
-          debut: debutArray[0]       
+          debut: timestampArray[0],                
         }
         
         return playerCard;

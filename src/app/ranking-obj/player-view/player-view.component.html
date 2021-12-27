@@ -1,36 +1,36 @@
 
 
-<ng-container *ngIf="player$ | async as player;">
-  <section class="" data-title="{{player.playername}}">
-    <div class="container"> 
-      <div class="details">    
+<ng-container *ngIf="playerDetail$ | async as playerDetails;">
+  <section class="stat" >
+    <div class="container" data-title="{{playerDetails.playername}}">
+      <div class="details">
         <div class="statistics">
-          <div class="info">Playername: </div>          
-          <div class="highlight">{{ player.playername }}</div>
-          <div class="info">Current ranking: </div>          
-          <div class="highlight">{{player.ranking }}</div>
-          <div class="info">Warcount: </div>            
-          <div class="highlight">{{ player.warcount }}</div>
-          <div class="info">Nationality: </div>           
-          <div class="highlight">{{ player.nationality }}</div>
-          
-        </div>       
-      </div> 
+          <div class="stat-cont">
+            <div>Playername: <span>{{ playerDetails.playername }}</span></div>
+            <div>Debut: <span>{{ playerDetails.debut }}</span></div>
+            <div>Current Ranking: <span>{{playerDetails.ranking }}</span> </div>
+            <div>War count: <span>{{ playerDetails.warcount }}</span></div>
+            <div>Clan history: <span>{{ playerDetails.clanhistory }}</span></div>
+          </div>
+          <div class="player-flag">
+            <div class="ambilight">
+              <!-- <img [src]='"assets/images/flags/" + playerDetails.nationality + ".gif"' class="image-flag"> -->
+              <img [src]='"assets/images/flags/" + playerDetails.nationality + ".gif"' class="image-light">
+            </div>            
+          </div>
+        </div>
+        <div class="wars-cont">
+          <h3>Player wars by ID:</h3>
+          <div class="details__wars">
+            <div class="details__wars--war" *ngFor="let war of playerDetails.wars"><a href="/obj-matches/{{ war[0] }}" title="{{war[1] | date:'dd.MM.yyyy HH:mm'}}">#{{ war[0] }}</a></div>
+          </div>
+        </div>
+       
+      </div>
+      <div class="big-name">{{playerDetails.playername}}</div>
     </div>
   </section>
 </ng-container>
-<ng-container *ngIf="playerDetail$ | async as playerDetails;">
-  <div class="container"> 
-    <div class="details__wars" style="border:3px solid red; padding: 50px; background-color: blueviolet;">    
-      <!-- <div class="statistics" *ngFor="let player of playerDetail; let i = index;"> -->
-        <div class="highlight"> !! {{ playerDetails.username }} !!</div>
-        <div class="highlight"> !! {{ playerDetails.debut }} !!</div>
 
-        <div class="details__wars--war" *ngFor="let war of playerDetails.wars"><a href="/obj-matches/{{ war }}">#{{ war }}</a></div>
-      <!-- </div> -->
-    </div>
-  </div>
- 
-</ng-container> 
 <ng-http-loader>    
 </ng-http-loader>

@@ -9,6 +9,7 @@ import { GetflagService } from '../services/getflag.service';
 import { MatchesApiService } from '../services/matches-api.service';
 import { Matches } from '../history-obj/matches.model';
 import { Spinkit } from 'ng-http-loader';
+import { stringify } from '@angular/compiler/src/util';
 
 
 @Component({
@@ -121,9 +122,7 @@ export class RankingObjComponent implements OnInit {
             fragsToDisplay = fragsPerPlayerArray.reduce((a, b) => a + b);
           } else {
             fragsToDisplay = 0;
-          }
-          
-          //Activity
+          }                 
           
           lastWarDate = {
             lastWarDate:this.findPlayerLastWar(name.username, v2),
@@ -137,7 +136,7 @@ export class RankingObjComponent implements OnInit {
             fragsperwar: (fragsToDisplay / name.warcount).toFixed(2),
             maxfragsperwar: Math.max(...fragsPerPlayerArray),
             minfragsperwar: Math.min(...fragsPerPlayerArray),
-            // activity:      
+            activity: this.searchPlayerActivity(name.username, v2),  
           };
           playerRowArray.push(lastWarDate);          
         }       
@@ -157,6 +156,32 @@ export class RankingObjComponent implements OnInit {
       return Object.values(m).includes(name);
      })
   } 
+
+  public searchPlayerActivity(name:string, obj:any){
+    const resultObject = this.filterUsername(name, obj)
+    const warDates = [];
+
+    const todayUnix = Date.now();
+    const lastMonthEvent = new Date(new Date().setDate(new Date().getDate() - 30));
+    const resultLastMonth = Date.parse(lastMonthEvent.toDateString());
+    const unixArr = [];
+
+    resultObject.forEach((elem) => {
+      const newTimestampElem = elem.timestamp;     
+      const elWar = Date.parse(newTimestampElem);      
+      let lastMonthActivity;
+
+      if(elWar > resultLastMonth && elWar < todayUnix){
+        lastMonthActivity += elWar;
+        // new Date(elWar).toLocaleDateString('pl-PL', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'});
+        console.log('lastMonthActivity: ', lastMonthActivity);
+        unixArr.push(lastMonthActivity);
+      }
+    });   
+    
+    return unixArr.length;
+    
+  }
 
   public findPlayerLastWar(name:string, obj:object) {    
     const findeLastWar:any = Object.values(obj)

@@ -13,10 +13,24 @@
           <div class="highlight">{{ player.warcount }}</div>
           <div class="info">Nationality: </div>           
           <div class="highlight">{{ player.nationality }}</div>
+          
         </div>       
       </div> 
     </div>
   </section>
 </ng-container>
+<ng-container *ngIf="playerDetail$ | async as playerDetails;">
+  <div class="container"> 
+    <div class="details__wars" style="border:3px solid red; padding: 50px; background-color: blueviolet;">    
+      <!-- <div class="statistics" *ngFor="let player of playerDetail; let i = index;"> -->
+        <div class="highlight"> !! {{ playerDetails.username }} !!</div>
+        <div class="highlight"> !! {{ playerDetails.debut }} !!</div>
+
+        <div class="details__wars--war" *ngFor="let war of playerDetails.wars"><a href="/obj-matches/{{ war }}">#{{ war }}</a></div>
+      <!-- </div> -->
+    </div>
+  </div>
+ 
+</ng-container> 
 <ng-http-loader>    
 </ng-http-loader>

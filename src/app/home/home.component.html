@@ -2,7 +2,10 @@
   <div class="wrapper-fix">
     <div class="wrapper-head">
       <img src="assets/images/sh_icon.png" alt="" class="logo_icon">
-      <h1>MoH: SH <br> Mix League</h1>
+      <div class="wrapper-head__right">
+        <h1>MoH: SH <br> Mix League</h1>
+        <div class="since">Since 10.10.2020</div>
+      </div>
     </div>       
     <!-- <div class="lol">LOL, Fantastic Action (c) YP</div> -->
     <!-- <div *ngIf="idOne$ | async as idones;" class="team-ids">
@@ -76,8 +79,9 @@
   <div class="teamsCumulative">
     <div>Cumulative: {{ teamOneCumulative }}</div>
     <div>Cumulative: {{ teamTwoCumulative }}</div>
-    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">Chance: {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>
     <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShow > chanceOfWinTeamOneShow), 'teamNotFavorite': (chanceOfWinTeamTwoShow < chanceOfWinTeamOneShow), 'teamWithoutFavorite': (chanceOfWinTeamTwoShow == chanceOfWinTeamOneShow) }">Chance: {{ chanceOfWinTeamTwoShow | number : '.2-2' }} %</div>
+    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">Chance: {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>
+    
   </div>
 </div>
 <ng-http-loader 

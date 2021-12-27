@@ -87,7 +87,7 @@ export class HomeComponent implements OnInit {
         const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;      
 
         this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-        this.chanceOfWinTeamTwoShow = this.floorPrecised(chanceOfWinTeamTwo, 2);       
+        this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);       
 
         this.teamOneCumulative = selectedArray[selectedArray.length -1].t1preelo;
         this.teamTwoCumulative = selectedArray[selectedArray.length -1].t2preelo;
@@ -121,6 +121,10 @@ export class HomeComponent implements OnInit {
   public floorPrecised(number, precision) {
     const power = Math.pow(10, precision);
     return Math.floor(number * power) / power;
+  }
+  public ceilPrecised(number, precision) {
+    const power = Math.pow(10, precision);
+    return Math.ceil(number * power) / power;
   }
 
 }

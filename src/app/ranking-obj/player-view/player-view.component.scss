@@ -18,6 +18,26 @@
       background-repeat: no-repeat;
       height: auto;
       min-width: 100%;
+
+      &__wars {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        &--war {
+          margin-right: 3px;
+
+          a {
+            color: #ffffc0;
+            text-decoration: none;
+            transition: all .3s;
+
+            &:hover {
+              color: red;
+            }
+          }
+        }
+      }
     }
 
     .statistics {
@@ -28,6 +48,14 @@
       font-size: 20px;
       color: #ffffc0;
       font-weight: 700;
+
+      @media screen and (max-width: 1024px){
+       column-gap: 100px;
+      }
+
+      @media screen and (max-width: 768px){
+        column-gap: 30px;
+      }
 
       :nth-child(2n+1){
         display: flex;
@@ -63,9 +91,15 @@
 //     writing-mode: tb-rl;
 //     transform: rotate(
 // 180deg);
-background-color: black;
-color: transparent;
-text-shadow: 0px 10px 30px #ffffc0;
--webkit-background-clip: text;
-background-clip: text;
+    background-color: black;
+    color: transparent;
+    text-shadow: 0px 10px 30px #ffffc0;
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    @media screen and (max-width: 700px){
+      font-size: 100px;
+    }    
   }
+
+  

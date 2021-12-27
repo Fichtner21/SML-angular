@@ -12,6 +12,36 @@ section {
   font-size: 1rem;
 }
 
+.container-bottom {  
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 15px;
+  font-size: 1rem;
+
+  .legend {
+    background-color: #40415f;
+    padding: 10px;
+    color: #ffffc0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .name {
+      display: flex;
+      align-items: center;     
+
+      div {
+        margin-right: 5px;
+      }
+
+      span {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
 .ranking-head, .character-card {
   display: grid;
   grid-template-columns: 70px 1.5fr 40px 1fr 1fr 1fr 1fr 40px;
@@ -236,99 +266,83 @@ a {
         position: relative;
       }
     }
-  }
-
-  .name {
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-    // border-right: 1px solid #010141;
-    // padding: 5px;
-
-    .green0 {
-      width: 21px;
-      height: 21px;
-      background-color: #003200;
-      margin: 2px;
-      box-shadow: inset 0 0 5px #000;
-    }
-
-    .green1_5 {
-      width: 21px;
-      height: 21px;
-      background-color: #050;
-      margin: 2px;
-    }
-
-    .green6_10 {
-      width: 21px;
-      height: 21px;
-      background-color: #00a100;
-      margin: 2px;
-    }
-
-    .green11_20 {
-      width: 21px;
-      height: 21px;
-      background-color: #8aff1a;
-      margin: 2px;
-    }
-
-    .green21_40 {
-      width: 21px;
-      height: 21px;
-      background-color: #ffff00;
-      margin: 2px;
-    }
-
-    .green41_70 {
-      width: 21px;
-      height: 21px;
-      background-color: orange;
-      margin: 2px;
-    }
-    .green71 {
-      width: 21px;
-      height: 21px;
-      background-color: red;
-      margin: 2px;
-    }
-  }
+  } 
 
   .name-blur {
     filter: blur(5px);
   }
 }
 
+.green0 {
+  width: 21px;
+  height: 21px;
+  background-color: #003200;
+  margin: 2px;
+  box-shadow: inset 0 0 5px #000;
+}
+
+.green1_5 {
+  width: 21px;
+  height: 21px;
+  background-color: #050;
+  margin: 2px;
+}
+
+.green6_10 {
+  width: 21px;
+  height: 21px;
+  background-color: #00a100;
+  margin: 2px;
+}
+
+.green11_20 {
+  width: 21px;
+  height: 21px;
+  background-color: #8aff1a;
+  margin: 2px;
+}
+
+.green21_40 {
+  width: 21px;
+  height: 21px;
+  background-color: #ffff00;
+  margin: 2px;
+}
+
+.green41_70 {
+  width: 21px;
+  height: 21px;
+  background-color: orange;
+  margin: 2px;
+}
+.green71 {
+  width: 21px;
+  height: 21px;
+  background-color: red;
+  margin: 2px;
+}
+
+.players-list {
+  >:nth-child(even){
+    background-color: #2f3060;
+  }
+
+  >:nth-child(odd){
+    background-color: #40415f;
+  }
+}
+
 .character-card {
   border-bottom: 1px solid #010141;
 
-  &:nth-child(n){
-    background-color: #2f3060;
+  &:nth-child(n){    
     border-right: 1px solid #010141;
   }
 
   :last-child {
     border: none;
   }
-
-  &:nth-child(2n){
-    background-color: #40415f;
-  }
+  
 }
 
 
-// .new-head {
-//   position: relative;
-
-//   &:before {
-//     position: absolute;
-//     content: 'NEW!';
-//     background-color: red;
-//     padding: 3px;
-//     color: #fff;
-//     transform:rotate(315deg);
-//     top: -40px;
-//     right: 0;
-//   }
-// }

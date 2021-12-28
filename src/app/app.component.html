@@ -2,20 +2,35 @@
   <div class="nav">
     <div class="menu">
       <a routerLink="" routerLinkActive="active">Home</a>
-      <a routerLink="obj-ranking" rounterLinkActive="active">Ranking OBJ</a>
-      <a routerLink="obj-matches" rounterLinkActive="active">Matches OBJ</a>
-      <a routerLink="obj-inactive" rounterLinkActive="active">Inactive OBJ</a>
-      <a routerLink="about" rounterLinkActive="active">About</a>
+      <a routerLink="obj-ranking" routerLinkActive="active">Ranking OBJ</a>
+      <a routerLink="obj-matches" routerLinkActive="active">Matches OBJ</a>
+      <a routerLink="obj-inactive" routerLinkActive="active">Inactive OBJ</a>
+      <a routerLink="about" routerLinkActive="active">About</a>
     </div>
     <div class="social">
-      <a href="https://discord.gg/QHYJQWMY" target="_blank" title="DISCORD">
-        <div>VISIT OUR</div>
+      <div *ngIf="players$ | async as numOfPlayers">        
+        <div *ngIf="numOfPlayers.length > 0">
+          <a routerLink="obj-ranking" routerLinkActive="active" title="ACTIVE PLAYERS">
+            <img src="../assets/images/icons/people.png" alt="" class="people">
+            {{ numOfPlayers.length - 1 }}
+          </a> 
+        </div>        
+      </div>
+      <div *ngIf="matches$ | async as numOfMatches">        
+        <div *ngIf="numOfMatches.length > 0">
+          <a routerLink="obj-matches" routerLinkActive="active" title="MATCHES PLAYED">
+            <img src="../assets/images/icons/avarage.png" alt="">
+            {{ numOfMatches.length - 1 }}
+          </a>
+        </div>       
+      </div>
+      <a href="https://discord.gg/ytZSpQ2" target="_blank" title="DISCORD" class="disco">
         <img src="assets/images/icons/discord.svg" alt="">
+        <div>VISIT DISCORD</div>        
       </a>
     </div>
   </div>  
 </nav>
-
 
 
 <router-outlet></router-outlet>

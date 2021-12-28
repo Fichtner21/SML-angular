@@ -5,8 +5,8 @@ import { filter, map } from 'rxjs/operators';
 import { GoogleSheetsDbService } from 'ng-google-sheets-db';
 
 import { environment } from '../environments/environment';
-
-
+import { PlayersApiService } from './services/players-api.service';
+import { Players } from './ranking-obj/ranking.model';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +15,21 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent implements OnInit{
   title = 'SML-angular';
- 
+  players$: Observable<any>;
+  matches$: Observable<any>;
 
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService) {}
+  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService) {}
 
   ngOnInit(): void {
-    
+    this.players$ = this.playersApiService.getPlayers('Players').pipe(
+      map((response: any) => {  
+        return response.values;       
+      })
+    )
+    this.matches$ = this.playersApiService.getPlayers('Match+History').pipe(
+      map((response: any) => {  
+        return response.values;       
+      })
+    )
   }
 }

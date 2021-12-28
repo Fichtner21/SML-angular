@@ -17,6 +17,10 @@ section {
   color: #ffffc8;  
   margin-bottom: 15px;
 
+  @media screen and (max-width: 800px){
+    grid-template-columns: 1fr;
+  }
+
   &__date {
     background-color: #40415f;
     padding: 15px;

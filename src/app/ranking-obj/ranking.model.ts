@@ -1,20 +1,24 @@
-import { NgModule } from "@angular/core"
-import { RouterModule, Routes } from "@angular/router"
-import { PlayerViewComponent } from "./player-view/player-view.component"
 
-const routes: Routes = [
-  {
-    path: ':username',
-    component: PlayerViewComponent
-  }
-]
+// TODO the same. We need this?
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
 
-export class Ranking {}
+// import { NgModule } from "@angular/core"
+// import { RouterModule, Routes } from "@angular/router"
+// import { PlayerViewComponent } from "./player-view/player-view.component"
+
+// const routes: Routes = [
+//   {
+//     path: ':username',
+//     component: PlayerViewComponent
+//   }
+// ]
+
+// @NgModule({
+//   imports: [RouterModule.forChild(routes)],
+//   exports: [RouterModule],
+// })
+
+// export class Ranking {}
 
 export const playerAttributesMapping = {
   playername: 'playername',

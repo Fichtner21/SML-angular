@@ -1,69 +1,103 @@
-<section class="example">
-  <div class="container">    
-    <div *ngIf="players$ | async as players; else loading">
-      <div class="ranking-head">
-        <div class="">Place</div>
-        <div class="">Player Name</div>
-        <div class=""></div>
-        <div class="">Ranking</div>
-        <div class="">Frags</div>
-        <div class="">Wars</div>
-        <div class="">Last War</div>
-        <div class="">Act</div>
-      </div>      
-      <div *ngFor="let player of players; let i = index;" class="character-card">
-        <div class="name">
-          {{ i+1 }}
-        </div>        
-        <div class="name">
-          <a routerLink="/obj-ranking/{{player.username}}">{{ player.playername }} </a>         
-        </div>
-        <div class="name">          
-          <img [src]='"assets/images/flags/" + player.nationality + ".gif"'>
-        </div> 
-        <div class="name">          
-          {{ player.ranking }}
-        </div>
-        <div class="name name-blur" title="Currently not available">          
-          999
-        </div>
-        <div class="name">          
-          {{ player.warcount }}
-        </div> 
-        <div class="name name-blur" title="Currently not available">          
-          6.12.2021, 22:26
-        </div> 
-        <div class="name name-blur" title="Currently not available">          
-          <div class="green6_10"></div>
-        </div> 
-         
 
+
+<ng-container *ngIf="lastWarOfPlayer$ | async as lastWarOfPlayers" >
+  <ng-container *ngIf="lastWarOfPlayers.length > 0">
+    <section class="example">
+      <div class="container">
+        <div>
+          <div class="ranking-head">
+            <div class="">Place</div>
+            <div class="">Player Name</div>
+            <div class=""></div>
+            <div class="">Ranking</div>
+            <div class="" title="Frags per War">FpW</div>
+            <div class="">Wars</div>
+            <div class="new-head">Last War</div>
+            <div class="">Act</div>
+          </div> 
+          <div class="players-list">
+            <div class="character-card" *ngFor="let player of lastWarOfPlayers; let i = index;">
+            <div class="item">{{ i+1 }}</div>
+            <div class="item">
+              <a routerLink="/obj-ranking/{{player.username}}">
+              {{ player.playername }}
+              <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
+                <span attr.data-title="{{player.strike}} in Last war."></span>
+              </div>
+            </a>
+              
+            </div>
+            <div class="item">
+              <img [src]='"assets/images/flags/" + player.flag + ".gif"'>
+            </div>
+            <div class="item">{{ player.ranking }}</div>
+            <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">{{ player.fragsperwar }}</div>
+            <div class="item">{{ player.wars }}</div>
+            <div class="item new">{{ player.lastWarDate }}</div>
+            <div class="item name">
+              <div [ngClass]="{'green0': player.activity == 0, 'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 70), 'green71': (player.activity > 70) }" title="{{ player.activity }} wars in last month."></div>
+            </div>
+            <!-- 
+            <div class="item item-player item-${el.username}"><a href="#charts-${el.username}" class="item${index++} item-${
+              el.username
+            }-cup" title="${addTitleCup(el.cup1on1edition1)}">${el.playername} ${smallStrike2(el.username, historyRanking)}</a></div>
+            
+            +
+            <div class="item">${getPlayerFlag(el.nationality)}</div> +
+            <div class="item">${el.ranking}</div> +
+            <div class="item">${sumOfFrags2(el.username, historyRanking)}</div> +
+            <div class="item">${el.warcount}</div> +
+            <div class="item lastPlayWar">${findPlayerLastWar(el.username, historyRanking)}</div> +
+            <div class="item">${pastMonthActivity2(el.username, historyRanking)}</div> -->
+            </div>
+          </div> 
+        </div>       
       </div>
-    </div>
-    <!-- <div *ngIf="players$ | async as players; else loading">
-      <div class="">Ranking</div>
-      <div *ngFor="let player of players" class="character-card">
-        <div class="name">          
-          {{ player.ranking }}
+      <div class="container-bottom">
+        <div class="legend">
+          <div class="name">           
+            <div class="green0"></div>
+            <span>0</span>
+          </div>          
+          <div class="name">            
+            <div class="green1_5"></div>
+            <span>1 - 5</span>
+          </div>                    
+          <div class="name">            
+            <div class="green6_10"></div>
+            <span>6 - 10</span>
+          </div>                    
+          <div class="name">         
+            <div class="green11_20"></div>
+            <span>11 - 20</span>
+          </div>                    
+          <div class="name">           
+            <div class="green21_40"></div>
+            <span>21 - 40</span>
+          </div>                    
+          <div class="name">            
+            <div class="green41_70"></div>
+            <span>41 - 70</span>
+          </div>                    
+          <div class="name">            
+            <div class="green71"></div>
+            <span>71+</span>
+          </div> 
+          <div>wars in last month.</div>                   
         </div>
       </div>
-    </div>
-    <div *ngIf="players$ | async as players; else loading">
-      <div class="">War Count</div>
-      <div *ngFor="let player of players" class="character-card">
-        <div class="name">          
-          {{ player.warCount }}
-        </div>
-      </div>
-    </div> -->
-    <ng-template #loading>
-      <div class="loading">
-        <div class="lds-ripple">
-          <div></div>
-          <div></div>
-        </div>
-      </div>
-    </ng-template>
-  </div>
-</section>
-<router-outlet></router-outlet>
+    </section>
+  </ng-container>
+</ng-container>
+<ng-http-loader 
+    [backdrop]="false"
+    [backgroundColor]="'#010141'"
+    [debounceDelay]="100"
+    [extraDuration]="300"
+    [minDuration]="300"
+    [opacity]=".6"
+    [backdropBackgroundColor]="'#777777'"
+    [spinner]="spinkit.skWave">
+</ng-http-loader>
+
+<!-- <router-outlet></router-outlet> -->

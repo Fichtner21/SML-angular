@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { GoogleSheetsDbService } from 'ng-google-sheets-db';
 import { idOne, IdOneAttributesMapping, IdTwoAttributesMapping, idTwo } from '../home/team-selection-one.model';
 import { SelectionTeamService } from './selection-team.service';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { Spinkit } from 'ng-http-loader';
+import { PlayersApiService } from '../services/players-api.service';
 
 @Component({
   selector: 'app-home',
@@ -11,63 +13,118 @@ import { tap } from 'rxjs/operators';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  public spinkit = Spinkit;
   idOne$: Observable<idOne[]>;
   idTwo$: Observable<idTwo[]>;
   idOneToDisp: [];
   randomVideo: string;  
   // idOne$: Observable<idOne[]>;
-  idOneCumulative$: Observable<idOne>;
+  teamOneCumulative: any;
+  teamTwoCumulative: any;
+  chanceOfWinTeamOneShow: any;
+  chanceOfWinTeamTwoShow: any;  
 
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private idTeamOne: SelectionTeamService) { }
+  public teamOneSelection$: Observable<any>;
+  public playersTest$: Observable<any>;
+  public teamSelections$: Observable<any>;
+
+  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private idTeamOne: SelectionTeamService, private playersApiService: PlayersApiService) { }
 
   ngOnInit(): void {
+    this.teamOneSelection$ = this.playersApiService.getPlayers('TeamSelectionOne').pipe(
+      map((response:any) => {
+        let batchRowValues = response.values;
+        let players: any[] = [];
+        for(let i = 1; i < batchRowValues.length; i++){
+          const rowObject: object = {};
+          for(let j = 0; j < batchRowValues[i].length; j++){
+            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+          }
+          players.push(rowObject);
+        }
+        
+        return players;
+      })
+    );
 
+    this.playersTest$ = this.playersApiService.getPlayers('Players').pipe(
+      map((response: any) => {        
+        let batchRowValues = response.values;
+        let players: any[] = [];
+        for(let i = 1; i < batchRowValues.length; i++){
+          const rowObject: object = {};
+          for(let j = 0; j < batchRowValues[i].length; j++){
+            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+          }
+          players.push(rowObject);
+        }
+        
+        return players;
+      }),
+    ); 
+
+    this.teamSelections$ = combineLatest([this.playersTest$, this.teamOneSelection$]).pipe(
+      map(([players, selection]) => {
+        let selected;
+        let selectedArray: any[] = [];
+
+        for(let name of selection){
+          selected = {
+            t1playername: this.addPlayerLink(name.Team1Players, players),
+            t1username: name.Team1Players,
+            t1preelo: name.ELO1,            
+            t2playername: this.addPlayerLink(name.Team2Players, players),
+            t2username: name.Team2Players,
+            t2preelo: name.ELO2,            
+          };
+          selectedArray.push(selected);          
+        }
+
+        const chanceFutureTeamOne = parseInt(selectedArray[selectedArray.length -1].t1preelo.replace(/,/g,''), 10);
+        const chanceFutureTeamTwo = parseInt(selectedArray[selectedArray.length -1].t2preelo.replace(/,/g,''), 10);      
+
+        const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne - chanceFutureTeamTwo) / 400)) * 100;
+        const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;      
+
+        this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+        this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);       
+
+        this.teamOneCumulative = selectedArray[selectedArray.length -1].t1preelo;
+        this.teamTwoCumulative = selectedArray[selectedArray.length -1].t2preelo;
+        // selectedArray[selectedArray.length -1].t1preelo = 
+        selectedArray.pop()
+        return selectedArray;           
+      })
+      
+    )
   
-    // this.idOne$ = this.GoogleSheetsDbService.get<idOne>('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'TeamSelectionOne', IdOneAttributesMapping).pipe(
-    //   tap(content => console.log('Content: ', content))
-    // );
     
     const videos = ['1','2','3','4'];
     this.randomVideo = videos[Math.floor(Math.random()*videos.length)];
 
-    
-
-    this.idOne$ = this.idTeamOne.getTeamIdOne();
-
-    this.idOneCumulative$ = this.idTeamOne.getTeamIdOneCumulative();
-
-    const batchRowValues = this.idOneCumulative$;
-   
-
-    // const historyMatches = [];
-    // for (let i = 1; i < batchRowValues.length; i++) {
-    //   const rowObject = {};
-    //   for (let j = 0; j < batchRowValues[i].length; j++) {
-    //     rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
-    //   }
-    //   historyMatches.push(rowObject);
-    // }
-   
-    
-    // this.idOne$ = this.idTeamOne.getTeamIdOne();
-    // console.log('this ID 1 =>', this.idOne$);
-    // this.idOne$ = this.GoogleSheetsDbService.get<idOne>('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'TeamSelectionOne', IdOneAttributesMapping);
-    // this.idTwo$ = this.GoogleSheetsDbService.get<idTwo>('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'TeamSelectionOne', IdTwoAttributesMapping);
-    // let toShow = this.idOne$;
-    // const aaa = this.idOne$.subscribe(res => {
-    //   res.map((item) => {
-    //     console.log(item);
-    //     // console.log('=> ',item.team2players);
-    //   })
-    // })
-    // const bbb = this.idTwo$.subscribe(res => {
-    //   res.map((item) => {
-    //     console.log('ID TWO: ', item);
-    //   })
-    // })
-
   }
 
-  
+  public addPlayerLink(player:string, obj:any) {
+    let convertedPlayer = '';    
+    obj.forEach((el:any) => {
+      if (player === el.username) {
+        convertedPlayer = el.playername;
+      } else if (player === '') {
+        // console.log('N/A player');
+      } else {
+        // console.log('Something went wrong.');
+      }
+    });   
+    return convertedPlayer; 
+  } 
+
+  public floorPrecised(number, precision) {
+    const power = Math.pow(10, precision);
+    return Math.floor(number * power) / power;
+  }
+  public ceilPrecised(number, precision) {
+    const power = Math.pow(10, precision);
+    return Math.ceil(number * power) / power;
+  }
 
 }

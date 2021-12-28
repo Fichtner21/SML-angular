@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RankingObjComponent } from './ranking-obj.component';
 import { PlayerViewComponent } from './player-view/player-view.component';
+import { PlayerViewResolve } from './player-view/resolver/player-view.resolver';
 
 const routes: Routes = [
   {
@@ -10,7 +11,8 @@ const routes: Routes = [
   },
   {
     path: ':username',
-    component: PlayerViewComponent
+    component: PlayerViewComponent,
+    resolve: { player: PlayerViewResolve }
   }
 ];
 

@@ -29,18 +29,40 @@ nav {
     justify-content: space-between;
     width: 100%;
 
+    @media screen and (max-width: 768px){
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .menu {
+      @media screen and (max-width: 768px){
+        
+      }
+    }
+
     .social {      
+      display: flex;
+      align-items: center;
+      font-weight: 700; 
       
+      @media screen and (max-width: 768px){
+        display: block;
+      }
+
+      .people {
+        filter: invert(100%) sepia(35%) saturate(1546%) hue-rotate(22deg) brightness(111%) contrast(105%);
+      }
       
       a {
         display: flex;
         align-items: center;
-        font-weight: 700;  
+        
       }
 
       img {
         width: 26px;
         height: auto;
+        margin-right: 5px;
       }
 
       div {

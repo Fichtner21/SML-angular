@@ -4,7 +4,7 @@ import { MatchesDetailsService } from '../matches-details.service';
 import { Matches } from '../matches.model';
 import { FetchMatchesService } from '../fetch-matches.service';
 import { Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-single-match',
@@ -17,8 +17,7 @@ export class SingleMatchComponent implements OnInit {
 
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private matchesDetail: MatchesDetailsService, private fetchMatch: FetchMatchesService   
+    private activatedRoute: ActivatedRoute, private fetchMatch: FetchMatchesService   
     ) { 
       console.log('activatedRoute =>', this.activatedRoute); 
     }
@@ -35,13 +34,9 @@ export class SingleMatchComponent implements OnInit {
     //   this.match = res;
     //   console.log('match 707 =>', res);
     // })
-    this.activatedRoute.params.pipe(
-      take(1), 
-      tap(params => {
-        // console.log('params', params);
-        this.match$ = this.fetchMatch.getSingleMatch(params.idwar);
-      })
-    ).subscribe();
+    this.match$ = this.activatedRoute.data.pipe(
+      map(data => data.match)
+    );
   }
 
 }

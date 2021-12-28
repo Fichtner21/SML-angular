@@ -10,9 +10,10 @@ import { idOne, IdOneAttributesMapping, IdTwoAttributesMapping, idTwo } from '..
 export class SelectionTeamService {
   private teamIdOne = new BehaviorSubject<idOne[]>([]);
   public teamOne$: Observable<idOne[]> = this.teamIdOne.asObservable();
-  // characters$: Observable<idOne[]>;
+  // characters$: Observable<idOne[]>;  
 
   constructor(private GoogleSheetsDbService: GoogleSheetsDbService) { }
+
 
   getTeamIdOne(){
     return this.GoogleSheetsDbService.get<idOne>('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'TeamSelectionOne', IdOneAttributesMapping).pipe(     

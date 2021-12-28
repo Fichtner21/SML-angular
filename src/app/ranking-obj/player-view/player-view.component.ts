@@ -19,10 +19,9 @@ export class PlayerViewComponent implements OnInit {
   public historyMatches$: Observable<any>;
   public playerUsername$: Observable<any>;
   public playersTab$: Observable<any>;
-  
+
   constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService) {
-    console.log('activatedRoute PlayerView =>', this.activatedRoute);  
-  
+    // console.log('activatedRoute PlayerView =>', this.activatedRoute);  
    }
 
   ngOnInit(): void {
@@ -57,17 +56,7 @@ export class PlayerViewComponent implements OnInit {
     );
 
     this.player$ = this.activatedRoute.data.pipe(
-      map(data => data.player)
-      // map((data) => {
-      //   let playerDetails;
-      //   playerDetails = combineLatest([data.player.username, this.historyMatches$]).pipe(
-      //     map(([v1, v2]) => {
-      //       let playerViewCard: any;
-      //       console.log('v1', v1);
-      //     })
-      //   )
-      // })
-      
+      map(data => data.player)      
     ) 
 
     this.playerUsername$ = this.activatedRoute.data.pipe(
@@ -119,7 +108,6 @@ export class PlayerViewComponent implements OnInit {
         
         return playerCard;
       })
-    )
-    
+    )    
   }
 }

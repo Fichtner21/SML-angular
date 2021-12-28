@@ -23,7 +23,7 @@ import { HomeComponent } from './home/home.component';
     AppRoutingModule,
     HttpClientModule,
     NgxPaginationModule,  
-    NgHttpLoaderModule.forRoot(),         
+    NgHttpLoaderModule.forRoot(),          
   ],
   providers: [{
     provide: API_KEY, 

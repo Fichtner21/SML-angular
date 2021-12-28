@@ -145,10 +145,7 @@ export class RankingObjComponent implements OnInit {
       })
     )   
 
-    this.players$ = this.rankObjService.fetchPlayers();
-
-    const actSquares = ['green0', 'green1_5', 'green6_10', 'green11_20', 'green21_40', 'green41_70','green71'];
-    this.randomAct = actSquares[Math.floor(Math.random()*actSquares.length)]; 
+    this.players$ = this.rankObjService.fetchPlayers();    
   }
 
   private filterUsername(name:string, matches:any[]){
@@ -174,7 +171,7 @@ export class RankingObjComponent implements OnInit {
       if(elWar > resultLastMonth && elWar < todayUnix){
         lastMonthActivity += elWar;
         // new Date(elWar).toLocaleDateString('pl-PL', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'});
-        console.log('lastMonthActivity: ', lastMonthActivity);
+        // console.log('lastMonthActivity: ', lastMonthActivity);
         unixArr.push(lastMonthActivity);
       }
     });   

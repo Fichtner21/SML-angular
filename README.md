@@ -1,10 +1,27 @@
 # SMLAngular
 
+# this project is a continuation the previous version of spearhead-mix-league (https://github.com/Fichtner21/spearhead-mix-league)
+
+BASIC TASK:
+Rewrite ES6 to Angular
+
+To do:
+- Mobile menu
+- Inactive player view
+- Active & inactive player view charts (frags with wars ID & ranking history)
+- Develop About component with some stuff for league (Maps, Log, Players Wanted)
+
+Next step?
+Rewrite to node.js + firebase + angular stack.
+
+# Live
+# https://mohsh.pl
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4500/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 

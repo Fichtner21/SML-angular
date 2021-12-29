@@ -91,7 +91,7 @@ export const matchesAttributesMapping = {
 }
 
 export interface Matches {
-  timestamp: string,
+  Timestamp: string,
   idwar: string,
   t1roundswon: string,
   t2roundswon: string, 
@@ -151,6 +151,8 @@ export interface Matches {
   t2p7preelo: string,
   t2p7score: string,
   t2p7postelo: string,
+  video: string,
+  info: string
 }
 
 

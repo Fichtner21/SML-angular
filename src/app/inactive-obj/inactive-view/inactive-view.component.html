@@ -1,1 +1,36 @@
-<p>inactive-view works!</p>
+
+
+<ng-container *ngIf="playerDetail$ | async as playerDetails;">
+  <section class="stat" >
+    <div class="container" data-title="{{playerDetails.playername}}">
+      <div class="details">
+        <div class="statistics">
+          <div class="stat-cont">
+            <div>Playername: <span>{{ playerDetails.playername }}</span></div>
+            <div>Debut: <span>{{ playerDetails.debut }}</span></div>
+            <div>Current Ranking: <span>{{playerDetails.ranking }}</span> </div>
+            <div>War count: <span>{{ playerDetails.warcount }}</span></div>
+            <div>Clan history: <span>{{ playerDetails.clanhistory }}</span></div>
+          </div>
+          <div class="player-flag">
+            <div class="ambilight">
+              <!-- <img [src]='"assets/images/flags/" + playerDetails.nationality + ".gif"' class="image-flag"> -->
+              <img [src]='"assets/images/flags/" + playerDetails.nationality + ".gif"' class="image-light">
+            </div>            
+          </div>
+        </div>
+        <div class="wars-cont">
+          <h3>Player wars by ID:</h3>
+          <div class="details__wars">
+            <div class="details__wars--war" *ngFor="let war of playerDetails.wars"><a href="/obj-matches/{{ war[0] }}" title="{{war[1] | date:'dd.MM.yyyy HH:mm'}}">#{{ war[0] }}</a></div>
+          </div>
+        </div>
+       
+      </div>
+      <div class="big-name">{{playerDetails.playername}}</div>
+    </div>
+  </section>
+</ng-container>
+
+<ng-http-loader>    
+</ng-http-loader>

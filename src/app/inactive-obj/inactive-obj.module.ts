@@ -7,6 +7,7 @@ import { InactiveObjComponent } from './inactive-obj.component';
 import { RouterModule } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgHttpLoaderModule } from 'ng-http-loader';
+import { InactiveViewResolve } from './inactive-view/resolver/inactive-view.resolver';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,9 @@ import { NgHttpLoaderModule } from 'ng-http-loader';
     NgxPaginationModule,
     InactiveObjRoutingModule,
     NgHttpLoaderModule.forRoot(),
+  ],
+  providers: [
+    InactiveViewResolve,
   ]
 })
 export class InactiveObjModule { }

@@ -13,7 +13,7 @@
 
 .ranking-head, .character-card {
   display: grid;
-  grid-template-columns: 70px 1.5fr 40px 1fr 1fr 1fr 1fr 40px;
+  grid-template-columns: 70px 1fr 40px 1fr 1fr 70px 1.5fr;
   grid-template-rows: auto;
   // gap: 15px;
   color: #ffffc0;
@@ -34,8 +34,29 @@
 
   :last-child {
     border: none;
+  }  
+}
+
+.character-card {
+  border-bottom: 1px solid #010141;
+
+  &:nth-child(n){    
+    border-right: 1px solid #010141;
   }
-  
+
+  :last-child {
+    border: none;
+  }  
+}
+
+.players-list {
+  >:nth-child(even){
+    background-color: #2f3060;
+  }
+
+  >:nth-child(odd){
+    background-color: #40415f;
+  }
 }
 
 .ranking-head {
@@ -43,17 +64,7 @@
   font-size: 22px;
   margin-top: 20px;
   background-color: #2f3060;  
-  border-bottom: 1px solid #010141;
-
-  // >:nth-child(n){    
-  //   border-right: 1px solid #010141;
-  //   padding: 5px 0;
-  //   font-weight: 600;
-  // }
-
-  // :last-child {
-  //   border: none;
-  // }
+  border-bottom: 1px solid #010141;  
 }
 
 a {

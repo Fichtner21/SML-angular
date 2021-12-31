@@ -107,7 +107,7 @@ export class RankingObjComponent implements OnInit {
 
           // Frags
           const fragsPerPlayerArray:any[] = [];
-
+          
           foundPlayerArray.forEach((el) => {            
             const destructObjPlayers1 = Object.values(el);
             destructObjPlayers1.forEach((item:any[], i) => {

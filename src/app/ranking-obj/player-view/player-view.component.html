@@ -2,7 +2,7 @@
 
 <ng-container *ngIf="playerDetail$ | async as playerDetails;">
   <section class="stat" >
-    <div class="container" data-title="{{playerDetails.playername}}">
+    <div class="container">
       <div class="details">
         <div class="statistics">
           <div class="stat-cont">
@@ -22,15 +22,21 @@
         <div class="wars-cont">
           <h3>Player wars by ID:</h3>
           <div class="details__wars">
-            <div class="details__wars--war" *ngFor="let war of playerDetails.wars"><a href="/obj-matches/{{ war[0] }}" title="{{war[1] | date:'dd.MM.yyyy HH:mm'}}">#{{ war[0] }}</a></div>
+            <div class="details__wars--war" *ngFor="let war of playerDetails.wars"><a href="/obj-matches/{{ war[0] }}" title="{{war[1] | date:'dd.MM.yyyy HH:mm'}} Frags: {{ war[2] }}">#{{ war[0] }} </a></div>
           </div>
+        </div>
+        <div>
+          <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">Fragi</button>
+          <canvas id="myChart" width="1320" height="400"></canvas>
         </div>
        
       </div>
       <div class="big-name">{{playerDetails.playername}}</div>
     </div>
   </section>
+
 </ng-container>
+
 
 <ng-http-loader>    
 </ng-http-loader>

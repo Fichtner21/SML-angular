@@ -61,7 +61,7 @@ export class PlayerViewComponent implements OnInit {
 
     this.playerUsername$ = this.activatedRoute.data.pipe(
       map((data) => {
-      return data.player.username;
+        return data.player.username;
       })
     ) 
    
@@ -105,6 +105,8 @@ export class PlayerViewComponent implements OnInit {
           wars: playerArray,
           debut: timestampArray[0],                
         }
+
+        console.log('P =>', playerCard);
         
         return playerCard;
       })

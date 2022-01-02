@@ -75,8 +75,8 @@ export class RankingObjComponent implements OnInit {
         for( let name of v1){ 
           const foundPlayerArray = this.filterUsername(name.username, v2);
                            
-          const strikeResults1 = foundPlayerArray.slice(-1)[0];
-          const strikeResults2 = foundPlayerArray.slice(-2)[0];         
+          const strikeResults1 = foundPlayerArray.slice(-1)[0] ? foundPlayerArray.slice(-1)[0] : 0;
+          const strikeResults2 = foundPlayerArray.slice(-2)[0] ? foundPlayerArray.slice(-2)[0] : 0;         
           const strikesArrayToCompare = [];
 
           const destructObj1 = Object.values(strikeResults1);          
@@ -112,7 +112,7 @@ export class RankingObjComponent implements OnInit {
             const destructObjPlayers1 = Object.values(el);
             destructObjPlayers1.forEach((item:any[], i) => {
               if(item.includes(name.username) ){
-                fragsPerPlayerArray.push(Number(destructObjPlayers1[i + 2]));
+                fragsPerPlayerArray.push(Number(destructObjPlayers1[i + 2] ? Number(destructObjPlayers1[i + 2]) : 0));
               }
             })
           }) 

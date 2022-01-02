@@ -1,6 +1,6 @@
 
   section {
-    height: 100vh;
+    // height: 100vh;
     min-width: 100%;
     background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
     background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
@@ -65,7 +65,7 @@
     .details {
       padding-top: 50px;
       background-image: url('/assets/images/solider.png');
-      background-position: center;
+      background-position: bottom;
       background-size: contain;
       background-repeat: no-repeat;
       height: auto;
@@ -213,3 +213,39 @@
       }
     }
   }
+
+.chartWrapper {
+    position: relative;
+}
+
+.chartWrapper > canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events:none;
+}
+
+.chartAreaWrapper {
+    width: 600px;
+    overflow-x: scroll;
+}
+
+.chart-info {
+  display: flex;
+  align-items: center;
+
+  &__title {
+    margin-right: 10px;
+  }
+}
+
+button {
+  margin: 20px 0;
+  font-size: 18px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+canvas {
+  height: 0;
+}

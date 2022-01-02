@@ -69,8 +69,7 @@ section {
 
   :last-child {
     border: none;
-  }
-  
+  }  
 }
 
 .ranking-head {
@@ -78,17 +77,7 @@ section {
   font-size: 22px;
   margin-top: 20px;
   background-color: #2f3060;  
-  border-bottom: 1px solid #010141;
-
-  // >:nth-child(n){    
-  //   border-right: 1px solid #010141;
-  //   padding: 5px 0;
-  //   font-weight: 600;
-  // }
-
-  // :last-child {
-  //   border: none;
-  // }
+  border-bottom: 1px solid #010141;  
 }
 
 a {
@@ -341,8 +330,5 @@ a {
 
   :last-child {
     border: none;
-  }
-  
+  }  
 }
-
-

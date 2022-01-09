@@ -30,6 +30,10 @@ export class AppComponent implements OnInit{
       map((response: any) => {  
         return response.values;       
       })
-    )
+    )       
+  }
+
+ public toggleMenu(){ 
+    document.getElementById('nav').classList.toggle('block_class');
   }
 }

@@ -78,6 +78,12 @@ section {
   margin-top: 20px;
   background-color: #2f3060;  
   border-bottom: 1px solid #010141;  
+
+  div {
+    @media screen and (max-width: 800px){
+      writing-mode: vertical-lr;
+    }
+  }
 }
 
 a {
@@ -101,6 +107,7 @@ a {
 
     @media screen and (max-width: 800px){
       font-size:14px;
+      justify-content: flex-start;
     }
     
     a {
@@ -318,6 +325,69 @@ a {
 
   >:nth-child(odd){
     background-color: #40415f;
+  }
+
+  :nth-child(1){
+    :nth-child(2) {
+      a div {
+        &:before {
+          position: absolute;
+          right: -13px;
+          top: -5px;
+          content: '';
+          background-image: url('/assets/images/ladder1.gif');          
+          width: 10px;
+          height: 13px;
+          z-index: 9;
+        }
+
+        &:after {
+          right: -27px !important;
+        }
+      }
+    }
+  }
+
+  :nth-child(2){
+    :nth-child(2) {
+      a div {
+        &:before {
+          position: absolute;
+          right: -13px;
+          top: -5px;
+          content: '';
+          background-image: url('/assets/images/ladder2.gif');          
+          width: 10px;
+          height: 13px;
+          z-index: 9;
+        }
+
+        &:after {
+          right: -27px !important;
+        }
+      }
+    }
+  }
+
+  :nth-child(3){
+    :nth-child(2) {
+      a div {
+        &:before {
+          position: absolute;
+          right: -13px;
+          top: -5px;
+          content: '';
+          background-image: url('/assets/images/ladder3.gif');          
+          width: 10px;
+          height: 13px;
+          z-index: 9;
+        }
+
+        &:after {
+          right: -27px !important;
+        }
+      }
+    }
   }
 }
 

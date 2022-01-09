@@ -2,13 +2,36 @@ nav {
   // background-color: #ffffc8;
   background-image: linear-gradient(
 0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
-    background-size: 12px 12px;
+  background-size: 12px 12px;
   padding: 15px;
   z-index: 999;
   position: fixed;
   top: 0;
   width: 100%;
   color: #ffffc8;
+
+  @media screen and (max-width: 768px){
+    padding: 10px;
+  }
+
+  .mobile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @media screen and (min-width: 769px){
+      display: none;
+    }
+
+    .mobile-icon {
+      max-width: 50px;
+    }
+
+    #hamburger {
+      display: flex;
+      justify-content: flex-end;      
+    }
+  }  
  
   a {
     margin-right: 15px;
@@ -18,9 +41,20 @@ nav {
     text-decoration: none;
     transition: all .3s;
 
+    @media screen and (max-width: 768px){
+      margin-right: 0;
+    }
+
     &:hover {
       color: red;
     }
+  }  
+
+  .block_class {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    // max-height: 100%;
+    // opacity: 1;
   }
 
   .nav {
@@ -28,15 +62,15 @@ nav {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    transition: .3s all;
 
-    @media screen and (max-width: 768px){
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    @media screen and (max-width: 768px){      
+      display: none;      
     }
 
-    .menu {
+    .menu a {
       @media screen and (max-width: 768px){
-        
+        display: block;
       }
     }
 
@@ -46,7 +80,8 @@ nav {
       font-weight: 700; 
       
       @media screen and (max-width: 768px){
-        display: block;
+        align-items: flex-end;
+        flex-direction: column;
       }
 
       .people {
@@ -68,6 +103,10 @@ nav {
       div {
         margin-right: 0.2rem;
         font-size: 22px;
+
+        @media screen and (max-width: 768px){
+          margin-right: 0;
+        }
       }
     }
   }  

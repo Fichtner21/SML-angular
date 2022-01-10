@@ -1,0 +1,21 @@
+{
+  "nav":{
+    "choose": "Wybierz język:",
+    "home": "Strona główna",
+    "matches_obj": "Mecze OBJ",
+    "inactive_obj": "Nieaktywni OBJ",
+    "about": "O lidze"
+  },
+  "home": {
+    "next_war": "Następna wojna",
+    "cumulative": "Ranking teamu:",
+    "chance": "Szansa:"
+  },
+  "ranking": {
+    "place": "Miejsce",
+    "player_name": "Nazwa gracza",
+    "wars": "Wojny",
+    "last_war": "Ostatnia wojna",
+    "act": "Akt"
+  }
+}

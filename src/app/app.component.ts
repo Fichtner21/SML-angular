@@ -7,6 +7,8 @@ import { GoogleSheetsDbService } from 'ng-google-sheets-db';
 import { environment } from '../environments/environment';
 import { PlayersApiService } from './services/players-api.service';
 import { Players } from './ranking-obj/ranking.model';
+import { TranslateService } from '@ngx-translate/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -17,10 +19,28 @@ export class AppComponent implements OnInit{
   title = 'SML-angular';
   players$: Observable<any>;
   matches$: Observable<any>;
+  // public lang = new FormControl('en');
+  currentLanguage: any = 'en';  
+  languageCode = 'en';  
 
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService) {}
+  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService) {}
+
+  languages = [  
+    { 'languageCode': 'en', 'languageName': 'English' },  
+    { 'languageCode': 'pl', 'languageName': 'Polski' },      
+  ] 
 
   ngOnInit(): void {
+    // this.translateService.setDefaultLang('en');
+
+    // this.lang.valueChanges.subscribe((lang) => {
+    //   this.translateService.use(lang);
+    // });
+
+    // this.translateService.onLangChange.subscribe((lang) => {
+    //   alert(lang);
+    // })
+
     this.players$ = this.playersApiService.getPlayers('Players').pipe(
       map((response: any) => {  
         return response.values;       
@@ -33,7 +53,13 @@ export class AppComponent implements OnInit{
     )       
   }
 
- public toggleMenu(){ 
+  languageChange($event) {  
+    // debugger;  
+    this.currentLanguage = $event;  
+    this.translateService.use(this.currentLanguage);  
+  } 
+
+  public toggleMenu(){ 
     document.getElementById('nav').classList.toggle('block_class');
   }
 }

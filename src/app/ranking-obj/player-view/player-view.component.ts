@@ -150,11 +150,9 @@ export class PlayerViewComponent implements OnInit {
           debut: timestampArray[0], 
           listwars: listwars,  
           rankings: rankings,             
-        }  
-        
-       
+        }         
 
-        console.log('P =>', playerCard);
+        // console.log('P =>', playerCard);
         return playerCard;
       })
     ) 
@@ -174,13 +172,10 @@ export class PlayerViewComponent implements OnInit {
     let myChart = new Chart(this.ctx, {
       type: 'bar',
       data: {
-          labels: listwars.map(i => 'War #' + i),
-          // labels: ["USA", "Spain", "Italy", "France", "Germany", "UK", "Turkey", "Iran", "China", "Russia", "Brazil", "Belgium", "Canada", "Netherlands", "Switzerland", "India", "Portugal", "Peru", "Ireland", "Sweden"],
+          labels: listwars.map(i => 'War #' + i),          
           datasets: [{
-              label: 'Frags in war',
-              // data: [886789, 213024, 189973, 158183, 153129, 138078, 101790, 87026, 82804, 62773, 50036, 42797, 42110, 35729, 28496, 23502, 22353, 20914, 17607, 16755],
-              data: frags,
-              // backgroundColor: ["red", , , , , , , , "orange"],
+              label: 'Frags in war',             
+              data: frags,              
               backgroundColor: listwars.map(function(frag, i){
                 if(frags[i] == Math.max.apply(null, frags)){
                   return 'rgba(11,156,49,0.6)';
@@ -255,13 +250,7 @@ export class PlayerViewComponent implements OnInit {
               borderWidth: 1
           }]
       },
-      options: {
-        // onClick: function(e){
-        //   var element = this.getElementAtEvent(e);
-        //   if (element.length) {
-        //     // console.log(element[0]._model)
-        //   }
-        // },
+      options: {      
         onClick: function(c,i) {
           let e:any;
           e = i[0];

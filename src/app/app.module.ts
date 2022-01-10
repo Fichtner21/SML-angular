@@ -1,5 +1,5 @@
 import { CommonModule, HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { API_KEY, GoogleSheetsDbService } from 'ng-google-sheets-db';
@@ -12,6 +12,12 @@ import { DateFormatPipePipe } from './history-obj/date-format-pipe.pipe';
 import { HomeComponent } from './home/home.component';
 import { ChartsModule } from 'ng2-charts';
 import { FormsModule } from '@angular/forms';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+
+export function createTranslateLoader(http: HttpClient){
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
+}
 
 @NgModule({
   declarations: [    
@@ -27,7 +33,15 @@ import { FormsModule } from '@angular/forms';
     NgxPaginationModule,  
     ChartsModule,
     FormsModule,
-    NgHttpLoaderModule.forRoot(),          
+    NgHttpLoaderModule.forRoot(),     
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+      defaultLanguage: 'en',
+    }),     
   ],
   providers: [{
     provide: API_KEY, 

@@ -1,0 +1,21 @@
+{
+  "nav": {
+    "choose": "Choose a language:",
+    "home": "Home",
+    "matches_obj": "Matches OBJ",
+    "inactive_obj": "Inactive OBJ",
+    "about": "About"
+  },
+  "home": {
+    "next_war": "Next war",
+    "cumulative": "Cumulative:",
+    "chance": "Chance:"
+  },
+  "ranking": {
+    "place": "Place",
+    "player_name": "Player Name",
+    "wars": "Wars",
+    "last_war": "Last War",
+    "act": "Act"
+  }
+}

@@ -40,7 +40,7 @@
   </div>
 </div>
 <div class="teams-container">
-  <div class="teamsNext">Next war</div>
+  <div class="teamsNext">{{ 'home.next_war' | translate }}</div>
   <div class="teamsDivide">
     <div>Team 1</div>
     <div>Team 2</div>
@@ -77,10 +77,10 @@
     </div> -->
   </div>
   <div class="teamsCumulative">
-    <div>Cumulative: {{ teamOneCumulative }}</div>
-    <div>Cumulative: {{ teamTwoCumulative }}</div>
-    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShow > chanceOfWinTeamOneShow), 'teamNotFavorite': (chanceOfWinTeamTwoShow < chanceOfWinTeamOneShow), 'teamWithoutFavorite': (chanceOfWinTeamTwoShow == chanceOfWinTeamOneShow) }">Chance: {{ chanceOfWinTeamTwoShow | number : '.2-2' }} %</div>
-    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">Chance: {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>
+    <div>{{ 'home.cumulative' | translate }} {{ teamOneCumulative }}</div>
+    <div>{{ 'home.cumulative' | translate }} {{ teamTwoCumulative }}</div>
+    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShow > chanceOfWinTeamOneShow), 'teamNotFavorite': (chanceOfWinTeamTwoShow < chanceOfWinTeamOneShow), 'teamWithoutFavorite': (chanceOfWinTeamTwoShow == chanceOfWinTeamOneShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamTwoShow | number : '.2-2' }} %</div>
+    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>
     
   </div>
 </div>

@@ -6,14 +6,14 @@
       <div class="container">
         <div>
           <div class="ranking-head">
-            <div class="">Place</div>
-            <div class="">Player Name</div>
+            <div class="">{{ 'ranking.place' | translate }}</div>
+            <div class="">{{ 'ranking.player_name' | translate }}</div>
             <div class=""></div>
             <div class="">Ranking</div>
             <div class="" title="Frags per War">FpW</div>
-            <div class="">Wars</div>
-            <div class="new-head">Last War</div>
-            <div class="">Act</div>
+            <div class="">{{ 'ranking.wars' | translate }}</div>
+            <div class="new-head">{{ 'ranking.last_war' | translate }}</div>
+            <div class="">{{ 'ranking.act' | translate }}</div>
           </div> 
           <div class="players-list">
             <div class="character-card" *ngFor="let player of lastWarOfPlayers; let i = index;">

@@ -10,6 +10,7 @@ import { MatchesApiService } from '../services/matches-api.service';
 import { Matches } from '../history-obj/matches.model';
 import { Spinkit } from 'ng-http-loader';
 import { stringify } from '@angular/compiler/src/util';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -31,8 +32,9 @@ export class RankingObjComponent implements OnInit {
   constructor(
     private rankObjService: RankObjService,
     private playersApiService: PlayersApiService,
-    private matchesApiService: MatchesApiService
-    ) { }
+    private matchesApiService: MatchesApiService,
+    private translateService: TranslateService
+    ) { } 
 
   ngOnInit(): void {     
 
@@ -146,7 +148,7 @@ export class RankingObjComponent implements OnInit {
     )   
 
     this.players$ = this.rankObjService.fetchPlayers();    
-  }
+  }  
 
   private filterUsername(name:string, matches:any[]){
     return matches.filter(m => {             

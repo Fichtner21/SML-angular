@@ -1,54 +1,43 @@
 <section>
   <div class="container">
-    <div class="about__intro">
-      <strong>Old friends</strong> reunited for the first lockdown in March 2020. Since then, we play almost every day, and from November 2020 we created the <strong>MoH:SH Mix League</strong>. During the year we played almost <strong>800 wars</strong>, and almost <strong>80</strong> people played in our league, most of them remembering the times of playing clanbase.
-    </div>  
-    <!-- <nav class="about__nav">
-      <a routerLink="download" routerLinkActive="active">
-        Download
-      </a>
-      <a routerLink="log">
-        Log
-      </a>
-      <a routerLink="maps">
-        Maps
-      </a>
-      <a routerLink="wanted">
-        Wanted
-      </a>
-      <a routerLink="obj-ranking" title="ACTIVE PLAYERS">ranking</a>
-    </nav>  -->
-    <div class="download"><a href="../../assets/MOHAA.rar" target="_self" download="MOHAA.rar" title="CLICK HERE TO DOWNLOAD">DOWNLAOD MOHAA: SPEARHEAD (Custom Maps INCLUDED) - 3 Gb</a></div>    
-    <h2>How to play with us?</h2>
+    <nav class="about__nav">      
+      <a routerLink="download" routerLinkActive="active">Download</a>
+      <a routerLink="/about/log">Log</a>
+      <a routerLink="maps">Maps</a>
+      <a routerLink="wanted">Wanted</a>      
+    </nav> 
+    <div class="about__intro">      
+      {{ 'about.intro' | translate }}      
+    </div>      
+       
+    <h2>{{ 'about.how_to_play' | translate }}</h2>
     <div class="how">
       <div class="how__info">
-        <div>Click in top right corner and join to our discord</div>
+        <div>{{ 'about.how_to_play_step1' | translate }}</div>
         <img src="../../assets/images/visitie.JPG" alt="">
       </div>
       <img src="../../assets/images/icons/arrow.svg" alt="" class="arrow">
       <div class="how__info">
-        <div>Join in discord to Voice Channel "Want to play"</div>
+        <div>{{ 'about.how_to_play_step2' | translate }}</div>
         <img src="../../assets/images/want_to_play.JPG" alt="">
       </div>
       <img src="../../assets/images/icons/arrow.svg" alt="" class="arrow">
       <div class="how__info">
-        <div>Admin will add you to website <br> (no own register)</div>
+        <div>{{ 'about.how_to_play_step3' | translate }}</div>
         <img src="../../assets/images/icons/admin.svg" alt="">
       </div>
       <img src="../../assets/images/icons/arrow.svg" alt="" class="arrow">
       <div class="how__info">
-        <div>Admin balance teams (based on ELO ranking)</div>
-        <div>What next? <strong>Just play!</strong> Watch your statistics</div>
-        <div>on website, watch your progress and have fun!</div>
+        <div>{{ 'about.how_to_play_step4' | translate }}</div>
       </div>
       <video src="../../assets/video/1.mp4" height="200" autoplay [muted]="true" loop></video>     
     </div>
-    <h2>What is the squads for next war?</h2>
-    <div>Always acutal squads are on main site, check <a href="/">homepage</a>.</div>
-    <h2>How about ELO algorithm</h2>
-    <div>If you've played clanbase, you know how the points were counted, if not, that will explain. The system in which we play is ELO algorithm, what does it mean in our case? First of all, what matters is whether your team won or not, secondly, what is your influence on the win (frags).</div>
-    <h2>Maps</h2>
-    <div>We play mostly stock maps The Hunt, V2, The Bridge, but this is not enough, we play too VSUK Abbey, V2Shelter, Navarone, Stlo, Dessau1946, The Church Final, The Lost Town, V2 Extended. (All maps included in download link).</div>
+    <h2>{{ 'about.what_squads' | translate }}</h2>
+    <div>{{ 'about.what_squads_desc' | translate }}<a href="/">{{ 'about.what_squads_home' | translate }}</a></div>
+    <h2>{{ 'about.how_elo' | translate }}</h2>
+    <div>{{ 'about.how_elo_desc' | translate }}</div>
+    <h2>{{ 'about.maps' | translate }}</h2>
+    <div>{{ 'about.maps_desc' | translate }}</div>
     <!-- <div class="maps-grid">      
       <div>
         <img src="../../assets/images/maps/hunt.jpg" alt=""> 

@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { FetchMatchesService } from './fetch-matches.service';
 import { Spinkit } from 'ng-http-loader';
 import { PlayersApiService } from '../services/players-api.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-history-obj',
@@ -29,7 +30,7 @@ export class HistoryObjComponent implements OnInit {
 
   public historyObj$: any;
   
-  constructor(private MatchDetail: MatchesDetailsService, private activatedRoute: ActivatedRoute, private router: Router, private httpClient: HttpClient, private fetchMatches: FetchMatchesService, private tabApiService: PlayersApiService) { }
+  constructor(private MatchDetail: MatchesDetailsService, private activatedRoute: ActivatedRoute, private router: Router, private httpClient: HttpClient, private fetchMatches: FetchMatchesService, private tabApiService: PlayersApiService, private translateService: TranslateService) { }
  
   ngOnInit(): void {
     this.matches$ = this.fetchMatches.fetchMatches();   

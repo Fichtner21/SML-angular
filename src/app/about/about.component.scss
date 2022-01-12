@@ -28,13 +28,38 @@ section {
       }     
 
       .about__nav {
-        padding-top: 30px;
-        border: 3px solid red;
+        padding: 20px 10px;        
         font-size: 30px;
+        background-image: linear-gradient(
+0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
+    background-size: 4px 4px;
+
+        :nth-child(n){
+          border-right: 2px solid #ffffc8;
+        }
+
+        :last-child {
+          border-right: none;
+        }
+
+        a {
+          text-decoration: none;
+          transition: .3s all;
+          font-weight: 700;
+          padding: 0 10px;
+
+          &:hover {
+            color: red;
+          }
+        }
 
         div {
           margin: 10px;
         }
+      }
+
+      .about__intro {
+        margin-top: 20px;
       }
 
       a {

@@ -20,7 +20,7 @@
       <a routerLink="about" routerLinkActive="active">{{ 'nav.about' | translate }}</a>
       <form action="">
         <label for="langChange">{{ 'nav.choose' | translate }}</label>
-        <select class="language-select" name="langChange" (ngModelChange)="languageChange($event)" [(ngModel)]="languageCode">
+        <select class="language-select" name="langChange" (ngModelChange)="languageChange($event)" [(ngModel)]="languageCode">          
           <option class="language-select" *ngFor='let item of languages' [ngValue]='item.languageCode'>    
             {{item.languageName}}</option>
         </select>

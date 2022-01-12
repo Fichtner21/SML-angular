@@ -12,11 +12,11 @@
               <div class="match-row__team">
                 <div class="teamrounds">{{ match.t1roundswon }}</div>
                 <div class="teaminfo">
-                  <div>preRANK</div>
-                  <div>Name</div>
-                  <div>Frags</div>
-                  <div>postRANK</div>
-                  <div>PC</div>
+                  <div>preELO</div>
+                  <div>{{ 'matches.name' | translate }}</div>
+                  <div>{{ 'matches.frags' | translate }}</div>
+                  <div>postELO</div>
+                  <div>{{ 'matches.pc' | translate }}</div>
                 </div>
                 <div class="match-row__team--player">
                   <div>{{ match.t1p1preelo | number: '.1-2' }}</div>
@@ -72,7 +72,7 @@
                 <div class="teamrounds">{{ match.t2roundswon }}</div>
                 <div class="teaminfo">
                   <div>preRANK</div>
-                  <div>Name</div>
+                  <div>{{ 'matches.name' | translate }}</div>
                   <div>Frags</div>
                   <div>postRANK</div>
                   <div>PC</div>

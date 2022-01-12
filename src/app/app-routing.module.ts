@@ -20,7 +20,7 @@ const routes: Routes = [{
 }, 
 {
   path: 'about',
-  loadChildren: () => import('./about/about-routing.module').then(m => m.AboutRoutingModule2)
+  loadChildren: () => import('./about/about.module').then(m => m.AboutModule)
 },
 {
   path: '',

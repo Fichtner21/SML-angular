@@ -23,9 +23,11 @@ export class AppComponent implements OnInit{
   currentLanguage: any = 'en';  
   languageCode = 'en';  
 
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService) {}
+  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService) {
+    translateService.setDefaultLang(localStorage.getItem('lang'));
+  }
 
-  languages = [  
+  languages = [      
     { 'languageCode': 'en', 'languageName': 'English' },  
     { 'languageCode': 'pl', 'languageName': 'Polski' },      
   ] 
@@ -50,13 +52,16 @@ export class AppComponent implements OnInit{
       map((response: any) => {  
         return response.values;       
       })
-    )       
+    )   
+    
+    console.log('local =>', localStorage.getItem('lang'));
   }
 
   languageChange($event) {  
     // debugger;  
     this.currentLanguage = $event;  
-    this.translateService.use(this.currentLanguage);  
+    this.translateService.use(this.currentLanguage); 
+    localStorage.setItem('lang', this.currentLanguage); 
   } 
 
   public toggleMenu(){ 

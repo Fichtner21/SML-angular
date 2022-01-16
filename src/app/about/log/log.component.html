@@ -1,34 +1,40 @@
 <section>
-  <div class="container">
-    <nav class="about__nav">      
-      <a routerLink="/about/download" routerLinkActive="active">Download</a>
+  <nav class="about__nav"> 
+    <div class="container">
+      <a routerLink="/about/download" routerLinkActive="active">{{'about.menu_download' | translate }}</a>
       <a routerLink="/about/log">Log</a>
-      <a routerLink="/about/maps">Maps</a>
-      <a routerLink="/about/wanted">Wanted</a>      
-    </nav> 
+      <a routerLink="/about/maps">{{'about.maps' | translate }}</a>
+      <a routerLink="/about/wanted">{{ 'about.menu_wanted' | translate }}</a> 
+    </div>
+  </nav> 
+  <div class="container">    
     <div class="log">
       <div class="log__item">
-        <div class="log__item--desc">Start MoHAA:Spearhead MIX League</div>
+        <div class="log__item--desc">{{ 'about.log_march2020' | translate }}</div>
+        <div class="log__item--date">March 2020</div>
+      </div>
+      <div class="log__item">
+        <div class="log__item--desc">{{ 'about.log_november2020' | translate }}</div>
         <div class="log__item--date">10.11.2020</div>
       </div>
       <div class="log__item">
-        <div class="log__item--desc">Chnage outperform Threshold from 200 to 12. Reset ranking points due change Outperform Thershold. Change convertion rate of each player on the team, in case of win best player get more points and worst get less in winnig team. Before this change, the point distribution was almost equal (equal responsiblity per team).</div>
+        <div class="log__item--desc">{{ 'about.log_january2021' | translate }}</div>
         <div class="log__item--date">13.01.2021</div>
       </div>
       <div class="log__item">
-        <div class="log__item--desc">Started first CUP 1on1 in MoH:SH MIX LEAGUE</div>
+        <div class="log__item--desc">{{ 'about.log_february2021' | translate }}</div>
         <div class="log__item--date">05.02.2021</div>
       </div>
       <div class="log__item">
-        <div class="log__item--desc">Finished first CUP 1on1</div>
+        <div class="log__item--desc">{{ 'about.log_march2021' | translate }}</div>
         <div class="log__item--date">05.03.2021</div>
       </div>
       <div class="log__item">
-        <div class="log__item--desc"><strong>RESET</strong> ranking points (back to 1000 for each players)</div>
+        <div class="log__item--desc">{{ 'about.log_may2021' | translate }} </div>
         <div class="log__item--date">05.05.2021</div>
       </div>
       <div class="log__item">
-        <div class="log__item--desc"><strong>RESET</strong> ranking points (back to 1000 for each players)</div>
+        <div class="log__item--desc">{{ 'about.log_may2021' | translate }} </div>
         <div class="log__item--date">31.12.2021</div>
       </div>      
     </div>

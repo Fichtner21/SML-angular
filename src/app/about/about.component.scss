@@ -7,56 +7,39 @@ section {
     background-size: 4px 4px;
     color: #ffffc8;
 
+    .about__nav {
+      padding: 20px 10px;        
+      font-size: 20px;
+      background-image: linear-gradient(
+0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
+  background-size: 4px 4px;
+
+      :nth-child(n){
+        border-right: 2px solid #ffffc8;
+      }
+
+      :last-child {
+        border-right: none;
+      }
+
+      a {
+        text-decoration: none;
+        transition: .3s all;
+        font-weight: 700;
+        padding: 0 10px;
+
+        &:hover {
+          color: red;
+        }
+      }      
+    }
+
     .container {
       margin: 0 auto;
       padding: 0 15px;
+      max-width: 1300px;         
 
-      @media screen and (min-width: 640px){
-        max-width: 640px;
-      }
-      @media screen and (min-width:768px){
-        max-width: 768px;
-      }
-      @media screen and (min-width: 1024px){
-        max-width: 1024px;
-      }
-      @media screen and (min-width: 1280px){
-        max-width: 1280px;
-      }
-      @media screen and (min-width: 1536px){
-        max-width: 1536px;
-      }     
-
-      .about__nav {
-        padding: 20px 10px;        
-        font-size: 30px;
-        background-image: linear-gradient(
-0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
-    background-size: 4px 4px;
-
-        :nth-child(n){
-          border-right: 2px solid #ffffc8;
-        }
-
-        :last-child {
-          border-right: none;
-        }
-
-        a {
-          text-decoration: none;
-          transition: .3s all;
-          font-weight: 700;
-          padding: 0 10px;
-
-          &:hover {
-            color: red;
-          }
-        }
-
-        div {
-          margin: 10px;
-        }
-      }
+      
 
       .about__intro {
         margin-top: 20px;

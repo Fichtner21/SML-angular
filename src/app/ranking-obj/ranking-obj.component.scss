@@ -1,14 +1,14 @@
 section {
   background-color: #010141;
   min-height: 100vh;
+  padding-top: 70px;
 }
 
-.container {
-  padding-top: 100px;
+.container {  
   margin: 0 auto;
   display: flex;
   justify-content: center;
-  padding-bottom: 15px;
+  padding: 15px 0;
   font-size: 1rem;
 }
 
@@ -74,8 +74,7 @@ section {
 
 .ranking-head {
   text-align: center;
-  font-size: 22px;
-  margin-top: 20px;
+  font-size: 22px;  
   background-color: #2f3060;  
   border-bottom: 1px solid #010141;  
 
@@ -112,6 +111,11 @@ a {
     
     a {
       position: relative;      
+    }
+
+    img {
+      margin: 5px;
+      border: 1px solid #000;
     }
       
     .down-streak {

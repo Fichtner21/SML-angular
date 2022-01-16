@@ -7,40 +7,158 @@ section {
   background-size: 4px 4px;
   color: #ffffc8;
 
+  .about__nav {
+    padding: 20px 10px;        
+    font-size: 20px;
+    background-image: linear-gradient(
+0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
+background-size: 4px 4px;
+
+    :nth-child(n){
+      border-right: 2px solid #ffffc8;
+    }
+
+    :last-child {
+      border-right: none;
+    }
+
+    a {
+      text-decoration: none;
+      transition: .3s all;
+      font-weight: 700;
+      padding: 0 10px;
+      color: #ffffc8;
+
+      &:hover {
+        color: red;
+      }
+    }    
+  }
+
   .container {
     padding: 0 15px;
     margin: 0 auto;
+    max-width: 1300px;
 
-    .about__nav {
-      padding: 20px 10px;        
-      font-size: 30px;
-      background-image: linear-gradient(
-0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
-  background-size: 4px 4px;
+    h2 {
+      margin-top: 15px;
+    }
 
-      :nth-child(n){
-        border-right: 2px solid #ffffc8;
+     
+    
+    .maps {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-rows: auto;
+      gap: 1rem;
+      padding: 1rem 0;
+
+      @media screen and (max-width: 1366px){
+        grid-template-columns: 1fr 1fr 1fr;
       }
 
-      :last-child {
-        border-right: none;
+      @media screen and (max-width: 992px){
+        grid-template-columns: 1fr 1fr;
       }
 
-      a {
-        text-decoration: none;
-        transition: .3s all;
-        font-weight: 700;
-        padding: 0 10px;
-        color: #ffffc8;
-
+      .map-link {
+        position: relative;
         &:hover {
-          color: red;
+          .getmap {            
+            opacity: 0.4;
+            filter: invert(1);
+          }
         }
       }
 
-      div {
-        margin: 10px;
+      .map {
+        width:100%;
+        height: 250px;      
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: .3s all;
+
+        @media screen and (max-width: 1366px){
+          height: 300px;
+        }
+        @media screen and (max-width: 992px){
+          height: 250px;
+        }        
       }
-    }    
+
+      .getmap {
+        position: absolute;
+        min-height: 100%;
+        min-width: 100%;
+        top: 0;
+        left: 0;      
+        opacity: 0;
+        transition: .3s all;
+        background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+        background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+        background-size: 4px 4px;
+        color: #ffffc8;
+
+        &__link {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, 0); 
+          font-size: 30px;
+          font-weight: 700;
+          color: darken(#ffffc8, 10%);
+        }
+      }
+
+      .hunt {
+        background-image: url("/assets/images/maps/hunt.jpg");
+      }
+      .v2 {
+        background-image: url("/assets/images/maps/v2.jpg");
+      }
+      .bridge {
+        background-image: url("/assets/images/maps/bridge.jpg");
+      }
+      .vsuk {
+        background-image: url("/assets/images/maps/vsuk.jpg");
+      }
+      .stlo {
+        background-image: url("/assets/images/maps/stlo.jpg");
+      }
+      .navarone {
+        background-image: url("/assets/images/maps/navarone.jpg");
+      }
+      .dessau {
+        background-image: url("/assets/images/maps/dessau.jpg");
+      }
+      .v2shelter {
+        background-image: url("/assets/images/maps/v2shelter.jpg");
+      }
+      .bridgeomg {
+        background-image: url("/assets/images/maps/obj_omg_team4.png");
+      }
+      .churchfinal {
+        background-image: url("/assets/images/maps/dmloadingTheChurch.JPG");
+      }
+      .dvsnow {
+        background-image: url("/assets/images/maps/dv_snow.jpg");
+      }
+      .losttown {
+        background-image: url("/assets/images/maps/obj_the_lost_town.png");
+      }
+      .renan {
+        background-image: url("/assets/images/maps/renan.png");
+      }
+      .stlo4 {
+        background-image: url("/assets/images/maps/stlo4.png");
+      }
+      .thevillage {
+        background-image: url("/assets/images/maps/TheVillage.png");
+      }
+      .v2ext {
+        background-image: url("/assets/images/maps/xTriode.png");
+      }
+    }
   }
 }

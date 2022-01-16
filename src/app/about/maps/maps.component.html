@@ -1,10 +1,96 @@
 <section>
-  <div class="container">
-    <nav class="about__nav">      
-      <a routerLink="/about/download" routerLinkActive="active">Download</a>
+  <nav class="about__nav">  
+    <div class="container">
+      <a routerLink="/about/download" routerLinkActive="active">{{'about.menu_download' | translate }}</a>
       <a routerLink="/about/log">Log</a>
-      <a routerLink="/about/maps">Maps</a>
-      <a routerLink="/about/wanted">Wanted</a>      
-    </nav> 
+      <a routerLink="/about/maps">{{'about.maps' | translate }}</a>
+      <a routerLink="/about/wanted">{{ 'about.menu_wanted' | translate }}</a> 
+    </div>          
+  </nav> 
+  <div class="container">    
+    <h2>{{ 'about.maps_customs' | translate }}:</h2>    
+    <div class="maps">    
+      <div class="map hunt"></div>
+      <div class="map v2"></div>
+      <div class="map bridge"></div>  
+      <a href="../../assets/VSUK-AbbeyBeta.pk3" target="_self" download="VSUK-AbbeyBeta.pk3" class="map-link">
+        <div class="map vsuk"></div>
+        <div class="getmap">
+          <div class="getmap__link">VSUK Abbey</div>
+        </div>
+      </a>  
+      <a href="../../assets/obj_kmarzo-stlo.pk3" target="_self" download="obj_kmarzo-stlo.pk3" class="map-link">
+        <div class="map stlo"></div> 
+        <div class="getmap">
+          <div class="getmap__link">St. Lo</div>
+        </div>
+      </a>          
+      <a href="../../assets/Navarone.pk3" target="_self" download="Navarone.pk3" class="map-link">
+        <div class="map navarone"></div> 
+        <div class="getmap">
+          <div class="getmap__link">Navarone</div>
+        </div>
+      </a>          
+      <a href="../../assets/obj_dessau1946.pk3" target="_self" download="obj_dessau1946.pk3" class="map-link">
+        <div class="map dessau"></div>
+        <div class="getmap">
+          <div class="getmap__link">Dessau1946</div>
+        </div> 
+      </a>          
+      <a href="../../assets/V2Shelter.pk3" target="_self" download="V2Shelter.pk3" class="map-link">
+        <div class="map v2shelter"></div>
+        <div class="getmap">
+          <div class="getmap__link">V2 Shelter</div>
+        </div> 
+      </a>          
+      <a href="../../assets/obj_omg_team4.pk3" target="_self" download="obj_omg_team4.pk3" class="map-link">
+        <div class="map bridgeomg"></div>
+        <div class="getmap">
+          <div class="getmap__link">The Bridge OMG</div>
+        </div> 
+      </a>
+      <a href="../../assets/obj_thechurch_final.pk3" target="_self" download="obj_thechurch_final.pk3" class="map-link">
+        <div class="map churchfinal"></div>
+        <div class="getmap">
+          <div class="getmap__link">The Church Final</div>
+        </div> 
+      </a>
+      <a href="../../assets/zzz_dv_snow_obj_tdm.pk3" target="_self" download="zzz_dv_snow_obj_tdm.pk3" class="map-link">
+        <div class="map dvsnow"></div>
+        <div class="getmap">
+          <div class="getmap__link">Destroyed Village Snow OBJ</div>
+        </div> 
+      </a>
+      <a href="../../assets/Obj_The_Lost_Town.pk3" target="_self" download="Obj_The_Lost_Town.pk3" class="map-link">
+        <div class="map losttown"></div>
+        <div class="getmap">
+          <div class="getmap__link">The Lost Town</div>
+        </div> 
+      </a>
+      <a href="../../assets/renan.pk3" target="_self" download="renan.pk3" class="map-link">
+        <div class="map renan"></div>
+        <div class="getmap">
+          <div class="getmap__link">Renan</div>
+        </div> 
+      </a>
+      <a href="../../assets/User-Stlo4.pk3" target="_self" download="User-Stlo4.pk3" class="map-link">
+        <div class="map stlo4"></div>
+        <div class="getmap">
+          <div class="getmap__link">St. Lo 4</div>
+        </div> 
+      </a>
+      <a href="../../assets/obj_thevillage.pk3" target="_self" download="obj_thevillage.pk3" class="map-link">
+        <div class="map thevillage"></div>
+        <div class="getmap">
+          <div class="getmap__link">The Village</div>
+        </div> 
+      </a>
+      <a href="../../assets/V2_Extended.pk3" target="_self" download="V2_Extended.pk3" class="map-link">
+        <div class="map v2ext"></div>
+        <div class="getmap">
+          <div class="getmap__link">V2 Extended</div>
+        </div> 
+      </a>
+    </div>
   </div>
 </section>

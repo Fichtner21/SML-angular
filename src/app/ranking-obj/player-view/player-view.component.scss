@@ -175,8 +175,8 @@
 
   .player-flag {
     overflow: hidden;
-    border-top: 1px solid #000;
-    border-bottom: 1px solid #000;
+    // border-top: 1px solid #000;
+    // border-bottom: 1px solid #000;
     // position: absolute;
     width: 100%;
   
@@ -201,9 +201,9 @@
   
       .image-light {
         opacity: 0.75; // change for best results
-        filter: blur(5px); // change for bigger/smaller shine
+        // filter: blur(5px); // change for bigger/smaller shine
         // fill the box with light:
-        width: 100%;
+        // width: 100%;
         height: 100%;
         position: absolute;
         top: 0;

@@ -1,12 +1,14 @@
 section {
-  background-color: #010141;  
+  background-color: #010141; 
+  padding-top: 70px;
+  // min-height: 100vh;
+  // min-width: 100%; 
 }
 
 .container {
-  padding-top: 70px;
+  padding: 15px;
   margin: 0 auto;
-  display: flex;
-  justify-content: center;
+  max-width: 1300px;
 }
 
 .match-row {
@@ -55,37 +57,7 @@ section {
       0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
           background-size: 4px 4px;
     color: #ffffc8;
-    font-weight: 700;
-
-    // &__pre {
-    //   background-image: linear-gradient(
-    //     0deg, gray 25%, lightgray 25%, lightgray 50%, gray 50%, gray 75%, lightgray 75%, lightgray 100%);
-    //   background-size: 4px 4px;
-    // }
-
-    // &__name {
-    //   background-image: linear-gradient(
-    //     0deg, #d0bfd9 25%, #e7dfec 25%, #e7dfec 50%, #d0bfd9 50%, #d0bfd9 75%, #e7dfec 75%, #e7dfec 100%);
-    //   background-size: 4px 4px;
-    // }
-
-    // &__frags {
-    //   background-image: linear-gradient(
-    //     0deg, #d4835e 25%, #a1502b 25%, #a1502b 50%, #d4835e 50%, #d4835e 75%, #a1502b 75%, #a1502b 100%);
-    //   background-size: 4px 4px;
-    // }
-
-    // &__post {
-    //   background-image: linear-gradient(
-    //     0deg, #a0daa9 25%, #5abf69 25%, #5abf69 50%, #a0daa9 50%, #a0daa9 75%, #5abf69 75%, #5abf69 100%);
-    //   background-size: 4px 4px;
-    // }
-
-    // &__pc {
-    //   background-image: linear-gradient(
-    //     0deg, #fdac53 25%, #fc8403 25%, #fc8403 50%, #fdac53 50%, #fdac53 75%, #fc8403 75%, #fc8403 100%);
-    //   background-size: 4px 4px;
-    // }
+    font-weight: 700;   
   }
 
   .roundswon_row {

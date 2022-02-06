@@ -45,13 +45,13 @@
         <div>
           <div class="chart-info">
             <h3 class="chart-info__title">{{ 'playerview.rank_chart' | translate }}</h3>
-            <button (click)="showRanking(playerDetails.rankings, playerDetails.listwars)">Rankings</button>
+            <button (click)="showRanking(playerDetails.rankings, playerDetails.listwars)">Load rankings...</button>
           </div>         
           <canvas id="rankChart" width="1320" height="400" style="overflow-x: scroll;">{{ chartRank }}</canvas>
         </div>
         <div class="chart-info">
           <h3 class="chart-info__title">{{ 'playerview.frags_chart' | translate }}</h3>
-          <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">Frags</button>
+          <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">Load frags...</button>
         </div>
         
         <canvas id="myChart" width="1320" height="400" style="overflow-x: scroll;"></canvas>  

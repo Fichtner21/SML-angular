@@ -130,6 +130,23 @@
                 </div>
               </div>
             </div>
+
+            <div *ngIf="match.video !== ''">
+              <div class="thumbnail video-responsive">
+                <iframe 
+                  id="ytplayer-"
+                  type="text/html"
+                  height="100%"
+                  frameborder="0"
+                  allowfullscreen
+                  srcdoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href={{match.video}}><img src='{{match.videoImg}}' alt='AltTagContent'><span>▶</span></a>"
+                  loading="lazy"
+                  src="{{match.video}}"
+                  >
+                </iframe>
+              </div> 
+
+            </div>
           
                   
         </div>
@@ -137,3 +154,13 @@
     </ng-container>
   </div>
 </section> 
+<ng-http-loader 
+    [backdrop]="false"
+    [backgroundColor]="'#010141'"
+    [debounceDelay]="100"
+    [extraDuration]="300"
+    [minDuration]="300"
+    [opacity]=".6"
+    [backdropBackgroundColor]="'#777777'"
+    [spinner]="spinkit.skWave">
+</ng-http-loader>

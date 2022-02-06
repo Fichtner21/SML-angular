@@ -4,6 +4,7 @@ import { ActivatedRouteSnapshot, Resolve } from "@angular/router";
 import { FetchMatchesService } from "../../fetch-matches.service";
 import { Matches } from "../../matches.model";
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators'
 
 @Injectable()
 export class SingleMatchResolve implements Resolve<Observable<Matches>> {
@@ -14,7 +15,8 @@ export class SingleMatchResolve implements Resolve<Observable<Matches>> {
             take(1),
             switchMap((matches: Matches[]) => {
                 return (matches.length > 0) ? this.fetchMatchesService.getSingleMatch(route.params['idwar']).pipe(take(1)) : this.fetchMatchesAndGetSingleMatch(route.params['idwar']);
-            })
+            }),
+            // tap(x => console.log('x', x))
         );
     }
 

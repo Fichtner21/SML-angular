@@ -11,6 +11,7 @@ import { NgHttpLoaderModule } from 'ng-http-loader';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ConfigComponent } from './config/config.component';
 
 export function createTranslateLoader(http: HttpClient){
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -22,7 +23,7 @@ export function createTranslateLoader(http: HttpClient){
     MapsComponent, 
     DownloadComponent, 
     LogComponent, 
-    WantedComponent
+    WantedComponent, ConfigComponent
   ],
   imports: [
     CommonModule,      

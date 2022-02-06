@@ -17,7 +17,7 @@ import { getLocaleEraNames } from '@angular/common';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  title = 'SML-angular';
+  title = 'SH MIX';
   players$: Observable<any>;
   matches$: Observable<any>;
   // public lang = new FormControl('en');

@@ -14,6 +14,7 @@ import { ChartsModule } from 'ng2-charts';
 import { FormsModule } from '@angular/forms';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { SafePipe } from './history-obj/safe.pipe';
 
 export function createTranslateLoader(http: HttpClient){
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -24,6 +25,7 @@ export function createTranslateLoader(http: HttpClient){
     AppComponent,
     HomeComponent,    
     DateFormatPipePipe,     
+    SafePipe
   ],
   imports: [
     CommonModule,
@@ -41,7 +43,7 @@ export function createTranslateLoader(http: HttpClient){
         deps: [HttpClient],
       },
       // defaultLanguage: 'en',
-    }),     
+    }),       
   ],
   providers: [{
     provide: API_KEY, 

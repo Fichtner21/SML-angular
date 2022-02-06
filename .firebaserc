@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "spearhead-mix-league": {
+      "hosting": {
+        "SML-angular": [
+          "spearhead-mix-league"
+        ]
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AboutComponent } from './about.component';
+import { ConfigComponent } from './config/config.component';
 import { DownloadComponent } from './download/download.component';
 import { LogComponent } from './log/log.component';
 import { MapsComponent } from './maps/maps.component';
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'wanted',
     component: WantedComponent,
+  },
+  {
+    path: 'config',
+    component: ConfigComponent,
   }      
 ];
 

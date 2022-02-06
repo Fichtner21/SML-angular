@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { GoogleSheetsDbService } from 'ng-google-sheets-db';
 import { Matches, matchesAttributesMapping } from './matches.model';
 import { MatchesDetailsService } from './matches-details.service';
@@ -10,6 +10,7 @@ import { FetchMatchesService } from './fetch-matches.service';
 import { Spinkit } from 'ng-http-loader';
 import { PlayersApiService } from '../services/players-api.service';
 import { TranslateService } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'app-history-obj',
@@ -165,11 +166,13 @@ export class HistoryObjComponent implements OnInit {
             t2p7score: match.t2p7score,
             t2p7postelo: match.t2p7postelo,
           }
-
+          
           matchRowArray.push(matchRow);
         }
-        return matchRowArray;
-      })
+        // console.log('M =>', matchRowArray[900]);
+        return matchRowArray.reverse();
+      }),
+      // tap(x => console.log('xx', x))
     )  
     
     

@@ -123,8 +123,13 @@
               "devServerTarget": "SML-angular:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
-    }},
+    }
+  },
   "defaultProject": "SML-angular"
 }

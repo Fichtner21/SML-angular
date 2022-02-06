@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PlayersApiService } from '../services/players-api.service';
 import { map } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-about',
@@ -14,7 +15,7 @@ export class AboutComponent implements OnInit {
   public maps: any;
   public resultMap: any;
 
-  constructor(public route: ActivatedRoute, private router: RouterModule, private tabApiService: PlayersApiService) { }
+  constructor(public route: ActivatedRoute, private router: RouterModule, private tabApiService: PlayersApiService, private translateService: TranslateService) { }
 
   ngOnInit(): void {
     this.matchesTab$ = this.tabApiService.getPlayers('Match+History').pipe(

@@ -17,5 +17,53 @@
     "wars": "Wojny",
     "last_war": "Ostatnia wojna",
     "act": "Akt"
+  },
+  "about": {
+    "menu_download": "Do pobrania",
+    "menu_wanted": "Poszukiwani",
+    "download_sh": "Pobierz MoHAA:SPEARHEAD (Zawiera customowe Mapy) - 3 Gb",
+    "download_dsc": "Pobierz aplikację DISCORD",
+    "download_tase": "Pobierz The All Seeing Eye",
+    "log_march2020": "Pierwsze spotkanie starych graczy po wielu latach (KaPsEL, Jim, bAtOn, malysw, Wiktor, gRaBaRz, kurier, -Illu$ioN-, Zielony, Zielakpr0, rybA, YOUR_PROBLEM, &elu$, Tomas).",
+    "log_november2020": "Wystartowaliśmy z MIX Ligą",
+    "log_january2021": "Zmiana naliczania punktów, pierwotnie odpowiedzialność zbiorowa za wygraną/przegraną, tj. małe wahania punktowe między najlepszym a najgorszym w teamie ok 2pkt max, natomiast po zmianie odpowiedzialność indywidualna, większa zmienność przyznawania punktów.",
+    "log_february2021": "Start pierwszego Pucharu 1on1",
+    "log_march2021": "Zakończenie pierwszego Pucharu 1on1",
+    "log_may2021": "RESET rankingu (powrót do 1000 dla każdego gracza)",
+    "log_december2021": "RESET rankingu (powrót do 1000 dla każdego gracza)",
+    "maps_customs": "Tutaj możesz pobrać, każdą customową mapę osobno",
+    "wanted_legend": "Legenda",
+    "wanted_dont": "Nie chce grać",
+    "wanted_nocontact": "Brak kontaktu",
+    "wanted_desc": "W tej sekcji wypisaliśmy wszystkich graczy z którymi kiedyś graliśmy w czasach clanbase.com",
+    "intro": "Starzy znajomi spotkali się ponownie w marcu 2020 roku po tym jak ogłoszono pierwszy lockdown. Od tego czasu gramy prawie że codziennie. W listopadzie 2020 roku stworzyliśmy Mix Ligę. Od tamtego czasu zagraliśmy prawie 900 wojen (stan na styczeń 2022), w lidze zagrało 80 graczy, większość z nich pamieta czasy clanbase.com",
+    "download": "POBIERZ MOHAA: SPEARHEAD (PACZKA ZAWIERA CUSTOMOWE MAPY) - 3Gb",
+    "how_to_play": "Jak z nami zagrać?",
+    "how_to_play_step1":"Kliknij w prawym gónym rogu w przycisk 'Odwiedź DISCORD'",
+    "how_to_play_step2":"Dołącz do kanału głosowego 'WANT TO PLAY' na discordzie",
+    "how_to_play_step3":"Admin doda Cię do strony, nie musisz się nigdzie rejestrować",
+    "how_to_play_step4":"Admin dokonuje balansowania teamów, na podstawie ELO rankingu graczy chętnych do gry, Co dalej? Po prostu graj! Sprawdzaj swoje statystyki, obserwuj swój progres na wykresach.",
+    "what_squads": "Jakie są składy na wojne?",
+    "what_squads_desc":"Zawsze aktualny skład jest widoczny na ",
+    "what_squads_home": "stronie głównej.",
+    "how_elo": "O co chodzi z ELO rankingiem?",
+    "how_elo_desc":"Jeśli grałeś w clanbase to zapewne pamiętasz jak były liczone punkty za wygranę, przegrane czy zremisowane wojny, tutaj jest dokładnie tak samo, z tą różnicą, że tutaj nie grasz klan na klan tylko gramy mixy, a więc system musiał zostać rozwinięty, przez co stał się bardziej skomplikowany. Co się liczy? Liczy się przede wszystkim czy wygrałeś czy nie, następnie otrzymujesz punkty proporcjonalnie do twojego udziału w wygranej (jest to liczone na podstawie proprocji zdobytych fragów przez cala druzyne).",
+    "maps": "Mapy",
+    "maps_desc": "Przeważnie gramy standardowe mapy czyli The Hunt, V2, The Bridge, ale to nie wszystko, gdyż gramy również VSUK Abbey, V2Shelter, Navarone, Dessau1946, The Church Final, The Lost Town, V2 Extended (wszystkie te mapy sa w linku do pobrania na górze). Jeśli masz do zaproponownania nową mapę to zapraszamy na DISCORD."     
+  },
+  "matches": {
+    "name": "Gracz",
+    "frags": "Fragi",
+    "pc": "Pkt."
+  },
+  "playerview": {
+    "playername": "Nazwa gracza:",
+    "debut": "Debiut:",
+    "current_rank": "Obecny ranking:",
+    "war_count": "Liczba wojen", 
+    "clan_history": "Klany historyczne",
+    "wars_id": "Wojny gracza po ID:",
+    "rank_chart": "Wykres rankingu gracza:", 
+    "frags_chart": "Wykres fragów gracza:"
   }
 }

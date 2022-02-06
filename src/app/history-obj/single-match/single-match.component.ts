@@ -6,6 +6,8 @@ import { FetchMatchesService } from '../fetch-matches.service';
 import { Observable, combineLatest } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { PlayersApiService } from 'src/app/services/players-api.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Spinkit } from 'ng-http-loader';
 
 @Component({
   selector: 'app-single-match',
@@ -14,7 +16,7 @@ import { PlayersApiService } from 'src/app/services/players-api.service';
 })
 export class SingleMatchComponent implements OnInit {
   public match$:Observable<Matches>;
-  public errorMessage: string;
+  public errorMessage: string; 
 
   public playersTab$: Observable<any>;
   public matchesTab$: Observable<any>;  
@@ -22,11 +24,13 @@ export class SingleMatchComponent implements OnInit {
   public historyObj$: any;
 
   public idwar$: Observable<any>;
+  public matchVideo: string;
+  public spinkit = Spinkit;
 
   constructor(
     private activatedRoute: ActivatedRoute, private tabApiService: PlayersApiService, private fetchMatch: FetchMatchesService   
-    ) { 
-      console.log('activatedRoute =>', this.activatedRoute); 
+    , sanitizer: DomSanitizer) { 
+      // console.log('activatedRoute =>', this.activatedRoute); 
     }
 
   // async ngOnInit(): Promise<void> {
@@ -36,20 +40,22 @@ export class SingleMatchComponent implements OnInit {
   //   this.match = await this.FetchMatchesService.getSingleMatch(idwar);
   //   console.log(this.match);
   // }
-  ngOnInit(): void {
-    // this.fetchMatch.getSingleMatch('707').subscribe(res => {
-    //   this.match = res;
-    //   console.log('match 707 =>', res);
-    // })
+  ngOnInit(): void {     
+
     this.match$ = this.activatedRoute.data.pipe(
       map(data => data.match)
-    );
+    );    
 
     this.idwar$ = this.activatedRoute.data.pipe(
       map((data) => {
         return data.match.idwar;
       })
-    )
+    );    
+
+    // this.fetchMatch.getSingleMatch('707').subscribe(res => {
+    //   this.matchVideo = res;
+    //   console.log('match 707 =>', res);
+    // }) 
 
     this.playersTab$ = this.tabApiService.getPlayers('Players').pipe(
       map((response: any) => {        
@@ -67,19 +73,22 @@ export class SingleMatchComponent implements OnInit {
     );
 
     this.matchesTab$ = this.tabApiService.getPlayers('Match+History').pipe(
-      map((response: any) => {        
+      map((response: any) => {   
+            
         let batchRowValuesHistory = response.values;
+       
         let historyMatches: any[] = [];
         for(let i = 1; i < batchRowValuesHistory.length; i++){
           const rowObject: object = {};
           for(let j = 0; j < batchRowValuesHistory[i].length; j++){
             rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
-          }
+          }          
+         
           historyMatches.push(rowObject);
         }        
         return historyMatches;
       }),
-    );
+    );    
 
     this.inactiveTab$ = this.tabApiService.getPlayers('Inactive').pipe(
       map((response: any) => {        
@@ -94,18 +103,18 @@ export class SingleMatchComponent implements OnInit {
         }        
         return inactivePlayers;
       }),
-    );
+    ); 
 
     this.historyObj$ = combineLatest([this.playersTab$, this.match$, this.inactiveTab$]).pipe(
       map(([players, match, inactive]) => {
-        let matchRow;
-     
+        let matchRow;         
           matchRow = {
-            timestamp: match.Timestamp,
+            timestamp: match.timestamp,
             idwar: match.idwar,
             t1roundswon: match.t1roundswon,
             t2roundswon: match.t2roundswon, 
-            video: match.video,
+            video: 'https://www.youtube.com/embed/' + match.video + '/?autoplay=1',
+            videoImg: 'https://img.youtube.com/vi/' + match.video + '/hqdefault.jpg',
             info: match.info,
             t1p1playername: this.addPlayerLink(match.t1p1name, players, inactive),
             t1p1username: match.t1p1name,
@@ -177,12 +186,11 @@ export class SingleMatchComponent implements OnInit {
             t2p7preelo: match.t2p7preelo,
             t2p7score: match.t2p7score,
             t2p7postelo: match.t2p7postelo,
-          }
-
+          }          
+          // console.log('matchRow', matchRow);
         return matchRow;
       })
     ) 
-
     
   }
   public addPlayerLink(player:string, obj:any, obj2:any) {

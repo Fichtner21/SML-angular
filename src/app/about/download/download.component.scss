@@ -1,0 +1,151 @@
+section {
+  padding-top: 70px;
+  min-height: 100vh;
+  min-width: 100%;
+  background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+  background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+  background-size: 4px 4px;
+  color: #ffffc8;
+
+  .about__nav {
+    padding: 20px 10px;        
+    font-size: 20px;
+    background-image: linear-gradient(
+0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
+background-size: 4px 4px;
+
+    :nth-child(n){
+      border-right: 2px solid #ffffc8;
+    }
+
+    :last-child {
+      border-right: none;
+    }
+
+    a {
+      text-decoration: none;
+      transition: .3s all;
+      font-weight: 700;
+      padding: 0 10px;
+      color: #ffffc8;
+
+      &:hover {
+        color: red;
+      }
+    }    
+  }
+
+  .container {
+    padding: 0 15px;
+    margin: 0 auto;
+    max-width: 1300px;
+
+    .sh-cover {
+      background-image: url('/assets/images/sh_cover.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: bottom;
+      height: 265px;
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        .download {
+        transform: scale(1.2);
+        }
+      }
+
+      .download {
+        position: absolute;
+        text-align: center;
+        top: 30%;
+        min-width: 100%;
+        padding: 1rem;
+        background-image: linear-gradient(
+  0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
+  background-size: 4px 4px;
+  transition: .3s all;
+
+        a {
+          font-weight: 700;
+          text-decoration: none;        
+        }
+      }
+    }
+
+    .dsc-cover {
+      background-image: url('/assets/images/Discord-2.webp');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      height: 265px;
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        .download {
+        transform: scale(1.2);
+        }
+      }
+
+      .download {
+        position: absolute;
+        text-align: center;
+        top: 30%;
+        min-width: 100%;
+        padding: 1rem;
+        background-image: linear-gradient(
+  0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
+  background-size: 4px 4px;
+  transition: .3s all;
+
+        a {
+          font-weight: 700;
+          text-decoration: none;        
+        }
+      }
+    }
+
+    .tase-cover {
+      background-image: url('/assets/images/tase.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      height: 265px;
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        .download {
+        transform: scale(1.2);
+        }
+      }
+
+      .download {
+        position: absolute;
+        text-align: center;
+        top: 30%;
+        min-width: 100%;
+        padding: 1rem;
+        background-image: linear-gradient(
+  0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
+  background-size: 4px 4px;
+  transition: .3s all;
+
+        a {
+          font-weight: 700;
+          text-decoration: none;        
+        }
+      }
+    }
+
+    div {
+      margin-top: 30px;
+
+      a {
+        color: #ffffc8;
+        font-size: 22px;
+      }
+    }
+  }
+}

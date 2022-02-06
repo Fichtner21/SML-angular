@@ -9,6 +9,7 @@ import { PlayersApiService } from './services/players-api.service';
 import { Players } from './ranking-obj/ranking.model';
 import { TranslateService } from '@ngx-translate/core';
 import { FormControl } from '@angular/forms';
+import { getLocaleEraNames } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -16,16 +17,18 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  title = 'SML-angular';
+  title = 'SH MIX';
   players$: Observable<any>;
   matches$: Observable<any>;
   // public lang = new FormControl('en');
-  currentLanguage: any = 'en';  
-  languageCode = 'en';  
+  currentLanguage: any = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';  
+  languageCode = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';  
 
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService) {}
+  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService) {
+    translateService.setDefaultLang(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');    
+  }
 
-  languages = [  
+  languages = [     
     { 'languageCode': 'en', 'languageName': 'English' },  
     { 'languageCode': 'pl', 'languageName': 'Polski' },      
   ] 
@@ -39,7 +42,7 @@ export class AppComponent implements OnInit{
 
     // this.translateService.onLangChange.subscribe((lang) => {
     //   alert(lang);
-    // })
+    // })  
 
     this.players$ = this.playersApiService.getPlayers('Players').pipe(
       map((response: any) => {  
@@ -50,16 +53,19 @@ export class AppComponent implements OnInit{
       map((response: any) => {  
         return response.values;       
       })
-    )       
+    )   
+    
+    // console.log('local =>', localStorage.getItem('lang'));
   }
 
-  languageChange($event) {  
+  languageChange($event) {    
     // debugger;  
     this.currentLanguage = $event;  
-    this.translateService.use(this.currentLanguage);  
+    this.translateService.use(this.currentLanguage); 
+    localStorage.setItem('lang', this.currentLanguage); 
   } 
 
   public toggleMenu(){ 
-    document.getElementById('nav').classList.toggle('block_class');
+    document.getElementById('nav').classList.toggle('block_class');    
   }
 }

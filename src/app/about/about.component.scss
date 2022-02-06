@@ -7,34 +7,44 @@ section {
     background-size: 4px 4px;
     color: #ffffc8;
 
+    .about__nav {
+      padding: 20px 10px;        
+      font-size: 20px;
+      background-image: linear-gradient(
+0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
+  background-size: 4px 4px;
+      display: flex;
+      flex-wrap: wrap;
+
+      :nth-child(n){
+        border-right: 2px solid #ffffc8;
+      }
+
+      :last-child {
+        border-right: none;
+      }
+
+      a {
+        text-decoration: none;
+        transition: .3s all;
+        font-weight: 700;
+        padding: 0 10px;
+        color: #ffffc8;
+        margin: 2px 0;
+
+        &:hover {
+          color: red;
+        }
+      }      
+    }
+
     .container {
       margin: 0 auto;
       padding: 0 15px;
+      max-width: 1300px;       
 
-      @media screen and (min-width: 640px){
-        max-width: 640px;
-      }
-      @media screen and (min-width:768px){
-        max-width: 768px;
-      }
-      @media screen and (min-width: 1024px){
-        max-width: 1024px;
-      }
-      @media screen and (min-width: 1280px){
-        max-width: 1280px;
-      }
-      @media screen and (min-width: 1536px){
-        max-width: 1536px;
-      }     
-
-      .about__nav {
-        padding-top: 30px;
-        border: 3px solid red;
-        font-size: 30px;
-
-        div {
-          margin: 10px;
-        }
+      .about__intro {
+        margin-top: 20px;
       }
 
       a {
@@ -55,43 +65,105 @@ section {
       }
 
       .how {
-        display: flex;
-        align-items: center;        
-        flex-wrap: wrap;
-        margin: 10px 0;
-        padding: 20px;
-        background-image: linear-gradient(0deg, rgba(0,0,0,0.8) 25%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.8) 75%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.5) 100%);
-        background-size: 4px 4px; 
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
 
-        @media screen and (max-width: 640px){
-          flex-direction: column;
+        @media screen and (max-width: 1024px){
+          grid-template-columns: 1fr 1fr;
+        }
+
+        @media screen and (max-width: 660px){
+          grid-template-columns: 1fr;
         }
 
         video {
-          width:400px;
-          @media screen and (max-width: 640px){
-            width: 300px;
-          }
-        }
+          height: auto;
+          width: 100%;
+        }        
 
         &__info {
-          margin-right: 20px;
-          text-align: center;
-          @media screen and (max-width: 640px){
-            margin-right: 0;
+          position: relative;;
+          &--up {
+            min-height: 100%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+          }
+
+          &--first {
+            background-image: linear-gradient(0deg, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2) 100%);
+            background-size: 4px 4px; 
+          }
+
+          &--second {
+            background-image: linear-gradient(0deg, rgba(0,0,0,0.6) 25%, rgba(0,0,0,0.3) 25%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.6) 75%, rgba(0,0,0,0.3) 75%, rgba(0,0,0,0.3) 100%);
+            background-size: 4px 4px; 
+          }
+
+          &--third {
+             background-image: linear-gradient(0deg, rgba(0,0,0,0.7) 25%, rgba(0,0,0,0.4) 25%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.4) 75%, rgba(0,0,0,0.4) 100%);
+            background-size: 4px 4px; 
+          }
+
+          &--fourth {
+             background-image: linear-gradient(0deg, rgba(0,0,0,0.8) 25%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.8) 75%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.5) 100%);
+            background-size: 4px 4px; 
+          }
+
+          &--bottom {
+            font-size: 50px;
+            font-weight: 700;
+            text-shadow: #ffffc8 1px 0 10px;
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;            
           }
         }
 
-        .arrow {
-          filter: invert(100%) sepia(99%) saturate(439%) hue-rotate(358deg) brightness(107%) contrast(101%);
-          transform:rotate(180deg);
-          margin-right: 20px;
+        // display: flex;
+        // align-items: center;        
+        // flex-wrap: wrap;
+        // margin: 10px 0;
+        // padding: 20px;
+        // background-image: linear-gradient(0deg, rgba(0,0,0,0.8) 25%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.8) 75%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.5) 100%);
+        // background-size: 4px 4px; 
 
-          @media screen and (max-width: 640px){
-            transform: rotate(270deg);
-            margin: 10px 0;
-          }
-        }
+        // @media screen and (max-width: 640px){
+        //   flex-direction: column;
+        // }
+
+        // video {
+        //   width:400px;
+        //   @media screen and (max-width: 640px){
+        //     width: 300px;
+        //   }
+        // }
+
+        // &__info {
+        //   margin-right: 20px;
+        //   text-align: center;
+        //   @media screen and (max-width: 640px){
+        //     margin-right: 0;
+        //   }
+        // }
+
+        // .arrow {
+        //   filter: invert(100%) sepia(99%) saturate(439%) hue-rotate(358deg) brightness(107%) contrast(101%);
+        //   transform:rotate(180deg);
+        //   margin-right: 20px;
+
+        //   @media screen and (max-width: 640px){
+        //     transform: rotate(270deg);
+        //     margin: 10px 0;
+        //   }
+        // }
       }
 
       // .maps-grid {

@@ -1,32 +1,3 @@
-// import { NgModule } from "@angular/core"
-// import { RouterModule, Routes } from "@angular/router"
-// import { HistoryObjComponent } from "./history-obj.component"
-// import { SingleMatchComponent } from "./single-match/single-match.component"
-
-// TODO We need this class? 
-
-// const routes: Routes = [
-//   // {
-//   //   path: '',
-//   //   component: HistoryObjComponent,
-//   //   children: [
-//       // {
-//       //   path: ':id',
-//       //   component: SingleMatchComponent
-//       // },
-//     // ],
-//   // },
-// ];
-
-// @NgModule({
-//   imports: [RouterModule.forChild(routes)],
-//   exports: [RouterModule],
-// })
-
-// export class MatchesRoutingModule {}
-
-
-
 export const matchesAttributesMapping = {
   Timestamp: 'timestamp',
   idwar: 'idwar',
@@ -89,10 +60,11 @@ export const matchesAttributesMapping = {
   t2p7score: 't2p7score',
   t2p7postelo: 't2p7postelo'
 }
-
 export interface Matches {
-  Timestamp: string,
+  timestamp: string,
   idwar: string,
+  video: string,
+  info: string,
   t1roundswon: string,
   t2roundswon: string, 
   t1p1name: string,
@@ -150,9 +122,7 @@ export interface Matches {
   t2p7name: string,
   t2p7preelo: string,
   t2p7score: string,
-  t2p7postelo: string,
-  video: string,
-  info: string
+  t2p7postelo: string  
 }
 
 

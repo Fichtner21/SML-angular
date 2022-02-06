@@ -1,0 +1,115 @@
+section {
+  padding-top: 70px;
+  min-height: 100vh;
+  min-width: 100%;
+  background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+  background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+  background-size: 4px 4px;
+  color: #ffffc8;  
+
+  .about__nav {
+    padding: 20px 10px;        
+    font-size: 20px;
+    background-image: linear-gradient(
+0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
+background-size: 4px 4px;
+
+    :nth-child(n){
+      border-right: 2px solid #ffffc8;
+    }
+
+    :last-child {
+      border-right: none;
+    }
+
+    a {
+      text-decoration: none;
+      transition: .3s all;
+      font-weight: 700;
+      padding: 0 10px;
+      color: #ffffc8;
+
+      &:hover {
+        color: red;
+      }
+    }    
+  }
+
+  .container {
+    padding: 0 15px;
+    margin: 0 auto;
+    max-width: 1300px;      
+
+    .wanted-legend {
+      display: flex;    
+      align-items: flex-end;
+      padding: 1rem 0; 
+      border-bottom: 1px solid #ffffc8;
+
+      h2 {
+        margin-right: 1rem;
+      }
+
+      .wanted {
+        border: 1px solid #ffffc8;
+        padding: 10px;
+        font-size: 18px;
+        font-weight: 700;
+        text-align: center;
+        margin-right: 1rem;
+      }
+
+      .red {
+        box-shadow: 0 0 10px red;
+      }
+
+      .gray {
+        box-shadow: 0 0 10px gray;
+      }
+    }
+
+    p {
+      margin-top: 1rem;
+    }
+    
+    .wanted-cont {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: auto;
+      gap: 1rem;
+      padding: 1rem 0;    
+      
+      @media screen and (max-width: 1366px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      @media screen and (max-width: 992px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      @media screen and (max-width: 640px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media screen and (max-width: 400px) {
+        grid-template-columns: 1fr;
+      }
+
+      .wanted {
+        border: 1px solid #ffffc8;
+        padding: 10px;
+        font-size: 18px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .red {
+        box-shadow: 0 0 10px red;
+      }
+
+      .gray {
+        box-shadow: 0 0 10px gray;
+      }
+    }
+  }
+}

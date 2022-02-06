@@ -6,10 +6,7 @@ import '@angular/common/locales/global/pl';
   name: 'dateFormatPipe'
 })
 export class DateFormatPipePipe implements PipeTransform {
-
-  // transform(value: unknown, ...args: unknown[]): unknown {
-  //   return null;
-  // }
+  
   transform(value: string){
     const datePipe = new DatePipe("pl-PL");
     value = datePipe.transform(value, 'dd.MM.yyyy HH:mm');

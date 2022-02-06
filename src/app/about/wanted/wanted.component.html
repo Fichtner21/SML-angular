@@ -1,1 +1,34 @@
-<p>wanted works!</p>
+<section>
+  <nav class="about__nav">  
+    <div class="container">
+      <a routerLink="/about/download" routerLinkActive="active">{{'about.menu_download' | translate }}</a>
+      <a routerLink="/about/log">Log</a>
+      <a routerLink="/about/maps">{{'about.maps' | translate }}</a>
+      <a routerLink="/about/wanted">{{ 'about.menu_wanted' | translate }}</a> 
+      <a routerLink="/about/config">Config</a> 
+    </div>             
+  </nav> 
+  <div class="container">   
+    <ng-container *ngIf="wantedPlayers$ | async as wantedPlayers">
+      <ng-container *ngIf="wantedPlayers.length > 0">
+        <div class="wanted-legend">
+          <h2>{{ 'about.wanted_legend' | translate }}</h2>
+          <div class="wanted">
+            <div class="red">{{ 'about.wanted_dont' | translate }}</div> 
+          </div>          
+          <div class="wanted">
+            <div class="gray">{{ 'about.wanted_nocontact' | translate }}</div>
+          </div>          
+        </div>
+        <p>{{'about.wanted_desc' | translate}}</p>
+        <div class="wanted-cont">         
+          <div class="wanted" *ngFor="let player of wantedPlayers; let i = index;">
+            <div class="wanted-player" [ngClass]="{ 'gray': player.status == 'No-contact', 'red': player.status == 'Not-want-to-play' }">
+              {{ player.playername }}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</section>

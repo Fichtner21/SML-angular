@@ -17,5 +17,53 @@
     "wars": "Wars",
     "last_war": "Last War",
     "act": "Act"
+  },
+  "about": {
+    "menu_download": "Download",
+    "menu_wanted": "Wanted",
+    "download_sh": "DOWNLAOD MOHAA: SPEARHEAD (Custom Maps INCLUDED) - 3 Gb",
+    "download_dsc": "Download DISCORD App",
+    "download_tase": "Download The All Seeing Eye",
+    "log_march2020": "Reunion cuz of COVID-19, start to play together after many years.",
+    "log_november2020": "Start MoHAA:Spearhead MIX League",
+    "log_january2021": "Chnage outperform Threshold from 200 to 12. Reset ranking points due change Outperform Thershold. Change convertion rate of each player on the team, in case of win best player get more points and worst get less in winnig team. Before this change, the point distribution was almost equal (equal responsiblity per team).",
+    "log_february2021": "Started first CUP 1on1 in MoH:SH MIX LEAGUE",
+    "log_march2021": "Finished first CUP 1on1",
+    "log_may2021": "RESET ranking points (back to 1000 for each players)",
+    "log_december2021": "RESET ranking points (back to 1000 for each players)",
+    "maps_customs": "Here u can download each map separately",
+    "wanted_legend": "Legend",
+    "wanted_dont": "Dont want to play",
+    "wanted_nocontact": "No contact",
+    "wanted_desc": "In this section we have listed the players we played with in the days of clanbase.com",
+    "intro": "Old friends reunited for the first lockdown in March 2020. Since then, we play almost every day, and from November 2020 we created the MoH:SH Mix League. During the year we played almost 800 wars, and almost 80 people played in our league, most of them remembering the times of playing clanbase.",
+    "download": "DOWNLAOD MOHAA: SPEARHEAD (Custom Maps INCLUDED) - 3 Gb",
+    "how_to_play": "How to play with us?",
+    "how_to_play_step1":"Click in top right corner and join to our discord",
+    "how_to_play_step2":"Join in discord to Voice Channel 'Want to play'",
+    "how_to_play_step3":"Admin will add you to website (no own register)",
+    "how_to_play_step4":"Admin balance teams (based on ELO ranking) What next? Just play! Watch your statistics on website, watch your progress and have fun!",
+    "what_squads": "What is the squads for next war?",
+    "what_squads_desc":"Always acutal squads are on main site, check ",
+    "what_squads_home": "homepage.",
+    "how_elo": "How about ELO algorithm",
+    "how_elo_desc":"If you've played clanbase, you know how the points were counted, if not, that will explain. The system in which we play is ELO algorithm, what does it mean in our case? First of all, what matters is whether your team won or not, secondly, what is your influence on the win (frags).",
+    "maps": "Maps",
+    "maps_desc": "We play mostly stock maps The Hunt, V2, The Bridge, but this is not enough, we play too VSUK Abbey, V2Shelter, Navarone, Stlo, Dessau1946, The Church Final, The Lost Town, V2 Extended. (All maps included in download link)." 
+  },
+  "matches": {
+    "name": "Name",
+    "frags": "Frags",
+    "pc": "PC"
+  },
+  "playerview": {
+    "playername": "Player Name:",
+    "debut": "Debut:",
+    "current_rank": "Current Ranking:",
+    "war_count": "War count", 
+    "clan_history": "Clan History",
+    "wars_id": "Player wars by ID:",
+    "rank_chart": "Player Rankings Chart:", 
+    "frags_chart": "Player Frags Chart:"
   }
 }

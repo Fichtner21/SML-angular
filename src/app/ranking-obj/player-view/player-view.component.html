@@ -6,21 +6,21 @@
       <div class="details">
         <div class="statistics">
           <div class="stat-cont">
-            <div>Player Name: <span>{{ playerDetails.playername }}</span></div>
-            <div>Debut: <span>{{ playerDetails.debut }}</span></div>
-            <div>Current Ranking: <span>{{playerDetails.ranking }}</span> </div>
-            <div>War count: <span>{{ playerDetails.warcount }}</span></div>
-            <div>Clan history: <span>{{ playerDetails.clanhistory }}</span></div>
+            <div>{{ 'playerview.playername' | translate }} <span>{{ playerDetails.playername }}</span></div>
+            <div>{{ 'playerview.debut' | translate }} <span>{{ playerDetails.debut }}</span></div>
+            <div>{{ 'playerview.current_rank' | translate }} <span>{{playerDetails.ranking }}</span> </div>
+            <div>{{ 'playerview.war_count' | translate }} <span>{{ playerDetails.warcount }}</span></div>
+            <div>{{ 'playerview.clan_history' | translate }} <span>{{ playerDetails.clanhistory }}</span></div>
           </div>
           <div class="player-flag">
             <div class="ambilight">
               <!-- <img [src]='"assets/images/flags/" + playerDetails.nationality + ".gif"' class="image-flag"> -->
-              <img [src]='"assets/images/flags/" + playerDetails.nationality + ".gif"' class="image-light">
+              <img [src]='"assets/images/flags_svg/" + playerDetails.nationality + ".SVG"' class="image-light">
             </div>            
           </div>
         </div>
         <div class="wars-cont">
-          <h3>Player wars by ID:</h3>
+          <h3>{{ 'playerview.wars_id' | translate }}</h3>
           <div class="details__wars">
             <div class="details__wars--war" *ngFor="let war of playerDetails.wars"><a href="/obj-matches/{{ war[0] }}" title="{{war[1] | date:'dd.MM.yyyy HH:mm'}} Frags: {{ war[2] }}">#{{ war[0] }} </a></div>
           </div>
@@ -44,14 +44,14 @@
         <canvas id="canva"></canvas>
         <div>
           <div class="chart-info">
-            <h3 class="chart-info__title">Player Rankings Chart:</h3>
-            <button (click)="showRanking(playerDetails.rankings, playerDetails.listwars)">Rankings</button>
+            <h3 class="chart-info__title">{{ 'playerview.rank_chart' | translate }}</h3>
+            <button (click)="showRanking(playerDetails.rankings, playerDetails.listwars)">Load rankings...</button>
           </div>         
           <canvas id="rankChart" width="1320" height="400" style="overflow-x: scroll;">{{ chartRank }}</canvas>
         </div>
         <div class="chart-info">
-          <h3 class="chart-info__title">Player Frags Chart:</h3>
-          <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">Frags</button>
+          <h3 class="chart-info__title">{{ 'playerview.frags_chart' | translate }}</h3>
+          <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">Load frags...</button>
         </div>
         
         <canvas id="myChart" width="1320" height="400" style="overflow-x: scroll;"></canvas>  

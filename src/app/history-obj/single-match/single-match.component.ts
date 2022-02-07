@@ -187,7 +187,7 @@ export class SingleMatchComponent implements OnInit {
             t2p7score: match.t2p7score,
             t2p7postelo: match.t2p7postelo,
           }          
-          // console.log('matchRow', matchRow);
+          console.log('matchRow', matchRow.video);
         return matchRow;
       })
     ) 

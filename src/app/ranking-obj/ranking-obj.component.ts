@@ -78,7 +78,8 @@ export class RankingObjComponent implements OnInit {
           const foundPlayerArray = this.filterUsername(name.username, v2);
                            
           const strikeResults1 = foundPlayerArray.slice(-1)[0] ? foundPlayerArray.slice(-1)[0] : 0;
-          const strikeResults2 = foundPlayerArray.slice(-2)[0] ? foundPlayerArray.slice(-2)[0] : 0;         
+          const strikeResults2 = foundPlayerArray.slice(-2)[0] ? foundPlayerArray.slice(-2)[0] : 0;             
+          
           const strikesArrayToCompare = [];
 
           const destructObj1 = Object.values(strikeResults1);          
@@ -88,18 +89,18 @@ export class RankingObjComponent implements OnInit {
             }
           })
 
-          const destructObj2 = Object.values(strikeResults2);
-          destructObj2.forEach((el, i) => {
+          const destructObjPreelo = Object.values(strikeResults1);
+          destructObjPreelo.forEach((el, i) => {
             if(el === name.username){
-              strikesArrayToCompare.push(destructObj2[i + 3])
+              strikesArrayToCompare.push(destructObjPreelo[i + 1]);
             }
-          })
+          })         
 
           const resultCompareArr = strikesArrayToCompare.map((x) => {
             return Math.round(x * 100) / 100;
-          })
+          })          
 
-          const resultCompare = resultCompareArr[0] - resultCompareArr[1];
+          const resultCompare = resultCompareArr[0] - resultCompareArr[1];          
          
           let finalStreak = resultCompare.toFixed(2);         
 

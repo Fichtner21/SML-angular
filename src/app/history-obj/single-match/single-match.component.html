@@ -131,7 +131,16 @@
               </div>
             </div>
 
-            <div *ngIf="match.video !== ''">
+            <div class="match-maps">
+              <div class="match-row__date">
+                Maps:
+              </div>              
+              <div class="match-maps__maps">
+                {{match.info}}
+              </div>
+            </div>
+
+            <div *ngIf="match.video !== 'https://www.youtube.com/embed//?autoplay=1'">
               <div class="thumbnail video-responsive">
                 <iframe 
                   id="ytplayer-"

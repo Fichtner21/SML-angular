@@ -97,7 +97,10 @@ export class RankingObjComponent implements OnInit {
 
           const resultCompareArr = strikesArrayToCompare.map((x) => {
             return Math.round(x * 100) / 100;
-          })
+          });
+
+          // console.log('last',resultCompareArr[0], 'last2', resultCompareArr[1]);
+          // console.log('0 ==>',resultCompareArr[1]);
 
           const resultCompare = resultCompareArr[0] - resultCompareArr[1];
          
@@ -120,10 +123,11 @@ export class RankingObjComponent implements OnInit {
           }) 
           
           let fragsToDisplay;
-          if (Array.isArray(fragsPerPlayerArray) && fragsPerPlayerArray.length) {
+          if (Array.isArray(fragsPerPlayerArray) && fragsPerPlayerArray.length > 0) {
+           
             fragsToDisplay = fragsPerPlayerArray.reduce((a, b) => a + b);
           } else {
-            fragsToDisplay = 0;
+            fragsToDisplay = '0';
           }                 
           
           lastWarDate = {
@@ -138,7 +142,8 @@ export class RankingObjComponent implements OnInit {
             fragsperwar: (fragsToDisplay / name.warcount).toFixed(2),
             maxfragsperwar: Math.max(...fragsPerPlayerArray),
             minfragsperwar: Math.min(...fragsPerPlayerArray),
-            activity: this.searchPlayerActivity(name.username, v2),  
+            activity: this.searchPlayerActivity(name.username, v2), 
+            lastyear: this.pastYearActivity(name.username, v2) 
           };
           playerRowArray.push(lastWarDate);          
         }       
@@ -486,17 +491,46 @@ export class RankingObjComponent implements OnInit {
     return warDates;
   }
 
+  public pastYearActivity(name:string, obj:any){
+    const resultObject = this.filterUsername(name, obj);
+    const warDates = [];
+
+    const todayUnix = Date.now();
+    const lastYearEvent = new Date(new Date().setDate(new Date().getDate() - 365));
+    const resultLastYear = Date.parse(lastYearEvent.toDateString());
+    const unixYearArr = [];
+    
+     resultObject.forEach((elem) => {
+      const newTimestampElem = elem.timestamp;     
+      const elWar = Date.parse(newTimestampElem);      
+      let lastYearActivity;
+
+      if(elWar > resultLastYear && elWar < todayUnix){
+        lastYearActivity += elWar;
+        // new Date(elWar).toLocaleDateString('pl-PL', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'});
+        // console.log('lastMonthActivity: ', lastMonthActivity);
+        unixYearArr.push(lastYearActivity);
+      }
+    });  
+
+    return unixYearArr.length;
+  }
+
   public pastMonthActivity2(name, obj) {
     const playerDates = this.searchPlayerActivity2(name, obj);
 
     const todayUnix = Date.now();
     const lastMonthEvent = new Date(new Date().setDate(new Date().getDate() - 30));
+    
     const resultLastMonth = Date.parse(lastMonthEvent.toDateString());
+    
     const unixArr = [];
+    
 
     playerDates.forEach((el) => {
       const elWar = Date.parse(el);
       let lastMonthActivity = '';
+      let lastYearActivity = '';
 
       if (elWar > resultLastMonth && elWar < todayUnix) {
         lastMonthActivity += elWar;
@@ -508,7 +542,7 @@ export class RankingObjComponent implements OnInit {
 
     let actSquare = '';
     if (unixArr.length === 0) {
-      actSquare = `<div class="green0" title="${unixArr.length} wars in last month."></div>`;
+      actSquare = `<div class="green0" title="${unixArr.length} wars in last month. "></div>`; 
     } else if (unixArr.length > 0 && unixArr.length <= 5) {
       actSquare = `<div class="green1_5" title="${unixArr.length} wars in last month."></div>`;
     } else if (unixArr.length > 5 && unixArr.length <= 10) {

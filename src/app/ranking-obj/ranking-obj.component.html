@@ -36,6 +36,7 @@
             <div class="item new">{{ player.lastWarDate }}</div>
             <div class="item name">
               <div [ngClass]="{'green0': player.activity == 0, 'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 70), 'green71': (player.activity > 70) }" title="{{ player.activity }} wars in last month."></div>
+              <div [ngClass]="{'green0': player.activity == 0, 'green1_5': (player.lastyear > 0 && player.lastyear <= 50), 'green6_10': (player.lastyear > 50 && player.lastyear <= 100), 'green11_20': (player.lastyear > 100 && player.lastyear <= 200), 'green21_40': (player.lastyear > 200 && player.lastyear <= 400), 'green41_70': (player.lastyear > 400 && player.lastyear <= 500), 'green71': (player.lastyear > 500) }" title="{{ player.lastyear }} wars in last year."></div>
             </div>
             <!-- 
             <div class="item item-player item-${el.username}"><a href="#charts-${el.username}" class="item${index++} item-${
@@ -84,6 +85,37 @@
             <span>71+</span>
           </div> 
           <div>wars in last month.</div>                   
+        </div>
+        <div class="legend">
+          <div class="name">           
+            <div class="green0"></div>
+            <span>0</span>
+          </div>          
+          <div class="name">            
+            <div class="green1_5"></div>
+            <span>1 - 50</span>
+          </div>                    
+          <div class="name">            
+            <div class="green6_10"></div>
+            <span>51 - 100</span>
+          </div>                    
+          <div class="name">         
+            <div class="green11_20"></div>
+            <span>101 - 200</span>
+          </div>                    
+          <div class="name">           
+            <div class="green21_40"></div>
+            <span>201 - 400</span>
+          </div>                    
+          <div class="name">            
+            <div class="green41_70"></div>
+            <span>401 - 500</span>
+          </div>                    
+          <div class="name">            
+            <div class="green71"></div>
+            <span>500+</span>
+          </div> 
+          <div>wars in last year.</div>                   
         </div>
       </div>
     </section>

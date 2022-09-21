@@ -39,7 +39,7 @@
         <div *ngIf="numOfMatches.length > 0">
           <a routerLink="obj-matches" routerLinkActive="active" title="MATCHES PLAYED">
             <img src="../assets/images/icons/avarage.png" alt="">
-            {{ numOfMatches.length - 1 }}
+            {{ numOfMatches.length }}
           </a>
         </div>       
       </div>
@@ -47,6 +47,9 @@
         <img src="assets/images/icons/discord.svg" alt="">
         <div>VISIT DISCORD</div>        
       </a>
+      <div>
+        {{ monthPlaying }}
+      </div>
     </div>
   </div>  
 </nav>

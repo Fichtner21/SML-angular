@@ -131,5 +131,8 @@
       }
     }
   },
-  "defaultProject": "SML-angular"
+  "defaultProject": "SML-angular",
+  "cli": {
+    "analytics": "c1d1bb5a-7752-4605-a816-b221a034bf4e"
+  }
 }

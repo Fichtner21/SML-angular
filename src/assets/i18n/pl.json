@@ -9,7 +9,8 @@
   "home": {
     "next_war": "Następna wojna",
     "cumulative": "Ranking teamu:",
-    "chance": "Szansa:"
+    "chance": "Szansa:",
+    "month_activity": "Liczba wojen zagranych w każdym miesiącu"
   },
   "ranking": {
     "place": "Miejsce",

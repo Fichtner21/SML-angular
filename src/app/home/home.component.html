@@ -38,6 +38,14 @@
       <source src="assets/video/4.mp4" type="video/mp4"> -->
     </video>   
   </div>
+  <div class="monthActivity">
+    <div class="container">
+      <div *ngIf="playedWars$ | async as playedWars"></div>
+      <h1>{{ 'home.month_activity' | translate }}:</h1>
+      <canvas id="allActivity" width="1320" height="280" style="overflow-x: scroll;"> -->
+      </canvas>
+    </div>
+  </div>
 </div>
 <div class="teams-container">
   <div class="teamsNext">{{ 'home.next_war' | translate }}</div>

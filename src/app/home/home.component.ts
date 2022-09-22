@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { GoogleSheetsDbService } from 'ng-google-sheets-db';
 import { idOne, IdOneAttributesMapping, IdTwoAttributesMapping, idTwo } from '../home/team-selection-one.model';
 import { SelectionTeamService } from './selection-team.service';
 import { map, tap } from 'rxjs/operators';
 import { Spinkit } from 'ng-http-loader';
 import { PlayersApiService } from '../services/players-api.service';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-home',
@@ -24,11 +24,15 @@ export class HomeComponent implements OnInit {
   chanceOfWinTeamOneShow: any;
   chanceOfWinTeamTwoShow: any;  
 
+  playedWars$: Observable<any>;
+  ctx: any;
+  activityCanvas: any;  
+
   public teamOneSelection$: Observable<any>;
   public playersTest$: Observable<any>;
   public teamSelections$: Observable<any>;
 
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private idTeamOne: SelectionTeamService, private playersApiService: PlayersApiService) { }
+  constructor(private idTeamOne: SelectionTeamService, private playersApiService: PlayersApiService) { }
 
   ngOnInit(): void {
     this.teamOneSelection$ = this.playersApiService.getPlayers('TeamSelectionOne').pipe(
@@ -102,6 +106,97 @@ export class HomeComponent implements OnInit {
     const videos = ['1','2','3','4'];
     this.randomVideo = videos[Math.floor(Math.random()*videos.length)];
 
+    this.playedWars$ = this.playersApiService.getPlayers('Match+History').pipe(
+      map((response: any) => {  
+        // console.log(response.values);
+        const resValues = response.values;
+        resValues.shift();
+        const matchesDate = [];
+        resValues.forEach((el:any) => {          
+          matchesDate.push(new Date(el[0]).toISOString());
+        });       
+        // console.log(this.groupDates(matchesDate));
+
+        const listOfActivity = this.groupDates(matchesDate);
+
+        const yearMonth = [];
+        const datesInMonth = [];
+
+        listOfActivity.forEach(el => {
+          // console.log('month =>', el['month'], 'year =>', el['year'], 'dates:', el['dates'].length);
+          const monthWithYear = el['month'] + '/' + el['year'];
+          yearMonth.push(monthWithYear);
+          datesInMonth.push(el['dates'].length);
+        });
+
+        // listOfActivity.map(el => console.log('MAP:', el['year']));
+
+        // console.log('DATES: ', yearMonth);
+        // console.log('DATES LENGTH: ', datesInMonth);
+        
+        //CANVAS
+        this.activityCanvas = document.getElementById('allActivity');
+        this.ctx = this.activityCanvas.getContext('2d');
+        new Chart(this.ctx, {
+          type: 'bar',
+          data: {
+            labels: yearMonth,
+            datasets: [{
+              label: 'Wars in month',
+              data: datesInMonth,
+              backgroundColor: datesInMonth.map(function(wars, i){
+                if(datesInMonth[i] == Math.max.apply(null, datesInMonth)){
+                  return 'rgba(11,156,49,0.6)';
+                }
+                if(datesInMonth[i] == Math.min.apply(null, datesInMonth)){
+                  return 'rgba(255,0,0,0.6)';
+                }
+                return 'rgba(239, 239, 240, 0.6)';
+              }),              
+              borderWidth: 1
+            }] 
+          },  
+                 
+          options: {
+            legend: {
+              display: false
+            },
+            responsive: true,
+            scales: {             
+              xAxes: [
+                {
+                  ticks: {
+                    beginAtZero: false,
+                    min: 1,
+                  },
+                  offset: true,
+                  id: 'date-x-axis',
+                  scaleLabel: {
+                    display: false,
+                    labelString: 'Date of match',
+                  },                  
+                },
+              ],
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                  scaleLabel: {
+                    display: false,
+                    labelString: 'Frags per war',
+                  },
+                },
+              ],
+            },
+            // display:true
+          },
+          
+        })
+        
+        return response.values;       
+      })
+    )  
   }
 
   public addPlayerLink(player:string, obj:any) {
@@ -125,6 +220,29 @@ export class HomeComponent implements OnInit {
   public ceilPrecised(number, precision) {
     const power = Math.pow(10, precision);
     return Math.ceil(number * power) / power;
+  }
+
+  groupDates(dates:any){
+    const groupedDates = {};
+    dates.forEach(d => {       
+      const dt = new Date(d);
+      const date = dt.getDate();
+      const year = dt.getFullYear();
+      const month = dt.getMonth() + 1;
+
+      const key = `${year}-${month}`;
+      if(key in groupedDates){
+        groupedDates[key].dates = [...groupedDates[key].dates, date];
+      } else {
+        groupedDates[key] = {
+          year,
+          month,
+          dates: [date],
+        };
+      }
+         
+    });
+    return Object.values(groupedDates);
   }
 
 }

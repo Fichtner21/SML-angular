@@ -18,6 +18,8 @@ section {
   justify-content: center;
   padding-bottom: 15px;
   font-size: 1rem;
+  align-items: center;
+  flex-direction: column;
 
   .legend {
     background-color: #40415f;
@@ -42,12 +44,20 @@ section {
   }
 }
 
+
 .ranking-head, .character-card {
   display: grid;
   grid-template-columns: 70px 1.5fr 40px 1fr 1fr 1fr 1fr 40px;
   grid-template-rows: auto;
   // gap: 15px;
   color: #ffffc0;
+
+  @media screen and (max-width: 500px){
+    grid-template-columns: 0.5fr 1fr 30px 1fr 0.5fr 0.5fr 1fr;
+    .name {
+      display: none;
+    }
+  }  
 
   @media screen and (max-width: 800px){
     grid-template-columns: 0.5fr 1fr 30px 1fr 0.5fr 0.5fr 1fr 0.5fr;
@@ -96,8 +106,7 @@ a {
 }
 
 .character-card {
-  background-color: #40415f;
-  // margin: 5px;
+  background-color: #40415f;  
 
   .item {
     padding: 5px 3px;
@@ -392,7 +401,7 @@ a {
         }
       }
     }
-  }
+  }  
 }
 
 .character-card {

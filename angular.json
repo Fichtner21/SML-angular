@@ -31,7 +31,9 @@
               "src/styles.scss",
               "src/assets/font/rajdhaniFont.css"
             ],
-            "scripts": []
+            "scripts": [
+              
+            ]
           },
           "configurations": {
             "production": {

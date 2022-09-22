@@ -9,7 +9,8 @@
   "home": {
     "next_war": "Next war",
     "cumulative": "Cumulative:",
-    "chance": "Chance:"
+    "chance": "Chance:",
+    "month_activity": "Number of wars played in a month"
   },
   "ranking": {
     "place": "Place",

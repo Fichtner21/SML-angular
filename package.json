@@ -29,6 +29,7 @@
     "bootstrap": "^4.5.0",
     "chart.js": "^2.9.3",
     "chartjs-plugin-annotation": "^0.5.7",
+    "firebase": "^7.0 || ^8.0",
     "ng-google-sheets-db": "^2.0.0",
     "ng-http-loader": "^9.1.0",
     "ng2-charts": "^2.4.1",
@@ -39,8 +40,7 @@
     "rxjs": "~6.5.4",
     "sass": "^1.37.5",
     "tslib": "^1.10.0",
-    "zone.js": "~0.10.2",
-    "firebase": "^7.0 || ^8.0"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.901.7",

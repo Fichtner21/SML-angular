@@ -10,6 +10,7 @@ import { Players } from './ranking-obj/ranking.model';
 import { TranslateService } from '@ngx-translate/core';
 import { FormControl } from '@angular/forms';
 import { getLocaleEraNames } from '@angular/common';
+import * as Chart from 'chart.js';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,8 @@ export class AppComponent implements OnInit{
   players$: Observable<any>;
   matches$: Observable<any>;
   matchesPerMonth$: Observable<any>;
+  activityCanvas:any;
+  ctx: any;
   // public lang = new FormControl('en');
   currentLanguage: any = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';  
   languageCode = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';
@@ -51,80 +54,25 @@ export class AppComponent implements OnInit{
         return response.values;       
       })
     )
-
-    // var itemsGroupedByMonth = function (items) {
-    //   var
-    //       groups = [[], [], [], [], [], [], [], [], [], [], [], [],],
-    //       itemGroupedByMonths = [];
-  
-    //   for (var i = 0; i < items.length; i++) {
-    //     groups[items[i].date.getMonth()].push(items[i]);
-    //   }
-    //   for (var i = 0; i < groups.length; i++) {
-    //     if (groups[i].length) {
-    //       itemGroupedByMonths.push({
-    //         month: monthLabels[i],
-    //         items: groups[i]
-    //       });
-  
-    //     }
-    //   }
-    //   return itemGroupedByMonths;
-    // };
+    
     this.matches$ = this.playersApiService.getPlayers('Match+History').pipe(
       map((response: any) => {  
         // console.log(response.values);
         const resValues = response.values;
         resValues.shift();
         const matchesDate = [];
-        resValues.forEach((el:any) => {
-          matchesDate.push(new Date(Date.parse(el[0])));
-          // console.log('EL =>', el[0]);
-        });
+        resValues.forEach((el:any) => {          
+          matchesDate.push(new Date(el[0]).toISOString());
+        });       
 
-        // console.log(matchesDate);
-        const monthYearArr = [];
-        matchesDate.forEach(el => {
-          console.log(el.getMonth() + ': ' + el.getFullYear());
-          let monthName = el.getMonth();
-          switch (monthName){
-            case 8: 
-              monthName = 'September';
-          }
-         
-          this.monthPlaying = el.getFullYear() + ': ' + monthName;         
-        });
-
-        for(let i = 0; i < matchesDate.length; i++){
-          monthYearArr.push([matchesDate[i].getMonth()]);
-        }
-        
-        // matchesDate.map((el) => {
-        //   year: el.getFullYear();
-        //   month: el.getMonth();
-        // });
-
-        // console.log('SUM of Matches:', matchesDate);
-        console.log('monthYearArr:', monthYearArr);
-
-        
+       
         
         return response.values;       
       })
-    )   
-    this.matchesPerMonth$ = this.playersApiService.getPlayers('Match+History').pipe(
-      map((response: any) => {  
-        
-        const resValues = response.values;
-        resValues.forEach((el:any) => {
-          console.log('EL =>', el);
-        })
-        return response.values;       
-      })
-    )   
+    )     
     
     // console.log('local =>', localStorage.getItem('lang'));
-  }
+  }  
 
   languageChange($event) {    
     // debugger;  

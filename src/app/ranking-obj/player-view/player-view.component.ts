@@ -8,7 +8,7 @@ import { PlayersApiService } from 'src/app/services/players-api.service';
 import { Chart, ChartConfiguration, ChartDataSets, ChartOptions } from 'chart.js';
 import { BaseChartDirective, Color, Label } from 'ng2-charts';
 import { MatchesApiService } from 'src/app/services/matches-api.service';
-import * as ChartAnnotation from 'chartjs-plugin-annotation';
+
 
 
 @Component({

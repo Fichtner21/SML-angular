@@ -107,32 +107,24 @@ export class HomeComponent implements OnInit {
     this.randomVideo = videos[Math.floor(Math.random()*videos.length)];
 
     this.playedWars$ = this.playersApiService.getPlayers('Match+History').pipe(
-      map((response: any) => {  
-        // console.log(response.values);
+      map((response: any) => {         
         const resValues = response.values;
         resValues.shift();
         const matchesDate = [];
         resValues.forEach((el:any) => {          
           matchesDate.push(new Date(el[0]).toISOString());
-        });       
-        // console.log(this.groupDates(matchesDate));
+        });               
 
         const listOfActivity = this.groupDates(matchesDate);
 
         const yearMonth = [];
         const datesInMonth = [];
 
-        listOfActivity.forEach(el => {
-          // console.log('month =>', el['month'], 'year =>', el['year'], 'dates:', el['dates'].length);
+        listOfActivity.forEach(el => {          
           const monthWithYear = el['month'] + '/' + el['year'];
           yearMonth.push(monthWithYear);
           datesInMonth.push(el['dates'].length);
-        });
-
-        // listOfActivity.map(el => console.log('MAP:', el['year']));
-
-        // console.log('DATES: ', yearMonth);
-        // console.log('DATES LENGTH: ', datesInMonth);
+        });       
         
         //CANVAS
         this.activityCanvas = document.getElementById('allActivity');
@@ -155,8 +147,7 @@ export class HomeComponent implements OnInit {
               }),              
               borderWidth: 1
             }] 
-          },  
-                 
+          },                  
           options: {
             legend: {
               display: false
@@ -190,8 +181,7 @@ export class HomeComponent implements OnInit {
               ],
             },
             // display:true
-          },
-          
+          },          
         })
         
         return response.values;       
@@ -224,13 +214,13 @@ export class HomeComponent implements OnInit {
 
   groupDates(dates:any){
     const groupedDates = {};
-    dates.forEach(d => {       
+    dates.forEach((d: string | number | Date) => {       
       const dt = new Date(d);
       const date = dt.getDate();
       const year = dt.getFullYear();
       const month = dt.getMonth() + 1;
 
-      const key = `${year}-${month}`;
+      const key = `${year}-${month}`;      
       if(key in groupedDates){
         groupedDates[key].dates = [...groupedDates[key].dates, date];
       } else {

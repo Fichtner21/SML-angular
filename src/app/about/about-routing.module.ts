@@ -5,6 +5,7 @@ import { ConfigComponent } from './config/config.component';
 import { DownloadComponent } from './download/download.component';
 import { LogComponent } from './log/log.component';
 import { MapsComponent } from './maps/maps.component';
+import { MeetingComponent } from './meeting/meeting.component';
 import { WantedComponent } from './wanted/wanted.component';
 
 
@@ -32,6 +33,10 @@ const routes: Routes = [
   {
     path: 'config',
     component: ConfigComponent,
+  },
+  {
+    path: 'meeting',
+    component: MeetingComponent
   }      
 ];
 

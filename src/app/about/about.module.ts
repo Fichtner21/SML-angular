@@ -12,6 +12,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ConfigComponent } from './config/config.component';
+import { MeetingComponent } from './meeting/meeting.component';
+import { SecretComponent } from './secret/secret.component';
 
 export function createTranslateLoader(http: HttpClient){
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -23,7 +25,7 @@ export function createTranslateLoader(http: HttpClient){
     MapsComponent, 
     DownloadComponent, 
     LogComponent, 
-    WantedComponent, ConfigComponent
+    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent
   ],
   imports: [
     CommonModule,      

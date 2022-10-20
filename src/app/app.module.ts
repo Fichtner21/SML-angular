@@ -41,8 +41,7 @@ export function createTranslateLoader(http: HttpClient){
     HttpClientModule,
     NgxPaginationModule,  
     ChartsModule,
-    FormsModule, 
-    // GoogleMapsModule, 
+    FormsModule,   
     NgHttpLoaderModule.forRoot(),     
     TranslateModule.forRoot({
       loader: {

@@ -39,7 +39,7 @@ export class RankingObjComponent implements OnInit {
   ngOnInit(): void {     
 
     this.playersTest$ = this.playersApiService.getPlayers('Players').pipe(
-      map((response: any) => {        
+      map((response: any) => {             
         let batchRowValues = response.values;
         let players: any[] = [];
         for(let i = 1; i < batchRowValues.length; i++){
@@ -48,8 +48,7 @@ export class RankingObjComponent implements OnInit {
             rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
           }
           players.push(rowObject);
-        }
-        
+        }        
         return players;
       }),
     );       
@@ -74,7 +73,7 @@ export class RankingObjComponent implements OnInit {
         
         let lastWarDate;
         let playerRowArray: any[] = [];
-        for( let name of v1){ 
+        for( let name of v1){          
           const foundPlayerArray = this.filterUsername(name.username, v2);
                            
           const strikeResults1 = foundPlayerArray.slice(-1)[0] ? foundPlayerArray.slice(-1)[0] : 0;
@@ -143,7 +142,8 @@ export class RankingObjComponent implements OnInit {
             maxfragsperwar: Math.max(...fragsPerPlayerArray),
             minfragsperwar: Math.min(...fragsPerPlayerArray),
             activity: this.searchPlayerActivity(name.username, v2), 
-            lastyear: this.pastYearActivity(name.username, v2) 
+            lastyear: this.pastYearActivity(name.username, v2),
+            meeting: name.meeting 
           };
           playerRowArray.push(lastWarDate);          
         }       

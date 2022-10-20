@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
 
 const routes: Routes = [{
   path: '',
@@ -21,6 +23,19 @@ const routes: Routes = [{
 {
   path: 'about',
   loadChildren: () => import('./about/about.module').then(m => m.AboutModule)
+},
+{ 
+  path: 'login' , 
+  component: LoginComponent
+},
+{ 
+  path: 'logout', 
+  component: LogoutComponent 
+},
+{
+  path: 'home',
+  redirectTo: 'home',
+  pathMatch: 'full'
 },
 {
   path: '',

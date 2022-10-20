@@ -142,6 +142,24 @@ video {
       padding-right: 30px;
       font-size: 20px;
     }
+
+    .meet {
+      text-align: right;
+      padding-right: 30px;
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+      transform: scale(1);
+      animation: pulsate 2s infinite;
+      font-style: italic;
+      font-size: 24px;
+      a {
+        color: #ffffc8;
+
+        &:hover {
+          color: #fff;
+          animation: pulsate 10s infinite;
+        }
+      }      
+    }
   }
   
   img {

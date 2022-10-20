@@ -29,6 +29,21 @@ section {
     align-items: center;
     flex-wrap: wrap;
 
+    .cyan {
+      background-color: darkcyan;
+      width: 50px;
+      height: 20px;
+    }
+
+    .cyan-info {
+      padding-left: 5px;
+      a {
+        font-weight: 700;
+        text-decoration: underline;
+  
+      }
+    }    
+
     .name {
       display: flex;
       align-items: center;     
@@ -54,9 +69,14 @@ section {
 
   @media screen and (max-width: 500px){
     grid-template-columns: 0.5fr 1fr 30px 1fr 0.5fr 0.5fr 1fr;
-    .name {
-      display: none;
-    }
+    // .name {
+    //   display: none;
+    // }
+    .act {
+      :last-child {
+        display: none;
+      }
+    }    
   }  
 
   @media screen and (max-width: 800px){
@@ -332,6 +352,10 @@ a {
 }
 
 .players-list {
+  .cyan {
+    background-color: darkcyan !important;
+  }
+
   >:nth-child(even){
     background-color: #2f3060;
   }
@@ -414,4 +438,10 @@ a {
   :last-child {
     border: none;
   }  
+}
+
+@media screen and (max-width: 500px){
+  .legend-year {
+    display: none !important;
+  }
 }

@@ -11,6 +11,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormControl } from '@angular/forms';
 import { getLocaleEraNames } from '@angular/common';
 import * as Chart from 'chart.js';
+import { Router } from '@angular/router';
+
+import { AuthService } from './auth.service';
+
 
 @Component({
   selector: 'app-root',
@@ -29,7 +33,7 @@ export class AppComponent implements OnInit{
   languageCode = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';
   monthPlaying: any;  
 
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService) {
+  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router) {
     translateService.setDefaultLang(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');    
   }
 
@@ -83,5 +87,21 @@ export class AppComponent implements OnInit{
 
   public toggleMenu(){ 
     document.getElementById('nav').classList.toggle('block_class');    
+  }
+
+  get isAdmin(){
+    let is_admin = localStorage.getItem('is_admin');
+    if(is_admin === 'on'){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  logoutUser(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('is_admin');
+    this.router.navigate(['/login']);
+    return true;
   }
 }

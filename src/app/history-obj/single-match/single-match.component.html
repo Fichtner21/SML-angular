@@ -130,8 +130,11 @@
                 </div>
               </div>
             </div>
+            <div style="color: #ffffc8;" class="match-row__date">
+             Info: {{ match.info}} -> {{ matchVideo }} <-
+            </div>
 
-            <div *ngIf="match.video !== ''">
+            <div *ngIf="matchVideo != ''">
               <div class="thumbnail video-responsive">
                 <iframe 
                   id="ytplayer-"

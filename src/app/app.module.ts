@@ -1,5 +1,5 @@
 import { CommonModule, HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { API_KEY, GoogleSheetsDbService } from 'ng-google-sheets-db';
@@ -15,6 +15,13 @@ import { FormsModule } from '@angular/forms';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { SafePipe } from './history-obj/safe.pipe';
+import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
+import { AuthService } from './auth.service';
+import { SecretComponent } from './about/secret/secret.component';
+import { TokenInterceptorService } from './token-interceptor.service';
+import { AuthGuard } from './auth.guard';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 export function createTranslateLoader(http: HttpClient){
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -25,7 +32,7 @@ export function createTranslateLoader(http: HttpClient){
     AppComponent,
     HomeComponent,    
     DateFormatPipePipe,     
-    SafePipe
+    SafePipe, LoginComponent, LogoutComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +41,8 @@ export function createTranslateLoader(http: HttpClient){
     HttpClientModule,
     NgxPaginationModule,  
     ChartsModule,
-    FormsModule,
+    FormsModule, 
+    // GoogleMapsModule, 
     NgHttpLoaderModule.forRoot(),     
     TranslateModule.forRoot({
       loader: {
@@ -43,17 +51,23 @@ export function createTranslateLoader(http: HttpClient){
         deps: [HttpClient],
       },
       // defaultLanguage: 'en',
-    }),       
+    }),        
   ],
   providers: [{
     provide: API_KEY, 
-    useValue: 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU'
+    useValue: 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU',    
+  }, 
+  AuthService,
+  AuthGuard,
+  {
+    provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true
   },
   {
     provide: LocationStrategy,
     useClass: PathLocationStrategy
   },
-    GoogleSheetsDbService
+    GoogleSheetsDbService,
+        
   ],
   bootstrap: [AppComponent]
 })

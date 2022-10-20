@@ -15,6 +15,7 @@ import { ConfigComponent } from './config/config.component';
 import { MeetingComponent } from './meeting/meeting.component';
 import { SecretComponent } from './secret/secret.component';
 
+
 export function createTranslateLoader(http: HttpClient){
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }
@@ -32,11 +33,12 @@ export function createTranslateLoader(http: HttpClient){
     AboutRoutingModule,  
     RouterModule,   
     NgHttpLoaderModule.forRoot(),  
-    TranslateModule  
-  ],
+    TranslateModule,     
+   ],
   exports: [
     CommonModule,
-    TranslateModule,    
+    TranslateModule,   
+    SecretComponent 
   ]
 })
 export class AboutModule { 

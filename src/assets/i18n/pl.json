@@ -17,7 +17,8 @@
     "player_name": "Nazwa gracza",
     "wars": "Wojny",
     "last_war": "Ostatnia wojna",
-    "act": "Akt"
+    "act": "Akt",
+    "meeting": "Zapisany na zjazd 18.11 - 20.11.2022r"
   },
   "about": {
     "menu_download": "Do pobrania",
@@ -50,7 +51,12 @@
     "how_elo": "O co chodzi z ELO rankingiem?",
     "how_elo_desc":"Jeśli grałeś w clanbase to zapewne pamiętasz jak były liczone punkty za wygranę, przegrane czy zremisowane wojny, tutaj jest dokładnie tak samo, z tą różnicą, że tutaj nie grasz klan na klan tylko gramy mixy, a więc system musiał zostać rozwinięty, przez co stał się bardziej skomplikowany. Co się liczy? Liczy się przede wszystkim czy wygrałeś czy nie, następnie otrzymujesz punkty proporcjonalnie do twojego udziału w wygranej (jest to liczone na podstawie proprocji zdobytych fragów przez cala druzyne).",
     "maps": "Mapy",
-    "maps_desc": "Przeważnie gramy standardowe mapy czyli The Hunt, V2, The Bridge, ale to nie wszystko, gdyż gramy również VSUK Abbey, V2Shelter, Navarone, Dessau1946, The Church Final, The Lost Town, V2 Extended (wszystkie te mapy sa w linku do pobrania na górze). Jeśli masz do zaproponownania nową mapę to zapraszamy na DISCORD."     
+    "maps_desc": "Przeważnie gramy standardowe mapy czyli The Hunt, V2, The Bridge, ale to nie wszystko, gdyż gramy również VSUK Abbey, V2Shelter, Navarone, Dessau1946, The Church Final, The Lost Town, V2 Extended (wszystkie te mapy sa w linku do pobrania na górze). Jeśli masz do zaproponownania nową mapę to zapraszamy na DISCORD.",
+    "meeting": "Zjazd",
+    "date": "Termin: 18.11 - 20.11.2022r.",
+    "place": "Miejsce:",
+    "price": "Cena: 240 zł / os. (2 noce, z piątku na sobotę i z soboty na niedziele), w cenie jest śniadanie, obiadokolacja i nocleg.",
+    "before": " Płatność: Jest potrzebna przedpłata w wysokości 50%, dlatego podaje numer konta do wpłaty 120 zł Bank Milenium, Ernest Fichtner 95 1160 2202 0000 0005 4009 1602 Nie zwlekajcie z zapłatą zaliczki."     
   },
   "matches": {
     "name": "Gracz",

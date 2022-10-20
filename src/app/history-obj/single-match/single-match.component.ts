@@ -26,36 +26,28 @@ export class SingleMatchComponent implements OnInit {
   public idwar$: Observable<any>;
   public matchVideo: string;
   public spinkit = Spinkit;
+  
 
   constructor(
     private activatedRoute: ActivatedRoute, private tabApiService: PlayersApiService, private fetchMatch: FetchMatchesService   
-    , sanitizer: DomSanitizer) { 
-      // console.log('activatedRoute =>', this.activatedRoute); 
+    , sanitizer: DomSanitizer) {       
     }
 
-  // async ngOnInit(): Promise<void> {
-  // //  this.activatedRoute.params.subscribe(m => this.match = m.idwar);
-  // //!!!
-  //   const idwar: string = this.activatedRoute.snapshot.params.idwar;
-  //   this.match = await this.FetchMatchesService.getSingleMatch(idwar);
-  //   console.log(this.match);
-  // }
+  
   ngOnInit(): void {     
 
     this.match$ = this.activatedRoute.data.pipe(
-      map(data => data.match)
+      map(data => data.match)       
     );    
+
+  this.match$.pipe(
+    map(x => this.matchVideo = x.video)).subscribe();
 
     this.idwar$ = this.activatedRoute.data.pipe(
       map((data) => {
         return data.match.idwar;
       })
-    );    
-
-    // this.fetchMatch.getSingleMatch('707').subscribe(res => {
-    //   this.matchVideo = res;
-    //   console.log('match 707 =>', res);
-    // }) 
+    );       
 
     this.playersTab$ = this.tabApiService.getPlayers('Players').pipe(
       map((response: any) => {        

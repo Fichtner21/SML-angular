@@ -16,7 +16,7 @@
             <div class="">{{ 'ranking.act' | translate }}</div>
           </div> 
           <div class="players-list">
-            <div class="character-card" *ngFor="let player of lastWarOfPlayers; let i = index;">
+            <div class="character-card" *ngFor="let player of lastWarOfPlayers; let i = index;" [ngClass]="{'cyan': player.meeting == 1 }">
             <div class="item">{{ i+1 }}</div>
             <div class="item">
               <a routerLink="/obj-ranking/{{player.username}}">
@@ -34,9 +34,9 @@
             <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">{{ player.fragsperwar }}</div>
             <div class="item">{{ player.wars }}</div>
             <div class="item new">{{ player.lastWarDate }}</div>
-            <div class="item name">
-              <div [ngClass]="{'green0': player.activity == 0, 'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 60), 'green71': (player.activity > 60) }" title="{{ player.activity }} wars in last month."></div>
-              <div [ngClass]="{'green0': player.lastyear == 0, 'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 31 && player.lastyear <= 90), 'green11_20': (player.lastyear > 91 && player.lastyear <= 150), 'green21_40': (player.lastyear > 151 && player.lastyear <= 250), 'green41_70': (player.lastyear > 251 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>
+            <div class="item name act">
+              <div class="act-month" [ngClass]="{'green0': player.activity == 0, 'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 60), 'green71': (player.activity > 60) }" title="{{ player.activity }} wars in last month."></div>
+              <div class="act-year" [ngClass]="{'green0': player.lastyear == 0, 'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 31 && player.lastyear <= 90), 'green11_20': (player.lastyear > 91 && player.lastyear <= 150), 'green21_40': (player.lastyear > 151 && player.lastyear <= 250), 'green41_70': (player.lastyear > 251 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>
             </div>
             <!-- 
             <div class="item item-player item-${el.username}"><a href="#charts-${el.username}" class="item${index++} item-${
@@ -48,6 +48,13 @@
         </div>       
       </div>
       <div class="container-bottom">
+        <div class="legend">
+          <div class="cyan"></div>
+          <div class="cyan-info">- 
+            {{ 'ranking.meeting' | translate }} 
+            <a href="https://discord.com/channels/716723661909786690/716723662337605663/1029825546747646093">More info in topic on DISCORD</a>
+            </div>
+        </div>
         <div class="legend">
           <div class="name">           
             <div class="green0"></div>
@@ -79,7 +86,7 @@
           </div> 
           <div>wars in last month.</div>                   
         </div>
-        <div class="legend">
+        <div class="legend legend-year">
           <div class="name">           
             <div class="green0"></div>
             <span>0</span>

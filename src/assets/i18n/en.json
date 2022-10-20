@@ -17,7 +17,8 @@
     "player_name": "Player Name",
     "wars": "Wars",
     "last_war": "Last War",
-    "act": "Act"
+    "act": "Act",
+    "meeting": "Signed up for the meeting 18.11 - 20.11.2022r."
   },
   "about": {
     "menu_download": "Download",
@@ -50,7 +51,12 @@
     "how_elo": "How about ELO algorithm",
     "how_elo_desc":"If you've played clanbase, you know how the points were counted, if not, that will explain. The system in which we play is ELO algorithm, what does it mean in our case? First of all, what matters is whether your team won or not, secondly, what is your influence on the win (frags).",
     "maps": "Maps",
-    "maps_desc": "We play mostly stock maps The Hunt, V2, The Bridge, but this is not enough, we play too VSUK Abbey, V2Shelter, Navarone, Stlo, Dessau1946, The Church Final, The Lost Town, V2 Extended. (All maps included in download link)." 
+    "maps_desc": "We play mostly stock maps The Hunt, V2, The Bridge, but this is not enough, we play too VSUK Abbey, V2Shelter, Navarone, Stlo, Dessau1946, The Church Final, The Lost Town, V2 Extended. (All maps included in download link).",
+    "meeting": "Meeting",
+    "date": "Date: November 18 - November 20, 2022.",
+    "place": "Place:",
+    "price": "Price: PLN 240 / person. (2 nights, from Friday to Saturday and from Saturday to Sunday), the price includes breakfast, dinner and accommodation.",
+    "before": "Payment: Prepayment is required in the amount of 50%, therefore gives the account number to pay PLN 120 Millennium Bank, Ernest Fichtner 95 1160 2202 0000 0005 4009 1602 Do not hesitate to pay the advance."  
   },
   "matches": {
     "name": "Name",

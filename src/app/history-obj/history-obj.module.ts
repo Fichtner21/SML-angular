@@ -39,7 +39,7 @@ import { TranslateModule } from "@ngx-translate/core";
     ]   
   })
   export class HistoryObjModule { 
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<HistoryObjModule> {
       return {
         ngModule: HistoryObjModule
       }

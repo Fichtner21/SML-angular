@@ -42,7 +42,7 @@ export function createTranslateLoader(http: HttpClient){
   ]
 })
 export class AboutModule { 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<AboutModule> {
     return {
       ngModule: AboutModule
     }

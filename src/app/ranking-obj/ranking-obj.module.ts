@@ -38,7 +38,7 @@ import { HttpClient } from "@angular/common/http";
 })
 
 export class RankingObjModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<RankingObjModule> {
     return {
       ngModule: RankingObjModule
     }

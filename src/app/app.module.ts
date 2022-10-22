@@ -21,7 +21,8 @@ import { AuthService } from './auth.service';
 import { SecretComponent } from './about/secret/secret.component';
 import { TokenInterceptorService } from './token-interceptor.service';
 import { AuthGuard } from './auth.guard';
-// import { GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMapsModule } from '@angular/google-maps';
+// import { AgmCoreModule } from '@agm/core';
 
 export function createTranslateLoader(http: HttpClient){
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -41,7 +42,8 @@ export function createTranslateLoader(http: HttpClient){
     HttpClientModule,
     NgxPaginationModule,  
     ChartsModule,
-    FormsModule,   
+    FormsModule,
+    GoogleMapsModule,
     NgHttpLoaderModule.forRoot(),     
     TranslateModule.forRoot({
       loader: {

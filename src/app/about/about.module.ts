@@ -14,6 +14,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ConfigComponent } from './config/config.component';
 import { MeetingComponent } from './meeting/meeting.component';
 import { SecretComponent } from './secret/secret.component';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 
 export function createTranslateLoader(http: HttpClient){
@@ -33,7 +34,8 @@ export function createTranslateLoader(http: HttpClient){
     AboutRoutingModule,  
     RouterModule,   
     NgHttpLoaderModule.forRoot(),  
-    TranslateModule,     
+    TranslateModule,    
+    GoogleMapsModule 
    ],
   exports: [
     CommonModule,

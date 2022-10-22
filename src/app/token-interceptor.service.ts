@@ -19,15 +19,16 @@ export class TokenInterceptorService implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const token: string = localStorage.getItem('token');
-
+    console.log('token', token);
     if (token) {
       request = request.clone({
         headers: request.headers.set('Authorization', token),
       });
-      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+      // const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
       //clone http to the custom AuthRequest and send it to the server
-      const AuthRequest = request.clone({ headers: headers });
-      return next.handle(AuthRequest);
+      // const AuthRequest = request.clone({ headers: headers });
+      // return next.handle(AuthRequest);
+      return next.handle(request);
     } else {
       return next.handle(request);
     }

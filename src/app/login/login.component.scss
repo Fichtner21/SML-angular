@@ -6,15 +6,75 @@ section {
   background-size: 4px 4px;
   color: #ffffc8;
 
+  .container {  
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+    font-size: 1rem;
+  }
+
   .secret-form {
     padding-top: 70px;
     position: relative;
     background-color: #2f3060;
+    font-size: 16px;
+    border-bottom: 2px solid #ffffc8;
+
+    .card-header {
+      background-color: #ffffc8;
+      padding: 5px 15px;
+      color: #2f3060;
+      font-weight: 700;
+      font-size: 18px;
+    }
   
     form {
       width: 400px;
       height: 200px;
-      margin: 0 auto;   
+      margin: 0 auto;
+      padding: 15px;   
+    }
+
+    .form-group {
+      margin-bottom: 5px;
+
+      label {
+        font-size: 18px;
+        margin-right: 5px;
+        font-weight: 700;
+      }
+
+      .invalid-feedback {
+        font-style: italic;
+        font-size: 14px;
+      }
+    }
+
+    .btn-cont {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 5px 10px;
+      font-size: 16px;
+      background-color: #ffffc8;
+      color: #2f3060;
+      font-weight: 700;
+      transition: all .3s;
+
+      &:disabled {
+        background-color: lightgray;
+        color: gray;
+        cursor: not-allowed;
+      }
+
+      &:hover:not(:disabled) {
+        cursor: pointer;
+        background-color: darken(#ffffc8, 10%);
+      }
     }
   }
 }

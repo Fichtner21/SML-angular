@@ -56,7 +56,15 @@
     "date": "Termin: 18.11 - 20.11.2022r.",
     "place": "Miejsce:",
     "price": "Cena: 240 zł / os. (2 noce, z piątku na sobotę i z soboty na niedziele), w cenie jest śniadanie, obiadokolacja i nocleg.",
-    "before": " Płatność: Jest potrzebna przedpłata w wysokości 50%, dlatego podaje numer konta do wpłaty 120 zł Bank Milenium, Ernest Fichtner 95 1160 2202 0000 0005 4009 1602 Nie zwlekajcie z zapłatą zaliczki."     
+    "before": " Płatność: Jest potrzebna przedpłata w wysokości 50%, dlatego podaje numer konta do wpłaty 120 zł Bank Milenium, Ernest Fichtner 95 1160 2202 0000 0005 4009 1602 Nie zwlekajcie z zapłatą zaliczki.",    
+    "contact": "Kontakty",
+    "contact-box": "Zaloguj się do kontaków",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "username-valid": "Nazwa użytkownika jest wymagana",
+    "password-valid": "Hasło jest wymagane",
+    "submit": "Zatwierdź",
+    "logout": "Wyloguj"
   },
   "matches": {
     "name": "Gracz",

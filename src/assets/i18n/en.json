@@ -56,7 +56,15 @@
     "date": "Date: November 18 - November 20, 2022.",
     "place": "Place:",
     "price": "Price: PLN 240 / person. (2 nights, from Friday to Saturday and from Saturday to Sunday), the price includes breakfast, dinner and accommodation.",
-    "before": "Payment: Prepayment is required in the amount of 50%, therefore gives the account number to pay PLN 120 Millennium Bank, Ernest Fichtner 95 1160 2202 0000 0005 4009 1602 Do not hesitate to pay the advance."  
+    "before": "Payment: Prepayment is required in the amount of 50%, therefore gives the account number to pay PLN 120 Millennium Bank, Ernest Fichtner 95 1160 2202 0000 0005 4009 1602 Do not hesitate to pay the advance.",  
+    "contact": "Contacts",
+    "contact-box": "Login contacts box",
+    "username": "Username",
+    "password": "Password",
+    "username-valid": "Username is required",
+    "password-valid": "Password is required",
+    "submit": "Submit",
+    "logout": "Logout"
   },
   "matches": {
     "name": "Name",

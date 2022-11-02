@@ -11,8 +11,8 @@ import { AuthService } from '../auth.service';
 export class LoginComponent implements OnInit {
 
   loginUserData: User = { username: '', password: '' };
-  allowedUsername = 'Mike';
-  allowedPassword = '123';
+  allowedUsername = 'drBoB';
+  allowedPassword = 'domeknarogu';
   constructor(private _auth: AuthService, private router: Router) {}
   ngOnInit() {}
 
@@ -21,10 +21,18 @@ export class LoginComponent implements OnInit {
       this.loginUserData.username == this.allowedUsername &&
       this.loginUserData.password == this.allowedPassword
     ) {
-      console.log('login success');
+      // console.log('login success');
       localStorage.setItem('token', 'secretToken');
       localStorage.setItem('is_admin', 'true');
       this.router.navigate(['/about/secret']);
+    } else {
+      const btnCont = document.querySelector('.btn-cont');      
+      if(!document.querySelector('.btn-cont .wrong')){
+        const wrongInfo = document.createElement('div');
+        wrongInfo.classList.add('wrong');
+        wrongInfo.innerHTML = 'Invalid Nickname or Password';
+        btnCont.appendChild(wrongInfo);
+      }      
     }
   }
 

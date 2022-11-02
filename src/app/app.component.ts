@@ -101,7 +101,7 @@ export class AppComponent implements OnInit{
   logoutUser(){
     localStorage.removeItem('token');
     localStorage.removeItem('is_admin');
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
     return true;
   }
 }

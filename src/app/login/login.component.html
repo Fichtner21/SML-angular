@@ -1,35 +1,39 @@
 <section> 
-  <div class="row pt-5 secret-form">
-    <div class="col-md-6 mx-auto">
-      <div class="card rounded-0">
-        <div class="card-header">
-          <h3 class="mb-0">Login</h3>
-        </div>
-        <div class="card-body">
-          <form class="form" #f="ngForm">
-
-            <div class="form-group">
-              <label for="username">Username</label>
-              <input [(ngModel)]="loginUserData.username" #username="ngModel" name="username" type="text" class="form-control rounded-0" [ngClass]="{ 'is-invalid':  username.invalid && username.touched }" required  >
-                <div *ngIf="username.invalid" class="invalid-feedback">
-                  <div *ngIf="username.errors.required">UserName is required</div>
-                </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" [(ngModel)]="loginUserData.password" #password="ngModel" name="password"  class="form-control rounded-0"  [ngClass]="{ 'is-invalid':  password.invalid && password.touched }"  required >
-                <div *ngIf="password.invalid" class="invalid-feedback">
-                  <div *ngIf="password.errors.required">Password is required</div>
-                </div>
-            </div>
-
-            <button [disabled]= "!f.form.valid" type="button" (click)="loginUser()" class="btn btn-success float-right">
-              Submit
-            </button>
-          </form>
+  <div class="container">
+    <div class="secret-form">
+      <div class="col-md-6 mx-auto">
+        <div class="card rounded-0">
+          <div class="card-header">
+            <h3 class="mb-0">{{ 'about.contact-box' | translate }}</h3>
+          </div>
+          <div class="card-body">
+            <form class="form" #f="ngForm">
+  
+              <div class="form-group">
+                <label for="username">{{ 'about.username' | translate }}</label>
+                <input [(ngModel)]="loginUserData.username" #username="ngModel" name="username" type="text" class="form-control rounded-0" [ngClass]="{ 'is-invalid':  username.invalid && username.touched }" required  >
+                  <div *ngIf="username.invalid" class="invalid-feedback">
+                    <div *ngIf="username.errors.required">{{ 'about.username-valid' | translate }}</div>
+                  </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="password">{{ 'about.password' | translate }}</label>
+                <input type="password" [(ngModel)]="loginUserData.password" #password="ngModel" name="password"  class="form-control rounded-0"  [ngClass]="{ 'is-invalid':  password.invalid && password.touched }"  required >
+                  <div *ngIf="password.invalid" class="invalid-feedback">
+                    <div *ngIf="password.errors.required">{{ 'about.password-valid' | translate }}</div>
+                  </div>
+              </div>
+  
+              <div class="btn-cont">
+                <button [disabled]= "!f.form.valid" type="button" (click)="loginUser()" class="btn btn-success float-right">
+                  {{ 'about.submit' | translate }}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </div>  
 </section> 

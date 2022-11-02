@@ -46,34 +46,36 @@
       <a href="https://discord.gg/ytZSpQ2" target="_blank" title="DISCORD" class="disco">
         <img src="assets/images/icons/discord.svg" alt="">
         <div>VISIT DISCORD</div>        
-      </a>     
+      </a>  
+         
+    </div>
+    <div class="" *ngIf="_authService.loggedIn()">
+      <!-- <a class="navbar-brand" href="">EventsHub</a> -->
+      
+      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button> -->
+    
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/" rouetrLinkActive="active">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/users"  *ngIf="isAdmin" rouetrLinkActive="active">Users</a>
+          </li>
+        </ul> -->
+       
+        <ul class="navbar-nav">
+           <a class="nav-link"  routerLink="/login" *ngIf="!_authService.loggedIn()" rouetrLinkActive="active">Login</a>
+           <a class="nav-link" style="cursor:pointer" *ngIf="_authService.loggedIn()" (click)="logoutUser()">{{ 'about.logout' | translate }}</a>
+        </ul>
+      </div>
     </div>
   </div>  
 </nav>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="_authService.loggedIn()">
-  <!-- <a class="navbar-brand" href="">EventsHub</a> -->
-  
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
-  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <!-- <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/" rouetrLinkActive="active">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/users"  *ngIf="isAdmin" rouetrLinkActive="active">Users</a>
-      </li>
-    </ul> -->
-   
-    <ul class="navbar-nav">
-       <a class="nav-link"  routerLink="/login" *ngIf="!_authService.loggedIn()" rouetrLinkActive="active">Login</a>
-       <a class="nav-link" style="cursor:pointer" *ngIf="_authService.loggedIn()" (click)="logoutUser()">Logout</a>
-    </ul>
-  </div>
-</nav>
 
 
 <router-outlet></router-outlet>

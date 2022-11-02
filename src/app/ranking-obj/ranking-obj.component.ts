@@ -77,7 +77,9 @@ export class RankingObjComponent implements OnInit {
           const foundPlayerArray = this.filterUsername(name.username, v2);
                            
           const strikeResults1 = foundPlayerArray.slice(-1)[0] ? foundPlayerArray.slice(-1)[0] : 0;
+          // console.log('name', name, 'first FromEND', strikeResults1);
           const strikeResults2 = foundPlayerArray.slice(-2)[0] ? foundPlayerArray.slice(-2)[0] : 0;         
+          // console.log('name', name, 'first FromEND', strikeResults2);
           const strikesArrayToCompare = [];
 
           const destructObj1 = Object.values(strikeResults1);          
@@ -137,7 +139,8 @@ export class RankingObjComponent implements OnInit {
             ranking:name.ranking,
             wars:name.warcount,
             flag:name.nationality,
-            strike: finalStreak,
+            // strike: finalStreak,
+            strike: this.smallStrike2(name.username, v2),
             fragsperwar: (fragsToDisplay / name.warcount).toFixed(2),
             maxfragsperwar: Math.max(...fragsPerPlayerArray),
             minfragsperwar: Math.min(...fragsPerPlayerArray),
@@ -147,7 +150,7 @@ export class RankingObjComponent implements OnInit {
           };
           playerRowArray.push(lastWarDate);          
         }       
-        
+        // console.log('playerRowArray', playerRowArray);
         return playerRowArray;         
       })
     )   
@@ -229,16 +232,18 @@ export class RankingObjComponent implements OnInit {
 
   public smallStrike2(name, obj) {    
     const firstFromEnd = this.rankHistory2(name, obj).slice(-1)[0];
+    // console.log('name2', name, 'secondFromEnd', firstFromEnd);
     const secondFromEnd = this.rankHistory2(name, obj).slice(-2)[0];
+    // console.log('name2', name, 'secondFromEnd', secondFromEnd);
     const countingPoints = firstFromEnd - secondFromEnd;
 
-    let littleStrike2 = '';
-    if (firstFromEnd > secondFromEnd) {
-      littleStrike2 = `<div class="up-streak"><span data-title="+${countingPoints.toFixed(2)} pc in last war."></span></div>`;
-    } else if (firstFromEnd < secondFromEnd) {
-      littleStrike2 = `<div class="down-streak"><span data-title="${countingPoints.toFixed(2)} pc in last war."></span></div>`;
-    } else {
-      littleStrike2 = `<div class="draw-streak"><span data-title="${countingPoints.toFixed(2)} pc in last war."></span></div>`;
+    let littleStrike2 = 0;
+    if (firstFromEnd > secondFromEnd) {      
+      littleStrike2 = Math.round(countingPoints * 100) / 100;
+    } else if (firstFromEnd < secondFromEnd) {      
+      littleStrike2 = Math.round(countingPoints * 100) / 100;
+    } else {      
+      littleStrike2 = Math.round(countingPoints * 100) / 100;
     }
 
     return littleStrike2;

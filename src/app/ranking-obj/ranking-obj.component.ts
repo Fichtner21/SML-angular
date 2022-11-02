@@ -76,10 +76,8 @@ export class RankingObjComponent implements OnInit {
         for( let name of v1){          
           const foundPlayerArray = this.filterUsername(name.username, v2);
                            
-          const strikeResults1 = foundPlayerArray.slice(-1)[0] ? foundPlayerArray.slice(-1)[0] : 0;
-          // console.log('name', name, 'first FromEND', strikeResults1);
-          const strikeResults2 = foundPlayerArray.slice(-2)[0] ? foundPlayerArray.slice(-2)[0] : 0;         
-          // console.log('name', name, 'first FromEND', strikeResults2);
+          const strikeResults1 = foundPlayerArray.slice(-1)[0] ? foundPlayerArray.slice(-1)[0] : 0;          
+          const strikeResults2 = foundPlayerArray.slice(-2)[0] ? foundPlayerArray.slice(-2)[0] : 0;              
           const strikesArrayToCompare = [];
 
           const destructObj1 = Object.values(strikeResults1);          
@@ -98,10 +96,7 @@ export class RankingObjComponent implements OnInit {
 
           const resultCompareArr = strikesArrayToCompare.map((x) => {
             return Math.round(x * 100) / 100;
-          });
-
-          // console.log('last',resultCompareArr[0], 'last2', resultCompareArr[1]);
-          // console.log('0 ==>',resultCompareArr[1]);
+          });         
 
           const resultCompare = resultCompareArr[0] - resultCompareArr[1];
          
@@ -138,8 +133,7 @@ export class RankingObjComponent implements OnInit {
             cup:this.addTitleCup(name.cup1on1edition1),
             ranking:name.ranking,
             wars:name.warcount,
-            flag:name.nationality,
-            // strike: finalStreak,
+            flag:name.nationality,          
             strike: this.smallStrike2(name.username, v2),
             fragsperwar: (fragsToDisplay / name.warcount).toFixed(2),
             maxfragsperwar: Math.max(...fragsPerPlayerArray),
@@ -149,8 +143,8 @@ export class RankingObjComponent implements OnInit {
             meeting: name.meeting 
           };
           playerRowArray.push(lastWarDate);          
-        }       
-        // console.log('playerRowArray', playerRowArray);
+        }     
+      
         return playerRowArray;         
       })
     )   

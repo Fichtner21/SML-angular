@@ -6,7 +6,6 @@ import { FetchMatchesService } from '../fetch-matches.service';
 import { Observable, combineLatest } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { PlayersApiService } from 'src/app/services/players-api.service';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Spinkit } from 'ng-http-loader';
 
 @Component({
@@ -29,8 +28,7 @@ export class SingleMatchComponent implements OnInit {
   
 
   constructor(
-    private activatedRoute: ActivatedRoute, private tabApiService: PlayersApiService, private fetchMatch: FetchMatchesService   
-    , sanitizer: DomSanitizer) {       
+    private activatedRoute: ActivatedRoute, private tabApiService: PlayersApiService, private fetchMatch: FetchMatchesService ) {       
     }
 
   

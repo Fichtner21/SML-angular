@@ -4,10 +4,15 @@ section {
 }
 
 .container {
-  padding-top: 70px;
+  padding-top: 86px;
   margin: 0 auto;
   display: flex;
   justify-content: center;
+  max-width: 1280px;
+
+  > div {
+    max-width: 1280px;
+  }
 }
 
 .match-row {
@@ -193,3 +198,18 @@ section {
 }
 
 // <style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style>
+.findMaps {
+  display: grid;
+  grid-template-rows: auto;
+  margin-top: 1rem;
+  gap: 1rem;
+
+  .singleMap {
+    height: 300px;
+    background-position: center;
+  }
+
+  .singleMapUnknown {
+    height: 300px;    
+  }
+}

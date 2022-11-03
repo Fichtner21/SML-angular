@@ -25,7 +25,7 @@ export class SingleMatchComponent implements OnInit {
   public idwar$: Observable<any>;
   public matchVideo: string;
   public spinkit = Spinkit;
-  
+  public columnsGrid;
 
   constructor(
     private activatedRoute: ActivatedRoute, private tabApiService: PlayersApiService, private fetchMatch: FetchMatchesService ) {       
@@ -97,6 +97,71 @@ export class SingleMatchComponent implements OnInit {
 
     this.historyObj$ = combineLatest([this.playersTab$, this.match$, this.inactiveTab$]).pipe(
       map(([players, match, inactive]) => {
+        const singleMap = match.info;
+        // console.log('match.info', match.info);
+       
+        const csLewisQuote = match.info;
+        const regex1 = /The Hunt/;
+        const regex2 = /The Bridge, The Church Final/g;
+        const regex3 = /The Church Final/g;
+
+        console.log('regEx =>', csLewisQuote.match(match.info)); 
+        const findMap = csLewisQuote.match(match.info);
+
+        const mapArray = [];
+        findMap.forEach((el) => {
+          mapArray.push(el);
+        });
+        
+        const newMapArray =  mapArray[0].split(', ');
+        
+        newMapArray.forEach((el, i) => {
+        if(el == 'The Hunt'){
+            const newEl = 'TheHunt';
+            this.neMap.push(newEl);
+        }
+        if(el == 'V2'){
+            const newEl = 'v2';
+            this.neMap.push(newEl);
+        }
+        if(el == 'Dessau1946'){
+            const newEl = 'dessau';
+            this.neMap.push(newEl);
+        }
+         if(el == 'The Bridge'){
+          const newEl = 'bridge';
+          this.neMap.push(newEl);
+         }
+         if(el == 'Stlo'){
+          const newEl = 'stlo';
+          this.neMap.push(newEl);
+         }
+         if(el == 'V2Shelter'){
+          const newEl = 'v2shleter';
+          this.neMap.push(newEl);
+         }
+         if(el == 'VSUK Abbey'){
+          const newEl = 'vsuk';
+          this.neMap.push(newEl);
+         }
+         if(el == 'Navarone'){
+          const newEl = 'navarone';
+          this.neMap.push(newEl);
+         }
+         if(el == 'Stlo4'){
+          const newEl = 'stlo4';
+          this.neMap.push(newEl);
+         }
+         if(el == 'The Church Final'){
+          const newEl = 'dmloadingTheChurch';
+          this.neMap.push(newEl);
+         }
+        });
+
+        // console.log('newMapArray', this.neMap);
+
+        // this.gridTemplateColumns = { gridTemplateColumns: `${this.countColumns(this.neMap.length)}`};
+     
         let matchRow;         
           matchRow = {
             timestamp: match.timestamp,
@@ -106,6 +171,7 @@ export class SingleMatchComponent implements OnInit {
             video: 'https://www.youtube.com/embed/' + match.video + '/?autoplay=1',
             videoImg: 'https://img.youtube.com/vi/' + match.video + '/hqdefault.jpg',
             info: match.info,
+            columns: this.countColumns(this.neMap.length),
             t1p1playername: this.addPlayerLink(match.t1p1name, players, inactive),
             t1p1username: match.t1p1name,
             t1p1preelo: match.t1p1preelo,
@@ -177,12 +243,22 @@ export class SingleMatchComponent implements OnInit {
             t2p7score: match.t2p7score,
             t2p7postelo: match.t2p7postelo,
           }          
-          // console.log('matchRow', matchRow);
+          console.log('matchRow', matchRow);
+
+          
         return matchRow;
       })
-    ) 
-    
+    )     
   }
+
+  public TheHunt = /The Hunt/;
+  public V2 = /V2/;
+  public TheBridge = /The Bridge/;
+  public TheChurchFinal = /The Church Final/;
+  public findMap = document.getElementById('findMaps');
+  public mapImg = [];
+  public neMap = [];
+
   public addPlayerLink(player:string, obj:any, obj2:any) {
     let convertedPlayer = '';    
     obj.forEach((el:any) => {
@@ -205,4 +281,23 @@ export class SingleMatchComponent implements OnInit {
     });
     return convertedPlayer;
   } 
+
+  countColumns(column:any){
+    switch(column){
+      case 1:
+        return 'repeat(1, 1fr)';       
+      case 2:
+        return 'repeat(2, 1fr)';       
+      case 3:
+        return 'repeat(3, 1fr)';       
+      case 4:
+        return 'repeat(4, 1fr)';       
+      case 5:
+        return 'repeat(5, 1fr)';       
+      case 6:
+        return 'repeat(6, 1fr)';       
+      default:
+        return 'repeat(2, 1fr)'
+    }
+  }
 }

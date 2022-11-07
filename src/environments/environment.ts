@@ -14,10 +14,10 @@ export const environment = {
     measurementId: 'G-7WB1MRGPB5',
   },
   production: false,
-  players: {
-    spreadsheetId: '1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo',
-    worksheetId: 1,
-  },  
+  // players: {
+  //   spreadsheetId: '1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo',
+  //   worksheetId: 1,
+  // },  
 };
 
 /*

@@ -161,7 +161,36 @@
               </div> 
 
             </div>
-          
+            <ng-container>
+              <div class="comments-match" style="background-color: #ffffc8; padding: 20px;">
+                <form action="" id="comment-{{match.idwar}}">
+                  <label for="message-{{match.idwar}}">Message</label>
+                  <textarea name="message" id="message-{{match.idwar}}" cols="30" rows="10" required></textarea>
+                  <label for="name">Name*</label>
+                  <input type="text" name="name" id="name-{{match.idwar}}">
+                  <label for="email">Email</label>
+                  <input type="text" name="email" id="email-{{match.idwar}}">
+                  <button (click)="addComment(match.idwar)" class="btn btn-success" type="button">Submit</button>
+                </form>
+                <div *ngIf="submitted">
+                  <h4>You submitted successfully!</h4>
+                  <button class="btn btn-success" (click)="newComment()">Add</button>
+                </div>
+                <div class="comments-container" id="comments-container-{{match.idwar}}" style="background: red">
+                  {{ comment$ | async | json }}
+                </div>
+              </div>
+            </ng-container>
+            <!-- <ng-container *ngIf="allComments$ | async as comments">
+              <div *ngFor="let comment of comments" style="background:#fff;">
+                {{ comment | json }}
+                <div>{{ comment.name | json}}</div>
+                <div>{{ comment.email }}</div>
+                <div>{{ comment.postedAt }}</div>
+                <div>{{ comment.message }}</div>
+              </div>
+            </ng-container> -->
+            
                   
         </div>
        

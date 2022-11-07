@@ -22,7 +22,9 @@ import { SecretComponent } from './about/secret/secret.component';
 import { TokenInterceptorService } from './token-interceptor.service';
 import { AuthGuard } from './auth.guard';
 import { GoogleMapsModule } from '@angular/google-maps';
-// import { AgmCoreModule } from '@agm/core';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from '../environments/environment';
 
 export function createTranslateLoader(http: HttpClient){
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -43,7 +45,10 @@ export function createTranslateLoader(http: HttpClient){
     NgxPaginationModule,  
     ChartsModule,
     FormsModule,
-    GoogleMapsModule,
+    GoogleMapsModule,    
+    AngularFireModule.initializeApp(environment.firebase, 'spearhead-mix-league'),
+    AngularFirestoreModule,
+    // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),     
     TranslateModule.forRoot({
       loader: {

@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatchesDetailsService } from '../matches-details.service';
 import { Matches } from '../matches.model';
 import { FetchMatchesService } from '../fetch-matches.service';
-import { Observable, combineLatest } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { Observable, combineLatest, pipe } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { Spinkit } from 'ng-http-loader';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { SingleComment } from './single-comment.model';
+import { CommentsService } from './comments.service';
+
 
 @Component({
   selector: 'app-single-match',
@@ -26,20 +29,54 @@ export class SingleMatchComponent implements OnInit {
   public matchVideo: string;
   public spinkit = Spinkit;
   public columnsGrid;
+  private singlePostCollection: AngularFirestoreCollection<SingleComment>;
+  singleComment$: Observable<SingleComment[]>;
+  allComments$: any;
+  // comment$: Observable<SingleComment | undefined>;
+  comment$: any;
+
+  comment: SingleComment = new SingleComment();
+  submitted = false;
 
   constructor(
-    private activatedRoute: ActivatedRoute, private tabApiService: PlayersApiService, private fetchMatch: FetchMatchesService ) {       
+    private activatedRoute: ActivatedRoute, private tabApiService: PlayersApiService, private fetchMatch: FetchMatchesService, private afs: AngularFirestore, private commentService: CommentsService,  ) {  
+      this.singlePostCollection = afs.collection<SingleComment>('postComments');
+      // this.singleComment$ = this.singlePostCollection.valueChanges({idField: 'id'}) 
+      console.log('this.singlePostCollection', this.singlePostCollection);    
     }
-
   
-  ngOnInit(): void {     
+  ngOnInit(): void {   
+   
+    console.log('getAll =>', this.commentService.getAll().valueChanges());
+    this.allComments$ = this.commentService.getAll().valueChanges();
+    // this.allComments$.pipe().subscribe((res) => console.log('res', res))
+    // this.allComments$.pipe(map(
+    //   (el:[]) => {
+    //     for(let single of el){
+    //       console.log('single', single.({idField, 'id'});
+    //     }
+    //   }
+    // )).subscribe();
+    //  this.allComments$.subscribe(pipe(
+    //   map((res: any) => {
+    //     res = this.commentService.getAll();
+    //     console.log('res', res)
+    //   })
+    //  )) 
+    const matchID = this.activatedRoute.snapshot.params['idwar'];
+    console.log('matchID', matchID);
+    console.log('this.afs', this.afs.firestore);
+    this.comment$ = this.afs.collection<SingleComment>('spearhead-mix-league').doc(matchID).valueChanges();
+    console.log('this.comment', this.comment$);
+    console.log('ressss', this.afs.collection<SingleComment>('spearhead-mix-league').doc(matchID))
+    
 
     this.match$ = this.activatedRoute.data.pipe(
       map(data => data.match)       
     );    
 
-  this.match$.pipe(
-    map(x => this.matchVideo = x.video)).subscribe();
+    this.match$.pipe(
+      map(x => this.matchVideo = x.video)).subscribe();
 
     this.idwar$ = this.activatedRoute.data.pipe(
       map((data) => {
@@ -105,7 +142,7 @@ export class SingleMatchComponent implements OnInit {
         const regex2 = /The Bridge, The Church Final/g;
         const regex3 = /The Church Final/g;
 
-        console.log('regEx =>', csLewisQuote.match(match.info)); 
+        // console.log('regEx =>', csLewisQuote.match(match.info)); 
         const findMap = csLewisQuote.match(match.info);
 
         const mapArray = [];
@@ -243,12 +280,27 @@ export class SingleMatchComponent implements OnInit {
             t2p7score: match.t2p7score,
             t2p7postelo: match.t2p7postelo,
           }          
-          console.log('matchRow', matchRow);
-
+          // console.log('matchRow', matchRow);
+          console.log('thisSingle', this.commentService.getSingleComment(match.idwar).valueChanges())
+          this.commentService.getSingleComment(match.idwar).valueChanges().pipe().subscribe(res => console.log('res', res));
           
         return matchRow;
       })
-    )     
+    );    
+    
+  }
+
+  addComment(id:string): void {
+    this.commentService.create(this.comment).then(() => {
+      console.log('this.comment', this.comment);
+      console.log('Created new comment succesfully!');
+      this.submitted = true;
+    })
+  }
+
+  newComment(): void {
+    this.submitted = false;
+    this.comment = new SingleComment();
   }
 
   public TheHunt = /The Hunt/;

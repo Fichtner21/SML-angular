@@ -37,7 +37,6 @@
     "ng-http-loader": "^9.1.0",
     "ng2-charts": "^2.4.1",
     "ngx-pagination": "^5.0.0",
-    "node-sass": "^4.14.1",
     "offside-js": "^1.4.0",
     "rxfire": "^6.0.0",
     "rxjs": "~6.5.4",

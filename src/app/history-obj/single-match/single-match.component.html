@@ -3,13 +3,13 @@
 <section class="single-match">
   <div class="container">
     <ng-container *ngIf="historyObj$ | async as match">
-      
-        <div>          
-          
+
+        <div>
+
             <div class="match-row">
               <div class="match-row__date">
-                <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>                
-                <div>#{{ match.idwar }}</div>          
+                <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>
+                <div>#{{ match.idwar }}</div>
               </div>
               <div class="match-row__team">
                 <div class="teamrounds">{{ match.t1roundswon }}</div>
@@ -133,21 +133,21 @@
             <div style="color: #ffffc8;" class="match-row__date">
              Info: {{ match.info}}  {{ matchVideo }}
             </div>
-            
-            <div *ngIf="neMap.length > 0" class="findMaps" [ngStyle]="{'gridTemplateColumns':match.columns}">             
+
+            <div *ngIf="neMap.length > 0" class="findMaps" [ngStyle]="{'gridTemplateColumns':match.columns}">
               <div *ngFor="let map of neMap, let i = index;" [ngStyle]="{'background-image': 'url(assets/images/maps/' + map + '.jpg)'}" class="singleMap" title="{{map}}">
-              </div>                         
+              </div>
             </div>
             <div *ngIf="neMap.length == 0" class="findMaps"  [ngStyle]="{'gridTemplateColumns':match.columns}">
               <div [ngStyle]="{'background-image': 'url(assets/images/sh_icon.png)'}" class="singleMapUnknown" title="Unkown map">
-              </div>       
-              <div [ngStyle]="{'background-image': 'url(assets/images/sh_icon.png)'}" class="singleMapUnknown" title="Unkown map">
-              </div>               
+              </div>
+              <!-- <div [ngStyle]="{'background-image': 'url(assets/images/sh_icon.png)'}" class="singleMapUnknown" title="Unkown map">
+              </div>                -->
             </div>
 
             <div *ngIf="matchVideo != ''">
               <div class="thumbnail video-responsive">
-                <iframe 
+                <iframe
                   id="ytplayer-"
                   type="text/html"
                   height="100%"
@@ -158,7 +158,7 @@
                   src="{{match.video}}"
                   >
                 </iframe>
-              </div> 
+              </div>
 
             </div>
             <ng-container>
@@ -190,14 +190,14 @@
                 <div>{{ comment.message }}</div>
               </div>
             </ng-container> -->
-            
-                  
+
+
         </div>
-       
+
     </ng-container>
   </div>
-</section> 
-<ng-http-loader 
+</section>
+<ng-http-loader
     [backdrop]="false"
     [backgroundColor]="'#010141'"
     [debounceDelay]="100"

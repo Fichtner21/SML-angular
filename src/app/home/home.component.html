@@ -4,7 +4,10 @@
       <img src="assets/images/sh_icon.png" alt="" class="logo_icon">
       <div class="wrapper-head__right">
         <h1>MoH: SH <br> Mix League</h1>
-        <div class="since">Since 10.11.2020</div>
+        <div class="since">  
+          <div>Since 10.11.2020</div>
+          <div class="second">2nd Anniversary!</div>
+        </div>
         <div class="meet"><a href="https://discord.com/channels/716723661909786690/716723662337605663/1029825546747646093" title="CLICK for more INFO" target="_blank">Meeting 18.11. - 20.11.2022</a></div>
       </div>
     </div>       
@@ -43,8 +46,22 @@
     <div class="container">
       <div *ngIf="playedWars$ | async as playedWars"></div>
       <h1>{{ 'home.month_activity' | translate }}:</h1>
-      <canvas id="allActivity" width="1320" height="280" style="overflow-x: scroll;"> -->
+      <canvas id="allActivity" width="1320" height="280" style="overflow-x: scroll;"> 
       </canvas>
+      <!-- <div style="display: block;" >
+        <canvas width="1320" height="280" 
+          #panelA="base-chart"
+          baseChart
+          [datasets]="barChartData"
+          [labels]="barChartLabels"
+          [options]="barChartOptions"
+          [legend]="barChartLegend"
+          [chartType]="barChartType"
+          [plugins]="barChartPlugins"
+          (chartClick)="onClick($event)"
+        >
+        </canvas>
+      </div> -->
     </div>
   </div>
 </div>

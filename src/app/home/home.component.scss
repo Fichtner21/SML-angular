@@ -128,7 +128,7 @@ video {
   padding-top: 15px;
 
   &__right {
-    margin-top: 15px;
+    margin-top: 25px;
     
     h1 {
       line-height: 1;
@@ -141,6 +141,14 @@ video {
       text-align: right;
       padding-right: 30px;
       font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .second {
+        font-weight: 700;
+        color:#F72119;
+      }
     }
 
     .meet {

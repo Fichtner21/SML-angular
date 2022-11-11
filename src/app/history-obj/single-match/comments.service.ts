@@ -24,7 +24,7 @@ export class CommentsService {
   }
 
   getSingleComment(comment:string): AngularFireList<SingleComment> {
-    console.log('this.commentsRef', this.commentsRef);
+    // console.log('this.commentsRef', this.commentsRef);
     return this.commentsRef;
   } 
 

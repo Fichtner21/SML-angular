@@ -86,8 +86,17 @@ export class HistoryObjComponent implements OnInit {
       map(([players, matches, inactive]) => {
         let matchRow;
         let matchRowArray: any[] = [];
-        for(let match of matches){         
-
+        for(let match of matches){ 
+          const sumPreeloTeam1 = [
+            (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) + 
+            (Number(match.t1p2preelo) ? Number(match.t1p2preelo) : 0) + 
+            (Number(match.t1p3preelo) ? Number(match.t1p3preelo) : 0) + 
+            (Number(match.t1p4preelo) ? Number(match.t1p4preelo) : 0) + 
+            (Number(match.t1p5preelo) ? Number(match.t1p5preelo) : 0) + 
+            (Number(match.t1p6preelo) ? Number(match.t1p6preelo) : 0) + 
+            (Number(match.t1p7preelo) ? Number(match.t1p7preelo) : 0) 
+          ].reduce(this.addPreelo, 0);        
+          
           matchRow = {
             timestamp: match.timestamp,
             idwar: match.idwar,
@@ -95,6 +104,7 @@ export class HistoryObjComponent implements OnInit {
             t2roundswon: match.t2roundswon, 
             video: match.video,
             info: match.info,
+            t1preelo: sumPreeloTeam1,
             t1p1playername: this.addPlayerLink(match.t1p1name, players, inactive),
             t1p1username: match.t1p1name,
             t1p1preelo: match.t1p1preelo,
@@ -198,5 +208,10 @@ export class HistoryObjComponent implements OnInit {
       }
     });
     return convertedPlayer;
-  }  
+  }   
+
+  public addPreelo(accumulator:any, a:any) {
+    return accumulator + a;
+  } 
+ 
 }

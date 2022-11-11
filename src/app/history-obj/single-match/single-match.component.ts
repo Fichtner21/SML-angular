@@ -42,12 +42,12 @@ export class SingleMatchComponent implements OnInit {
     private activatedRoute: ActivatedRoute, private tabApiService: PlayersApiService, private fetchMatch: FetchMatchesService, private afs: AngularFirestore, private commentService: CommentsService,  ) {
       this.singlePostCollection = afs.collection<SingleComment>('postComments');
       // this.singleComment$ = this.singlePostCollection.valueChanges({idField: 'id'})
-      console.log('this.singlePostCollection', this.singlePostCollection);
+      // console.log('this.singlePostCollection', this.singlePostCollection);
     }
 
   ngOnInit(): void {
 
-    console.log('getAll =>', this.commentService.getAll().valueChanges());
+    // console.log('getAll =>', this.commentService.getAll().valueChanges());
     this.allComments$ = this.commentService.getAll().valueChanges();
     // this.allComments$.pipe().subscribe((res) => console.log('res', res))
     // this.allComments$.pipe(map(
@@ -64,11 +64,11 @@ export class SingleMatchComponent implements OnInit {
     //   })
     //  ))
     const matchID = this.activatedRoute.snapshot.params['idwar'];
-    console.log('matchID', matchID);
-    console.log('this.afs', this.afs.firestore);
+    // console.log('matchID', matchID);
+    // console.log('this.afs', this.afs.firestore);
     this.comment$ = this.afs.collection<SingleComment>('spearhead-mix-league').doc(matchID).valueChanges();
-    console.log('this.comment', this.comment$);
-    console.log('ressss', this.afs.collection<SingleComment>('spearhead-mix-league').doc(matchID))
+    // console.log('this.comment', this.comment$);
+    // console.log('ressss', this.afs.collection<SingleComment>('spearhead-mix-league').doc(matchID))
 
 
     this.match$ = this.activatedRoute.data.pipe(
@@ -281,8 +281,8 @@ export class SingleMatchComponent implements OnInit {
             t2p7postelo: match.t2p7postelo,
           }
           // console.log('matchRow', matchRow);
-          console.log('thisSingle', this.commentService.getSingleComment(match.idwar).valueChanges())
-          this.commentService.getSingleComment(match.idwar).valueChanges().pipe().subscribe(res => console.log('res', res));
+          // console.log('thisSingle', this.commentService.getSingleComment(match.idwar).valueChanges())
+          // this.commentService.getSingleComment(match.idwar).valueChanges().pipe().subscribe(res => console.log('res', res));
 
         return matchRow;
       })
@@ -292,8 +292,8 @@ export class SingleMatchComponent implements OnInit {
 
   addComment(id:string): void {
     this.commentService.create(this.comment).then(() => {
-      console.log('this.comment', this.comment);
-      console.log('Created new comment succesfully!');
+      // console.log('this.comment', this.comment);
+      // console.log('Created new comment succesfully!');
       this.submitted = true;
     })
   }

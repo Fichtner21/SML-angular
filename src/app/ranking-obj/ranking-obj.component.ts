@@ -71,7 +71,7 @@ export class RankingObjComponent implements OnInit {
     this.lastWarOfPlayer$ = combineLatest([this.playersTest$, this.historyMatches$]).pipe(
       map(([v1, v2]) => {
         
-        let lastWarDate;
+        let lastWarDate: any;
         let playerRowArray: any[] = [];
         for( let name of v1){          
           const foundPlayerArray = this.filterUsername(name.username, v2);
@@ -135,9 +135,9 @@ export class RankingObjComponent implements OnInit {
             wars:name.warcount,
             flag:name.nationality,          
             strike: this.smallStrike2(name.username, v2),
-            fragsperwar: (fragsToDisplay / name.warcount).toFixed(2),
-            maxfragsperwar: Math.max(...fragsPerPlayerArray),
-            minfragsperwar: Math.min(...fragsPerPlayerArray),
+            fragsperwar: (fragsToDisplay / name.warcount).toFixed(2) != 'NaN' ? (fragsToDisplay / name.warcount).toFixed(2) : '0',
+            maxfragsperwar: Math.max(...fragsPerPlayerArray) ? Math.max(...fragsPerPlayerArray) : '0',
+            minfragsperwar: Math.min(...fragsPerPlayerArray) ? Math.min(...fragsPerPlayerArray) : '0',
             activity: this.searchPlayerActivity(name.username, v2), 
             lastyear: this.pastYearActivity(name.username, v2),
             meeting: name.meeting 

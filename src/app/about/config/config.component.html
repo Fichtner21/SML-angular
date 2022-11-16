@@ -13,12 +13,382 @@
     <h2>Useful configuration:</h2> 
     <div class="grid-config">
       <div>com_maxfps 300</div>
-      <div>-</div>
+      <div>show FPS (limit to 300 max)</div>
       <div>cg_lagometer 1</div>
-      <div>-</div>
+      <div>To show lagometer (ping, packet lost, lag server)</div>
       <div>cg_smoothclients 1</div>
       <div>-</div>
+      <div>r_customwidth "xxxx"</div>
+      <div>in "xxxx" can be 1920 or what ever you want</div>
+      <div>r_customheight "xxxx"</div>
+      <div>in "xxxx" can be 1080 or what ever you want</div>
+      <div>r_mode -1</div>
+      <div>To set custom resolution</div>
+      <div>vid_restart</div>
+      <div>To correct confirm new resolution</div>
+      <div>ui_console 1</div>
+      <div>To show mini console (you can see how many hits you get)</div>
     </div>
+    <td width="602" valign="top">
+      <table border="0" cellspacing="0" cellpadding="0">
+         <tbody><tr>
+            <td width="601" valign="top">
+               <p align="left"><font face="Courier" size="5" color="00ff33"><b>rcon commands</b></font></p>
+            </td>
+         </tr>
+         <tr>
+            <td width="601" valign="top">
+               <!--area Type="subhead" face="Courier" size="3" color="#33FF33" style="1"-->
+               
+               <p><font face="Courier" size="3" color="#33FF33"><b></b></font></p><div><font face="Courier" size="3" color="#33FF33"><b><font color="#00ff33">medal of honor spearhead rcon commands</font></b></font></div><font face="Courier" size="3" color="#33FF33"><b>
+                  <div>&nbsp;
+                  <!--"''"--></div></b></font>
+               <p></p>
+               
+               <!--/area Type="subhead"-->
+            </td>
+         </tr>
+         
+         <tr>
+            <td width="601" valign="top">
+               <!--area Type="main" face="Courier" size="2" color="#33FF33" style="0"-->
+               
+               <p><font face="Courier" size="2" color="#33FF33"></font></p><div><font face="Courier" size="2" color="#33FF33"><b>
+                  <p><font color="#00ff33">+set ui_console 1 </font></p></b>
+                  <p><font color="#00ff33">Your shortcut target should look like this: </font></p><b>
+                  <p><font color="#00ff33">"C:\Program Files\EA GAMES\MOHAA\MOHAA.exe" +set ui_console 1 </font></p></b>
+                  <p><font color="#00ff33">Notice the space after the last quote and before the + sign! If you have problems doing this, you can
+                  also enable it in the game itself . From the main menu, click the radio on the left hand side. Go to Advanced Options, and
+                  make sure "Console" has a red X in the box. Then hit Apply. </font></p><b><font size="5">
+                  <p><font color="#00ff33">How to use RCON</font></p></font></b>
+                  <p><font color="#00ff33">To use RCON, simply pull down the console, by pressing the tilde key "~". This key is located in the
+                  upper left hand corner of your keyboard, just left of the "1" key. There are several ways to connect to your dedicated game
+                  server: 1: Your connected to your server as a client. Simply add your rcon password after the rcon and before the command
+                  you wish to execute. Type in the console: </font></p><b>
+                  <p><font color="#00ff33">rcon [password] status </font></p></b>
+                  <p><font color="#00ff33">You will have to do this every time you wish to send a command to your server. 2: Your playing MOH,
+                  but not on your server. You could be playing a single player game or connected to another game server. Type in the console:
+                  </font></p><b>
+                  <p><font color="#00ff33">rconaddress [your server’s IP address] rconpassword [your password] </font></p></b>
+                  <p><font color="#00ff33">This only has to be done once per session.<br>NOTE: If you are already connected to the server, then
+                  all you to do is type: rconpassword [password]. 3: Your not playing MOH and you have "The All Seeing Eye" (ASE) installed.
+                  You can download a free trial version ( limited ) at: http://www.udpsoft.com/eye/ ASE has an RCON client built into it. This
+                  is the best way of accessing your game server, when your not playing MOH. You first need to enter your game server’s
+                  RCON password into ASE. This is only done once and only needs to be changed, if you ever change your server's RCON password.
+                  Setup: 1st Pull up your server in the ASE window. 2nd Right click your server 3rd Left click on "Server Properties" 4th Enter
+                  your RCON password To access your server’s RCON: 1st Pull up your server in the ASE window. 2nd Right click your server
+                  3rd Left click on "remote console" 4th Enter your commands in ASE’s pop up box. When using ASE. You do not use the rcon
+                  command before your other commands. ASE automatically adds this command for you. Thus, it makes it even easier and quicker
+                  to send commands to your server. </font></p>
+                  <p><font color="#00ff33"></font>&nbsp;</p><b><font color="#00ff33" size="5">
+                  <p>RCON Commands</p></font><font size="4">
+                  <p><font color="#00ff33">cd</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon cd [path] <br>cd = Change Directory. This is the same command used in dos. You can change
+                  directory on the server. </font></p><b><font size="4">
+                  <p><font color="#00ff33">clientkick</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon clientkick [client number] <br>Use this command after using the status command. This enables
+                  a server admin to easily kick users via their client number instead of their name. </font></p><b><font size="4">
+                  <p><font color="#00ff33">cmdlist</font></p></font></b>
+                  <p><font color="#00ff33">Usage : rcon cmdlist [letter] <br>Will return all know rcon commands. Optionally, if you put a single
+                  letter it will only return commands starting with that letter. Not all work though. <br>Submitted by DogMeat </font></p><b><font size="4">
+                  <p><font color="#00ff33">crash </font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon crash <br>Will crash your server. Be careful with this command. Especially if your host
+                  does not run a script to restart your MOH.exe <br>Submitted by mikerush76 </font></p><b><font size="4">
+                  <p><font color="#00ff33">cvarlist</font></p></font></b>
+                  <p><font color="#00ff33">Usage : rcon cvarlist [letter] <br>Will return all know variables, or cvars. Optionally, if you put
+                  a single letter it will only return cvars starting with that letter. <br>Submitted by DogMeat </font></p><b><font size="4">
+                  <p><font color="#00ff33">dir </font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon dir <br>Will return a directory listing of your dedicated servers MOH\main directory </font></p><b><font size="4">
+                  <p><font color="#00ff33">(folder) dumpuser </font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon dumpuser [client name] <br>Will return info on a user : userinfo <br>-------- <br>dm_playermodel
+                  : allied_airborne - Name of the skin the client is currently using <br>dm_playergermanmodel : german_elite_sentry - Name of
+                  the model the client is currently using <br>name : JohnDoe - Name of the client <br>rate : 20000 - Clients rate <br>snaps
+                  : 20 - ?? <br>password : bungee - If the client is connecting via a password, this is the password he is using </font></p><b><font size="4">
+                  <p><font color="#00ff33">exec</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon exec server.cfg <br>This will execute your server.cfg file. causing any changes made to
+                  this file to take effect. If you have multiple cfg file. Say one for TDM and one for OBJ. maps. You can use this to execute
+                  the *.cfg file of your choice. changing game types, maplist or other properties of a cfg file. </font></p><b><font size="4">
+                  <p><font color="#00ff33">freeze</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon freeze [seconds] <br>Freezes all players on the server for what ever amount of time you
+                  put. ( Good for getting the undivided attention of clan mates/ Clients) <br>Submitted by mikerush76 </font></p><b><font size="4">
+                  <p><font color="#00ff33">kick</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon kick [client name or "all"] <br>kicks a client by his in game nick. If a the client has
+                  a space in his name. Surround his name in quotes. If you wish to kick all clients at once. then use all. </font></p><b><font size="4">
+                  <p><font color="#00ff33">map</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon map [complete map name. ie: dm/mohdm4 or obj/obj_team4]<br>Use this to change maps. </font></p><b><font size="4">
+                  <p><font color="#00ff33">meminfo</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon meminfo <br>This will return information, on how much memory your dedicated server is using.
+                  May be helpful when renting a server from another party. </font></p><b><font size="4">
+                  <p><font color="#00ff33">quit</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon quit <br>This will shutdown your dedicated game server. Kicking all clients and dropping
+                  your rcon connection. Some providers run scripts that monitor your MOH.exe. When this script notices your moh.exe not running.
+                  They will restart the moh.exe for you. This is good when you upload a new map and need to restart your server. For the new
+                  maps load. Check with your provider to see if they have any type of script running on the server before executing this command!
+                  </font></p><b><font size="4">
+                  <p><font color="#00ff33">rconaddress</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rconaddress [server ip address] <br>This is how you initiate a connection to the rcon server
+                  your trying to control .Please note there is no spaces between rcon and address. </font></p><b><font size="4">
+                  <p><font color="#00ff33">rconpassword</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rconpassword [password] <br>This is your rcon password you setup within your server.cfg file.
+                  If you ever post or send someone your cfg file, make sure you do not include this entry. Please note that there is no spaces
+                  between rcon and password. </font></p><b><font size="4">
+                  <p><font color="#00ff33">restart</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon restart <br>Will restart the current map. Say <br>Usage: rcon say [your message] <br>This
+                  command is used to broadcast messages to all clients in real time. </font></p><b><font size="4">
+                  <p><font color="#00ff33">serverinfo </font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon serverinfo <br>Will return the following dedicated server information:<br>---------------------<br>cheats:
+                  0 -is cheats enabled on server 0=no 1=yes <br>sv_allowDownload : 0 -does the server allow people to download current maps
+                  0=no 1=yes ( does not work ) <br>sv_maplist : dm/mohdm1 dm/mohdm2 dm/mohdm3 dm/mohdm4 dm/mohdm6 dm/mohdm7 -current map list
+                  running on server <br>sv_hostname : =CKR= www.alliedassault.com members v1.11 custom maps TDM =CKR= -host name <br>sv_privateClients
+                  : 4 -number of private slots. must connect with the correct password <br>sv_maxclients : 16 - max number of clients allowed
+                  to connect <br>sv_maxRate : 8000 - Max data transmit rate by clients connected to the server <br>sv_maxPing : 600 - maximum
+                  ping allowed when client connects. If client connects with a ping over this value. They will not be allowed to join the server
+                  <br>g_gametype : 2 - game type 1= FFA 2= TeamMatch 3= RoundBased 4= Objective <br>deathmatch : 1 -?? <br>version : Medal of
+                  Honor Allied Assault 1.11 win-x86 Mar 5 2002 - version of MOH running <br>skill : 0 -?? <br>dmflags : 0 -?? <br>fraglimit
+                  : 0 - How many kills a team needs to win the battle <br>timelimit : 15 - How long the map will run. By setting both fraglimit
+                  and timelimit at the same time. The game will end whenever one of these conditions are met first. <br>protocol : 8 -?? <br>mapname
+                  : dm/mohdm2 - current map playing on server <br>sv_minPing : 0 - Min ping allowed to play on server <br>sv_floodProtect :
+                  1 -?? <br>g_gametypestring : Team-Match - ?? <br>sv_fps : 20 - <br>Admin : Rudedog - Server's admin set via cfg file <br>URL
+                  : www.alliedassault.com members -URL set via cfg file <br>Connection : Full T1 -Just for information to users. Set via cfg
+                  file <br>g_allowjointime : 5 - <br>roundlimit : 0 - number of rounds when playing Obj based game play <br>nomonsters : 0 -??
+                  <br>sv_friction : 4 -?? <br>sv_stopspeed : 100 -?? <br>sv_waterfriction : 1 -?? <br>sv_waterspeed : 400 -?? <br>sv_cinematic
+                  : 0 -?? <br>g_forceready : 1 -?? <br>g_forcerespawn : 0 -?? <br>g_maxintermission : 15 -?? <br>g_obj_alliedtext1 : Destroyed
+                  Village -motd for current map <br>g_obj_axistext2 : [TFO]DogMeat Map Fix -motd for current map <br>g_obj_axistext3 : TFO.ServeBeer.com
+                  1.2 -motd for current map <br>g_scoreboardpic : mohdm2 -?? </font></p><b><font size="4">
+                  <p><font color="#00ff33">status </font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon status <br>Will return information on all connected clients including: current map name,
+                  client number, client's score, client's ping, client's name, client's IP address, client's qport and client's rate. </font></p><b><font size="4">
+                  <p><font color="#00ff33">systeminfo</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon systeminfo <br>Will return system info g_syncronousclients, sv_serverid, and timescale.
+                  </font></p><b><font size="4">
+                  <p><font color="#00ff33">set</font></p></font></b>
+                  <p><font color="#00ff33">Usage : rcon set [variable] [value] <br>Sets the value of a variable.<br>Submitted by Crow King </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta</font></p></font></b>
+                  <p><font color="#00ff33">Usage : rcon seta [variable] [value] <br>Sets the value of a variable and the archive flag so that
+                  the value will be saved to the user's Default.cfg file to be loaded each time the game is loaded.<br>Submitted by Crow King
+                  </font></p><b><font size="4">
+                  <p><font color="#00ff33">sets</font></p></font></b>
+                  <p><font color="#00ff33">Usage : rcon sets [variable] [value] <br>Sets the value of a variable and the server flag so that the
+                  variable is transmitted to clients upon connect. Is implemented in MoHAA but does not seem to function properly. <br>Submitted
+                  by Crow King </font></p><b><font size="4">
+                  <p><font color="#00ff33">setu</font></p></font></b>
+                  <p><font color="#00ff33">Usage : rcon setu [variable] [value] <br>Sets the variable with the userinfo flag, so it will be transmitted
+                  from a client to a server while connecting. <br>Caveat : Not tested, however I suspect that like sets , it is not functioning
+                  properly. <br>Submitted by DogMeat </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta sv_hostname</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon seta sv_hostname [server name] <br>You can change your servers name ( ASE / GameSpy ) at
+                  any time. Just remember that it may take several seconds for gamespy or ASE to update. Good when you have just set the server
+                  private. </font></p><b><font size="4">
+                  <p><font color="#00ff33">sets Admin</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon sets admin [admin's name] <br>This will also update your ASE info on the fly. It may take
+                  a couple of seconds to update on the master server. </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta g_motd</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon seta g_motd [message of the day] <br>This will also update your ASE/GS info on the fly.
+                  It may take a couple of seconds to update on the master server. Does not broadcast any messages to clients connecting to your
+                  server "MOTD"=message of the day. </font></p><b><font size="4">
+                  <p><font color="#00ff33">sets URL</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon sets URL [Server URL] <br>This will also update your ASE info on the fly. It may take a
+                  couple of seconds to update on the master server. Does not broadcast any messages to clients connecting to your server. This
+                  link should provide information to your clients. Map list, Map downloads, Server rules. </font></p><b><font size="4">
+                  <p><font color="#00ff33">sets Connection</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon sets Connection [Server's connection speed] <br>This will also update your ASE info on
+                  the fly. It may take a couple of seconds to update on the master server. Does not broadcast any messages to clients connecting
+                  to your server. This is only to inform your clients what type of connection your server uses. This can be anything. </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta timelimit</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon seta timelimit [Number of minutes] <br>Whole number, representing how long each map will
+                  be played. </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta fraglimit</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon seta fraglimit [Number of frags] <br>Whole number, representing how many kills a team needs
+                  to win a map. </font></p><b><font size="4">
+                  <p><font color="#00ff33">set g_gametype</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set g_gametype [Number from 1 to 4] <br>Changes the game type 1= FFA 2= TeamMatch 3= RoundBased
+                  4= Objective 5= Tug Of War </font></p><b><font size="4">
+                  <p><font color="#00ff33">set g_teamdamage </font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set g_teamdamage [0 or 1] <br>Changes FF ( friendly fire ): 0=no 1=yes set g_inactiveSpectate
+                  <br>Usage: rcon set g_inactiveSpectate [Number of seconds] <br>Whole number, representing how long, in seconds, before an
+                  inactive player is moved into Spectate. </font></p><b><font size="4">
+                  <p><font color="#00ff33">set g_inactiveKick</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set g_inactiveKick [Number of seconds] <br>Whole number, representing how long, in seconds,
+                  before an inactive spectator will be kicked. </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta g_allowjointime</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon seta g_allowjointime [Number of seconds]<br>The time period after a map start that the
+                  players are allowed to join in seconds: Default=30. Setting this to 5 will STOP RESPAWNERS<br>Submitted by Jericho Jones </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta g_minGameClients</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon seta g_minGameClients [0 – max number of clients]<br>Number of clients required for
+                  the map to start: Default=0<br>Submitted by Jericho Jones </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta sv_maplist</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon seta sv_maplist ["complete map name. Separated by a space, enclosed by quotes"] <br>Sets
+                  a new map rotation. Complete map name = dm/mohdm4 or obj/obj_team4 </font></p><b><font size="4">
+                  <p><font color="#00ff33">set rconpassword</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set rconpassword [Password] <br>Is used to change your password from rcon. You will need
+                  to reconnect after running this command. </font></p><b><font size="4">
+                  <p><font color="#00ff33">set sv_maxclients</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set sv_maxclients [Number of clients] <br>Whole number, representing the total number of
+                  clients that can connect at the same time. </font></p><b><font size="4">
+                  <p><font color="#00ff33">set sv_privateClients</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set sv_privateClients [Number of clients] <br>Whole number, representing the number of
+                  clients that must use a password to connect. </font></p><b><font size="4">
+                  <p><font color="#00ff33">set sv_privatepassword</font></p></font></b>
+                  <p><font color="#00ff33">Usage: set sv_privatepassword [Password] <br>This is how you can set a private password, so only clients
+                  that provide the correct password can connect. To remove a password from the server use "" without spaces. </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta sv_minping</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon seta sv_minping [Ping in ms] <br>Whole number, representing the minimum ping allowed by
+                  the server, for a client to connect. </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta sv_maxping</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon seta sv_maxping [Ping in ms] <br>Whole number, representing the maximum ping allowed by
+                  the server, for a client to connect. </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta sv_gamespy</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon seta sv_gamespy [0 or 1] <br>This will broadcast your server information to the master
+                  server used by Game spy and ASE: 0=no 1=yes seta sv_maxRate <br>Usage: rcon seta sv_maxRate [Number] <br>Whole number, representing
+                  how much bandwidth each client can receive. This depends on your server's connection. </font></p><b><font size="4">
+                  <p><font color="#00ff33">Set sv_gravity</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set sv_gravity [Number] <br>This will change the gravity of all clients on the server:
+                  Default=800. </font></p><b><font size="4">
+                  <p><font color="#00ff33">set g_allowVote</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set g_allowvote [0 or 1] <br>This command will allow your clients to call votes: 0=no 1=yes
+                  </font></p><b><font size="4">
+                  <p><font color="#00ff33">sv_maxvelocity</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon sv_maxvelocity [Number] <br>This will increase the velocity of the clients movement on
+                  the maps: Default = 6000 </font></p><b><font size="4">
+                  <p><font color="#00ff33">set net_port</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set net_port [port number] <br>This is used to set the game servers port number. </font></p><b><font size="4">
+                  <p><font color="#00ff33">set net_noipx</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon net_noipx [0 or 1 ] <br>When playing on a private network with ipx you can enable MOH to
+                  use the IPX protocol: 0=no 1=yes </font></p><b><font size="4">
+                  <p><font color="#00ff33">sv_walkspeed</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon sv_walkspeed [0-inf]<br>Sets the walk speed: Default = 150<br>Submitted by -=|MwD|=-DaiShan
+                  </font></p><b><font size="4">
+                  <p><font color="#00ff33">sv_runspeed</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon sv_runspeed [0-inf] <br>Sets the run speed: Default = 250 <br>Submitted by -=|MwD|=-DaiShan
+                  </font></p><b><font size="4">
+                  <p><font color="#00ff33">sv_crouchmult</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon sv_crouchmult [0-inf] <br>Sets the crouch speed. Multiplayer: Default is 0.6. Set this
+                  to 0 and you can't move while crouching. Set it to 1 and you move just as fast as standing. <br>Submitted by -=|MwD|=-DaiShan
+                  </font></p><b><font size="4">
+                  <p><font color="#00ff33">toggle</font></p></font></b>
+                  <p><font color="#00ff33">Usage : rcon toggle [variable] <br>Toggles the value of a flag variable. For example, "rcon toggle
+                  g_teamdamage" would turn friendly fire off, if it was currently on.<br>Submitted by DogMeat </font></p><b><font size="4">
+                  <p><font color="#00ff33">path</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon path <br>Will return all current game paths for .pk3 files on the server. </font></p><b><font size="4">
+                  <p><font color="#00ff33">roundlimit</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set roundlimit [Number; Default = 0] <br>This will change the time limit for each round
+                  on a round based game.<br>Submitted by yochoylamuete </font></p><b><font color="#00ff33" size="5">
+                  <p>Spearhead</p></font><font size="4">
+                  <p><font color="#00ff33">g_healthdrop</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set g_healthdrop [ 0 or 1] <br>When enabled players will drop a health pack when killed:
+                  0=no 1=yes </font></p><b><font size="4">
+                  <p><font color="#00ff33">g_realismmode</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set g_realismmode [ 0 or 1 ]<br>Sets server to EA's version of realism: 0=no 1=yes </font></p><b><font size="4">
+                  <p><font color="#00ff33">sv_runspeed</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set sv_runspeed [Number]<br>Sets the walk speed for all clients. Default Spearhead = 287
+                  Default MOHAA = 250 </font></p><b><font size="4">
+                  <p><font color="#00ff33">sv_dmspeedmult</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set sv_dmspeedmult [Number]<br>This is the players burst run speed. After a player has
+                  been running for a short period of time, his speed will increase. Default = 1.10000 </font></p><b><font size="4">
+                  <p><font color="#00ff33">g_healrate</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set g_healrate [Number] <br>This determines how fast players heal, in seconds, when they
+                  use a health pickup: Default = 10 </font></p><b><font size="4">
+                  <p><font color="#00ff33">maprotationtime</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon maprotationtime [Number in Minutes] <br>This sets the maximum amount of time in minutes
+                  players will spend in a particular map. </font></p><b><font size="4">
+                  <p><font color="#00ff33">sv_team_spawn_interval</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set sv_team_spawn_interval [Number] <br>This sets a delay in seconds between spawns. This
+                  is useful if you would like the player spawned in batches, <br>rather than one at a time: Default = 3 </font></p><b><font size="4">
+                  <p><font color="#00ff33">roundlimit</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon roundlimit [Number in Minutes] <br>This sets how long each round will take, in minutes.
+                  This can be smaller than the map rotation time, but not larger. </font></p><b><font size="4">
+                  <p><font color="#00ff33">ui_dedicated</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set ui_dedicated [ 0 or 1 ] <br>Both this cvar and sv_gamespy must be set to 1 to show
+                  up on gamespy: 0=no 1=yes </font></p><b><font size="4">
+                  <p><font color="#00ff33">g_forceteamspectate</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set g_forceteamspectate [ 0 or 1 ] <br>Forces players to only be able to spectate behind
+                  their own team: 0=no 1=yes </font></p><b><font size="4">
+                  <p><font color="#00ff33">dmflags</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set dmflags [Number; the sum of each flag you with to set] <br>You can customize your Spearhead
+                  server, by setting flags. To set more then one, simply add together, each flag you wish to use.<br><br>DF_NO_HEALTH 1<br>DF_NO_POWERUPS
+                  2 <br>DF_WEAPONS_STAY 4 <br>DF_NO_FALLING 8 <br>DF_INSTANT_ITEMS 16 <br>DF_SAME_LEVEL 32 <br>DF_NO_ARMOR 2048 <br>DF_INFINITE_AMMO
+                  16384 <br>DF_NO_FOOTSTEPS 131072 <br>DF_ALLOW_LEAN <br>262144 <br>DF_OLD_SNIPERRIFLE 524288 <br>DF_GERMAN_SHOTGUN 1048576
+                  </font></p><b><font size="4">
+                  <p><font color="#00ff33">sv_invulnerabletime</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set sv_invulnerabletime [Number in seconds] <br>Amount of time (in seconds) a player is
+                  invulnerable for after spawning: Default = 3 </font></p><b><font size="4">
+                  <p><font color="#00ff33">g_teamkillwarn</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set g_teamkillwarn [Number of times] <br>Amount of team kills before the player is warned:
+                  Default = 3 </font></p><b><font size="4">
+                  <p><font color="#00ff33">g_teamkillkick</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon set g_teamkillkick [Number of times] <br>Amount of team kills before the player is kicked
+                  off the server: Default = 5 </font></p><b><font size="4">
+                  <p><font color="#00ff33">g_teamswitchdelay</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon g_teamswitchdelay [Number in seconds]<br>How long you must wait before you can switch teams:
+                  Default = 15 </font></p><b><font size="4">
+                  <p><font color="#00ff33">sv_keywords</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon sv_keywords [ Keywords ]<br>Keywords which allow browsers to filter servers. </font></p><b><font color="#00ff33" size="5">
+                  <p>Linux</p></font><font size="4">
+                  <p><font color="#00ff33">sv_chatter</font></p></font></b>
+                  <p><font color="#00ff33">Usage: rcon sv_chatter [0 or 1]<br>This will echo any chat to console. It not only shows the general
+                  chat (useful for parsing to ban bad swear people) but also shows DM taunts: 0=no 1=yes<br>Submitted by GI jerk </font></p><b><font color="#00ff33" size="5">
+                  <p>Broken Commands</p></font><font size="4">
+                  <p><font color="#00ff33">seta sv_pure</font></p></font></b>
+                  <p><font color="#00ff33">Validates the pk3 file on the client. Must match the server’s pk3 file. 0=no 1=yes </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta g_teamForceBalance</font></p></font></b>
+                  <p><font color="#00ff33">Forces team Balance. Evens the teams when a new client joins or leaves </font></p><b><font size="4">
+                  <p><font color="#00ff33">seta sv_allowDownload</font></p></font></b>
+                  <p><font color="#00ff33">Allow clients to download maps directly from the server</font></p><font face="Arial" size="2"></font>
+                  <!--"''"--></font></div>
+               <p></p>
+               
+               <!--/area Type="main"-->
+            </td>
+         </tr>
+         <tr>
+            <td><img src="/imagelib/sitebuilder/layout/spacer.gif" height="30" alt=""></td>
+         </tr>
+         <tr>
+            <td width="601" valign="top">
+               <!--area Type="area_a" face="Courier" size="2" color="#33FF33" style="0"-->
+               <!--/area Type="area_a"-->
+            </td>
+         </tr>
+         <tr>
+            <td><img src="/imagelib/sitebuilder/layout/spacer.gif" height="30" alt=""></td>
+         </tr>
+         <tr>
+            <td width="601" valign="top">
+               <!--area Type="area_b" face="Courier" size="2" color="#33FF33" style="0"-->
+               <!--/area Type="area_b"-->
+            </td>
+         </tr>
+         <tr>
+            <td><img src="/imagelib/sitebuilder/layout/spacer.gif" height="30" alt=""></td>
+         </tr>
+         <tr>
+            <td width="601" valign="top">
+               <!--area Type="area_c" face="Courier" size="2" color="#33FF33" style="0"-->
+               <!--/area Type="area_c"-->
+            </td>
+         </tr>
+         <tr>
+            <td height="10"><img src="/imagelib/sitebuilder/layout/spacer.gif" height="10" alt=""></td>
+         </tr>         
+         <tr>
+            <td height="10"><img src="/imagelib/sitebuilder/layout/spacer.gif" height="10" alt=""></td>
+         </tr>
+         <tr>
+            <td width="601" valign="top">
+               <!--area Type="runner" face="Courier" size="2" color="#33FF33" style="0"-->
+               
+               <p><font face="Courier" size="2" color="#33FF33"></font></p><div><font face="Courier" size="2" color="#33FF33">done by -=[AGF]=- 2lt.Pinpoint [B-UK]
+                  <!--"''"--></font></div>
+               <p></p>
+               
+                 
+               <!--area Type="footer" face="Courier" size="2" color="#33FF33" style="0"-->
+               <!--/area Type="footer"-->
+               <!--/area Type="runner"-->
+            </td>
+         </tr>
+      </tbody></table>
+   </td>
   </div>
   
   

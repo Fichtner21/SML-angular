@@ -30,6 +30,8 @@ export class HistoryObjComponent implements OnInit {
   public inactiveTab$: Observable<any>;
 
   public historyObj$: any;
+  chanceOfWinTeamOneShow: any;
+  chanceOfWinTeamTwoShow: any; 
   
   constructor(private MatchDetail: MatchesDetailsService, private activatedRoute: ActivatedRoute, private router: Router, private httpClient: HttpClient, private fetchMatches: FetchMatchesService, private tabApiService: PlayersApiService, private translateService: TranslateService) { }
  
@@ -95,7 +97,22 @@ export class HistoryObjComponent implements OnInit {
             (Number(match.t1p5preelo) ? Number(match.t1p5preelo) : 0) + 
             (Number(match.t1p6preelo) ? Number(match.t1p6preelo) : 0) + 
             (Number(match.t1p7preelo) ? Number(match.t1p7preelo) : 0) 
-          ].reduce(this.addPreelo, 0);        
+          ].reduce(this.addPreelo, 0);     
+
+          const sumPreeloTeam2 = [
+            (Number(match.t2p1preelo) ? Number(match.t2p1preelo) : 0) + 
+            (Number(match.t2p2preelo) ? Number(match.t2p2preelo) : 0) + 
+            (Number(match.t2p3preelo) ? Number(match.t2p3preelo) : 0) + 
+            (Number(match.t2p4preelo) ? Number(match.t2p4preelo) : 0) + 
+            (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) + 
+            (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) + 
+            (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0) 
+          ].reduce(this.addPreelo, 0); 
+          
+          // console.log('sumPreeloTeam1', sumPreeloTeam1);
+          // console.log('sumPreeloTeam2', sumPreeloTeam2);
+
+         
           
           matchRow = {
             timestamp: match.timestamp,
@@ -105,6 +122,9 @@ export class HistoryObjComponent implements OnInit {
             video: match.video,
             info: match.info,
             t1preelo: sumPreeloTeam1,
+            t2preelo: sumPreeloTeam2,
+            t1chance: Number(this.calculateChance(sumPreeloTeam1,sumPreeloTeam2)[0].toFixed(2)),
+            t2chance: Number(this.calculateChance(sumPreeloTeam1,sumPreeloTeam2)[1].toFixed(2)),
             t1p1playername: this.addPlayerLink(match.t1p1name, players, inactive),
             t1p1username: match.t1p1name,
             t1p1preelo: match.t1p1preelo,
@@ -179,7 +199,7 @@ export class HistoryObjComponent implements OnInit {
           
           matchRowArray.push(matchRow);
         }
-        // console.log('M =>', matchRowArray[900]);
+        // console.log('M =>', matchRowArray[1337]);
         return matchRowArray.reverse();
       }),
       // tap(x => console.log('xx', x))
@@ -213,5 +233,28 @@ export class HistoryObjComponent implements OnInit {
   public addPreelo(accumulator:any, a:any) {
     return accumulator + a;
   } 
+
+  public floorPrecised(number, precision) {
+    const power = Math.pow(10, precision);
+    return Math.floor(number * power) / power;
+  }
+  public ceilPrecised(number, precision) {
+    const power = Math.pow(10, precision);
+    return Math.ceil(number * power) / power;
+  }
+
+  public calculateChance(team1PreElo:any, team2PreElo:any){
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((team1PreElo - team2PreElo) / 400)) * 100;
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((team2PreElo - team1PreElo) / 400)) * 100; 
+
+    this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+    this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
+
+    const arrChance = [];
+
+    arrChance.push(chanceOfWinTeamOne, chanceOfWinTeamTwo);
+
+    return arrChance;
+  }
  
 }

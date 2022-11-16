@@ -69,8 +69,11 @@
                   <div class="match-row__team--player__score">{{ match.t1p7score }} </div>
                   <div>{{ match.t1p7postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t1p7postelo - match.t1p7preelo) > 0, 'lost': (match.t1p7postelo - match.t1p7preelo) < 0, 'draw': (match.t1p7postelo - match.t1p7preelo === 0) }"><span>{{ match.t1p7postelo - match.t1p7preelo | number: '.1-2'}}</span></div>
-                </div>
-                <div>Sum preelo before war: {{ match.t1preelo | number:'1.0-2'}}</div>
+                </div>    
+                <div class="preelo-info">
+                  <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>            
+                  <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div> 
+                </div>                              
               </div>
               <div class="match-row__team">
                 <div class="teamrounds">{{ match.t2roundswon }}</div>
@@ -130,6 +133,10 @@
                   <div>{{ match.t2p7postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t2p7postelo - match.t2p7preelo) > 0, 'lost': (match.t2p7postelo - match.t2p7preelo) < 0, 'draw': (match.t2p7postelo - match.t2p7preelo === 0) }"><span>{{ match.t2p7postelo - match.t2p7preelo | number: '.1-2'}}</span></div>
                 </div>
+                <div class="preelo-info">
+                  <div class="preelo_war">preELO before war: {{ match.t2preelo | number:'1.0-2'}}</div>
+                  <div [ngClass]="{ 'teamFavorite': (match.t2preelo > match.t1preelo), 'teamNotFavorite': (match.t1preelo > match.t2preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{ match.t1chance }} %</div>
+                </div>                
               </div>
             </div>
           </div>

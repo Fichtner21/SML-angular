@@ -79,6 +79,9 @@
     "clan_history": "Klany historyczne",
     "wars_id": "Wojny gracza po ID:",
     "rank_chart": "Wykres rankingu gracza:", 
-    "frags_chart": "Wykres fragów gracza:"
+    "frags_chart": "Wykres fragów gracza:",
+    "lost": "Przegrane wojny:",
+    "won": "Wygrane wojny:",
+    "drawn": "Zremisowane wojny:"
   }
 }

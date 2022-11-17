@@ -1,4 +1,4 @@
-import { Component, OnInit   } from '@angular/core';
+import { Component, ElementRef, OnInit   } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { tap, take, map } from 'rxjs/operators';
 import { RankObjService } from '../rank-obj.service';
@@ -8,7 +8,6 @@ import { PlayersApiService } from 'src/app/services/players-api.service';
 import { Chart, ChartConfiguration, ChartDataSets, ChartOptions } from 'chart.js';
 import { BaseChartDirective, Color, Label } from 'ng2-charts';
 import { MatchesApiService } from 'src/app/services/matches-api.service';
-
 
 
 @Component({
@@ -32,11 +31,14 @@ export class PlayerViewComponent implements OnInit {
   chartRank: any; 
   public chartFrags: any;
 
+  resultCanvas: any;  
+  ctxResult: any;
+
   public dataToChartFrags: any;
   chart: Chart;
-  
+  // public resultPerPlayer = [];
  
-  constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService) {
+  constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef) {
     // console.log('activatedRoute PlayerView =>', this.activatedRoute);     
    }
 
@@ -82,7 +84,7 @@ export class PlayerViewComponent implements OnInit {
       })
     ) 
    
-    this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$, this.playersTab$]).pipe(
+    this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$,     this.playersTab$]).pipe(
       map(([player, matches, players]) => {
         let playerArray: any[] = [];
         let timestampArray: any[] = [];
@@ -94,6 +96,7 @@ export class PlayerViewComponent implements OnInit {
         let frags: any[] = [];
         let listwars: any[] = [];
         let rankings: any[] = [];
+        let resultPerPlayer: any[] = [];
 
         const foundPlayerArray = this.filterUsername(player, matches);
 
@@ -106,7 +109,85 @@ export class PlayerViewComponent implements OnInit {
               fragsPerPlayerArray.push(Number(destructObjPlayers1[i + 2]));
             }
           })
-        })   
+        })  
+        
+        // console.log('foundPlayerArray', foundPlayerArray);        
+        
+        let win = 0;
+        let lose = 0;
+        let draw = 0;
+
+        foundPlayerArray.forEach(el => {
+          const numPlayerTeam = Number(this.getKeyByValue(el, player).slice(1,2));
+          const numOpponentTeam = (numPlayerTeam === 1) ? 2 : 1;
+
+          const numPlayerTeamWon = Number(el[`t${numPlayerTeam}roundswon`]);
+          const numOpponentTeamWon = Number(el[`t${numOpponentTeam}roundswon`]);
+
+          if(numPlayerTeamWon > numOpponentTeamWon) {
+            win++;
+          } else if(numPlayerTeamWon < numOpponentTeamWon){
+            lose++;
+          } else {
+            draw++;
+          }              
+        });
+        
+        resultPerPlayer.push(win, lose, draw);
+
+        // console.log('resultPerPlayer', resultPerPlayer);        
+
+        // this.resultCanvas = document.getElementById('playerResult');
+        // console.log('this.resultCanvas', this.resultCanvas);          
+        // this.ctxResult = this.resultCanvas.getContext('2d'); 
+        // console.log('this.ctxResult', this.ctxResult);
+        // new Chart(this.ctxResult, {
+        //   type: 'bar',
+        //   data: {
+        //     labels: ['Win', 'Lose', 'Draw'],
+        //     datasets: [{
+        //       label: 'aaa',
+        //       data: resultPerPlayer,
+        //       backgroundColor: ["rgba(11,156,49,0.6)", "rgba(255,0,0,0.6)", "rgba(239, 239, 240, 0.6)"],                  
+        //       borderWidth: 1
+        //     }]
+        //   },
+        //   options: {
+        //     legend: {
+        //       display: false
+        //     },
+        //     responsive: true,
+        //     scales: {             
+        //       xAxes: [
+        //         {
+        //           ticks: {
+        //             beginAtZero: false,
+        //             min: 1,
+        //           },
+        //           offset: true,
+        //           id: 'date-x-axis',
+        //           scaleLabel: {
+        //             display: false,
+        //             labelString: 'Date of match',
+        //           },                  
+        //         },
+        //       ],
+        //       yAxes: [
+        //         {
+        //           ticks: {
+        //             beginAtZero: true,
+        //           },
+        //           scaleLabel: {
+        //             display: false,
+        //             labelString: 'Frags per war',
+        //           },
+        //         },
+        //       ],
+        //     },
+            
+        //     // display:true
+        //   }, 
+        // });      
 
         matches.forEach((el) => {
           if(Object.values(el).includes(player)){              
@@ -124,7 +205,7 @@ export class PlayerViewComponent implements OnInit {
             playerArray.push([el.idwar, el.timestamp, fragPerWar]);           
             timestampArray.push(new Date(el.timestamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }));            
           }
-        });
+        });       
         
         players.forEach((el) => {
          if(el.username === player){
@@ -149,21 +230,30 @@ export class PlayerViewComponent implements OnInit {
           frags: fragsPerPlayerArray,
           debut: timestampArray[0], 
           listwars: listwars,  
-          rankings: rankings,             
-        }         
-
-        // console.log('P =>', playerCard);
+          rankings: rankings,    
+          win: win,
+          lose: lose,
+          draw: draw,  
+          winPercentage: (win/(win + lose + draw)*100),       
+          losePercentage: (lose/(win + lose + draw)*100),       
+          drawPercentage: (draw/(win + lose + draw)*100),
+          resultPerPlayer: resultPerPlayer
+        }  
+        // console.log('playerCard', playerCard)
+        
         return playerCard;
       })
     ) 
-
-    
   }  
 
+  public getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+  }
+
   private filterUsername(name:string, matches:any[]){
-        return matches.filter(m => {             
-          return Object.values(m).includes(name);
-          })
+    return matches.filter(m => {             
+      return Object.values(m).includes(name);
+      })
   } 
 
   public showFrags(frags:any[], listwars:any[]){    
@@ -224,6 +314,60 @@ export class PlayerViewComponent implements OnInit {
       }
     });
   } 
+
+  public showResult(resultPerPlayer:any[]){
+    this.resultCanvas = document.getElementById('playerResult');
+    // console.log('this.resultCanvas', this.resultCanvas);          
+    this.ctxResult = this.resultCanvas.getContext('2d'); 
+    // console.log('this.ctxResult', this.ctxResult);
+    new Chart(this.ctxResult, {
+      type: 'bar',
+      data: {
+        labels: ['Win', 'Lose', 'Draw'],
+        datasets: [{
+          label: 'War',
+          data: resultPerPlayer,
+          backgroundColor: ["rgba(11,156,49,0.6)", "rgba(255,0,0,0.6)", "rgba(239, 239, 240, 0.6)"],                  
+          borderWidth: 1
+        }]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        responsive: true,
+        scales: {             
+          xAxes: [
+            {
+              ticks: {
+                beginAtZero: false,
+                min: 1,
+              },
+              offset: true,
+              id: 'date-x-axis',
+              scaleLabel: {
+                display: false,
+                labelString: 'Date of match',
+              },                  
+            },
+          ],
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: false,
+                labelString: 'Frags per war',
+              },
+            },
+          ],
+        },
+        
+        // display:true
+      }, 
+    });  
+  }
 
   public showRanking(rankings:any[], listwars:any[]){    
     this.canvasRank = document.getElementById('rankChart');
@@ -360,50 +504,47 @@ export class PlayerViewComponent implements OnInit {
   
   }
 
-  // public cssHorizontal(frags:any[], listwars:any[]){
-  //   this.canvas = <HTMLCanvasElement>document.getElementById("chart");
-  //   this.ctx = this.canvas.getContext('2d');
-  //   var data = {
-  //     labels: listwars,
-  //     datasets: [{
-  //       /* data */
-  //       label: "Data label",
-  //       backgroundColor: ["red", "#8e5ea2","#3cba9f", '#1d49b8'],
-  //       data: frags,
-  //     }]
-  //   };
+// public cssHorizontal(frags:any[], listwars:any[]){
+//   this.canvas = <HTMLCanvasElement>document.getElementById("chart");
+//   this.ctx = this.canvas.getContext('2d');
+//   var data = {
+//     labels: listwars,
+//     datasets: [{
+//       /* data */
+//       label: "Data label",
+//       backgroundColor: ["red", "#8e5ea2","#3cba9f", '#1d49b8'],
+//       data: frags,
+//     }]
+//   };
 
-  //   var options = {
-  //     responsive: true,
-  //     maintainAspectRatio: true,
-  //     title: {
-  //       text: 'Hello',
-  //       display: true
-  //     },
-  //     scales: {
-  //       xAxes: [{
-  //         stacked: false,
-  //         ticks: {
-    
-  //         },
-  //       }],
-  //       yAxes: [{
-  //         stacked: true,
-  //         ticks: {
-    
-  //         }
-  //       }]
-  //     }
-  //   };
+//   var options = {
+//     responsive: true,
+//     maintainAspectRatio: true,
+//     title: {
+//       text: 'Hello',
+//       display: true
+//     },
+//     scales: {
+//       xAxes: [{
+//         stacked: false,
+//         ticks: {
+  
+//         },
+//       }],
+//       yAxes: [{
+//         stacked: true,
+//         ticks: {
+  
+//         }
+//       }]
+//     }
+//   };
 
-  //   new Chart(this.ctx, {
-  //     type: 'bar',
-  //     data: data,
-  //     options: options
-  //   })
-  // }
-}
-function annotations(annotations: any) {
-  throw new Error('Function not implemented.');
+//   new Chart(this.ctx, {
+//     type: 'bar',
+//     data: data,
+//     options: options
+//   })
+// }
 }
 

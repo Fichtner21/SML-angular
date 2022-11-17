@@ -107,13 +107,8 @@ export class HistoryObjComponent implements OnInit {
             (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) + 
             (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) + 
             (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0) 
-          ].reduce(this.addPreelo, 0); 
-          
-          // console.log('sumPreeloTeam1', sumPreeloTeam1);
-          // console.log('sumPreeloTeam2', sumPreeloTeam2);
-
-         
-          
+          ].reduce(this.addPreelo, 0);           
+        
           matchRow = {
             timestamp: match.timestamp,
             idwar: match.idwar,
@@ -199,7 +194,7 @@ export class HistoryObjComponent implements OnInit {
           
           matchRowArray.push(matchRow);
         }
-        // console.log('M =>', matchRowArray[1337]);
+        // console.log('M =>', matchRowArray[1345]);
         return matchRowArray.reverse();
       }),
       // tap(x => console.log('xx', x))

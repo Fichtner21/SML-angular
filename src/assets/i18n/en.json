@@ -79,6 +79,9 @@
     "clan_history": "Clan History",
     "wars_id": "Player wars by ID:",
     "rank_chart": "Player Rankings Chart:", 
-    "frags_chart": "Player Frags Chart:"
+    "frags_chart": "Player Frags Chart:",
+    "lost": "Lost wars:",
+    "won": "Won wars:",
+    "drawn": "Drawn wars:"
   }
 }

@@ -120,10 +120,10 @@
                   <div [ngClass]="{ 'won': (match.t2p5postelo - match.t2p5preelo) > 0, 'lost': (match.t2p5postelo - match.t2p5preelo) < 0, 'draw': (match.t2p5postelo - match.t2p5preelo === 0) }"><span>{{ match.t2p5postelo - match.t2p5preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p6username !== ''">
-                  <div>{{ match.t2p6preelo | number: '.1-2' }}</div>
+                  <div>{{ match.t2p6preelo | number: '1.0-2' }}</div>
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p6username}}">{{ match.t2p6playername }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p6score }} </div>
-                  <div>{{ match.t2p6postelo | number: '.1-2' }}</div>
+                  <div>{{ match.t2p6postelo | number: '1.0-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t2p6postelo - match.t2p6preelo) > 0, 'lost': (match.t2p6postelo - match.t2p6preelo) < 0, 'draw': (match.t2p6postelo - match.t2p6preelo === 0) }"><span>{{ match.t2p6postelo - match.t2p6preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p7username !== ''">

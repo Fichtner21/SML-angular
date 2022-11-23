@@ -14,6 +14,16 @@
             <div class="won">{{ 'playerview.won' | translate }} <span>{{ playerDetails.win }} ({{ playerDetails.winPercentage | number: '1.0-2' }}%)</span></div>
             <div class="lost">{{ 'playerview.lost' | translate }} <span>{{ playerDetails.lose }} ({{ playerDetails.losePercentage | number: '1.0-2' }}%)</span></div>
             <div class="drawn">{{ 'playerview.drawn' | translate }} <span>{{ playerDetails.draw }} ({{ playerDetails.drawPercentage | number: '1.0-2'  }}%)</span></div>
+            <div class="playedWith danger">
+              Most played with:            
+              <div *ngFor="let player of playerDetails.mostOftenPlayed; let i = index;" class="playerWith">                
+                <span>{{ i+1 }}. <a href="/obj-ranking/{{ player[0] }}">{{ player[0] }}</a>, {{ player[1] }} times.
+                </span>
+              </div>
+               
+            </div>
+            <button (click)="clickEvent()" class="more"
+               [ngClass]="status ? 'show' : 'hide'">Show/hide more</button>
           </div>
           <div class="player-flag">
             <div class="ambilight">

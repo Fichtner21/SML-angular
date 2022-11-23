@@ -1,13 +1,11 @@
 import { Component, ElementRef, OnInit   } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { tap, take, map } from 'rxjs/operators';
 import { RankObjService } from '../rank-obj.service';
 import { Players } from '../ranking.model';
 import { combineLatest, Observable } from 'rxjs';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { Chart, ChartConfiguration, ChartDataSets, ChartOptions } from 'chart.js';
-import { BaseChartDirective, Color, Label } from 'ng2-charts';
-import { MatchesApiService } from 'src/app/services/matches-api.service';
 
 
 @Component({
@@ -23,6 +21,7 @@ export class PlayerViewComponent implements OnInit {
   public historyMatches$: Observable<any>;
   public playerUsername$: Observable<any>;
   public playersTab$: Observable<any>;
+  public inactiveTab$: Observable<any>;
   canvas: any;
   ctx: any;
   isShown: Boolean = false;
@@ -37,8 +36,10 @@ export class PlayerViewComponent implements OnInit {
   public dataToChartFrags: any;
   chart: Chart;
   // public resultPerPlayer = [];
+  status: boolean = false;
+  mostOftenPlayed = [];
  
-  constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef) {
+  constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef, private router: Router) {
     // console.log('activatedRoute PlayerView =>', this.activatedRoute);     
    }
 
@@ -74,18 +75,37 @@ export class PlayerViewComponent implements OnInit {
       }),
     );
 
-    this.player$ = this.activatedRoute.data.pipe(
+    this.inactiveTab$ = this.playersApiService.getPlayers('Inactive').pipe(
+      map((response: any) => {        
+        let batchRowValues = response.values;
+        let players: any[] = [];
+        for(let i = 1; i < batchRowValues.length; i++){
+          const rowObject: object = {};
+          for(let j = 0; j < batchRowValues[i].length; j++){
+            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+          }
+          players.push(rowObject);
+        }          
+        return players;
+      }),
+    );
+
+    this.player$ = this.activatedRoute.data.pipe(      
       map(data => data.player)      
-    ) 
+    );    
 
     this.playerUsername$ = this.activatedRoute.data.pipe(
-      map((data) => {
-        return data.player.username;
+      map((data) => {         
+        if(data.player == undefined){
+          this.router.navigate(['/obj-inactive/']);
+        } else {
+          return data.player.username;
+        }       
       })
-    ) 
+    ); 
    
-    this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$,     this.playersTab$]).pipe(
-      map(([player, matches, players]) => {
+    this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$, this.playersTab$, this.inactiveTab$]).pipe(
+      map(([player, matches, players, inactives]) => {
         let playerArray: any[] = [];
         let timestampArray: any[] = [];
         let playerName: string;
@@ -98,7 +118,7 @@ export class PlayerViewComponent implements OnInit {
         let rankings: any[] = [];
         let resultPerPlayer: any[] = [];
 
-        const foundPlayerArray = this.filterUsername(player, matches);
+        const foundPlayerArray = this.filterUsername(player, inactives, matches);               
 
         const fragsPerPlayerArray:any[] = [];
           
@@ -116,9 +136,21 @@ export class PlayerViewComponent implements OnInit {
         let win = 0;
         let lose = 0;
         let draw = 0;
+        
 
         foundPlayerArray.forEach(el => {
-          const numPlayerTeam = Number(this.getKeyByValue(el, player).slice(1,2));
+          const numPlayerTeam = Number(this.getKeyByValue(el, player).slice(1,2));         
+          const numPlayerTeamPosition = Number(this.getKeyByValue(el, player).slice(3,4));    
+
+          const playerPosition = el[`t${numPlayerTeam}p${numPlayerTeamPosition}name`];
+
+          for(let i = 1; i < 8; i++){
+            const restOfTeam = el[`t${numPlayerTeam}p${(i == numPlayerTeamPosition) ? 'continue' : i}name`];           
+            if(restOfTeam != (undefined || '')){
+              this.mostOftenPlayed.push(restOfTeam);
+            }
+          }               
+
           const numOpponentTeam = (numPlayerTeam === 1) ? 2 : 1;
 
           const numPlayerTeamWon = Number(el[`t${numPlayerTeam}roundswon`]);
@@ -135,6 +167,30 @@ export class PlayerViewComponent implements OnInit {
         
         resultPerPlayer.push(win, lose, draw);
 
+        // console.log('mostOftenPlayed', mostOftenPlayed.filter(n => n)); 
+        const mostOftenPlayedFilter = this.mostOftenPlayed.filter(n => n);
+        // console.log('mostOftenPlayedFilter', mostOftenPlayedFilter);
+
+        const count = {};
+
+        for (const element of mostOftenPlayedFilter) {
+          if (count[element]) {           
+            count[element] += 1;
+          } else {
+            count[element] = 1;
+          }
+        }
+
+        // console.log('count', count);
+
+        let keys = Object.keys(count); 
+      
+        keys.sort(function(a, b) { return count[a] - count[b] });
+
+        const sorttedCount = this.publicsortObjectbyValue(count);
+        const sorttedCountArr = Object.entries(sorttedCount);
+        const countPlayers = this.get3TopItems(Object.entries(count));           
+       
         // console.log('resultPerPlayer', resultPerPlayer);        
 
         // this.resultCanvas = document.getElementById('playerResult');
@@ -215,7 +271,7 @@ export class PlayerViewComponent implements OnInit {
            ranking = el.ranking;
            clanHistory = el.clanhistory;
          }         
-        })
+        });       
        
         let playerCard;
         
@@ -237,23 +293,41 @@ export class PlayerViewComponent implements OnInit {
           winPercentage: (win/(win + lose + draw)*100),       
           losePercentage: (lose/(win + lose + draw)*100),       
           drawPercentage: (draw/(win + lose + draw)*100),
-          resultPerPlayer: resultPerPlayer
+          resultPerPlayer: resultPerPlayer,    
+          mostOftenPlayed: sorttedCountArr,      
+          mostOftenPlayed1: { c: sorttedCountArr[0], n: sorttedCountArr[0]},
+          mostOftenPlayed2: { c: sorttedCountArr[1], n: sorttedCountArr[1]},
+          mostOftenPlayed3: { c: sorttedCountArr[2], n: sorttedCountArr[2]},
         }  
-        // console.log('playerCard', playerCard)
+        // console.log('playerCard', playerCard);
         
         return playerCard;
       })
     ) 
   }  
 
+  clickEvent(){
+    this.status = !this.status;    
+    const playerWith = document.querySelector('.playedWith');
+    const moreDiv = document.querySelector('.open');
+    
+    if(this.status){    
+      playerWith.classList.add('success');
+      playerWith.classList.remove('danger');     
+    } else {
+      playerWith.classList.remove('success')
+      playerWith.classList.add('danger');     
+    }
+  }
+
   public getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
   }
 
-  private filterUsername(name:string, matches:any[]){
-    return matches.filter(m => {             
+  private filterUsername(name:string, inactive:string, matches:any[]){ 
+    return matches.filter(m => {  
       return Object.values(m).includes(name);
-      })
+    })
   } 
 
   public showFrags(frags:any[], listwars:any[]){    
@@ -504,6 +578,41 @@ export class PlayerViewComponent implements OnInit {
   
   }
 
+  public get3TopItems(arr:any[]) {
+    return arr.sort((a, b) => b - a).slice(0, 3);
+  }
+
+  public getDisplayName(name:string, actRanking: any, inRanking: any){
+
+    const activeANDinactive = combineLatest(actRanking, inRanking).pipe(
+      map(([active, inactive]) => {
+        let activeInactive: any;
+        console.log('active', active);
+        console.log('inactive', inactive);
+      })
+    );
+
+    return activeANDinactive;
+    actRanking.filter((active:string) => {
+      if(active != null || undefined || ''){
+        return Object.values(active).includes(name);
+      } 
+    });
+
+    inRanking.filter((inactive:string) => {
+      if(inactive != null || undefined || ''){
+        return Object.values(inactive).includes(name)
+      }
+    })
+  }
+
+  public publicsortObjectbyValue(obj={},asc=true){ 
+    const ret = {};
+    Object.keys(obj).sort((a,b) => obj[asc?b:a]-obj[asc?a:b]).forEach(s => ret[s] = obj[s]);
+    return ret
+ }
+ 
+ 
 // public cssHorizontal(frags:any[], listwars:any[]){
 //   this.canvas = <HTMLCanvasElement>document.getElementById("chart");
 //   this.ctx = this.canvas.getContext('2d');

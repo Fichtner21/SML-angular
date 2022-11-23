@@ -13,7 +13,7 @@ const routes: Routes = [
     path: ':username',
     component: PlayerViewComponent,
     resolve: { player: PlayerViewResolve }
-  }
+  }  
 ];
 
 @NgModule({

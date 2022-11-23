@@ -134,23 +134,24 @@ export class SingleMatchComponent implements OnInit {
 
     this.historyObj$ = combineLatest([this.playersTab$, this.match$, this.inactiveTab$]).pipe(
       map(([players, match, inactive]) => {
-        const singleMap = match.info;
+        // const singleMap = match.info;
         // console.log('match.info', match.info);
 
-        const csLewisQuote = match.info;
-        const regex1 = /The Hunt/;
-        const regex2 = /The Bridge, The Church Final/g;
-        const regex3 = /The Church Final/g;
+        const csLewisQuote = match.info;        
 
         // console.log('regEx =>', csLewisQuote.match(match.info));
         const findMap = csLewisQuote.match(match.info);
 
         const mapArray = [];
-        findMap.forEach((el) => {
-          mapArray.push(el);
-        });
+        if(findMap != null){
+          findMap.forEach((el) => {
+            mapArray.push(el);
+          });
+        } else {
+          mapArray.push(match.info);
+        }       
 
-        const newMapArray =  mapArray[0].split(', ');
+        const newMapArray = mapArray[0].split(', ');
 
         newMapArray.forEach((el, i) => {
         if(el == 'The Hunt'){

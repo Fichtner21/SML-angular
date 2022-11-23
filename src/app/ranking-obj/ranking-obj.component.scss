@@ -29,20 +29,20 @@ section {
     align-items: center;
     flex-wrap: wrap;
 
-    .cyan {
-      background-color: darkcyan;
-      width: 50px;
-      height: 20px;
-    }
+    // .cyan {
+    //   background-color: darkcyan;
+    //   width: 50px;
+    //   height: 20px;
+    // }
 
-    .cyan-info {
-      padding-left: 5px;
-      a {
-        font-weight: 700;
-        text-decoration: underline;
+    // .cyan-info {
+    //   padding-left: 5px;
+    //   a {
+    //     font-weight: 700;
+    //     text-decoration: underline;
   
-      }
-    }    
+    //   }
+    // }    
 
     .name {
       display: flex;
@@ -352,9 +352,9 @@ a {
 }
 
 .players-list {
-  .cyan {
-    background-color: darkcyan !important;
-  }
+  // .cyan {
+  //   background-color: darkcyan !important;
+  // }
 
   >:nth-child(even){
     background-color: #2f3060;

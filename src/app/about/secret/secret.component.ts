@@ -129,13 +129,5 @@ export class SecretComponent implements OnInit {
   // public position = {
   //   lat: 52.259232532739134,
   //   lng: 19.1596780162337
-  // }
-
-  
-
- 
-
- 
-
-  
+  // }  
 }

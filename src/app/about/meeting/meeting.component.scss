@@ -28,6 +28,7 @@ background-size: 4px 4px;
       font-weight: 700;
       padding: 0 10px;
       color: #ffffc8;
+      cursor: pointer;
 
       &:hover {
         color: red;
@@ -40,8 +41,27 @@ background-size: 4px 4px;
     margin: 0 auto;
     max-width: 1300px;
 
+    .meet-users {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      padding: 10px;
+      background-color: #010141;
+
+      :nth-child(n):not(:last-child){
+        border-right: 2px solid #ffffc0;
+      }
+
+      div {
+        font-weight: 700;
+        font-size:22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
     h2 {
-      margin-top: 15px;
+      margin: 15px 0;
     }   
     
     ol {

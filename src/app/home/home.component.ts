@@ -2,10 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { idOne, IdOneAttributesMapping, IdTwoAttributesMapping, idTwo } from '../home/team-selection-one.model';
 import { SelectionTeamService } from './selection-team.service';
-import { map, tap } from 'rxjs/operators';
+import { bufferToggle, map, tap } from 'rxjs/operators';
 import { Spinkit } from 'ng-http-loader';
 import { PlayersApiService } from '../services/players-api.service';
-import { Chart, ChartOptions, ChartType } from 'chart.js';
+import { Chart, ChartOptions } from 'chart.js';
+import * as ChartAnnotation from 'chartjs-plugin-annotation';
+// import * as pluginAnnotation from 'chartjs-plugin-annotation';
+import annotationPlugin from 'chartjs-plugin-annotation';
+
 
 
 @Component({
@@ -32,16 +36,15 @@ export class HomeComponent implements OnInit {
 
   public teamOneSelection$: Observable<any>;
   public playersTest$: Observable<any>;
-  public teamSelections$: Observable<any>;  
+  public teamSelections$: Observable<any>; 
+  public addAmatch$: Observable<any>;
 
   constructor(private idTeamOne: SelectionTeamService, private playersApiService: PlayersApiService) {
     
-   }
+  }   
 
-   onClick(event) {}
-
-  ngOnInit(): void {
-    
+  ngOnInit(): void { 
+    Chart.plugins.register(annotationPlugin);
 
     this.teamOneSelection$ = this.playersApiService.getPlayers('TeamSelectionOne').pipe(
       map((response:any) => {
@@ -58,7 +61,7 @@ export class HomeComponent implements OnInit {
         return players;
       })
     );
-
+ 
     this.playersTest$ = this.playersApiService.getPlayers('Players').pipe(
       map((response: any) => {        
         let batchRowValues = response.values;
@@ -83,9 +86,11 @@ export class HomeComponent implements OnInit {
         for(let name of selection){
           selected = {
             t1playername: this.addPlayerLink(name.Team1Players, players),
+            // t1playername: name.Team1Players,
             t1username: name.Team1Players,
             t1preelo: name.ELO1,            
             t2playername: this.addPlayerLink(name.Team2Players, players),
+            // t2playername: name.Team2Players,
             t2username: name.Team2Players,
             t2preelo: name.ELO2,            
           };
@@ -112,7 +117,7 @@ export class HomeComponent implements OnInit {
       
     )  
     
-    const videos = ['1','2','3','4'];
+    const videos = ['1','2','3','4','5'];
     this.randomVideo = videos[Math.floor(Math.random()*videos.length)];
 
     this.playedWars$ = this.playersApiService.getPlayers('Match+History').pipe(
@@ -133,11 +138,10 @@ export class HomeComponent implements OnInit {
           const monthWithYear = el['month'] + '/' + el['year'];
           yearMonth.push(monthWithYear);
           datesInMonth.push(el['dates'].length);
-        });           
-        
+        }); 
+
         //CANVAS
-        this.activityCanvas = document.getElementById('allActivity');
-        console.log('this.activityCanvas',  this.activityCanvas);
+        this.activityCanvas = document.getElementById('allActivity');       
         this.ctx = this.activityCanvas.getContext('2d');
         new Chart(this.ctx, {
           type: 'bar',
@@ -189,21 +193,45 @@ export class HomeComponent implements OnInit {
                   },
                 },
               ],
-            },
-            
+            },  
+            annotation: {
+              drawTime: 'afterDatasetsDraw',
+              annotations: [
+                {
+                  id: 'hline1',
+                  type: 'line',
+                  mode: 'horizontal',
+                  scaleID: 'y-axis-0',
+                  value: this.avarageWarsPerMonth(datesInMonth),
+                  borderColor: 'red',
+                  borderDash: [10, 5],
+                  label: {
+                    backgroundColor: 'red',
+                    content: 'Avg. ' + this.avarageWarsPerMonth(datesInMonth).toFixed(2) + ' wars per month.',
+                    enabled: true,
+                  },
+                },
+              ]
+            },            
             // display:true
-          }, 
-               
-        });        
-        
+          } as ChartOptions,              
+          plugins: [ChartAnnotation] 
+        }); 
         return response.values;       
       })
     )  
+
+    
   } 
+
+  onClick(event) {}
+  ngAfterViewInit() {
+    
+  }
 
   public addPlayerLink(player:string, obj:any) {
     let convertedPlayer = '';    
-    obj.forEach((el:any) => {
+    obj.forEach((el:any) => {           
       if (player === el.username) {
         convertedPlayer = el.playername;
       } else if (player === '') {
@@ -215,6 +243,10 @@ export class HomeComponent implements OnInit {
     return convertedPlayer; 
   } 
 
+  public avarageWarsPerMonth(obj:any){
+    return obj.reduce((a:any, b:any) => a + b) / obj.length;
+  }
+
   public floorPrecised(number, precision) {
     const power = Math.pow(10, precision);
     return Math.floor(number * power) / power;
@@ -222,6 +254,21 @@ export class HomeComponent implements OnInit {
   public ceilPrecised(number, precision) {
     const power = Math.pow(10, precision);
     return Math.ceil(number * power) / power;
+  }
+
+  public bgColor(dates:any){
+    dates.map(function(wars, i){
+      if(dates[i] == Math.max.apply(null, dates)){
+        // return 'rgba(11,156,49,0.6)';
+        return '#00FF00';
+      }
+      if(dates[i] == Math.min.apply(null, dates)){
+        // return 'rgba(255,0,0,0.6)';
+        return '#FF00000';
+      }
+      // return 'rgba(239, 239, 240, 0.6)';
+      return '#efef2899';
+    })              
   }
 
   groupDates(dates:any){

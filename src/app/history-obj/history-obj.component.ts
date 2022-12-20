@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { GoogleSheetsDbService } from 'ng-google-sheets-db';
@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-history-obj',
   templateUrl: './history-obj.component.html',
   styleUrls: ['./history-obj.component.scss']
@@ -194,14 +195,15 @@ export class HistoryObjComponent implements OnInit {
           
           matchRowArray.push(matchRow);
         }
-        // console.log('M =>', matchRowArray[1345]);
+        // console.log('M =>', matchRowArray[1363]);
         return matchRowArray.reverse();
       }),
       // tap(x => console.log('xx', x))
     )  
     
     
-  }; 
+  };  
+
   public addPlayerLink(player:string, obj:any, obj2:any) {
     let convertedPlayer = '';    
     obj.forEach((el:any) => {
@@ -251,5 +253,71 @@ export class HistoryObjComponent implements OnInit {
 
     return arrChance;
   }
+
+  public betOdd(bet:number){
+    let code = bet;
+    switch (true) {
+      case code == 0:
+        return "100";
+        break;
+      case bet > 0 && bet < 20:
+        return "20";
+        break;
+      case bet > 20 && bet < 30:
+        return this.randomNumber(8, 15);
+        break;
+      case bet > 30 && bet < 40:
+        return this.randomNumber(4, 7.99);
+        break;
+      case bet > 40 && bet < 42:
+        return this.randomNumber(3.31, 4);
+        break;
+      case bet > 42 && bet < 44:
+        return this.randomNumber(2.81, 3.30);
+        break;
+      case bet > 44 && bet < 46:
+        return this.randomNumber(2.51, 2.8);
+        break;
+      case bet > 46 && bet < 48:
+        return this.randomNumber(2.21, 2.5);
+        break;
+      case bet > 48 && bet < 50.1:
+        return this.randomNumber(2.01, 2.2);
+        break;
+      case bet == 50:
+        return "2";
+        break;
+      case bet > 50.1 && bet < 52: 
+        return this.randomNumber(1.85, 1.99);
+        break;
+      case bet > 52 && bet < 54:
+        return this.randomNumber(1.70, 1.84);
+        break;
+      case bet > 54 && bet < 56:
+        return this.randomNumber(1.55, 1.69);
+        break;
+      case bet > 56 && bet < 58:
+        return this.randomNumber(1.40, 1.54);
+        break;
+      case bet > 58 && bet < 60:
+        return this.randomNumber(1.31, 1.39);
+        break;
+      case bet > 60 && bet < 80:
+        return "1.3";
+        break;
+      case bet > 80 && bet < 100:
+        return "1.1";
+        break;
+      case bet == 100:
+        return "1";
+        break;
+      default:
+        return "unknown odd";      
+    }
+  }
+
+  public randomNumber(min, max) { 
+    return (Math.random() * (max - min) + min).toFixed(2);
+}
  
 }

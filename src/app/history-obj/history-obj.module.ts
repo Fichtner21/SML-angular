@@ -11,6 +11,7 @@ import { SinglePlayerResolve } from "./single-match/resolver/single-player.resol
 import { HttpClient } from "@angular/common/http";
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule } from "@ngx-translate/core";
+import { SafePipe } from "./safe.pipe";
 
 // export function createTranslateLoader(http: HttpClient){
 //   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -19,7 +20,8 @@ import { TranslateModule } from "@ngx-translate/core";
 @NgModule({
     declarations: [
       HistoryObjComponent,
-      SingleMatchComponent
+      SingleMatchComponent,
+      SafePipe
     ],
     imports: [
         CommonModule,        

@@ -11,57 +11,22 @@
         <!-- <div class="meet"><a href="https://discord.com/channels/716723661909786690/716723662337605663/1029825546747646093" title="CLICK for more INFO" target="_blank">Meeting 18.11. - 20.11.2022</a></div> -->
       </div>
     </div>       
-    <!-- <div class="lol">LOL, Fantastic Action (c) YP</div> -->
-    <!-- <div *ngIf="idOne$ | async as idones;" class="team-ids">
-      <div class="team-cont">
-        <h2>TEAM 1</h2>
-        <div *ngFor="let idone of idones; let i = index;" class="character-card">
-            <div>{{ idone.team1players.name | json }}</div>
-            <div>{{ idone.team1players.elo | json }}</div>          
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="idTwo$ | async as idtwos;" class="team-ids">
-      <div class="team-cont">
-        <h2>TEAM 1</h2>
-        <div *ngFor="let idtwo of idtwos; let i = index;" class="character-card">
-            <div>{{ idtwo.team2players.name | json }}</div>
-            <div>{{ idtwo.team2players.elo | json }}</div>          
-        </div>
-      </div>  
-    </div> -->
-    
+    <!-- <div class="lol">LOL, Fantastic Action (c) YP</div> -->    
   </div>
   <div class="gradient"></div>
   <div class="videoContainer">
-    <video autoplay [muted]="true" loop id="myVideo1">
-      <!-- <source src="assets/video/1.webm" type="video/webm">  -->
-      <source src="assets/video/{{randomVideo}}.mp4" type="video/mp4">
-      <!-- <source src="assets/video/3.mp4" type="video/mp4">
-      <source src="assets/video/4.mp4" type="video/mp4"> -->
+    <video autoplay [muted]="true" loop id="myVideo1">      
+      <source src="assets/video/{{randomVideo}}.mp4" type="video/mp4">      
     </video>   
   </div>
   <div class="monthActivity">
     <div class="container">
       <div *ngIf="playedWars$ | async as playedWars"></div>
-      <h1>{{ 'home.month_activity' | translate }}:</h1>
+      <ng-container *ngIf="playedWars$ | async">
+        <h1>{{ 'home.month_activity' | translate }}:</h1>
+      </ng-container>    
       <canvas id="allActivity" width="1320" height="280" style="overflow-x: scroll;"> 
-      </canvas>
-      <!-- <div style="display: block;" >
-        <canvas width="1320" height="280" 
-          #panelA="base-chart"
-          baseChart
-          [datasets]="barChartData"
-          [labels]="barChartLabels"
-          [options]="barChartOptions"
-          [legend]="barChartLegend"
-          [chartType]="barChartType"
-          [plugins]="barChartPlugins"
-          (chartClick)="onClick($event)"
-        >
-        </canvas>
-      </div> -->
+      </canvas>     
     </div>
   </div>
 </div>
@@ -74,7 +39,7 @@
   <div class="teamsCont">  
     <ng-container *ngIf="teamSelections$ | async as teamOneSelection;">
       <ng-container *ngFor="let teamOne of teamOneSelection; let i = index;">
-        <div class="teamIdOne">
+        <div class="teamIdOne">          
           <div class="teamIdOne__playerElo">{{ teamOne.t1preelo }}</div>
           <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t1username}}">{{ teamOne.t1playername }}</a></div>                 
         </div>        
@@ -83,24 +48,7 @@
           <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t2username}}">{{ teamOne.t2playername }}</a></div> 
         </div>        
       </ng-container>
-    </ng-container>
-    <!-- <div *ngIf="idOne$ | async as idones;">
-      <div *ngFor="let idone of idones; let i = index;">
-        <div class="teamIdOne">
-          <div class="teamIdOne__playerName">{{ idone.Team1Players }}</div> 
-          <div class="teamIdOne__playerElo">{{ idone.ELO1 }}</div> 
-        </div>
-        
-      </div>
-    </div>
-    <div *ngIf="idOne$ | async as idones;">
-      <div *ngFor="let idone of idones; let i = index;">
-        <div class="teamIdOne">
-          <div class="teamIdOne__playerName">{{ idone.Team2Players }}</div> 
-          <div class="teamIdOne__playerElo">{{ idone.ELO2 }}</div> 
-        </div>        
-      </div>
-    </div> -->
+    </ng-container>   
   </div>
   <div class="teamsCumulative">
     <div>{{ 'home.cumulative' | translate }} {{ teamOneCumulative }}</div>

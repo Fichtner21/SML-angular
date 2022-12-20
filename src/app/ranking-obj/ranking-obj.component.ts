@@ -25,6 +25,9 @@ export class RankingObjComponent implements OnInit {
   randomAct:string;  
   public playersRow: any;
   public lastWarOfPlayer$: any;  
+  booleanVar = false;
+  booleanVarRank = false;
+  booleanVarFpW = false; 
 
   public playersTest$: Observable<any>;
   public historyMatches$: Observable<any>;
@@ -131,7 +134,7 @@ export class RankingObjComponent implements OnInit {
             username:name.username,
             playername:name.playername,
             cup:this.addTitleCup(name.cup1on1edition1),
-            ranking:name.ranking,
+            ranking:parseFloat(name.ranking.replace(/,/g,'')),
             wars:name.warcount,
             flag:name.nationality,          
             strike: this.smallStrike2(name.username, v2),
@@ -602,5 +605,59 @@ export class RankingObjComponent implements OnInit {
     const showIDwars = linkWars.join(', ');
 
     return showIDwars;
+  }
+
+  public sortByWarsDesc(res:Observable<any>){      
+    this.booleanVar = !this.booleanVar;    
+    return this.lastWarOfPlayer$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => Number(b.wars) - Number(a.wars))
+      )
+    )       
+  }
+
+  public sortByWarsAsc(res:Observable<any>){  
+    this.booleanVar = !this.booleanVar;     
+    return this.lastWarOfPlayer$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => Number(a.wars) - Number(b.wars))
+      )
+    )       
+  }
+
+  public sortByRankingDesc(res:Observable<any>){ 
+    this.booleanVarRank = !this.booleanVarRank;     
+    return this.lastWarOfPlayer$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(b.ranking) - parseFloat(a.ranking))
+      )
+    )       
+  }
+
+  public sortByRankingAsc(res:Observable<any>){   
+    this.booleanVarRank = !this.booleanVarRank;     
+    return this.lastWarOfPlayer$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(a.ranking) - parseFloat(b.ranking))
+      )
+    )       
+  }
+
+  public sortByFpWDesc(res:Observable<any>){ 
+    this.booleanVarFpW = !this.booleanVarFpW;     
+    return this.lastWarOfPlayer$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(b.fragsperwar) - parseFloat(a.fragsperwar))
+      )
+    )       
+  }
+
+  public sortByFpWAsc(res:Observable<any>){ 
+    this.booleanVarFpW = !this.booleanVarFpW;     
+    return this.lastWarOfPlayer$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(a.fragsperwar) - parseFloat(b.fragsperwar))
+      )
+    )       
   }
 }

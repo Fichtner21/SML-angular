@@ -1,17 +1,17 @@
 <section class="example">
   <div class="container">    
-    <div *ngIf="listInactive$ | async as players;">
+    <div *ngIf="listInactive$ | async;" class="cont">
       <div class="ranking-head">
         <div class="">Place</div>
         <div class="">Player Name</div>
         <div class=""></div>
-        <div class="">Ranking</div>
-        <div class="" title="Frags per War">FpW</div>
-        <div class="">Wars</div>
+        <div class="ranking" (click)="booleanVarRank ? sortByRankingAsc(listInactive$) : sortByRankingDesc(listInactive$)">Ranking</div>
+        <div class="fpw" title="Frags per War" (click)="booleanVarFpW ? sortByFpWAsc(listInactive$) : sortByFpWDesc(listInactive$)">FpW</div>
+        <div class="wars" (click)="booleanVar ? sortByWarsAsc(listInactive$) : sortByWarsDesc(listInactive$)">Wars</div>
         <div class="">Last War</div>        
       </div> 
       <div class="players-list">
-        <div *ngFor="let player of players; let i = index;" class="character-card">
+        <div *ngFor="let player of listInactive$ | async; let i = index" class="character-card">
           <div class="name">
             {{ i+1 }}
           </div>        
@@ -34,7 +34,13 @@
           {{ player.lastwar }}
           </div>
         </div>
-      </div>  
+      </div>
+      <div class="info">
+        <div class="info-title">NEW FEATURE</div>
+        <div class="info-desc">
+          Now u can sort people by Wars, Frags per War or Ranking.
+        </div>
+      </div>       
     </div>    
   </div>
 </section>

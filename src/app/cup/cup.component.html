@@ -1,0 +1,82 @@
+<section>
+  <div class="">
+    <h1 style="width: 100%; text-align: center">
+      <!-- <ng-container *ngIf=" renderedTree === 'se'">Single Elimination Example</ng-container> -->
+      <ng-container *ngIf=" renderedTree === 'de'">MoH:SH Mix Cup 3on3 / <a routerLink="rules">Rules</a></ng-container>
+      <br>     
+      <!-- <div *ngFor="let t of tt">
+        {{ t | json }}
+      </div> -->
+      <!-- <button (click)="renderedTree = 'se'">Show Single Elimination</button> -->
+      <!-- <button (click)="renderedTree = 'de'">Show Double Elimination</button> -->
+     
+    </h1>
+    <div class="brackets">
+      <div class="bracket theOne">
+        <div *ngFor="let one of bracket1 | shuffle" class="user-conta">
+          <div *ngIf="!one.status" class="user">{{ one.name }}</div>
+        </div>
+        <div class="sort">
+          <button (click)="sortBracket(bracket1)">Sort bucket 1</button>
+        </div>       
+        <div *ngFor="let one of bracket1; let i = index;" class="user-cont">
+          <span>TEAM: {{ i+1 }}.</span>          
+          <button *ngIf="!one.status" (click)="showHidden(one.name, one.status = true, i);">Show</button>
+          <div *ngIf="one.status" class="user">{{ one.name }}</div>
+        </div>
+      </div>
+      <div class="bracket theTwo">
+        <div *ngFor="let one of bracket2 | shuffle" class="user-conta">
+          <div *ngIf="!one.status" class="user">{{ one.name }}</div>
+        </div>
+        <div class="sort">
+          <button (click)="sortBracket(bracket2)">Sort bucket 2</button>
+        </div>       
+        <div *ngFor="let one of bracket2; let i = index;" class="user-cont">                
+          <button *ngIf="!one.status" (click)="showHidden(one.name, one.status = true, i);">Show</button>
+          <div *ngIf="one.status" class="user">1.{{ one.name }} i: {{i}}</div>          
+        </div>
+      </div>
+      <div class="bracket theThree">
+        <div *ngFor="let one of bracket3 | shuffle" class="user-conta">
+          <div *ngIf="!one.status" class="user">{{ one.name }}</div>
+        </div>
+        <div class="sort">
+          <button (click)="sortBracket(bracket3)">Sort bucket 3</button>
+        </div>       
+        <div *ngFor="let one of bracket3 let i = index;" class="user-cont">                  
+          <button *ngIf="!one.status" (click)="showHidden(one.name, one.status = true, i);">Show</button>
+          <div *ngIf="one.status" class="user">{{ one.name }}</div>
+        </div>
+      </div>
+    </div>
+    <!-- <div style="padding:10px; border: 3px solid red;">
+        TEAM A: {{ teamA.user1 }}, {{ teamA.user2 }}, {{ teamA.user3 }}
+    </div>
+    <div style="padding:10px; border: 3px solid red;">
+        TEAM B: {{ teamB.user1 }}, {{ teamB.user2 }}, {{ teamB.user3 }}
+    </div> -->
+    <ngtt-double-elimination-tree [tournament]="doubleEliminationTournament"
+    [matchTemplate]="matchTemplate"></ngtt-double-elimination-tree>
+    <ng-template #matchTemplate let-match>
+      <!-- <tt-match [match]="match"></tt-match> -->
+      <div class="ngtt__match-wrapper">
+        <ng-container *ngFor="let team of match.teams; let i = index;">
+          <div class="ngtt__team-wrapper">
+            <div class="ngtt__team-avatar"></div>
+            <!-- <h3 class="ngtt__team-title" [ngClass]="team.name" *ngFor="let teamPlayers of team">
+              {{ teamPlayers.user1 }}
+            </h3> -->
+            <h3 class="ngtt__team-title" [ngClass]="team.class" (mouseenter)="mouseHover($event)"(mouseleave)="mouseOver($event)">              
+              <span>{{ team.title }} </span>{{ team?.name?.user1 }} {{ team?.name?.user2 }} {{ team?.name?.user3 }}
+            </h3>
+            <!-- <div *ngFor="let score of team">
+
+            </div> -->
+            <div *ngIf="team.score" class="ngtt__team-score">{{team.score}}</div>
+          </div>
+        </ng-container>
+      </div>      
+    </ng-template>
+  </div>
+</section>

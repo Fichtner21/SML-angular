@@ -8,11 +8,13 @@ import { RouterModule } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { InactiveViewResolve } from './inactive-view/resolver/inactive-view.resolver';
+import { SortByOrderPipe } from '../sort-by-order.pipe';
 
 @NgModule({
   declarations: [
     InactiveViewComponent,
-    InactiveObjComponent
+    InactiveObjComponent,
+    SortByOrderPipe
   ],
   imports: [
     CommonModule,

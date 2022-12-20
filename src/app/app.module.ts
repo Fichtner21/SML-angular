@@ -25,6 +25,8 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
+import { NgxLodashPipesModule  } from 'ngx-lodash-pipes';
+
 
 export function createTranslateLoader(http: HttpClient){
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -35,7 +37,7 @@ export function createTranslateLoader(http: HttpClient){
     AppComponent,
     HomeComponent,    
     DateFormatPipePipe,     
-    SafePipe, LoginComponent, LogoutComponent
+    LoginComponent, LogoutComponent
   ],
   imports: [
     CommonModule,
@@ -48,6 +50,7 @@ export function createTranslateLoader(http: HttpClient){
     GoogleMapsModule,    
     AngularFireModule.initializeApp(environment.firebase, 'spearhead-mix-league'),
     AngularFirestoreModule,
+    NgxLodashPipesModule,
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),     
     TranslateModule.forRoot({

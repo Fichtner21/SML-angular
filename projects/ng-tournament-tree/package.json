@@ -1,0 +1,33 @@
+{
+  "name": "ng-tournament-tree",
+  "version": "2.0.2",
+  "author": "Oliver Happe",
+  "description": "Tournament-Tree render components for Angular. Includes single- and double-elimination trees. You can also customize how a match is displayed by providing your own component.",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/joermunG/tournament-tree.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/joermunG/tournament-tree/issues"
+  },
+  "homepage": "https://gitlab.com/joermunG/tournament-tree",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "ng",
+    "tournament",
+    "tournament-tree",
+    "tournament-bracket",
+    "bracket",
+    "flow-chart",
+    "chart",
+    "tree",
+    "scss",
+    "components",
+    "match"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^8.0.0",
+    "@angular/core": "^8.0.0"
+  }
+}

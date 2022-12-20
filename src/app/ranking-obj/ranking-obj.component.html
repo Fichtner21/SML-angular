@@ -4,14 +4,14 @@
   <ng-container *ngIf="lastWarOfPlayers.length > 0">
     <section class="example">
       <div class="container">
-        <div>
+        <div class="cont">
           <div class="ranking-head">
             <div class="">{{ 'ranking.place' | translate }}</div>
             <div class="">{{ 'ranking.player_name' | translate }}</div>
             <div class=""></div>
-            <div class="">Ranking</div>
-            <div class="" title="Frags per War">FpW</div>
-            <div class="">{{ 'ranking.wars' | translate }}</div>
+            <div class="ranking" (click)="booleanVarRank ? sortByRankingAsc(lastWarOfPlayer$) : sortByRankingDesc(lastWarOfPlayer$)">Ranking</div>
+            <div class="fpw" title="Frags per War" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)">FpW</div>
+            <div class="wars" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)">{{ 'ranking.wars' | translate }}</div>
             <div class="new-head">{{ 'ranking.last_war' | translate }}</div>
             <div class="">{{ 'ranking.act' | translate }}</div>
           </div> 
@@ -35,8 +35,12 @@
             <div class="item">{{ player.wars }}</div>
             <div class="item new">{{ player.lastWarDate }}</div>
             <div class="item name act">
-              <div class="act-month" [ngClass]="{'green0': player.activity == 0, 'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 60), 'green71': (player.activity > 60) }" title="{{ player.activity }} wars in last month."></div>
-              <div class="act-year" [ngClass]="{'green0': player.lastyear == 0, 'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 31 && player.lastyear <= 90), 'green11_20': (player.lastyear > 91 && player.lastyear <= 150), 'green21_40': (player.lastyear > 151 && player.lastyear <= 250), 'green41_70': (player.lastyear > 251 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>
+              <div class="act-month" [ngClass]="{
+                'green0': player.activity == 0, 
+                'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 60), 'green71': (player.activity > 60) }" title="{{ player.activity }} wars in last month."></div>
+              <div class="act-year" [ngClass]="{
+                'green0': player.lastyear == 0, 
+                'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 30 && player.lastyear <= 90), 'green11_20': (player.lastyear > 90 && player.lastyear <= 150), 'green21_40': (player.lastyear > 150 && player.lastyear <= 250), 'green41_70': (player.lastyear > 250 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>
             </div>
             
             <!-- <div class="item item-player item-${el.username}"><a href="#charts-${el.username}" class="item${index++} item-${
@@ -46,6 +50,12 @@
            
             </div>
           </div> 
+          <div class="info">
+            <div class="info-title">NEW FEATURE</div>
+            <div class="info-desc">
+              Now u can sort people by Wars, Frags per War or Ranking.
+            </div>
+          </div>    
         </div>       
       </div>
       <div class="container-bottom">

@@ -9,6 +9,40 @@
   justify-content: center;
   padding-bottom: 15px;
   font-size: 18px;
+
+  .cont {
+    position: relative;
+
+    @media screen and (min-width: 1295px){
+      .info {
+        position: absolute;
+        top: 50px;
+        right: -250px;
+        padding: 20px;
+        border: 3px dashed red;
+        background-color: #40415f;
+        color: #ffffc0;
+        max-width: 200px;
+  
+        &:before {
+          position: absolute;
+          top: -42px;
+          width: 2px;
+          background-color: red;
+          height: 42px;
+          content: ''; 
+          left: 50%;
+          right: 50%; 
+        }
+  
+        .info-title {
+          font-weight: 700;
+          font-style: italic;
+          margin-bottom: 5px;
+        }
+      }
+    }    
+  }
 }
 
 .ranking-head, .character-card {
@@ -75,7 +109,82 @@
   font-size: 22px;
   margin-top: 20px;
   background-color: #2f3060;  
-  border-bottom: 1px solid #010141;  
+  border-bottom: 1px solid #010141; 
+  
+  .ranking, .fpw, .wars {
+    cursor: pointer;
+    position: relative;
+    transition: all .3s;
+
+    &:hover {
+      color: red;
+    }
+  }
+
+  @media screen and (min-width:1295px){
+    .fpw {
+      &:before {
+        position: absolute;
+        top: -10px;
+        width: 2px;
+        background-color: red;
+        height: 20px;
+        content: '';      
+      }
+  
+      &:after {
+        position: absolute;
+        height: 2px;
+        width: 372px;
+        background-color: red;
+        content: '';
+        top: -10px;
+        left: 50%;
+      }
+    }
+  
+    .ranking {
+      &:before {
+        position: absolute;
+        top: -10px;
+        width: 2px;
+        background-color: red;
+        height: 20px;
+        content: '';      
+      }
+  
+      &:after {
+        position: absolute;
+        height: 2px;
+        width: 372px;
+        background-color: red;
+        content: '';
+        top: -10px;
+        left: 50%;
+      }
+    }
+  
+    .wars { 
+      &:before {
+        position: absolute;
+        top: -10px;
+        width: 2px;
+        background-color: red;
+        height: 20px;
+        content: '';      
+      }
+  
+      &:after {
+        position: absolute;
+        height: 2px;
+        width: 372px;
+        background-color: red;
+        content: '';
+        top: -10px;
+        left: 50%;
+      }
+    }
+  }  
 }
 
 a {

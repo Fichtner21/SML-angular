@@ -1,0 +1,219 @@
+// @import 'my-tree-configuration';
+// @import '~ng-tournament-tree/styles/ngtt-styles';
+@import '../../styles/ngtt-styles.scss';
+@import '../../styles/ngtt-double-elimination-styles.scss';
+@import '../../styles/ngtt-reset.scss';
+@import '../../styles/ngtt-single-elimination-styles.scss';
+@import '../../styles/ngtt-variables.scss';
+
+html {
+  background-color: lightgray;
+}
+
+section {
+  background-color: lightgray;
+  min-height: 100vh;
+  padding-top: 70px;
+
+  h1 {
+    color: #010141;
+    border-bottom: 2px solid #010141;
+    font-size: 48px;
+    font-weight: 700;
+  }
+
+  .container {    
+    padding: 15px;
+    margin: 0 auto;
+    max-width: 1300px;
+    color: black;    
+  }
+}
+
+.ngtt-de__match-component-container {
+  display: flex;
+  height: 100px;
+  width: 200px !important;
+  // background-color: transparent;
+  background-color: lightblue !important;
+  box-sizing: border-box !important;  
+  padding: 5px;
+}
+
+.ngtt__match-wrapper {
+  padding: 5px 15px;
+}
+
+.brackets {
+  // display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  // gap: 20px;
+  grid-template-rows: auto;
+  // max-width: 1200px;
+  display: none;
+
+  .bracketA {
+    font-size: 18px;
+  }
+
+  .bracket {
+    font-size: 18px;
+   
+    .user-cont:nth-of-type(2n){
+      background-color: #2f3060;
+    }
+    .user-cont:nth-of-type(2n-1){
+      background-color: #40415f;
+    }
+
+    .user-cont {
+      color: #fffff8;      
+
+      .btnShow {
+        font-size: 16px;
+        padding: 5px;
+      }
+
+      span {
+        margin-right: 10px;
+        font-style: italic;
+      }
+
+      .user {
+        font-size: 22px;
+        animation: shake 7.32s cubic-bezier(.36,.07,.19,.97) both;
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        perspective: 1000px;
+        font-weight: 700;
+      }
+    }
+
+    .user-conta {
+      .user {
+        font-weight: 700;
+        font-size: 18px;
+      }
+    }
+
+    .user-cont, .user-conta {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 35px;
+    }
+
+    .sort {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60px;
+      padding: 15px;
+      // margin: 10px;      
+      background-color: #010141;      
+    }
+
+    button {
+      font-size: 18px;
+      padding: 5px;
+    }
+  }
+}
+
+.hidden {
+ display: none;
+}
+
+@mixin bucket {
+  font-size: 30px;
+  font-weight: 700;
+  text-shadow: #ffffc8 1px 0 10px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  position: absolute;
+  top: 100px;
+  right: 50px;
+  color:#ffffc8;
+  background-color: #010141;  
+  font-style: italic;
+  transform: rotate(270deg);
+}
+
+.theOne {
+  position: relative;
+
+  .user-conta {
+    background-color: lighten(#010141, 75%);
+  }
+
+  &:before {   
+    content: 'bucket 1';
+    @include bucket;
+  }
+}
+
+.theTwo {
+  position: relative;
+
+  .user-conta {
+    background-color: lighten(#010141, 80%);
+  }
+
+  &:before {   
+    content: 'bucket 2';
+    @include bucket;
+  }
+}
+
+.theThree {
+  position: relative;
+
+  .user-conta {
+    background-color: lighten(#010141, 85%);
+  }
+
+  &:before {   
+    content: 'bucket 3';
+    @include bucket;
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-100px, 0, 0);
+  }
+  
+  20%, 80% {
+    // transform: translate3d(200px, 0, 0) scale(5);
+  } 
+
+  30%, 50%, 70% {
+    transform: translate3d(0px, 0, 0) scale(5);
+    background-color: #40415f;
+    padding: 20px;
+    border-radius: 50px;
+    border: 5px solid #ffffc8;
+    box-shadow: 0 0 50px #ffffc8;
+  }
+
+  40%, 60% {
+    // transform: translate3d(400px, 0, 0);
+  }
+}
+
+.active {
+  color: red;
+
+  &:hover {
+    background-color: yellow;
+  }  
+}
+
+.ngtt__team-title {
+  font-size: 16px;
+  span {
+    font-size: 14px;
+    font-weight: 400;
+  }
+}

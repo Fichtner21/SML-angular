@@ -73,7 +73,17 @@
                 <div class="preelo-info">
                   <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>            
                   <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div> 
-                </div>                              
+                </div>  
+                <!-- <div class="preelo-info">
+                  <div class="bet">
+                    <img src="../../assets/images/80-163.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
+                  </div>
+                  <div class="bet">
+                    <img src="../../assets/images/80-165.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
+                  </div>                   
+                </div>                                -->
               </div>
               <div class="match-row__team">
                 <div class="teamrounds">{{ match.t2roundswon }}</div>
@@ -136,7 +146,17 @@
                 <div class="preelo-info">
                   <div class="preelo_war">preELO before war: {{ match.t2preelo | number:'1.0-2'}}</div>
                   <div [ngClass]="{ 'teamFavorite': (match.t2preelo > match.t1preelo), 'teamNotFavorite': (match.t1preelo > match.t2preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{ match.t1chance }} %</div>
-                </div>                
+                </div>
+                <!-- <div class="preelo-info">
+                  <div class="bet">
+                    <img src="../../assets/images/80-163.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
+                  </div>
+                  <div class="bet">
+                    <img src="../../assets/images/80-165.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
+                  </div>                   
+                </div>                  -->
               </div>
             </div>
           </div>

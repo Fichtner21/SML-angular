@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { InactiveObjService } from './inactive-obj.service';
 import { InactivePlayers } from './inactive.model';
 import { combineLatest, Observable } from 'rxjs';
 import { Spinkit } from 'ng-http-loader';
 import { PlayersApiService } from '../services/players-api.service';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { SortByOrderPipe } from '../sort-by-order.pipe';
+
 
 @Component({
   selector: 'app-inactive-obj',
   templateUrl: './inactive-obj.component.html',
-  styleUrls: ['./inactive-obj.component.scss']
+  styleUrls: ['./inactive-obj.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ SortByOrderPipe]
 })
 export class InactiveObjComponent implements OnInit {
   public spinkit = Spinkit;
@@ -17,8 +21,12 @@ export class InactiveObjComponent implements OnInit {
   public playersInactive$: Observable<any>;
   public historyMatches$: Observable<any>;
   public listInactive$: any;
+  public ngForPlayers:any;
+  booleanVar = false;
+  booleanVarRank = false;
+  booleanVarFpW = false; 
 
-  constructor(private inactiveObjService: InactiveObjService, private playersApiService: PlayersApiService) { }
+  constructor(private inactiveObjService: InactiveObjService, private playersApiService: PlayersApiService, private sortbyorder: SortByOrderPipe) { }
 
   ngOnInit(): void {
     this.players$ = this.inactiveObjService.fetchInactivePlayers();
@@ -83,7 +91,7 @@ export class InactiveObjComponent implements OnInit {
           playerInactiveRow = {
             username: name.username,
             playername: name.playername,
-            ranking: name.ranking,
+            ranking: parseFloat(name.ranking.replace(/,/g,'')),
             wars: name.warcount,
             flag: name.nationality,
             fragsperwar: (fragsToDisplay / name.warcount).toFixed(2),
@@ -94,7 +102,61 @@ export class InactiveObjComponent implements OnInit {
         }        
         return playerInactiveRowArray;
       })
-    )
+    )     
+  }
+
+  public sortByWarsDesc(res:Observable<any>){      
+    this.booleanVar = !this.booleanVar;
+    return this.listInactive$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => Number(b.wars) - Number(a.wars))
+      )
+    )       
+  }
+
+  public sortByWarsAsc(res:Observable<any>){  
+    this.booleanVar = !this.booleanVar; 
+    return this.listInactive$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => Number(a.wars) - Number(b.wars))
+      )
+    )       
+  }
+
+  public sortByRankingDesc(res:Observable<any>){ 
+    this.booleanVarRank = !this.booleanVarRank;     
+    return this.listInactive$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(b.ranking) - parseFloat(a.ranking))
+      )
+    )       
+  }
+
+  public sortByRankingAsc(res:Observable<any>){   
+    this.booleanVarRank = !this.booleanVarRank;     
+    return this.listInactive$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(a.ranking) - parseFloat(b.ranking))
+      )
+    )       
+  }
+
+  public sortByFpWDesc(res:Observable<any>){ 
+    this.booleanVarFpW = !this.booleanVarFpW;     
+    return this.listInactive$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(b.fragsperwar) - parseFloat(a.fragsperwar))
+      )
+    )       
+  }
+
+  public sortByFpWAsc(res:Observable<any>){ 
+    this.booleanVarFpW = !this.booleanVarFpW;     
+    return this.listInactive$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(a.fragsperwar) - parseFloat(b.fragsperwar))
+      )
+    )       
   }
 
   private filterUsername(name:string, matches:any[]){
@@ -122,4 +184,6 @@ export class InactiveObjComponent implements OnInit {
     }
     return newTimestampElem;
   }
+
+ 
 }

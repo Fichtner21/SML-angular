@@ -1,0 +1,70 @@
+section {
+  background-color: lightgray;
+  min-height: 100vh;
+  padding-top: 70px;
+
+  h1 {
+    color: #010141;
+    border-bottom: 2px solid #010141;
+    font-size: 48px;
+    font-weight: 700;
+  }
+
+  .container {    
+    padding: 15px;
+    margin: 0 auto;
+    max-width: 1300px;
+    color: black;    
+
+    ol {
+      margin-top: 10px;
+      padding-left: 15px;
+
+      li {
+        font-size: 18px;
+
+        .maps {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          grid-template-rows: auto;
+          gap: .5rem;
+          
+          img {
+            height: 150px;
+            width: auto;
+          }
+        }
+
+        .bucket {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 1rem;
+          background-color: lighten(lightslategray, 20%);
+          padding: 10px 15px;
+
+          li {
+            padding-left: 5px;
+          }
+
+          li {
+            &:nth-child(2n){
+              background-color: lighten(gray, 20%);
+            }
+          }
+          
+          li {
+            &:nth-child(2n-1){
+              background-color: lighten(gray, 25%);
+            }
+          }
+
+          div {
+            font-weight: 700;
+            font-size: 22px;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

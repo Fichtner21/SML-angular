@@ -50,7 +50,7 @@ export class AboutComponent implements OnInit {
         return players;
       })
     )
-    this.contactPlayers$.subscribe(res => console.log('CONTACT', res));
+    // this.contactPlayers$.subscribe(res => console.log('CONTACT', res));
     
     // this.maps = this.matchesTab$;
     // const mapsFilter = this.maps.map((a) => a.info);

@@ -6,6 +6,7 @@ import { Spinkit } from 'ng-http-loader';
 import { PlayersApiService } from '../services/players-api.service';
 import { map, tap } from 'rxjs/operators';
 import { SortByOrderPipe } from '../sort-by-order.pipe';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class InactiveObjComponent implements OnInit {
   booleanVarRank = false;
   booleanVarFpW = false; 
 
-  constructor(private inactiveObjService: InactiveObjService, private playersApiService: PlayersApiService, private sortbyorder: SortByOrderPipe) { }
+  constructor(private inactiveObjService: InactiveObjService, private playersApiService: PlayersApiService, private sortbyorder: SortByOrderPipe, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.players$ = this.inactiveObjService.fetchInactivePlayers();
@@ -102,11 +103,28 @@ export class InactiveObjComponent implements OnInit {
         }        
         return playerInactiveRowArray;
       })
-    )     
+    );      
+       
+    if(this.activatedRoute.snapshot.queryParams['sortByWars'] == 'DESC'){        
+      this.sortByWarsDesc(this.listInactive$);        
+    } else if(this.activatedRoute.snapshot.queryParams['sortByWars'] == 'ASC'){
+      this.sortByWarsAsc(this.listInactive$);
+    } else if(this.activatedRoute.snapshot.queryParams['sortByRanking'] == 'DESC'){
+      this.sortByRankingDesc(this.listInactive$);
+    } else if(this.activatedRoute.snapshot.queryParams['sortByRanking'] == 'ASC'){
+      this.sortByRankingAsc(this.listInactive$);
+    } else if(this.activatedRoute.snapshot.queryParams['sortByFpW'] == 'DESC'){
+      this.sortByFpWDesc(this.listInactive$);
+    } else if(this.activatedRoute.snapshot.queryParams['sortByFpW'] == 'ASC'){
+      this.sortByFpWAsc(this.listInactive$);
+    } else {
+      this.router.navigate(['/obj-inactive'], { queryParams: {  } });
+    }
   }
 
   public sortByWarsDesc(res:Observable<any>){      
     this.booleanVar = !this.booleanVar;
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByWars: 'DESC' } });   
     return this.listInactive$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => Number(b.wars) - Number(a.wars))
@@ -116,6 +134,7 @@ export class InactiveObjComponent implements OnInit {
 
   public sortByWarsAsc(res:Observable<any>){  
     this.booleanVar = !this.booleanVar; 
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByWars: 'ASC' } }); 
     return this.listInactive$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => Number(a.wars) - Number(b.wars))
@@ -124,7 +143,8 @@ export class InactiveObjComponent implements OnInit {
   }
 
   public sortByRankingDesc(res:Observable<any>){ 
-    this.booleanVarRank = !this.booleanVarRank;     
+    this.booleanVarRank = !this.booleanVarRank;    
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByRanking: 'DESC' } }); 
     return this.listInactive$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(b.ranking) - parseFloat(a.ranking))
@@ -133,7 +153,8 @@ export class InactiveObjComponent implements OnInit {
   }
 
   public sortByRankingAsc(res:Observable<any>){   
-    this.booleanVarRank = !this.booleanVarRank;     
+    this.booleanVarRank = !this.booleanVarRank;   
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByRanking: 'ASC' } });   
     return this.listInactive$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(a.ranking) - parseFloat(b.ranking))
@@ -142,7 +163,8 @@ export class InactiveObjComponent implements OnInit {
   }
 
   public sortByFpWDesc(res:Observable<any>){ 
-    this.booleanVarFpW = !this.booleanVarFpW;     
+    this.booleanVarFpW = !this.booleanVarFpW; 
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByFpW: 'DESC' } });    
     return this.listInactive$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(b.fragsperwar) - parseFloat(a.fragsperwar))
@@ -151,7 +173,8 @@ export class InactiveObjComponent implements OnInit {
   }
 
   public sortByFpWAsc(res:Observable<any>){ 
-    this.booleanVarFpW = !this.booleanVarFpW;     
+    this.booleanVarFpW = !this.booleanVarFpW;  
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByFpW: 'ASC' } });    
     return this.listInactive$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(a.fragsperwar) - parseFloat(b.fragsperwar))
@@ -183,7 +206,5 @@ export class InactiveObjComponent implements OnInit {
       findLastTimeStamp = 'No match';
     }
     return newTimestampElem;
-  }
-
- 
+  } 
 }

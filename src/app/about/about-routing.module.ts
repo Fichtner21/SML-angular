@@ -4,6 +4,7 @@ import { AuthGuard } from '../auth.guard';
 import { AboutComponent } from './about.component';
 import { ConfigComponent } from './config/config.component';
 import { DownloadComponent } from './download/download.component';
+import { LinksComponent } from './links/links.component';
 import { LogComponent } from './log/log.component';
 import { MapsComponent } from './maps/maps.component';
 import { MeetingComponent } from './meeting/meeting.component';
@@ -44,6 +45,10 @@ const routes: Routes = [
     path: 'secret',
     component: SecretComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'links',
+    component: LinksComponent
   }      
 ];
 

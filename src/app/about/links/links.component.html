@@ -1,0 +1,78 @@
+<section>
+  <nav class="about__nav">  
+    <div class="container">
+      <a routerLink="/about/download" routerLinkActive="active">{{'about.menu_download' | translate }}</a>
+      <a routerLink="/about/log">Log</a>
+      <a routerLink="/about/maps">{{'about.maps' | translate }}</a>
+      <a routerLink="/about/wanted">{{ 'about.menu_wanted' | translate }}</a> 
+      <a routerLink="/about/config">Config</a>  
+      <a routerLink="/about/meeting">{{ 'about.meeting' | translate }}</a>
+    </div>   
+  </nav> 
+  <div class="container">
+    <h2>{{ 'about.useful-links' | translate }}:</h2>
+    <div class="recommended">
+      <div class="recommended-items">
+        <h3>Twitch:</h3>
+        <div class="items">
+          <div class="recommended-item">
+            <div>
+              <fa-icon [icon]="arrowRightIcon"></fa-icon>
+            </div>
+            <div>          
+              <a href="https://www.twitch.tv/W4T20NN">Watson Twitch Channel</a>
+            </div>
+          </div>
+          <div class="recommended-item">
+            <div>
+              <fa-icon [icon]="arrowRightIcon"></fa-icon>
+            </div>
+            <div>          
+              <a href="https://www.twitch.tv/illusion_spearhead">-Illu$ioN- Twitch Channel</a>
+            </div>
+          </div>
+          <div class="recommended-item">
+            <div>
+              <fa-icon [icon]="arrowRightIcon"></fa-icon>
+            </div>
+            <div>          
+              <a href="https://www.twitch.tv/lolandiusz">Zielony Twitch Channel</a>
+            </div>
+          </div>
+        </div>        
+      </div>
+      <div class="recommended-items">
+        <h3>YouTube:</h3>
+        <div class="items">
+          <div class="recommended-item">
+            <div>
+              <fa-icon [icon]="arrowRightIcon"></fa-icon>
+            </div>
+            <div>          
+              <a href="https://www.youtube.com/@mohspearhead6673">evoltnz! Channel on YouTube</a>
+            </div>
+          </div>
+          <div class="recommended-item">
+            <div>
+              <fa-icon [icon]="arrowRightIcon"></fa-icon>
+            </div>
+            <div>          
+              <a href="https://www.youtube.com/@lolandiusz88">Zielony Channel on YouTube</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="recommended-items">
+        <h3>Game tracker:</h3>
+        <div class="recommended-item">
+          <div>
+            <fa-icon [icon]="arrowRightIcon"></fa-icon>
+          </div>
+          <div>          
+            <a href="https://www.gametracker.com/search/sh/?sort=3&order=DESC">Game tracker with Spearhead servers</a>
+          </div>
+        </div>
+      </div>            
+    </div>
+  </div>
+</section>

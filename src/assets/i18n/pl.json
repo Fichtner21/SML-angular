@@ -64,7 +64,9 @@
     "username-valid": "Nazwa użytkownika jest wymagana",
     "password-valid": "Hasło jest wymagane",
     "submit": "Zatwierdź",
-    "logout": "Wyloguj"
+    "logout": "Wyloguj",
+    "links": "Linki",
+    "useful-links": "Polecane" 
   },
   "matches": {
     "name": "Gracz",

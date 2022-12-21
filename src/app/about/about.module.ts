@@ -15,6 +15,8 @@ import { ConfigComponent } from './config/config.component';
 import { MeetingComponent } from './meeting/meeting.component';
 import { SecretComponent } from './secret/secret.component';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { LinksComponent } from './links/links.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 
 
 export function createTranslateLoader(http: HttpClient){
@@ -27,7 +29,7 @@ export function createTranslateLoader(http: HttpClient){
     MapsComponent, 
     DownloadComponent, 
     LogComponent, 
-    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent
+    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent
   ],
   imports: [
     CommonModule,      
@@ -35,7 +37,8 @@ export function createTranslateLoader(http: HttpClient){
     RouterModule,   
     NgHttpLoaderModule.forRoot(),  
     TranslateModule,    
-    GoogleMapsModule 
+    GoogleMapsModule,
+    FontAwesomeModule 
    ],
   exports: [
     CommonModule,

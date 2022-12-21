@@ -64,7 +64,9 @@
     "username-valid": "Username is required",
     "password-valid": "Password is required",
     "submit": "Submit",
-    "logout": "Logout"
+    "logout": "Logout",
+    "links": "Links",
+    "useful-links": "Useful links"
   },
   "matches": {
     "name": "Name",

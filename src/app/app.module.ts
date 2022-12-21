@@ -26,6 +26,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
 import { NgxLodashPipesModule  } from 'ngx-lodash-pipes';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 export function createTranslateLoader(http: HttpClient){
@@ -60,7 +61,7 @@ export function createTranslateLoader(http: HttpClient){
         deps: [HttpClient],
       },
       // defaultLanguage: 'en',
-    }),        
+    }), FontAwesomeModule,        
   ],
   providers: [{
     provide: API_KEY, 

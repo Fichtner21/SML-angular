@@ -1,17 +1,9 @@
-import { map, mergeAll, flatMap, withLatestFrom, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { PlayersApiService } from './../services/players-api.service';
 import { Component, OnInit } from '@angular/core';
-import { combineLatest, Observable, of } from 'rxjs';
-import { GoogleSheetsDbService } from 'ng-google-sheets-db';
-import { RankObjService } from './rank-obj.service';
+import { combineLatest, Observable } from 'rxjs';
 import { Players } from './ranking.model';
-import { GetflagService } from '../services/getflag.service';
-import { MatchesApiService } from '../services/matches-api.service';
-import { Matches } from '../history-obj/matches.model';
 import { Spinkit } from 'ng-http-loader';
-import { stringify } from '@angular/compiler/src/util';
-import { TranslateService } from '@ngx-translate/core';
-
 
 @Component({
   selector: 'app-ranking-obj',
@@ -32,12 +24,7 @@ export class RankingObjComponent implements OnInit {
   public playersTest$: Observable<any>;
   public historyMatches$: Observable<any>;
   
-  constructor(
-    private rankObjService: RankObjService,
-    private playersApiService: PlayersApiService,
-    private matchesApiService: MatchesApiService,
-    private translateService: TranslateService
-    ) { } 
+  constructor(private playersApiService: PlayersApiService) { } 
 
   ngOnInit(): void {     
 
@@ -121,9 +108,8 @@ export class RankingObjComponent implements OnInit {
             })
           }) 
           
-          let fragsToDisplay;
+          let fragsToDisplay:any;
           if (Array.isArray(fragsPerPlayerArray) && fragsPerPlayerArray.length > 0) {
-           
             fragsToDisplay = fragsPerPlayerArray.reduce((a, b) => a + b);
           } else {
             fragsToDisplay = '0';
@@ -151,8 +137,7 @@ export class RankingObjComponent implements OnInit {
         return playerRowArray;         
       })
     )   
-
-    this.players$ = this.rankObjService.fetchPlayers();    
+    // this.players$ = this.rankObjService.fetchPlayers();    
   }  
 
   private filterUsername(name:string, matches:any[]){
@@ -162,9 +147,7 @@ export class RankingObjComponent implements OnInit {
   } 
 
   public searchPlayerActivity(name:string, obj:any){
-    const resultObject = this.filterUsername(name, obj)
-    const warDates = [];
-
+    const resultObject = this.filterUsername(name, obj);
     const todayUnix = Date.now();
     const lastMonthEvent = new Date(new Date().setDate(new Date().getDate() - 30));
     const resultLastMonth = Date.parse(lastMonthEvent.toDateString());
@@ -176,9 +159,7 @@ export class RankingObjComponent implements OnInit {
       let lastMonthActivity;
 
       if(elWar > resultLastMonth && elWar < todayUnix){
-        lastMonthActivity += elWar;
-        // new Date(elWar).toLocaleDateString('pl-PL', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'});
-        // console.log('lastMonthActivity: ', lastMonthActivity);
+        lastMonthActivity += elWar;        
         unixArr.push(lastMonthActivity);
       }
     });   
@@ -265,81 +246,9 @@ export class RankingObjComponent implements OnInit {
       max = len;
     }
     return max;
-  }
+  }  
 
-  public getPlayerFlag(playerFlag) {
-    let flag = '';
-    switch (playerFlag) {
-      case 'EU': {
-        flag = 'EU';
-        break;
-      }
-      case 'PL': {
-        flag = '<img [src]="/assets/images/flags/PL.gif" title="Poland">';
-        break;
-      }
-      case 'EG': {
-        flag = `<img src="/assets/flags/EG.gif" title="Egypt">`;
-        break;
-      }
-      case 'NL': {
-        flag = `<img src="/assets/flags/nl.gif" title="Netherlands">`;
-        break;
-      }
-      case 'RU': {
-        flag = `<img src="/assets/flags/RU.gif" title="Russia">`;
-        break;
-      }
-      case 'RO': {
-        flag = `<img src="/assets/flags/ro.gif" title="Romania">`;
-        break;
-      }
-      case 'FR': {
-        flag = `<img src="/assets/flags/fr.gif" title="France">`;
-        break;
-      }
-      case 'UK': {
-        flag = `<img src="/assets/flags/uk.gif" title"United Kingdom">`;
-        break;
-      }
-      case 'BE': {
-        flag = `<img src="/assets/flags/be.gif" title="Belgium">`;
-        break;
-      }
-      case 'GR': {
-        flag = `<img src="/assets/flags/gr.gif" title="Greece">`;
-        break;
-      }
-      case 'DE': {
-        flag = `<img src="/assets/flags/de.gif" title="Germany">`;
-        break;
-      }
-      case 'ES': {
-        flag = `<img src="/assets/flags/es.gif" title="Spain">`;
-        break;
-      }
-      case 'PT': {
-        flag = `<img src="/assets/flags/pt.gif" title="Portugal">`;
-        break;
-      }
-      case 'FI': {
-        flag = `<img src="/assets/flags/fi.gif" title="Finland">`;
-        break;
-      }
-      case 'AM': {
-        flag = `<img src="/assets/flags/am.gif" title="Armenia">`;
-        break;
-      }
-      case 'SE': {
-        flag = `<img src="/assets/flags/se.gif" title="Sweden">`;
-        break;
-      }
-      default:
-      // console.log('Nie pasuje');
-    }
-    return flag;
-  }
-
+  //need to refactor
   public destructObjRanks2(obj, arr) {
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
@@ -354,6 +263,7 @@ export class RankingObjComponent implements OnInit {
     }
   }
 
+  //need to refactor
   public getIndexesRanks2(arr, val) {
     const indexes = [];
     let i = -1;
@@ -363,15 +273,7 @@ export class RankingObjComponent implements OnInit {
     return indexes;
   }
 
-  public getIndexesFrags2(arr, val) {
-    const indexes = [];
-    let i = -1;
-    while ((i = arr.indexOf(val, i + 1)) !== -1) {
-      indexes.push(i + 3); // frags
-    }
-    return indexes;
-  }
-
+  //need to refactor
   public ranksAllStrikes2(username, ind, arrIn, arrOut) {
     if (arrIn.includes(username)) {
       arrIn.forEach(function (el, index) {
@@ -386,6 +288,7 @@ export class RankingObjComponent implements OnInit {
     }
   }
 
+  //need to refactor
   public rankHistory2(name, obj) {
     const arrNameRanks2 = [];
     this.destructObjRanks2(obj, arrNameRanks2);
@@ -394,103 +297,6 @@ export class RankingObjComponent implements OnInit {
     this.ranksAllStrikes2(name, indexesRanksName2, arrNameRanks2, nameRanksOut2);
     nameRanksOut2.unshift(1000);
     return nameRanksOut2;
-  }
-
-  public sumOfFrags2(name, obj) {
-    const arrNameFrags2 = [];
-    this.destructObjRanks2(obj, arrNameFrags2);
-    // const arrNameFrags2 = this.destructObjRanks2(obj);
-    const indexesFragsName2 = this.getIndexesFrags2(arrNameFrags2, name);
-    const nameFragsOut2 = [];
-    this.ranksAllStrikes2(name, indexesFragsName2, arrNameFrags2, nameFragsOut2);
-    let nameFragsOutExist2;
-    if (Array.isArray(nameFragsOut2) && nameFragsOut2.length) {
-      nameFragsOutExist2 = nameFragsOut2.reduce((a, b) => a + b);
-    } else {
-      nameFragsOutExist2 = 0;
-    }
-    return nameFragsOutExist2;
-  }
-
-  public minMaxFrags2(name, obj) {
-    const arrNameFrags2 = [];
-    this.destructObjRanks2(obj, arrNameFrags2);
-    const indexesFragsName2 = this.getIndexesFrags2(arrNameFrags2, name);
-    const nameFragsOut2 = [];
-    this.ranksAllStrikes2(name, indexesFragsName2, arrNameFrags2, nameFragsOut2);
-    nameFragsOut2.unshift(0);
-    return nameFragsOut2;
-  }
-
-  public minFrags(name, obj) {
-    const arrNameFrags2 = [];
-    this.destructObjRanks2(obj, arrNameFrags2);
-    const indexesFragsName2 = this.getIndexesFrags2(arrNameFrags2, name);
-    const nameFragsOut2 = [];
-    this.ranksAllStrikes2(name, indexesFragsName2, arrNameFrags2, nameFragsOut2);
-    return nameFragsOut2;
-  }
-
-  public countWars(name, obj) {
-    const playerWarsObj = [];
-    const playerRankHistory2 = this.rankHistory2(name, obj);
-    playerRankHistory2.forEach((war, index) => {
-      playerWarsObj.push(index);
-    });
-    return playerWarsObj;
-  }
-
-  public getNumOfPlayers(obj) {
-    // return obj.length;
-    return Object.keys(obj).length;
-  }
-
-  public searchPlayerKeyName2(name, obj) {
-    const searchPlayerKeyNameArr = [];
-    for (let i = 0; i < obj.length; i++) {
-      if (obj[i].t1p1name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t1p2name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t1p3name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t1p4name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t1p5name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t1p6name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t1p7name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t2p1name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t2p2name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t2p3name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t2p4name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t2p5name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t2p6name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      } else if (obj[i].t2p7name === name) {
-        searchPlayerKeyNameArr.push(obj[i]);
-      }
-    }
-    return searchPlayerKeyNameArr;
-  }
-
-  public searchPlayerActivity2(name, obj) {
-    const resultObject = this.searchPlayerKeyName2(name, obj);
-    const warDates = [];
-    resultObject.forEach((elem) => {
-      const newTimestampElem = elem.timestamp;
-      warDates.push(newTimestampElem);
-    });
-
-    warDates.unshift(0);
-    return warDates;
   }
 
   public pastYearActivity(name:string, obj:any){
@@ -518,95 +324,7 @@ export class RankingObjComponent implements OnInit {
     return unixYearArr.length;
   }
 
-  public pastMonthActivity2(name, obj) {
-    const playerDates = this.searchPlayerActivity2(name, obj);
-
-    const todayUnix = Date.now();
-    const lastMonthEvent = new Date(new Date().setDate(new Date().getDate() - 30));
-    
-    const resultLastMonth = Date.parse(lastMonthEvent.toDateString());
-    
-    const unixArr = [];
-    
-
-    playerDates.forEach((el) => {
-      const elWar = Date.parse(el);
-      let lastMonthActivity = '';
-      let lastYearActivity = '';
-
-      if (elWar > resultLastMonth && elWar < todayUnix) {
-        lastMonthActivity += elWar;
-        unixArr.push(lastMonthActivity);
-      } else {
-        // console.log('nie ma takich dat');
-      }
-    });
-
-    let actSquare = '';
-    if (unixArr.length === 0) {
-      actSquare = `<div class="green0" title="${unixArr.length} wars in last month. "></div>`; 
-    } else if (unixArr.length > 0 && unixArr.length <= 5) {
-      actSquare = `<div class="green1_5" title="${unixArr.length} wars in last month."></div>`;
-    } else if (unixArr.length > 5 && unixArr.length <= 10) {
-      actSquare = `<div class="green6_10" title="${unixArr.length} wars in last month."></div>`;
-    } else if (unixArr.length > 10 && unixArr.length <= 20) {
-      actSquare = `<div class="green11_20" title="${unixArr.length} wars in last month."></div>`;
-    } else if (unixArr.length > 20 && unixArr.length <= 50) {
-      actSquare = `<div class="green21_50" title="${unixArr.length} wars in last month."></div>`;
-    } else if (unixArr.length > 50 && unixArr.length <= 79) {
-      actSquare = `<div class="green51_100" title="${unixArr.length} wars in last month."></div>`;
-    } else if (unixArr.length > 79) {
-      actSquare = `<div class="green101" title="${unixArr.length} wars in last month."></div>`;
-    } else {
-      // console.log('reszta ma inne niz 0');
-    }
-    return actSquare;
-  }
-
-  public searchPlayer2(name, obj) {
-    const resultObject = this.searchPlayerKeyName2(name, obj);
-    const warDates = [];
-    resultObject.forEach((elem) => {
-      const oldTimestampElem = elem.timestamp;
-      const newTimestampElem = new Date(oldTimestampElem).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-
-      warDates.push(newTimestampElem);
-    });
-
-    warDates.unshift(0);
-    return warDates;
-  }
-
-  public searchPlayerWars2(name, obj) {
-    // Date.prototype.removeHours = function (h) {
-    //   this.setHours(this.getHours() - h);
-    //   return this;
-    // };
-    const resultObject = this.searchPlayerKeyName2(name, obj);
-    const warIDs = [];
-
-    resultObject.forEach((elem) => {
-      warIDs.push(elem);
-    });
-
-    const linkWars = [];
-    warIDs.forEach((el) => {
-      const squads = `<div><h2>Squads</h2><div>${el.t1p1name ? el.t1p1name : ''}<div><div>${
-        el.t2p1name ? el.t2p1name : ''
-      }</div></div></div>`;
-      const oldTimestampEl = el.timestamp;
-      const newTimestampEl = new Date(oldTimestampEl).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-
-      let linkWar = '';
-      linkWar = `<a href="#match-${el.idwar}" data-title="Show war #${el.idwar} - ${newTimestampEl}"><span>#</span>${el.idwar}</a>`;
-      linkWars.push(linkWar);
-    });
-
-    const showIDwars = linkWars.join(', ');
-
-    return showIDwars;
-  }
-
+  //SORTING
   public sortByWarsDesc(res:Observable<any>){      
     this.booleanVar = !this.booleanVar;    
     return this.lastWarOfPlayer$ = res.pipe(

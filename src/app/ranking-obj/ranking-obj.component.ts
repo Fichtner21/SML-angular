@@ -64,37 +64,7 @@ export class RankingObjComponent implements OnInit {
         let lastWarDate: any;
         let playerRowArray: any[] = [];
         for( let name of v1){          
-          const foundPlayerArray = this.filterUsername(name.username, v2);
-                           
-          const strikeResults1 = foundPlayerArray.slice(-1)[0] ? foundPlayerArray.slice(-1)[0] : 0;          
-          const strikeResults2 = foundPlayerArray.slice(-2)[0] ? foundPlayerArray.slice(-2)[0] : 0;              
-          const strikesArrayToCompare = [];
-
-          const destructObj1 = Object.values(strikeResults1);          
-          destructObj1.forEach((el, i) => {
-            if(el === name.username){
-              strikesArrayToCompare.push(destructObj1[i + 3])
-            }
-          })
-
-          const destructObj2 = Object.values(strikeResults2);
-          destructObj2.forEach((el, i) => {
-            if(el === name.username){
-              strikesArrayToCompare.push(destructObj2[i + 3])
-            }
-          })
-
-          const resultCompareArr = strikesArrayToCompare.map((x) => {
-            return Math.round(x * 100) / 100;
-          });         
-
-          const resultCompare = resultCompareArr[0] - resultCompareArr[1];
-         
-          let finalStreak = resultCompare.toFixed(2);         
-
-          if(Number(finalStreak) > 0){
-            finalStreak = `+${finalStreak}`
-          }
+          const foundPlayerArray = this.filterUsername(name.username, v2);         
 
           // Frags
           const fragsPerPlayerArray:any[] = [];
@@ -136,8 +106,7 @@ export class RankingObjComponent implements OnInit {
       
         return playerRowArray;         
       })
-    )   
-    // this.players$ = this.rankObjService.fetchPlayers();    
+    )    
   }  
 
   private filterUsername(name:string, matches:any[]){
@@ -291,7 +260,7 @@ export class RankingObjComponent implements OnInit {
   //need to refactor
   public rankHistory2(name, obj) {
     const arrNameRanks2 = [];
-    this.destructObjRanks2(obj, arrNameRanks2);
+    this.destructObjRanks2(obj, arrNameRanks2);   
     const indexesRanksName2 = this.getIndexesRanks2(arrNameRanks2, name);
     const nameRanksOut2 = [];
     this.ranksAllStrikes2(name, indexesRanksName2, arrNameRanks2, nameRanksOut2);

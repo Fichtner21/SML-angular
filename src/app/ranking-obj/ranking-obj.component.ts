@@ -25,6 +25,7 @@ export class RankingObjComponent implements OnInit {
   booleanVarFpW = false; 
 
   public playersTest$: Observable<any>;
+  public playersTest2$: Observable<any>;
   public historyMatches$: Observable<any>;
 
   arrowUp = faArrowUp;
@@ -47,7 +48,7 @@ export class RankingObjComponent implements OnInit {
         }        
         return players;
       }),
-    );       
+    );     
 
     this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
       map((response: any) => {        
@@ -100,14 +101,17 @@ export class RankingObjComponent implements OnInit {
             // ranking: name.ranking,
             wars:name.warcount,
             flag:name.nationality,          
-            strike: this.smallStrike2(name.username, v2),
+            // strike: this.smallStrike2(name.username, v2),
+            strike: name.lastwarpc,
             // fragsperwar: (fragsToDisplay / name.warcount).toFixed(2) != 'NaN' ? (fragsToDisplay / name.warcount).toFixed(2) : '0',
             // maxfragsperwar: Math.max(...fragsPerPlayerArray) ? Math.max(...fragsPerPlayerArray) : '0',
             // minfragsperwar: Math.min(...fragsPerPlayerArray) ? Math.min(...fragsPerPlayerArray) : '0',
             maxfragsperwar: name.fpwmax,
             minfragsperwar: name.fpwmin,
-            activity: this.searchPlayerActivity(name.username, v2), 
-            lastyear: this.pastYearActivity(name.username, v2),
+            // activity: this.searchPlayerActivity(name.username, v2), 
+            activity: name.last30days, 
+            // lastyear: this.pastYearActivity(name.username, v2),
+            lastyear: name.last365days,
             meeting: name.meeting,
             lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
             fragsperwar: name.fpw

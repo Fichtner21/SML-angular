@@ -85,5 +85,21 @@
     <h1 style="width: 100%; text-align: center">
       MoH:SH Mix Cup 3on3 / <a routerLink="rules">Rules</a>
     </h1>
+    <div class="cup-frame">
+      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwPqewjKb8rymhWCc-LUBZiFzA_iOQlvOSSLKX38UUCMziOyev9D9hSHM7UplLRRYxFVa5jB1p1e5q/pubhtml?gid=1726158420&amp;single=true&amp;widget=true&amp;headers=false" width="1694" height="380" style="border:0;"></iframe>
+    </div>
+    <div class="cup-frame">
+      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwPqewjKb8rymhWCc-LUBZiFzA_iOQlvOSSLKX38UUCMziOyev9D9hSHM7UplLRRYxFVa5jB1p1e5q/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false" width="1694" height="980" style="border:0;" #cupFrame></iframe>
+    </div>    
   </div>
 </section>
+<ng-http-loader 
+    [backdrop]="false"
+    [backgroundColor]="'#010141'"
+    [debounceDelay]="100"
+    [extraDuration]="300"
+    [minDuration]="300"
+    [opacity]=".6"
+    [backdropBackgroundColor]="'#777777'"
+    [spinner]="spinkit.skWave">
+</ng-http-loader>

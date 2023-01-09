@@ -10,16 +10,25 @@ html {
   background-color: lightgray;
 }
 
+#top-bar {
+  background-color: #40415f !important;
+}
+
 section {
-  background-color: lightgray;
+  background-color: #40415f;
   min-height: 100vh;
   padding-top: 70px;
 
   h1 {
-    color: #010141;
-    border-bottom: 2px solid #010141;
+    color: #ffffc8;
+    // border-bottom: 2px solid gray;
     font-size: 48px;
     font-weight: 700;
+    padding: 10px 0;
+
+    a {
+      color: #ffffc8;
+    }
   }
 
   .container {    
@@ -27,6 +36,16 @@ section {
     margin: 0 auto;
     max-width: 1300px;
     color: black;    
+  }
+
+  .cup-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+    
+    #top-bar {
+      display: none;
+    }
   }
 }
 

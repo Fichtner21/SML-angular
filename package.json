@@ -39,6 +39,7 @@
     "ng-http-loader": "^9.1.0",
     "ng-tournament-tree": "^2.0.2",
     "ng2-charts": "^2.4.1",
+    "ngx-doc-viewer": "^15.0.1",
     "ngx-lodash-pipes": "0.0.8",
     "ngx-pagination": "^5.0.0",
     "offside-js": "^1.4.0",

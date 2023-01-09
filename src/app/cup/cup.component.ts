@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Button } from 'protractor';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { NgttTournament } from '../../../projects/ng-tournament-tree/src/lib/dec
 import { PlayersApiService } from '../services/players-api.service';
 import { TeamCup } from './cup.model';
 import {HostListener} from '@angular/core';
+import { Spinkit } from 'ng-http-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,7 +16,7 @@ import {HostListener} from '@angular/core';
   styleUrls: ['./cup.component.scss']
 })
 export class CupComponent implements OnInit, AfterViewInit {
-
+  public spinkit = Spinkit;
   public singleEliminationTournament: NgttTournament;
   public doubleEliminationTournament: NgttTournament; 
   // public teamsCup$: Observable<TeamCup[]>;
@@ -180,13 +181,13 @@ export class CupComponent implements OnInit, AfterViewInit {
 
   public renderedTree: 'se' | 'de' = 'de';
   @Output() elemHovered: EventEmitter<any> = new EventEmitter<any>();
+  @ViewChild('cupFrame') public cupFrame: any;
 
   constructor(private playersApiService: PlayersApiService, @Inject(DOCUMENT) private document: any) {
     
   }
 
-  ngOnInit() {
-    
+  ngOnInit() {    
     this.teamsAll = this.playersApiService.getPlayers('Cup').pipe(
       map((response: any) => {
         let batchRowValues = response.values;       
@@ -359,8 +360,12 @@ export class CupComponent implements OnInit, AfterViewInit {
     
   }
 
+  public stylingFrame = '<style>#top-bar {background-color: red;</style>';
+
   ngAfterViewInit() {  
-        
+    const iframDoc = this.cupFrame.nativeElement.contentWindow.document;
+    console.log('iframeDoc', iframDoc.head);
+    iframDoc.head.appendChild(this.stylingFrame);
   }
 
   mouseHover(e:any) {

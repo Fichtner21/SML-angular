@@ -29,6 +29,7 @@ import { NgxLodashPipesModule  } from 'ngx-lodash-pipes';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
+
 export function createTranslateLoader(http: HttpClient){
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }

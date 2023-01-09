@@ -26,6 +26,10 @@ export const inactivePlayerAttributesMapping = {
   nationality: 'nationality',
   clanhistory: 'clanhistory',
   due: 'due',
+  lastwar: 'lastwar',
+  fpw: 'fpw',
+  fpwmax: 'fpwmax',
+  fpwmin: 'fpwmin'
 }
 
 export interface InactivePlayers {
@@ -38,4 +42,8 @@ export interface InactivePlayers {
   nationality: string,
   clanhistory: string,
   due: string,
+  lastwar: string,
+  fpw: string,
+  fpwmax: string,
+  fpwmin: string
 }

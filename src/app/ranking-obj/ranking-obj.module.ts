@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, DatePipe } from "@angular/common";
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { NgxPaginationModule } from "ngx-pagination";
@@ -10,6 +10,7 @@ import { PlayerViewResolve } from "./player-view/resolver/player-view.resolver";
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from "@angular/common/http";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // export function createTranslateLoader(http: HttpClient){
 //   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -26,7 +27,8 @@ import { HttpClient } from "@angular/common/http";
     NgxPaginationModule,
     RankingObjRoutingModule,
     NgHttpLoaderModule.forRoot(), 
-    TranslateModule  
+    TranslateModule,
+    FontAwesomeModule  
   ],
   exports: [
     CommonModule,
@@ -34,6 +36,7 @@ import { HttpClient } from "@angular/common/http";
   ],
   providers: [
     PlayerViewResolve,
+    DatePipe
   ]
 })
 

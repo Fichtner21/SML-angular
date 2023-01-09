@@ -4,6 +4,9 @@ import { Component, OnInit } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
+import { DatePipe } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-ranking-obj',
@@ -23,8 +26,11 @@ export class RankingObjComponent implements OnInit {
 
   public playersTest$: Observable<any>;
   public historyMatches$: Observable<any>;
+
+  arrowUp = faArrowUp;
+  arrowDown = faArrowDown;
   
-  constructor(private playersApiService: PlayersApiService) { } 
+  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute) { } 
 
   ngOnInit(): void {     
 
@@ -64,49 +70,70 @@ export class RankingObjComponent implements OnInit {
         let lastWarDate: any;
         let playerRowArray: any[] = [];
         for( let name of v1){          
-          const foundPlayerArray = this.filterUsername(name.username, v2);         
+          // const foundPlayerArray = this.filterUsername(name.username, v2);         
 
           // Frags
-          const fragsPerPlayerArray:any[] = [];
+          // const fragsPerPlayerArray:any[] = [];
           
-          foundPlayerArray.forEach((el) => {            
-            const destructObjPlayers1 = Object.values(el);
-            destructObjPlayers1.forEach((item:any[], i) => {
-              if(item.includes(name.username) ){
-                fragsPerPlayerArray.push(Number(destructObjPlayers1[i + 2] ? Number(destructObjPlayers1[i + 2]) : 0));
-              }
-            })
-          }) 
+          // foundPlayerArray.forEach((el) => {            
+          //   const destructObjPlayers1 = Object.values(el);
+          //   destructObjPlayers1.forEach((item:any[], i) => {
+          //     if(item.includes(name.username) ){
+          //       fragsPerPlayerArray.push(Number(destructObjPlayers1[i + 2] ? Number(destructObjPlayers1[i + 2]) : 0));
+          //     }
+          //   })
+          // }) 
           
-          let fragsToDisplay:any;
-          if (Array.isArray(fragsPerPlayerArray) && fragsPerPlayerArray.length > 0) {
-            fragsToDisplay = fragsPerPlayerArray.reduce((a, b) => a + b);
-          } else {
-            fragsToDisplay = '0';
-          }                 
+          // let fragsToDisplay:any;
+          // if (Array.isArray(fragsPerPlayerArray) && fragsPerPlayerArray.length > 0) {
+          //   fragsToDisplay = fragsPerPlayerArray.reduce((a, b) => a + b);
+          // } else {
+          //   fragsToDisplay = '0';
+          // }                 
           
           lastWarDate = {
-            lastWarDate:this.findPlayerLastWar(name.username, v2),
+            // lastWarDate:this.findPlayerLastWar(name.username, v2),
             username:name.username,
             playername:name.playername,
             cup:this.addTitleCup(name.cup1on1edition1),
             ranking:parseFloat(name.ranking.replace(/,/g,'')),
+            // ranking: name.ranking,
             wars:name.warcount,
             flag:name.nationality,          
             strike: this.smallStrike2(name.username, v2),
-            fragsperwar: (fragsToDisplay / name.warcount).toFixed(2) != 'NaN' ? (fragsToDisplay / name.warcount).toFixed(2) : '0',
-            maxfragsperwar: Math.max(...fragsPerPlayerArray) ? Math.max(...fragsPerPlayerArray) : '0',
-            minfragsperwar: Math.min(...fragsPerPlayerArray) ? Math.min(...fragsPerPlayerArray) : '0',
+            // fragsperwar: (fragsToDisplay / name.warcount).toFixed(2) != 'NaN' ? (fragsToDisplay / name.warcount).toFixed(2) : '0',
+            // maxfragsperwar: Math.max(...fragsPerPlayerArray) ? Math.max(...fragsPerPlayerArray) : '0',
+            // minfragsperwar: Math.min(...fragsPerPlayerArray) ? Math.min(...fragsPerPlayerArray) : '0',
+            maxfragsperwar: name.fpwmax,
+            minfragsperwar: name.fpwmin,
             activity: this.searchPlayerActivity(name.username, v2), 
             lastyear: this.pastYearActivity(name.username, v2),
-            meeting: name.meeting 
+            meeting: name.meeting,
+            lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
+            fragsperwar: name.fpw
           };
           playerRowArray.push(lastWarDate);          
         }     
-      
+        // console.log('playerRowArray', playerRowArray)
         return playerRowArray;         
       })
-    )    
+    );
+    
+    if(this.activatedRoute.snapshot.queryParams['sortByWars'] == 'DESC'){        
+      this.sortByWarsDesc(this.lastWarOfPlayer$);        
+    } else if(this.activatedRoute.snapshot.queryParams['sortByWars'] == 'ASC'){
+      this.sortByWarsAsc(this.lastWarOfPlayer$);
+    } else if(this.activatedRoute.snapshot.queryParams['sortByRanking'] == 'DESC'){
+      this.sortByRankingDesc(this.lastWarOfPlayer$);
+    } else if(this.activatedRoute.snapshot.queryParams['sortByRanking'] == 'ASC'){
+      this.sortByRankingAsc(this.lastWarOfPlayer$);
+    } else if(this.activatedRoute.snapshot.queryParams['sortByFpW'] == 'DESC'){
+      this.sortByFpWDesc(this.lastWarOfPlayer$);
+    } else if(this.activatedRoute.snapshot.queryParams['sortByFpW'] == 'ASC'){
+      this.sortByFpWAsc(this.lastWarOfPlayer$);
+    } else {
+      this.router.navigate(['/obj-ranking'], { queryParams: {  } });
+    }
   }  
 
   private filterUsername(name:string, matches:any[]){
@@ -133,8 +160,7 @@ export class RankingObjComponent implements OnInit {
       }
     });   
     
-    return unixArr.length;
-    
+    return unixArr.length;    
   }
 
   public findPlayerLastWar(name:string, obj:object) {    
@@ -295,7 +321,9 @@ export class RankingObjComponent implements OnInit {
 
   //SORTING
   public sortByWarsDesc(res:Observable<any>){      
-    this.booleanVar = !this.booleanVar;    
+    this.booleanVar = !this.booleanVar;   
+    this.router.navigate(['/obj-ranking'], { queryParams: {sortByWars: 'DESC' }}); 
+    // console.log('this.booleanVar', this.booleanVar);
     return this.lastWarOfPlayer$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => Number(b.wars) - Number(a.wars))
@@ -304,7 +332,9 @@ export class RankingObjComponent implements OnInit {
   }
 
   public sortByWarsAsc(res:Observable<any>){  
-    this.booleanVar = !this.booleanVar;     
+    this.booleanVar = !this.booleanVar;   
+    this.router.navigate(['/obj-ranking'], { queryParams: { sortByWars: 'ASC' } }); 
+    console.log('this.booleanVar', this.booleanVar); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => Number(a.wars) - Number(b.wars))
@@ -313,7 +343,8 @@ export class RankingObjComponent implements OnInit {
   }
 
   public sortByRankingDesc(res:Observable<any>){ 
-    this.booleanVarRank = !this.booleanVarRank;     
+    this.booleanVarRank = !this.booleanVarRank;  
+    this.router.navigate(['/obj-ranking'], { queryParams: { sortByRanking: 'DESC' } });    
     return this.lastWarOfPlayer$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(b.ranking) - parseFloat(a.ranking))
@@ -322,7 +353,8 @@ export class RankingObjComponent implements OnInit {
   }
 
   public sortByRankingAsc(res:Observable<any>){   
-    this.booleanVarRank = !this.booleanVarRank;     
+    this.booleanVarRank = !this.booleanVarRank;  
+    this.router.navigate(['/obj-ranking'], { queryParams: { sortByRanking: 'ASC' } });     
     return this.lastWarOfPlayer$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(a.ranking) - parseFloat(b.ranking))
@@ -331,7 +363,8 @@ export class RankingObjComponent implements OnInit {
   }
 
   public sortByFpWDesc(res:Observable<any>){ 
-    this.booleanVarFpW = !this.booleanVarFpW;     
+    this.booleanVarFpW = !this.booleanVarFpW;    
+    this.router.navigate(['/obj-ranking'], { queryParams: { sortByFpW: 'DESC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(b.fragsperwar) - parseFloat(a.fragsperwar))
@@ -341,6 +374,7 @@ export class RankingObjComponent implements OnInit {
 
   public sortByFpWAsc(res:Observable<any>){ 
     this.booleanVarFpW = !this.booleanVarFpW;     
+    this.router.navigate(['/obj-ranking'], { queryParams: { sortByFpW: 'ASC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(a.fragsperwar) - parseFloat(b.fragsperwar))

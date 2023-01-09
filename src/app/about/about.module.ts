@@ -16,7 +16,7 @@ import { MeetingComponent } from './meeting/meeting.component';
 import { SecretComponent } from './secret/secret.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { LinksComponent } from './links/links.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 export function createTranslateLoader(http: HttpClient){

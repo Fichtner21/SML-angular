@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Matches } from '../matches.model';
 import { FetchMatchesService } from '../fetch-matches.service';
@@ -45,7 +45,15 @@ export class SingleMatchComponent implements OnInit {
       // console.log('this.singlePostCollection', this.singlePostCollection);
     }
 
+  @ViewChild('iframe', { static: true }) iframe: ElementRef;
+
   ngOnInit(): void {
+   
+    // let content = '*{padding:0;margin:0;overflow:hidden}html,body{height:100%;position:relative, min-width:100%; display:flex; jusitify-conent:center;}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}img{min-width:100%}a{position:relative;display:block;}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}';
+    // let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
+    // doc.open();
+    // doc.write(content);
+    // doc.close();
 
     // console.log('getAll =>', this.commentService.getAll().valueChanges());
     this.allComments$ = this.commentService.getAll().valueChanges();

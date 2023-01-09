@@ -21,7 +21,7 @@ export class InactiveObjComponent implements OnInit {
   players$: Observable<InactivePlayers[]>;
   public playersInactive$: Observable<any>;
   public historyMatches$: Observable<any>;
-  public listInactive$: any;
+  public listInactive$: Observable<InactivePlayers[]>;
   public ngForPlayers:any;
   booleanVar = false;
   booleanVarRank = false;
@@ -67,9 +67,10 @@ export class InactiveObjComponent implements OnInit {
       map(([inactive, matches]) => {
         let playerInactiveRow;
         let playerInactiveRowArray: any[] = [];
+        
         for(let name of inactive){
           const foundPlayerArray = this.filterUsername(name.username, matches);
-
+         
           //Frags
           const fragsPerPlayerArray:any[] = [];
 
@@ -82,12 +83,12 @@ export class InactiveObjComponent implements OnInit {
             })
           }) 
 
-          let fragsToDisplay:any;
-          if (Array.isArray(fragsPerPlayerArray) && fragsPerPlayerArray.length) {
-            fragsToDisplay = fragsPerPlayerArray.reduce((a, b) => a + b);
-          } else {
-            fragsToDisplay = 0;
-          }  
+          // let fragsToDisplay:any;
+          // if (Array.isArray(fragsPerPlayerArray) && fragsPerPlayerArray.length) {
+          //   fragsToDisplay = fragsPerPlayerArray.reduce((a, b) => a + b);
+          // } else {
+          //   fragsToDisplay = 0;
+          // }  
 
           playerInactiveRow = {
             username: name.username,
@@ -95,10 +96,12 @@ export class InactiveObjComponent implements OnInit {
             ranking: parseFloat(name.ranking.replace(/,/g,'')),
             wars: name.warcount,
             flag: name.nationality,
-            fragsperwar: (fragsToDisplay / name.warcount).toFixed(2),
-            lastwar: this.findPlayerLastWar(name.username, matches)
+            // fragsperwar: (fragsToDisplay / name.warcount).toFixed(2),
+            fragsperwar: name.fpw,
+            // lastwar: this.findPlayerLastWar(name.username, matches)
+            lastwar: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
           };
-
+        
           playerInactiveRowArray.push(playerInactiveRow);
         }        
         return playerInactiveRowArray;

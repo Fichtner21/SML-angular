@@ -8,6 +8,10 @@ import { NgttDoubleEliminationTreeModule } from '../../../projects/ng-tournament
 import { MatchModule } from './match/match.module';
 import { NgxLodashPipesModule  } from 'ngx-lodash-pipes';
 import { RulesComponent } from './rules/rules.component';
+import { NgHttpLoaderModule } from 'ng-http-loader';
+import { TranslateModule } from '@ngx-translate/core';
+import { HttpClientModule } from '@angular/common/http';
+// import { NgxDocViewerModule } from 'ngx-doc-viewer';
 
 @NgModule({
   declarations: [
@@ -20,8 +24,11 @@ import { RulesComponent } from './rules/rules.component';
     NgttSingleEliminationTreeModule,
     NgttDoubleEliminationTreeModule,
     MatchModule,
-    NgxLodashPipesModule
-  ],
-  
+    NgxLodashPipesModule,   
+    NgHttpLoaderModule.forRoot(),
+    HttpClientModule
+    // NgxDocViewerModule
+  ], 
 })
 export class CupModule { }
+

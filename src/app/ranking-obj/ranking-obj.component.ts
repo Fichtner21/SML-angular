@@ -28,10 +28,20 @@ export class RankingObjComponent implements OnInit {
   public playersTest2$: Observable<any>;
   public historyMatches$: Observable<any>;
 
+  currentInfo: any = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';  
+  infoCode = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';
+
   arrowUp = faArrowUp;
   arrowDown = faArrowDown;
   
-  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute) { } 
+  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute) {
+    // localStorage.setItem('info', 'less');
+   } 
+
+  infos = [     
+    { 'infoCode': 'less', 'infoName': 'Less' },  
+    { 'infoCode': 'more', 'infoName': 'More' },      
+  ] 
 
   ngOnInit(): void {     
 
@@ -108,6 +118,7 @@ export class RankingObjComponent implements OnInit {
             // minfragsperwar: Math.min(...fragsPerPlayerArray) ? Math.min(...fragsPerPlayerArray) : '0',
             maxfragsperwar: name.fpwmax,
             minfragsperwar: name.fpwmin,
+            s1wars: name.s1wars,
             // activity: this.searchPlayerActivity(name.username, v2), 
             activity: name.last30days, 
             // lastyear: this.pastYearActivity(name.username, v2),
@@ -118,7 +129,7 @@ export class RankingObjComponent implements OnInit {
           };
           playerRowArray.push(lastWarDate);          
         }     
-        // console.log('playerRowArray', playerRowArray)
+        console.log('playerRowArray', playerRowArray)
         return playerRowArray;         
       })
     );
@@ -138,7 +149,21 @@ export class RankingObjComponent implements OnInit {
     } else {
       this.router.navigate(['/obj-ranking'], { queryParams: {  } });
     }
-  }  
+  } 
+  
+  infoChange($event){
+    this.currentInfo = $event;
+    localStorage.setItem('info', this.currentInfo);
+  }
+
+  get isInfo(){
+    let is_info = localStorage.getItem('info');
+    if(is_info === 'more'){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   private filterUsername(name:string, matches:any[]){
     return matches.filter(m => {             

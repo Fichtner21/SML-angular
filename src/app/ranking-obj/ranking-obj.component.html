@@ -60,11 +60,14 @@
             <div class="item">
               <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
             </div>
-            <div class="item">{{ player.ranking }}</div>
+            <div class="item">{{ player.ranking | number: '.2-2' }}</div>
             <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
               {{ player.fragsperwar | number: '.2-2' }}              
             </div>
-            <div class="item">{{ player.wars }}</div>
+            <div class="item-block">
+              <div>{{ player.wars }}</div>
+              <div class="season-wars" *ngIf="isInfo">(season #1: {{ player.s1wars }})</div>
+            </div>
             <div class="item new">{{ player.lastWarDate }}</div>
             <div class="item name act">
               <div class="act-month" [ngClass]="{
@@ -82,6 +85,17 @@
            
             </div>
           </div> 
+          <div class="more-less">
+            <form action="">
+              <label for="infoChange">{{ isInfo == true ? 'Hide season info' : 'Show season info' }}</label>
+              <select class="info-select" name="infoChange" id="" (ngModelChange)="infoChange($event)" [(ngModel)]="infoCode">
+                <option value="" disabled selected>Choose a state</option>                           
+                <option class="language-select" *ngFor="let item of infos" [ngValue]='item.infoCode'>
+                  {{ item.infoName }}
+                </option>
+              </select>
+            </form>
+          </div>
           <!-- <div class="info">
             <div class="info-title">NEW FEATURE</div>
             <div class="info-desc">

@@ -5,6 +5,9 @@ import { PlayersApiService } from '../services/players-api.service';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { Contact } from './secret/secret.model';
+import { NgxGalleryOptions } from '@kolkov/ngx-gallery';
+import { NgxGalleryImage } from '@kolkov/ngx-gallery';
+import { NgxGalleryAnimation } from '@kolkov/ngx-gallery';
 
 @Component({
   selector: 'app-about',
@@ -15,6 +18,9 @@ export class AboutComponent implements OnInit {
   public matchesTab$: Observable<any>;
   public maps: any;
   public resultMap: any;
+
+  galleryOptions: NgxGalleryOptions[];
+  galleryImages: NgxGalleryImage[];
 
   constructor(public route: ActivatedRoute, private router: RouterModule, private tabApiService: PlayersApiService, private translateService: TranslateService) { }
   public contactPlayers$: Observable<Contact[]>;
@@ -50,6 +56,39 @@ export class AboutComponent implements OnInit {
         return players;
       })
     )
+
+    this.galleryOptions = [
+      {
+        width: '600px',
+        height: '400px',
+        thumbnailsColumns: 4,
+        imageAnimation: NgxGalleryAnimation.Slide
+      },
+      // max-width 800
+      {
+        breakpoint: 800,
+        width: '100%',
+        height: '600px',
+        imagePercent: 80,
+        thumbnailsPercent: 20,
+        thumbnailsMargin: 20,
+        thumbnailMargin: 20
+      },
+      // max-width 400
+      {
+        breakpoint: 400,
+        preview: false
+      }
+    ];
+
+    this.galleryImages = [
+      {
+        small: 'assets/images/cb_rank.jpg',
+        medium: 'assets/images/cb_rank.jpg',
+        big: 'assets/images/cb_rank.jpg'
+      },
+    ]
+
     // this.contactPlayers$.subscribe(res => console.log('CONTACT', res));
     
     // this.maps = this.matchesTab$;
@@ -57,7 +96,4 @@ export class AboutComponent implements OnInit {
     // this.resultMap = mapsFilter.filter((map: string | string[]) => map.includes('The Hunt')).length;
 
   } 
-
-
-
 }

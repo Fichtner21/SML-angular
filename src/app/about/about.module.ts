@@ -9,7 +9,7 @@ import { WantedComponent } from './wanted/wanted.component';
 import { RouterModule } from '@angular/router';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ConfigComponent } from './config/config.component';
 import { MeetingComponent } from './meeting/meeting.component';
@@ -17,6 +17,7 @@ import { SecretComponent } from './secret/secret.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { LinksComponent } from './links/links.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 
 
 export function createTranslateLoader(http: HttpClient){
@@ -38,7 +39,9 @@ export function createTranslateLoader(http: HttpClient){
     NgHttpLoaderModule.forRoot(),  
     TranslateModule,    
     GoogleMapsModule,
-    FontAwesomeModule 
+    FontAwesomeModule,
+    HttpClientModule, 
+    NgxGalleryModule 
    ],
   exports: [
     CommonModule,

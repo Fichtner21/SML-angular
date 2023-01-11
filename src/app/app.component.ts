@@ -68,8 +68,6 @@ export class AppComponent implements OnInit{
         resValues.forEach((el:any) => {          
           matchesDate.push(new Date(el[0]).toISOString());
         });       
-
-       
         
         return response.values;       
       })

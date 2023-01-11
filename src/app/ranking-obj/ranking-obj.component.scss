@@ -32,6 +32,18 @@ section {
     position: relative;
     box-shadow: 0 20px 20px #010141;
 
+    .more-less {
+      padding: 10px 15px;
+
+      label {
+        color: #ffffc8;
+      }
+
+      select {
+        margin-left: 5px;
+      }
+    }
+
     // @media screen and (min-width: 1295px){
     //   .info {
     //     position: absolute;
@@ -176,71 +188,6 @@ section {
       color: red;
     }
   }
-
-  // @media screen and (min-width:1295px){
-  //   // .fpw {
-  //   //   &:before {
-  //   //     position: absolute;
-  //   //     top: -10px;
-  //   //     width: 2px;
-  //   //     background-color: red;
-  //   //     height: 20px;
-  //   //     content: '';      
-  //   //   }
-  
-  //   //   &:after {
-  //   //     position: absolute;
-  //   //     height: 2px;
-  //   //     width: 372px;
-  //   //     background-color: red;
-  //   //     content: '';
-  //   //     top: -10px;
-  //   //     left: 50%;
-  //   //   }
-  //   // }
-  
-  //   // .ranking {
-  //   //   &:before {
-  //   //     position: absolute;
-  //   //     top: -10px;
-  //   //     width: 2px;
-  //   //     background-color: red;
-  //   //     height: 20px;
-  //   //     content: '';      
-  //   //   }
-  
-  //   //   &:after {
-  //   //     position: absolute;
-  //   //     height: 2px;
-  //   //     width: 372px;
-  //   //     background-color: red;
-  //   //     content: '';
-  //   //     top: -10px;
-  //   //     left: 50%;
-  //   //   }
-  //   // }
-  
-  //   // .wars { 
-  //   //   &:before {
-  //   //     position: absolute;
-  //   //     top: -10px;
-  //   //     width: 2px;
-  //   //     background-color: red;
-  //   //     height: 20px;
-  //   //     content: '';      
-  //   //   }
-  
-  //   //   &:after {
-  //   //     position: absolute;
-  //   //     height: 2px;
-  //   //     width: 382px;
-  //   //     background-color: red;
-  //   //     content: '';
-  //   //     top: -10px;
-  //   //     left: 50%;
-  //   //   }
-  //   // }
-  // } 
 }
 
 a {
@@ -261,6 +208,22 @@ a {
     box-shadow: inset 0 0 10px #39533C;
   }
 
+  .item-block {
+    padding: 5px 3px;
+    position: relative;   
+    font-size: 18px;
+    flex-direction: column;
+
+    @media screen and (max-width: 800px){
+      font-size:14px;      
+    }
+
+    .season-wars {
+      font-size: 12px;
+      font-style: italic;
+    }
+  }
+
   .item {
     padding: 5px 3px;
     position: relative;   
@@ -278,7 +241,7 @@ a {
     img {
       margin: 5px;
       border: 1px solid #000;
-    }
+    }    
       
     .down-streak {
       position: absolute;
@@ -558,7 +521,7 @@ a {
         }
       }
     }
-  }  
+  } 
 }
 
 .character-card {

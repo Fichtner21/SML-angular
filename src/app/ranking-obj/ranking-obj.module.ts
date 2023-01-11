@@ -11,6 +11,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from "@angular/common/http";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule } from "@angular/forms";
 
 // export function createTranslateLoader(http: HttpClient){
 //   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -28,7 +29,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     RankingObjRoutingModule,
     NgHttpLoaderModule.forRoot(), 
     TranslateModule,
-    FontAwesomeModule  
+    FontAwesomeModule,
+    FormsModule  
   ],
   exports: [
     CommonModule,

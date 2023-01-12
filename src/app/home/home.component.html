@@ -21,10 +21,8 @@
   </div>
   <div class="monthActivity">
     <div class="container">
-      <div *ngIf="playedWars$ | async as playedWars"></div>
-      <ng-container *ngIf="playedWars$ | async">
-        <h1>{{ 'home.month_activity' | translate }}:</h1>
-      </ng-container>    
+      <div *ngIf="playedWars$ | async as playedWars"></div>     
+      <h1>{{ 'home.month_activity' | translate }}:</h1>      
       <canvas id="allActivity" width="1320" height="280" style="overflow-x: scroll;"> 
       </canvas>     
     </div>

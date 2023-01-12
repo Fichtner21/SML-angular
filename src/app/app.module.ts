@@ -27,6 +27,9 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
 import { NgxLodashPipesModule  } from 'ngx-lodash-pipes';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TabsComponent } from './ranking-obj/tabs/tabs.component';
+import { TabComponent } from './ranking-obj/tabs/tab.component';
 
 
 
@@ -39,7 +42,7 @@ export function createTranslateLoader(http: HttpClient){
     AppComponent,
     HomeComponent,    
     DateFormatPipePipe,     
-    LoginComponent, LogoutComponent
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent
   ],
   imports: [
     CommonModule,
@@ -62,7 +65,7 @@ export function createTranslateLoader(http: HttpClient){
         deps: [HttpClient],
       },
       // defaultLanguage: 'en',
-    }), FontAwesomeModule,        
+    }), FontAwesomeModule, BrowserAnimationsModule,        
   ],
   providers: [{
     provide: API_KEY, 

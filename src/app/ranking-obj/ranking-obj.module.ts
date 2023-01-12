@@ -12,6 +12,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from "@angular/common/http";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from "@angular/forms";
+import { MatTabsModule } from '@angular/material/tabs';
 
 // export function createTranslateLoader(http: HttpClient){
 //   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -30,7 +31,8 @@ import { FormsModule } from "@angular/forms";
     NgHttpLoaderModule.forRoot(), 
     TranslateModule,
     FontAwesomeModule,
-    FormsModule  
+    FormsModule,
+    MatTabsModule  
   ],
   exports: [
     CommonModule,

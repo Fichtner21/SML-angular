@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit   } from '@angular/core';
+import { Component, ElementRef, Input, OnInit   } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { tap, take, map } from 'rxjs/operators';
 import { RankObjService } from '../rank-obj.service';
@@ -6,6 +6,7 @@ import { Players } from '../ranking.model';
 import { combineLatest, Observable } from 'rxjs';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { Chart, ChartConfiguration, ChartDataSets, ChartOptions } from 'chart.js';
+import {ThemePalette} from '@angular/material/core';
 
 
 @Component({
@@ -14,6 +15,8 @@ import { Chart, ChartConfiguration, ChartDataSets, ChartOptions } from 'chart.js
   styleUrls: ['./player-view.component.scss']
 })
 export class PlayerViewComponent implements OnInit {
+  @Input('tabTitle') title: string;
+  @Input() active = false;
   public player$:Observable<Players>;
   public errorMessage: string;
   public playerView: any;
@@ -117,6 +120,7 @@ export class PlayerViewComponent implements OnInit {
         let listwars: any[] = [];
         let rankings: any[] = [];
         let resultPerPlayer: any[] = [];
+        let s1wars: string;
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);               
 
@@ -270,6 +274,7 @@ export class PlayerViewComponent implements OnInit {
            nationality = el.nationality;
            ranking = el.ranking;
            clanHistory = el.clanhistory;
+           s1wars = el.s1wars;
          }         
         });       
        
@@ -298,13 +303,14 @@ export class PlayerViewComponent implements OnInit {
           mostOftenPlayed1: { c: sorttedCountArr[0], n: sorttedCountArr[0]},
           mostOftenPlayed2: { c: sorttedCountArr[1], n: sorttedCountArr[1]},
           mostOftenPlayed3: { c: sorttedCountArr[2], n: sorttedCountArr[2]},
+          s1wars: s1wars
         }  
-        // console.log('playerCard', playerCard);
+        console.log('playerCard', playerCard);
         
         return playerCard;
       })
     ) 
-  }  
+  } 
 
   clickEvent(){
     this.status = !this.status;    

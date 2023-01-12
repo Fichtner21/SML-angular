@@ -125,7 +125,8 @@ export class RankingObjComponent implements OnInit {
             lastyear: name.last365days,
             meeting: name.meeting,
             lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
-            fragsperwar: name.fpw
+            fragsperwar: name.fpw,
+            inactive: name.active == 'FALSE' ? false : true            
           };
           playerRowArray.push(lastWarDate);          
         }     
@@ -363,7 +364,7 @@ export class RankingObjComponent implements OnInit {
   public sortByWarsAsc(res:Observable<any>){  
     this.booleanVar = !this.booleanVar;   
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByWars: 'ASC' } }); 
-    console.log('this.booleanVar', this.booleanVar); 
+    // console.log('this.booleanVar', this.booleanVar); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => Number(a.wars) - Number(b.wars))

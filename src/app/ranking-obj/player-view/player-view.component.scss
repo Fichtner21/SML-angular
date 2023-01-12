@@ -96,8 +96,8 @@
 
     .statistics {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      column-gap: 50px;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      column-gap: 20px;
       grid-template-rows: auto;
       font-size: 20px;
       color: #ffffc0;
@@ -135,11 +135,9 @@
         }
       }
 
-      // :nth-child(2n+1){
-      //   display: flex;
-      //   align-items: center;
-      //   justify-content: flex-end;
-      // }
+      .seasons {
+       width: 480px;
+      }
     }
 
     .wars-cont {

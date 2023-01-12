@@ -43,8 +43,6 @@ background-size: 4px 4px;
     h2 {
       margin-top: 15px;
     }
-
-     
     
     .maps {
       display: grid;
@@ -62,13 +60,17 @@ background-size: 4px 4px;
       }
 
       .map-link {
-        position: relative;
-        &:hover {
-          .getmap {            
-            opacity: 0.4;
-            filter: invert(1);
+        position: relative;        
+        .getmap {            
+          opacity: 0.4;
+          filter: invert(1);
+          &:hover {
+            opacity: 0.25;
+            .getmap__link {
+              filter: saturate(10) hue-rotate(100deg);
+            }            
           }
-        }
+        }     
       }
 
       .map {
@@ -158,6 +160,9 @@ background-size: 4px 4px;
       }
       .v2ext {
         background-image: url("/assets/images/maps/xTriode.png");
+      }
+      .harbor {
+        background-image: url("/assets/images/maps/harborobj.jpg");
       }
     }
   }

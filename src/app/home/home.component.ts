@@ -10,8 +10,6 @@ import * as ChartAnnotation from 'chartjs-plugin-annotation';
 // import * as pluginAnnotation from 'chartjs-plugin-annotation';
 import annotationPlugin from 'chartjs-plugin-annotation';
 
-
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -39,7 +37,7 @@ export class HomeComponent implements OnInit {
   public teamSelections$: Observable<any>; 
   public addAmatch$: Observable<any>;
 
-  constructor(private idTeamOne: SelectionTeamService, private playersApiService: PlayersApiService) {
+  constructor(private playersApiService: PlayersApiService) {
     
   }   
 
@@ -85,22 +83,18 @@ export class HomeComponent implements OnInit {
 
         for(let name of selection){
           selected = {
-            t1playername: this.addPlayerLink(name.Team1Players, players),
-            // t1playername: name.Team1Players,
+            t1playername: this.addPlayerLink(name.Team1Players, players),         
             t1username: name.Team1Players,
             t1preelo: name.ELO1,            
-            t2playername: this.addPlayerLink(name.Team2Players, players),
-            // t2playername: name.Team2Players,
+            t2playername: this.addPlayerLink(name.Team2Players, players),           
             t2username: name.Team2Players,
             t2preelo: name.ELO2,            
           };
           selectedArray.push(selected);          
         }
 
-        const chanceFutureTeamOne = parseInt(selectedArray[selectedArray.length -1].t1preelo.replace(/,/g,''), 10);
-        // console.log('chanceFutureTeamOne', chanceFutureTeamOne);
-        const chanceFutureTeamTwo = parseInt(selectedArray[selectedArray.length -1].t2preelo.replace(/,/g,''), 10);  
-        // console.log('chanceFutureTeamTwo', chanceFutureTeamTwo);    
+        const chanceFutureTeamOne = parseInt(selectedArray[selectedArray.length -1].t1preelo.replace(/,/g,''), 10);       
+        const chanceFutureTeamTwo = parseInt(selectedArray[selectedArray.length -1].t2preelo.replace(/,/g,''), 10);            
 
         const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne - chanceFutureTeamTwo) / 400)) * 100;
         const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;      
@@ -110,7 +104,7 @@ export class HomeComponent implements OnInit {
 
         this.teamOneCumulative = selectedArray[selectedArray.length -1].t1preelo;
         this.teamTwoCumulative = selectedArray[selectedArray.length -1].t2preelo;
-        // selectedArray[selectedArray.length -1].t1preelo = 
+        
         selectedArray.pop()
         return selectedArray;           
       })
@@ -219,16 +213,9 @@ export class HomeComponent implements OnInit {
         }); 
         return response.values;       
       })
-    )  
-
-    
+    )    
   } 
-
-  onClick(event) {}
-  ngAfterViewInit() {
-    
-  }
-
+ 
   public addPlayerLink(player:string, obj:any) {
     let convertedPlayer = '';    
     obj.forEach((el:any) => {           
@@ -247,11 +234,11 @@ export class HomeComponent implements OnInit {
     return obj.reduce((a:any, b:any) => a + b) / obj.length;
   }
 
-  public floorPrecised(number, precision) {
+  public floorPrecised(number:any, precision:any) {
     const power = Math.pow(10, precision);
     return Math.floor(number * power) / power;
   }
-  public ceilPrecised(number, precision) {
+  public ceilPrecised(number:any, precision:any) {
     const power = Math.pow(10, precision);
     return Math.ceil(number * power) / power;
   }

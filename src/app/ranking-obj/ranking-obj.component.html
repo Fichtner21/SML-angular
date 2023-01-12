@@ -47,43 +47,39 @@
             <div class="">{{ 'ranking.act' | translate }}</div>
           </div> 
           <div class="players-list">
-            <div class="character-card" *ngFor="let player of lastWarOfPlayers; let i = index;" [ngClass]="{'cyan': player.meeting == 1 }">
-            <div class="item">{{ i+1 }}</div>
-            <div class="item">
-              <a routerLink="/obj-ranking/{{player.username}}">
-              {{ player.playername }}
-              <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
-                <span attr.data-title="{{player.strike}} in Last war."></span>
+            <ng-container *ngFor="let player of lastWarOfPlayers; let i = index;">
+              <div class="character-card" [ngClass]="{'cyan': player.meeting == 1 }" *ngIf="player.inactive">                
+                <div class="item">{{ i+1 }}</div>
+                <div class="item">
+                  <a routerLink="/obj-ranking/{{player.username}}">
+                  {{ player.playername }}
+                  <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
+                    <span attr.data-title="{{player.strike}} in Last war."></span>
+                  </div>
+                </a>              
+                </div>
+                <div class="item">
+                  <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
+                </div>
+                <div class="item">{{ player.ranking | number: '.2-2' }}</div>
+                <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
+                  {{ player.fragsperwar | number: '.2-2' }}              
+                </div>
+                <div class="item-block">
+                  <div>{{ player.wars }}</div>
+                  <div class="season-wars" *ngIf="isInfo">(season #1: <span>{{ player.s1wars }}</span>)</div>
+                </div>
+                <div class="item new">{{ player.lastWarDate }}</div>
+                <div class="item name act">
+                  <div class="act-month" [ngClass]="{
+                    'green0': player.activity == 0, 
+                    'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 60), 'green71': (player.activity > 60) }" title="{{ player.activity }} wars in last month."></div>
+                  <div class="act-year" [ngClass]="{
+                    'green0': player.lastyear == 0, 
+                    'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 30 && player.lastyear <= 90), 'green11_20': (player.lastyear > 90 && player.lastyear <= 150), 'green21_40': (player.lastyear > 150 && player.lastyear <= 250), 'green41_70': (player.lastyear > 250 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>
+                </div>              
               </div>
-            </a>              
-            </div>
-            <div class="item">
-              <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
-            </div>
-            <div class="item">{{ player.ranking | number: '.2-2' }}</div>
-            <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
-              {{ player.fragsperwar | number: '.2-2' }}              
-            </div>
-            <div class="item-block">
-              <div>{{ player.wars }}</div>
-              <div class="season-wars" *ngIf="isInfo">(season #1: {{ player.s1wars }})</div>
-            </div>
-            <div class="item new">{{ player.lastWarDate }}</div>
-            <div class="item name act">
-              <div class="act-month" [ngClass]="{
-                'green0': player.activity == 0, 
-                'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 60), 'green71': (player.activity > 60) }" title="{{ player.activity }} wars in last month."></div>
-              <div class="act-year" [ngClass]="{
-                'green0': player.lastyear == 0, 
-                'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 30 && player.lastyear <= 90), 'green11_20': (player.lastyear > 90 && player.lastyear <= 150), 'green21_40': (player.lastyear > 150 && player.lastyear <= 250), 'green41_70': (player.lastyear > 250 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>
-            </div>
-            
-            <!-- <div class="item item-player item-${el.username}"><a href="#charts-${el.username}" class="item${index++} item-${
-              el.username
-            }-cup" title="${addTitleCup(el.cup1on1edition1)}">${el.playername} ${smallStrike2(el.username, historyRanking)}</a>
-          </div>             -->
-           
-            </div>
+            </ng-container>
           </div> 
           <div class="more-less">
             <form action="">

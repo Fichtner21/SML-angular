@@ -33,12 +33,40 @@
           </div>
          
             <!-- <button (click)="showResult(playerDetails.resultPerPlayer)">Load rankings...</button> -->
-            <div *ngIf="playerDetail$ | async as playerDetails">  
-              <button (click)="showResult(playerDetails.resultPerPlayer)">Load Results (Won, Lost, Drawn)...</button>         
-              <canvas id="playerResult" width="400" height="400">
-                
-              </canvas>
-            </div> 
+          <div *ngIf="playerDetail$ | async as playerDetails">  
+            <button (click)="showResult(playerDetails.resultPerPlayer)">Load Results (Won, Lost, Drawn)...</button>         
+            <canvas id="playerResult" width="400" height="400">
+              
+            </canvas>
+          </div>
+          <div class="seasons">
+            <ng-container *ngIf="playerDetail$ | async as playerDetails;">
+              <!-- <my-tabs>
+                <my-tab [tabTitle]="'Tab 1'">
+                  Tab 1 content
+                </my-tab>
+                <my-tab tabTitle="Tab 2">
+                  Tab 2 content
+                </my-tab>
+              </my-tabs> -->
+              <mat-tab-group animationDuration="0ms">
+                <mat-tab label="Season #1">
+                  <h2>01.01.2023 - 31.03.2023</h2>  
+                  <h3>Achievementss</h3>
+                  <ul>
+                    <li>-</li>
+                  </ul>
+                  <h3>Statistics</h3>
+                  <div>Played wars: <span>{{ playerDetails.s1wars }}</span></div>          
+                </mat-tab>
+                <mat-tab label="Season #2"> 
+                  <h2>01.04.2023 - 30.06.2023</h2>
+                  <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi quaerat culpa praesentium doloremque aliquam quidem ut maxime necessitatibus. Rerum est sapiente, et labore ipsum cumque ratione accusantium eum quae hic. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consectetur ab magnam quae accusantium perspiciatis atque repellendus ex eaque dolores! Nostrum porro tenetur ipsum suscipit? Quaerat eligendi repudiandae modi distinctio ipsum.</div>
+                </mat-tab>              
+              </mat-tab-group>   
+
+            </ng-container>                
+          </div> 
         </div>
         <div class="wars-cont">
           <h3>{{ 'playerview.wars_id' | translate }}</h3>

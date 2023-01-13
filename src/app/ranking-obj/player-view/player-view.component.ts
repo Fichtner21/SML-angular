@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit   } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewEncapsulation   } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { tap, take, map } from 'rxjs/operators';
 import { RankObjService } from '../rank-obj.service';
@@ -12,7 +12,8 @@ import {ThemePalette} from '@angular/material/core';
 @Component({
   selector: 'app-player-view',
   templateUrl: './player-view.component.html',
-  styleUrls: ['./player-view.component.scss']
+  styleUrls: ['./player-view.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PlayerViewComponent implements OnInit {
   @Input('tabTitle') title: string;
@@ -47,6 +48,8 @@ export class PlayerViewComponent implements OnInit {
    }
 
   ngOnInit(): void {  
+    
+    
     
     this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
       map((response: any) => {        
@@ -305,11 +308,21 @@ export class PlayerViewComponent implements OnInit {
           mostOftenPlayed3: { c: sorttedCountArr[2], n: sorttedCountArr[2]},
           s1wars: s1wars
         }  
-        console.log('playerCard', playerCard);
+        // console.log('playerCard', playerCard);
         
         return playerCard;
       })
     ) 
+
+    // const matchesArr = [];
+    // this.playerDetail$.pipe(
+    //   map((el) => (el.win.push(matchesArr))),
+    //   map((el) => (el.lose.push(matchesArr))),
+    //   map((el) => (el.draw.npush(matchesArr)))
+
+    // ).subscribe();
+
+    // this.showResult(matchesArr); 
   } 
 
   clickEvent(){

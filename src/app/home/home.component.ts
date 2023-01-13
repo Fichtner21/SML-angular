@@ -85,11 +85,12 @@ export class HomeComponent implements OnInit {
           selected = {
             t1playername: this.addPlayerLink(name.Team1Players, players),         
             t1username: name.Team1Players,
-            t1preelo: name.ELO1,            
+            t1preelo: name.ELO1 != '#N/A' ? name.ELO1 : '',            
             t2playername: this.addPlayerLink(name.Team2Players, players),           
             t2username: name.Team2Players,
-            t2preelo: name.ELO2,            
+            t2preelo: name.ELO2 != '#N/A' ? name.ELO2 : '',            
           };
+          
           selectedArray.push(selected);          
         }
 

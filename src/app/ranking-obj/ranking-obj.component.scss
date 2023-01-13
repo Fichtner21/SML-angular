@@ -224,7 +224,8 @@ a {
 
       span {
         font-weight: 700;
-        color: red;
+        text-decoration: underline;
+        font-size: 15px;                      
       }
     }
   }
@@ -450,6 +451,15 @@ a {
   height: 21px;
   background-color: red;
   margin: 2px;
+}
+
+.moh {
+  background-image: url('/assets/images/medal_of_h.png');  
+  width: 21px;
+  height: 20px;
+  margin-right: 2px; 
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .players-list {

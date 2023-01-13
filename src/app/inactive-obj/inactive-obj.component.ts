@@ -93,7 +93,7 @@ export class InactiveObjComponent implements OnInit {
           playerInactiveRow = {
             username: name.username,
             playername: name.playername,
-            ranking: parseFloat(name.ranking.replace(/,/g,'')),
+            ranking: parseFloat(name.ranking.replace(/,/g,'')),            
             wars: name.warcount,
             flag: name.nationality,
             // fragsperwar: (fragsToDisplay / name.warcount).toFixed(2),

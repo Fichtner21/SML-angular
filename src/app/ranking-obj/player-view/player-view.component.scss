@@ -137,6 +137,68 @@
 
       .seasons {
        width: 480px;
+
+       .mat-tab-label {
+        height: 48px;
+        padding: 0 24px;
+        cursor: pointer;
+        box-sizing: border-box;        
+        min-width: 160px;
+        text-align: center;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        white-space: nowrap;
+        position: relative;
+        font-size: 22px;
+
+        .mat-tab-label-content {
+          color:#ffffc0;
+        }
+      }
+
+      .mat-tab-label-active {
+        height: 48px;
+        padding: 0 24px;
+        cursor: pointer;
+        box-sizing: border-box;       
+        min-width: 160px;
+        text-align: center;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        white-space: nowrap;
+        position: relative;
+        font-size: 22px;
+
+        .mat-tab-label-content {
+          color:#ffff62;
+          font-weight: 700;
+        }
+        
+      }
+
+      h3 {
+        text-decoration: underline;
+      }
+
+      .stat-units {
+        font-style: italic;
+        span {
+          color: #ffff62;
+          font-weight: 700;
+          font-style: normal;
+        }
+      }
+
+      //  .mat-tab-label-content {
+      //     color: #ffffc0;
+      //     font-size: 22px;
+      //     font-weight: 700;
+      //   }
+      //  .mat-tab-label-active.mat-tab-label-content {
+      //     color: #ffff62;          
+      //   }
       }
     }
 
@@ -288,4 +350,12 @@ canvas {
       color: red;
     }
   }
+}
+
+.mat-tab-label {
+  opacity: 1 !important;
+}
+
+.mat-ink-bar {
+  background-color: #ffffc0 !important;
 }

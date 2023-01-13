@@ -32,7 +32,6 @@ import { TabsComponent } from './ranking-obj/tabs/tabs.component';
 import { TabComponent } from './ranking-obj/tabs/tab.component';
 
 
-
 export function createTranslateLoader(http: HttpClient){
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }

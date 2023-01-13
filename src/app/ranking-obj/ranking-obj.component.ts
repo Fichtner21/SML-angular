@@ -126,11 +126,12 @@ export class RankingObjComponent implements OnInit {
             meeting: name.meeting,
             lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
             fragsperwar: name.fpw,
-            inactive: name.active == 'FALSE' ? false : true            
+            inactive: name.active == 'FALSE' ? false : true,
+            ban: name.ban == 'TRUE' ? true : false            
           };
           playerRowArray.push(lastWarDate);          
         }     
-        console.log('playerRowArray', playerRowArray)
+        // console.log('playerRowArray', playerRowArray)
         return playerRowArray;         
       })
     );

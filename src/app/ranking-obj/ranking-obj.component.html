@@ -74,7 +74,7 @@
                   <div class="item name act">
                     <div class="act-month" [ngClass]="{
                       'green0': player.activity == 0, 
-                      'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 60), 'green71': (player.activity > 60 && player.activity <= 94), 'moh': (player.activity > 95) }" title="{{ player.activity }} wars in last month. {{ player.activity > 95 ? 'Medal of Honor' : '' }}."></div>
+                      'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 60), 'green71': (player.activity > 60 && player.activity <= 89), 'moh': (player.activity > 89) }" title="{{ player.activity }} wars in last month. {{ player.activity > 89 ? 'Medal of Honor' : '' }}."></div>
                     <div class="act-year" [ngClass]="{
                       'green0': player.lastyear == 0, 
                       'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 30 && player.lastyear <= 90), 'green11_20': (player.lastyear > 90 && player.lastyear <= 150), 'green21_40': (player.lastyear > 150 && player.lastyear <= 250), 'green41_70': (player.lastyear > 250 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>

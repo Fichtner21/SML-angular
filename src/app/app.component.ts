@@ -26,6 +26,7 @@ export class AppComponent implements OnInit{
   players$: Observable<any>;
   matches$: Observable<any>;
   matchesPerMonth$: Observable<any>;
+  numOfPlayers$: Observable<any>;
   activityCanvas:any;
   ctx: any;
   // public lang = new FormControl('en');
@@ -53,8 +54,16 @@ export class AppComponent implements OnInit{
     //   alert(lang);
     // })  
 
+    this.numOfPlayers$ = this.playersApiService.getPlayers('NumPlayers').pipe(
+      map((response: any) => {   
+        // console.log('response', response);       
+        // console.log('response.values', response.values[0][1]);       
+        return Number(response.values[0][1]) + 1;       
+      })
+    )
+
     this.players$ = this.playersApiService.getPlayers('Players').pipe(
-      map((response: any) => {  
+      map((response: any) => {         
         return response.values;       
       })
     )

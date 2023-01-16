@@ -32,7 +32,8 @@
         <div *ngIf="numOfPlayers.length > 0">
           <a routerLink="obj-ranking" routerLinkActive="active" title="ACTIVE PLAYERS">
             <img src="../assets/images/icons/people.png" alt="" class="people">
-            {{ numOfPlayers.length - 1 }}
+            <!-- {{ numOfPlayers.length - 1 }} -->
+            {{ numOfPlayers$ | async }}
           </a> 
         </div>        
       </div>

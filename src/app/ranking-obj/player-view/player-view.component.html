@@ -1,9 +1,22 @@
 
 
 <ng-container *ngIf="playerDetail$ | async as playerDetails;">
-  <section class="stat" >
-    <div class="container">
+  <section [ngClass]="{ 'active': playerDetails.active == true, 'inactive': playerDetails.active == false }">
+    <div class="container">      
       <div class="details">
+        <div class="status">
+          <h2>Status:</h2>
+          <div class="status-player">
+            <ng-container *ngIf="playerDetails.active; then active; else inactive">              
+            </ng-container>
+            <ng-template #active>
+              <div class="green">active</div>
+            </ng-template>
+            <ng-template #inactive>
+              <div class="red">inactive</div>
+            </ng-template>
+          </div>
+        </div>
         <div class="statistics">
           <div class="stat-cont">
             <div>{{ 'playerview.playername' | translate }} <span>{{ playerDetails.playername }}</span></div>

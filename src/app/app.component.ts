@@ -58,7 +58,7 @@ export class AppComponent implements OnInit{
       map((response: any) => {   
         // console.log('response', response);       
         // console.log('response.values', response.values[0][1]);       
-        return Number(response.values[0][1]) + 1;       
+        return Number(response.values[0][2]);       
       })
     )
 

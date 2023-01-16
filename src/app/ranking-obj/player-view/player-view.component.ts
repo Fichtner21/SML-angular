@@ -124,6 +124,7 @@ export class PlayerViewComponent implements OnInit {
         let rankings: any[] = [];
         let resultPerPlayer: any[] = [];
         let s1wars: string;
+        let active: string;
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);               
 
@@ -271,14 +272,15 @@ export class PlayerViewComponent implements OnInit {
         });       
         
         players.forEach((el) => {
-         if(el.username === player){
-           playerName = el.playername;
-           warCount = el.warcount;
-           nationality = el.nationality;
-           ranking = el.ranking;
-           clanHistory = el.clanhistory;
-           s1wars = el.s1wars;
-         }         
+          if(el.username === player){
+            playerName = el.playername;
+            warCount = el.warcount;
+            nationality = el.nationality;
+            ranking = el.ranking;
+            clanHistory = el.clanhistory;
+            s1wars = el.s1wars;
+            active = el.active;
+          }            
         });       
        
         let playerCard;
@@ -306,7 +308,8 @@ export class PlayerViewComponent implements OnInit {
           mostOftenPlayed1: { c: sorttedCountArr[0], n: sorttedCountArr[0]},
           mostOftenPlayed2: { c: sorttedCountArr[1], n: sorttedCountArr[1]},
           mostOftenPlayed3: { c: sorttedCountArr[2], n: sorttedCountArr[2]},
-          s1wars: s1wars
+          s1wars: s1wars,
+          active: (active == 'FALSE') ? false : true
         }  
         // console.log('playerCard', playerCard);
         

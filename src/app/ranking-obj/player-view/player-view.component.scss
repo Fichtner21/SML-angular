@@ -1,5 +1,5 @@
 
-  section {
+  .active {
     // height: 100vh;
     min-width: 100%;
     background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
@@ -7,6 +7,34 @@
     background-size: 4px 4px;
   }
 
+  .inactive {
+    min-width: 100%;
+    background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+    background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+    background-size: 4px 4px;    
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+
+    .status-player {
+      font-weight: 700;
+      font-size: 22px;      
+      display: flex;
+      align-items: center;
+
+      .green {
+        color: green;
+        margin-left: 5px;
+      }
+
+      .red {
+        color: red;
+        margin-left: 5px;
+      }
+    }
+  }
   
   .big-name {       
     // bottom: 5%;
@@ -25,6 +53,7 @@
     -webkit-background-clip: text;
     background-clip: text;
     text-align: center;
+    opacity: .3;
 
     @media screen and (max-width: 700px){
       font-size: 100px;
@@ -71,7 +100,7 @@
       height: auto;
       min-width: 100%;
       color: #ffffc0;
-      z-index: 10;
+      z-index: 10;      
 
       &__wars {
         display: flex;

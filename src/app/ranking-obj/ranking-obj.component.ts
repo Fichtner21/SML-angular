@@ -101,35 +101,38 @@ export class RankingObjComponent implements OnInit {
           // } else {
           //   fragsToDisplay = '0';
           // }                 
-          
-          lastWarDate = {
-            // lastWarDate:this.findPlayerLastWar(name.username, v2),
-            username:name.username,
-            playername:name.playername,
-            cup:this.addTitleCup(name.cup1on1edition1),
-            ranking:parseFloat(name.ranking.replace(/,/g,'')),
-            // ranking: name.ranking,
-            wars:name.warcount,
-            flag:name.nationality,          
-            // strike: this.smallStrike2(name.username, v2),
-            strike: name.lastwarpc,
-            // fragsperwar: (fragsToDisplay / name.warcount).toFixed(2) != 'NaN' ? (fragsToDisplay / name.warcount).toFixed(2) : '0',
-            // maxfragsperwar: Math.max(...fragsPerPlayerArray) ? Math.max(...fragsPerPlayerArray) : '0',
-            // minfragsperwar: Math.min(...fragsPerPlayerArray) ? Math.min(...fragsPerPlayerArray) : '0',
-            maxfragsperwar: name.fpwmax,
-            minfragsperwar: name.fpwmin,
-            s1wars: name.s1wars,
-            // activity: this.searchPlayerActivity(name.username, v2), 
-            activity: name.last30days, 
-            // lastyear: this.pastYearActivity(name.username, v2),
-            lastyear: name.last365days,
-            meeting: name.meeting,
-            lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
-            fragsperwar: name.fpw,
-            inactive: name.active == 'FALSE' ? false : true,
-            ban: name.ban == 'TRUE' ? true : false            
-          };
-          playerRowArray.push(lastWarDate);          
+          if(name.active == 'FALSE'){
+            continue;
+          } else {
+            lastWarDate = {
+              // lastWarDate:this.findPlayerLastWar(name.username, v2),
+              username:name.username,
+              playername:name.playername,
+              cup:this.addTitleCup(name.cup1on1edition1),
+              ranking:parseFloat(name.ranking.replace(/,/g,'')),
+              // ranking: name.ranking,
+              wars:name.warcount,
+              flag:name.nationality,          
+              // strike: this.smallStrike2(name.username, v2),
+              strike: name.lastwarpc,
+              // fragsperwar: (fragsToDisplay / name.warcount).toFixed(2) != 'NaN' ? (fragsToDisplay / name.warcount).toFixed(2) : '0',
+              // maxfragsperwar: Math.max(...fragsPerPlayerArray) ? Math.max(...fragsPerPlayerArray) : '0',
+              // minfragsperwar: Math.min(...fragsPerPlayerArray) ? Math.min(...fragsPerPlayerArray) : '0',
+              maxfragsperwar: name.fpwmax,
+              minfragsperwar: name.fpwmin,
+              s1wars: name.s1wars,
+              // activity: this.searchPlayerActivity(name.username, v2), 
+              activity: name.last30days, 
+              // lastyear: this.pastYearActivity(name.username, v2),
+              lastyear: name.last365days,
+              meeting: name.meeting,
+              lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
+              fragsperwar: name.fpw,
+              inactive: name.active == 'FALSE' ? false : true,
+              ban: name.ban == 'TRUE' ? true : false            
+            };
+            playerRowArray.push(lastWarDate); 
+          }                   
         }     
         // console.log('playerRowArray', playerRowArray)
         return playerRowArray;         

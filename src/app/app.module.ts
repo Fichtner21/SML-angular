@@ -30,6 +30,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsComponent } from './ranking-obj/tabs/tabs.component';
 import { TabComponent } from './ranking-obj/tabs/tab.component';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 
 export function createTranslateLoader(http: HttpClient){
@@ -57,6 +58,7 @@ export function createTranslateLoader(http: HttpClient){
     NgxLodashPipesModule,
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),     
+    // OAuthModule.forRoot(), 
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

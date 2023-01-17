@@ -18,6 +18,9 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { LinksComponent } from './links/links.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SlugTransformDirective } from './slug-transform.directive';
+
 
 
 export function createTranslateLoader(http: HttpClient){
@@ -30,7 +33,7 @@ export function createTranslateLoader(http: HttpClient){
     MapsComponent, 
     DownloadComponent, 
     LogComponent, 
-    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent
+    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent, SlugTransformDirective
   ],
   imports: [
     CommonModule,      
@@ -41,12 +44,14 @@ export function createTranslateLoader(http: HttpClient){
     GoogleMapsModule,
     FontAwesomeModule,
     HttpClientModule, 
-    NgxGalleryModule 
+    NgxGalleryModule,
+    ReactiveFormsModule    
    ],
   exports: [
     CommonModule,
     TranslateModule,   
-    SecretComponent 
+    SecretComponent,
+    SlugTransformDirective 
   ]
 })
 export class AboutModule { 

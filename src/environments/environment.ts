@@ -14,6 +14,7 @@ export const environment = {
     measurementId: 'G-7WB1MRGPB5',
   },
   production: false,
+  CONNECTION_URL: 'https://sheet.best/api/sheets/d58b442c-790c-4e5b-a033-bf718908baa0'
   // players: {
   //   spreadsheetId: '1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo',
   //   worksheetId: 1,

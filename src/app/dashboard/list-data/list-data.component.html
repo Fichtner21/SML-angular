@@ -1,0 +1,35 @@
+<section>
+  <div class="container">   
+    
+    <table class="table table-dark table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Player name</th>
+          <th scope="col">Username</th>
+          <th scope="col">ranking</th>
+          <th scope="col">percentile</th>
+          <th scope="col">place</th>
+          <th scope="col">warcount</th>
+          <th scope="col">nationality</th>
+          <th scope="col">active</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let datum of data; let i = index ">
+          <th scope="row">{{datum.playername}}</th>
+          <td>{{datum.username}}</td>
+          <td>{{datum.ranking}}</td>
+          <td>{{datum.percentile}}</td>
+          <td>{{datum.place}}</td>
+          <td>{{datum.warcount}}</td>
+          <td>{{datum.nationality}}</td>
+          <td>{{datum.active}}</td>
+          <td (click)="editSheet(datum.username)"><button class="btn btn-secondary">Edit</button></td>  
+          <td (click)="deleteSheet(datum.username)"><button class="btn btn-danger">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>    
+  </div>
+</section>

@@ -1,0 +1,36 @@
+<section>
+  <div class="container">
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <button class="btn btn-primary" routerLink="/dashboard/list-players">Home</button>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <form [formGroup]="updateSheetForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="name" class="form-label">Player Name</label>
+          <input type="text" class="form-control" id="name" placeholder="name" formControlName="playername">
+        </div>
+    
+        <div class="mb-3">
+          <label for="username" class="form-label">User name</label>
+          <input type="text" class="form-control" id="username" placeholder="username" formControlName="username">
+        </div>
+    
+        <div class="mb-3">
+          <label for="ranking" class="form-label">Ranking</label>
+          <input type="text" class="form-control" id="ranking" placeholder="ranking" formControlName="ranking">
+        </div>
+    
+        <div class="mb-3">
+          <label for="percentile" class="form-label">Percentile</label>
+          <input type="text" class="form-control" id="percentile" placeholder="percentile" formControlName="percentile">
+        </div>
+    
+        <button [disabled]="updateSheetForm.invalid || updateSheetForm.pristine"
+          class="btn btn-success mt-3">Submit</button>
+    
+      </form>
+    </div>
+  </div>
+</section>

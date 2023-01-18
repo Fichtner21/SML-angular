@@ -1,0 +1,34 @@
+section {
+  padding-top: 70px;
+
+  .container {
+    margin: 0 auto;
+    padding: 0 15px;
+
+    table {
+      thead {
+        background-color: #010141;
+        color: #ffffc0;  
+
+        tr {
+         
+          th {
+            padding: 2px;            
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          &:nth-child(2n){
+            background-color: lighten(lightgray,10%);
+          }
+  
+          &:nth-child(2n-1){
+            background-color: lighten(lightgray, 5%);
+          }
+        }
+      }
+    } 
+  }
+}

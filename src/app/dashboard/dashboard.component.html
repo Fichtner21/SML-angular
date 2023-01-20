@@ -4,7 +4,21 @@
       <a routerLink="/dashboard/create-player">Create player</a>    
       <a routerLink="/dashboard/list-players">List players</a>      
     </nav>
-    <div>
+    <div *ngIf="isLoggedIn()" style="border:3px solid red; margin: 20px; padding: 20px;">
+      <div class="container">Hi and welcome!</div>
+      <div class="container">Name: {{ userInfo?.info?.name }}</div>
+      <div class="container"><img src="{{ userInfo?.info?.picture }}"></div>
+      <div class="container">
+        <button (click)="getEmails()">List Emails</button>
+      </div>
+      <div class="container" *ngFor="let snippet of mailSnippets">
+        {{ snippet }}
+      </div>
+      <div class="container">
+        <button (click)="logout()">Logout from Google</button>
+      </div>
+    </div>
+  <div>
       <!-- <app-list-data></app-list-data> -->
       <router-outlet></router-outlet>
     </div>

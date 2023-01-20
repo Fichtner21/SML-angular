@@ -17,10 +17,27 @@ export class ListDataComponent implements OnInit {
   }  
 
   listData(){
-    this.service.listPlayers().subscribe({
-      next: (res) => {
-        // console.log(res)
-        this.data = res;
+    // this.service.listPlayers().subscribe({
+    //   next: (res) => {
+    //     // console.log(res)
+    //     this.data = res;
+    //   },
+    //   error: (error) => {
+    //     console.log(error)
+    //   }
+    // })
+    this.service.getPlayers('Players').subscribe({
+      next: (res) => {                    
+        let batchRowValues = res.values;
+        let players: any[] = [];
+        for(let i = 1; i < batchRowValues.length; i++){
+          const rowObject: object = {};
+          for(let j = 0; j < batchRowValues[i].length; j++){
+            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+          }
+          players.push(rowObject);
+        }        
+        this.data = players; 
       },
       error: (error) => {
         console.log(error)

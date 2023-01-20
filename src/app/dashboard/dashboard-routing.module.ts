@@ -10,16 +10,16 @@ const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'create-player',
-    component: CreateDataComponent,
+    canActivate: [AuthGuard],       
   },
   {
     path: 'list-players',
     component: ListDataComponent
   },
+  {
+    path: 'create-player',
+    component: CreateDataComponent,
+  },  
   {
     path: 'edit-player/:username',
     component: EditDataComponent

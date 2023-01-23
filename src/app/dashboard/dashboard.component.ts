@@ -13,11 +13,13 @@ export class DashboardComponent {
 
   constructor(private readonly googleApi: PlayersApiService) { 
     googleApi.userProfileSubject.subscribe( info => {
+      console.log('info', info);
       this.userInfo = info
     })
+    console.log(googleApi.gmail)
   }  
 
-  isLoggedIn(): boolean {
+  isLoggedIn(): boolean {    
     return this.googleApi.isLoggedIn()
   }
 

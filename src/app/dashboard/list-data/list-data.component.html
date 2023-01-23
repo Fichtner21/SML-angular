@@ -13,6 +13,7 @@
           <th scope="col">warcount</th>
           <th scope="col">nationality</th>
           <th scope="col">active</th>
+          <th scope="col">ban</th>
           <th scope="col"></th>
           <th scope="col"></th>
         </tr>
@@ -28,6 +29,7 @@
           <td>{{datum.warcount}}</td>
           <td>{{datum.nationality}}</td>
           <td>{{datum.active}}</td>
+          <td>{{datum.ban}}</td>
           <td (click)="editSheet(datum.username)"><button class="btn btn-secondary">Edit</button></td>  
           <td (click)="deleteSheet(datum.username)"><button class="btn btn-danger">Delete</button></td>
         </tr>

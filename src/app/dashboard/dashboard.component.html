@@ -8,9 +8,9 @@
       <div class="container">Hi and welcome!</div>
       <div class="container">Name: {{ userInfo?.info?.name }}</div>
       <div class="container"><img src="{{ userInfo?.info?.picture }}"></div>
-      <div class="container">
+      <!-- <div class="container">
         <button (click)="getEmails()">List Emails</button>
-      </div>
+      </div> -->
       <div class="container" *ngFor="let snippet of mailSnippets">
         {{ snippet }}
       </div>

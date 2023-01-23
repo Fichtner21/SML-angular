@@ -26,6 +26,17 @@
           <label for="percentile" class="form-label">Percentile</label>
           <input type="text" class="form-control" id="percentile" placeholder="percentile" formControlName="percentile">
         </div>
+
+        <div class="mb-3">
+          <mat-form-field appearance="fill">
+            <mat-label>Nationality</mat-label>
+            <mat-select formControlName="nationality">
+              <mat-option *ngFor="let country of countries" [value]="country.value" >
+                {{country.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>     
+        </div>
     
         <button [disabled]="updateSheetForm.invalid || updateSheetForm.pristine"
           class="btn btn-success mt-3">Submit</button>

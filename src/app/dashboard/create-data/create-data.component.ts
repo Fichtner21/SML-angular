@@ -48,7 +48,7 @@ export class CreateDataComponent implements OnInit {
       cup1on1edition1: formBuilder.control('-'),
       meeting: formBuilder.control(''),
       cup3on3: formBuilder.control(''),
-      active: formBuilder.control(false),
+      active: formBuilder.control(''),
       ban: formBuilder.control(false),
       lastwar: formBuilder.control(''),
       fpw: formBuilder.control(''),
@@ -76,6 +76,7 @@ export class CreateDataComponent implements OnInit {
 
     this.googleSheetForm.get("username").valueChanges.subscribe(val => {
       this.googleSheetForm.patchValue({warcount: `=LICZ.JEŻELI('Match History'!A:BK, B${this.countPlayers})`});
+      this.googleSheetForm.patchValue({active: `=ORAZ($N${this.countPlayers}>=DZIŚ()-30)`});
       this.googleSheetForm.patchValue({percentile: `=ROZKŁAD.NORMALNY(C${this.countPlayers},1000,ODCH.STANDARDOWE(Players!$C$2:$C$150)+0.00001,PRAWDA)`});      
       this.googleSheetForm.patchValue({ lastwarpc: 
         `=JEŻELI(F${this.countPlayers}=0,0,INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),PODAJ.POZYCJĘ(B${this.countPlayers},INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),0),0)+3)-INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),PODAJ.POZYCJĘ(B${this.countPlayers},INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),0),0)+1))`
@@ -166,10 +167,18 @@ export class CreateDataComponent implements OnInit {
 
     const valueRangeBody = {
       'majorDimension': 'ROWS',
-      'values': [playername, username]
+      'values': [playername, username, percentile, ranking]
+    }    
+
+    // const spreadsheetId = environment.SPREADSHEET_ID;
+    // const tableRange = 'Players';
+    const updates =  {
+      "values": [
+        [playername, username, percentile, ranking]
+      ]
     }
     
-    this.playersApiService.createPlayer(playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({
+    this.playersApiService.createPlayer(environment.SPREADSHEET_ID, "USER_ENTERED", playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({      
       next: (res) => {
         console.log(res);
         if(res){
@@ -177,9 +186,21 @@ export class CreateDataComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.log('ERROR =>', error.message);
+        console.log('ERROR =>', error.message);        
       }
     })
+
+    // this.playersApiService.createPlayer(playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({      
+    //   next: (res) => {
+    //     console.log(res);
+    //     if(res){
+    //       this.router.navigate(['/obj-ranking'])
+    //     }
+    //   },
+    //   error: (error) => {
+    //     console.log('ERROR =>', error.message);        
+    //   }
+    // })
   }
 
   listPlayersComponent() {

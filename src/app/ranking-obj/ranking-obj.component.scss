@@ -552,3 +552,14 @@ a {
     display: none !important;
   }
 }
+
+.s1wars {
+  font-size: 14px;
+  font-weight: 400;
+  transition: .3 all;
+
+  &:hover {
+    color: red;
+    cursor: pointer;
+  }
+}

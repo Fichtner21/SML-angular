@@ -30,10 +30,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsComponent } from './ranking-obj/tabs/tabs.component';
 import { TabComponent } from './ranking-obj/tabs/tab.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { TokenInterceptor } from './token.interceptor';
 
 
-export function createTranslateLoader(http: HttpClient){
+export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }
 
@@ -42,7 +44,7 @@ export function createTranslateLoader(http: HttpClient){
     AppComponent,
     HomeComponent,    
     DateFormatPipePipe,     
-    LoginComponent, LogoutComponent, TabsComponent, TabComponent
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent
   ],
   imports: [
     CommonModule,
@@ -56,9 +58,9 @@ export function createTranslateLoader(http: HttpClient){
     AngularFireModule.initializeApp(environment.firebase, 'spearhead-mix-league'),
     AngularFirestoreModule,
     NgxLodashPipesModule,
+    OAuthModule.forRoot(),
     // provideFirestore(() => getFirestore()),
-    NgHttpLoaderModule.forRoot(),     
-    // OAuthModule.forRoot(), 
+    NgHttpLoaderModule.forRoot(),      
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -78,11 +80,13 @@ export function createTranslateLoader(http: HttpClient){
     provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true
   },
   {
+    provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true
+  },
+  {
     provide: LocationStrategy,
     useClass: PathLocationStrategy
   },
-    GoogleSheetsDbService,
-        
+    GoogleSheetsDbService,        
   ],
   bootstrap: [AppComponent]
 })

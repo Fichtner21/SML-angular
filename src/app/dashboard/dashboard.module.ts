@@ -11,7 +11,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { SlugTransformDirective } from '../about/slug-transform.directive';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { MatButtonModule } from '@angular/material/button';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { TokenInterceptor } from '../token.interceptor';
 
 @NgModule({
   declarations: [  
@@ -29,13 +32,17 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     MatSelectModule,
     MatInputModule,
-    HttpClientModule,     
+    HttpClientModule,  
+    MatButtonModule,
+    // OAuthModule.forRoot(),   
    ],
   exports: [
     CommonModule,
     TranslateModule,
     SlugTransformDirective   
-  ]  
+  ],
+  
+   
 })
 export class DashboardModule { 
   static forRoot(): ModuleWithProviders<DashboardModule> {

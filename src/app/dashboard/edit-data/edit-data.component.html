@@ -1,31 +1,32 @@
 <section>
   <div class="container">
     <nav class="navbar navbar-light bg-light">
-      <div class="container-fluid">
-        <button class="btn btn-primary" routerLink="/dashboard/list-players">List players</button>
+      <div class="container">
+        <button mat-raised-button routerLink="/dashboard/list-players">List players</button>
       </div>
     </nav>
-    <div class="container mt-5">
+    <div class="container mt-5 edit-player">
       <form [formGroup]="updateSheetForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="name" class="form-label">Player Name</label>
-          <input type="text" class="form-control" id="name" placeholder="name" formControlName="playername">
-        </div>
-    
-        <div class="mb-3">
-          <label for="username" class="form-label">User name</label>
-          <input type="text" class="form-control" id="username" placeholder="username" formControlName="username">
-        </div>
-    
-        <div class="mb-3">
-          <label for="ranking" class="form-label">Ranking</label>
-          <input type="text" class="form-control" id="ranking" placeholder="ranking" formControlName="ranking">
-        </div>
-    
-        <div class="mb-3">
-          <label for="percentile" class="form-label">Percentile</label>
-          <input type="text" class="form-control" id="percentile" placeholder="percentile" formControlName="percentile">
-        </div>
+        
+        <mat-form-field class="example-full-width">
+          <mat-label>Player Name</mat-label>
+          <input matInput placeholder="Player Name" formControlName="playername">
+        </mat-form-field>
+       
+        <mat-form-field class="example-full-width">
+          <mat-label>User Name</mat-label>
+          <input matInput placeholder="" formControlName="username">
+        </mat-form-field>
+       
+        <mat-form-field class="example-full-width">
+          <mat-label>Ranking</mat-label>
+          <input matInput placeholder="" formControlName="ranking">
+        </mat-form-field>
+        
+        <mat-form-field class="example-full-width">
+          <mat-label>Percentile</mat-label>
+          <input matInput placeholder="" formControlName="percentile">
+        </mat-form-field>
 
         <div class="mb-3">
           <mat-form-field appearance="fill">
@@ -36,10 +37,9 @@
               </mat-option>
             </mat-select>
           </mat-form-field>     
-        </div>
-    
-        <button [disabled]="updateSheetForm.invalid || updateSheetForm.pristine"
-          class="btn btn-success mt-3">Submit</button>
+        </div>    
+       
+        <button mat-raised-button type="submit" color="primary" [disabled]="updateSheetForm.invalid || updateSheetForm.pristine">Submit</button>
     
       </form>
     </div>

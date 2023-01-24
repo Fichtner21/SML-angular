@@ -7,6 +7,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { Chart, ChartConfiguration, ChartDataSets, ChartOptions } from 'chart.js';
 import {ThemePalette} from '@angular/material/core';
+import * as ChartAnnotation from 'chartjs-plugin-annotation';
 
 
 @Component({
@@ -406,8 +407,28 @@ export class PlayerViewComponent implements OnInit {
             },
           ],
         },
+        annotation: {
+          drawTime: 'afterDatasetsDraw',
+          annotations: [
+            {
+              id: 'hline1',
+              type: 'line',
+              mode: 'horizontal',
+              scaleID: 'y-axis-0',
+              value: this.avarageWarsPerMonth(frags),
+              borderColor: 'red',
+              borderDash: [10, 5],
+              label: {
+                backgroundColor: 'red',
+                content: 'Avg. ' + this.avarageWarsPerMonth(frags).toFixed(2) + ' frags per war.',
+                enabled: true,
+              },
+            },
+          ]
+        }, 
         // display:true
-      }
+      } as ChartOptions,
+      plugins: [ChartAnnotation]
     });
   } 
 
@@ -533,6 +554,10 @@ export class PlayerViewComponent implements OnInit {
       }
     });
   }  
+
+  public avarageWarsPerMonth(obj:any){
+    return obj.reduce((a:any, b:any) => a + b) / obj.length;
+  }
 
   public showHorizontalScrolling(frags:any[], listwars:any[]){
     this.canvas = <HTMLCanvasElement>document.getElementById('myChart2');

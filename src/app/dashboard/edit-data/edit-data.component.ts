@@ -1,9 +1,13 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { RSA_NO_PADDING } from 'constants';
 import { Country } from 'src/app/models/country.model';
 import { PlayersApiService } from 'src/app/services/players-api.service';
+import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-edit-data',
@@ -38,6 +42,8 @@ export class EditDataComponent implements OnInit {
     private formBuilder: FormBuilder,
     private service: PlayersApiService,
     private actRoute: ActivatedRoute,
+    private http: HttpClient,
+    private readonly oAuthService: OAuthService,
     private router: Router) { 
       this.updateSheetForm = this.formBuilder.group({
         playername: ['', Validators.required],
@@ -70,8 +76,9 @@ export class EditDataComponent implements OnInit {
   ngOnInit() {
     this.actRoute.params.subscribe((params) => {
       this.username = params['username'];
-      console.log(this.username)
+      // console.log(this.username)
       this.service.getPlayerByUsername(this.username).subscribe((res:any) => {
+        // console.log('RES', res);
         let batchRowValues = res.values;
         let players: any[] = [];
         for(let i = 1; i < batchRowValues.length; i++){
@@ -93,8 +100,14 @@ export class EditDataComponent implements OnInit {
             this.updateSheetForm.get('nationality')?.setValue(this.data.nationality);
           }
         }) 
-        console.log('el', this.data);   
+        // console.log('el', this.data);   
       })
+    })
+  }
+
+  public authHeader() : HttpHeaders { 
+    return new HttpHeaders ({
+      'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`
     })
   }
 
@@ -108,20 +121,79 @@ export class EditDataComponent implements OnInit {
     const percentile = this.updateSheetForm.value.percentile;
     const nationality = this.updateSheetForm.value.nationality;
 
-    this.service
-      .updatePlayer(playername, username, ranking, percentile, nationality)
-      // .updatePlayer()
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          if (res) {
-            this.router.navigate(['/dashboard/list-players']);
-          }
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      });
+    // this.service
+    //   .updatePlayer(playername, username, ranking, percentile, nationality)
+    //   // .updatePlayer()
+    //   .subscribe({
+    //     next: (res) => {
+    //       console.log(res);
+    //       if (res) {
+    //         this.router.navigate(['/dashboard/list-players']);
+    //       }
+    //     },
+    //     error: (error) => {
+    //       console.log(error);
+    //     },
+    //   });
+      // this.service.updatePlayerNEW(username, playername).subscribe({
+      //   next: (res:any) => {
+      //     console.log('res ***', res);
+      //     console.log('username ***', username);
+      //   //   const numRows = res.values ? res.values.length : 0;
+      //   //   console.log(`${numRows} rows retrieved.`);
+      //   //   const source = res.values;
+      //   //   const input = source.map(function (row, index) {
+      //   //     row.unshift(index);
+      //   //     return row;
+      //   //   }).filter(function (iRow:any) {
+      //   //     // console.log('iRow[1]', iRow[2])
+      //   //       return iRow[2] === username;
+      //   //   });
+      //   //   console.log('input', input);
+      //   //   var index = parseInt(input[0]) + 1; //Saves the old index
+      //   //   console.log('index', index);
+      //   //   input[0].shift(); //Removes the old index from the array
+      //   //   input[0][2] = "TEST"; //Update the row with stuff
+      //   //   let values = [
+      //   //     input[0]
+      //   //   ];
+      //   //   const resource = {
+      //   //       values
+      //   //   };
+
+      //   //  return this.http.put<any>(
+      //   //     `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Players!A${index}:W${index}?valueInputOption=RAW`, 
+      //   //     {
+      //   //       "values": [
+      //   //         [input]
+      //   //       ]
+      //   //     },
+      //   //     {
+      //   //       headers: this.authHeader()
+      //   //     }
+      //   //   )
+
+      //     // Sheets.spreadsheets.values.update({
+      //     //   spreadsheetId: "XXXXXXXXXXXXXXXXXXX",
+      //     //   range: "Tabellenblatt1!A" + index + ":J" + index, //Saves the row at the old index from before
+      //     //   valueInputOption: "RAW",
+      //     //   resource : resource
+      //     // }, (err, result) => {
+      //     //     if (err) {
+      //     //         console.log(err);
+      //     //     } else {
+      //     //         console.log('%d cells updated.', result.data.updatedRows);
+      //     //     }
+      //     // });
+
+      //     // if (res) {
+      //     //   this.router.navigate(['/dashboard/list-players']);
+      //     // }
+      //   },
+      //   error: (error) => {
+      //     console.log(error);
+      //   },
+      // })
   }
 
 }

@@ -405,13 +405,33 @@ export class RankingObjComponent implements OnInit {
       )
     )       
   }
-
+ 
   public sortByFpWAsc(res:Observable<any>){ 
     this.booleanVarFpW = !this.booleanVarFpW;     
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByFpW: 'ASC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(a.fragsperwar) - parseFloat(b.fragsperwar))
+      )
+    )       
+  }
+
+  public sortByS1WarsDesc(res:Observable<any>){ 
+    this.booleanVarFpW = !this.booleanVarFpW;    
+    this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'DESC' } }); 
+    return this.lastWarOfPlayer$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(b.s1wars) - parseFloat(a.s1wars))
+      )
+    )       
+  }
+ 
+  public sortByS1WarsAsc(res:Observable<any>){ 
+    this.booleanVarFpW = !this.booleanVarFpW;     
+    this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'ASC' } }); 
+    return this.lastWarOfPlayer$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(a.s1wars) - parseFloat(b.s1wars))
       )
     )       
   }

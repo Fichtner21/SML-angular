@@ -7,12 +7,12 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { OAuthService } from 'angular-oauth2-oidc';
 import { AuthService } from './auth.service';
 
 @Injectable()
 export class TokenInterceptorService implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private readonly oAuthService: OAuthService) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -22,8 +22,8 @@ export class TokenInterceptorService implements HttpInterceptor {
     
     if (token) {
       request = request.clone({
-        headers: request.headers.set('Authorization', token),
-      });
+        headers: request.headers.set('Authorization', token),        
+    });
       // const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
       //clone http to the custom AuthRequest and send it to the server
       // const AuthRequest = request.clone({ headers: headers });
@@ -31,6 +31,9 @@ export class TokenInterceptorService implements HttpInterceptor {
       return next.handle(request);
     } else {
       return next.handle(request);
-    }
+    }    
+   
   }
+
+  
 }

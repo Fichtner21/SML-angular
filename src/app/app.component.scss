@@ -102,39 +102,48 @@ nav {
       }
     }
 
-    .social {      
-      display: flex;
-      align-items: center;
-      font-weight: 700; 
+    .social {    
       
-      @media screen and (max-width: 768px){
-        align-items: flex-end;
-        flex-direction: column;
-      }
-
-      .people {
-        filter: invert(100%) sepia(35%) saturate(1546%) hue-rotate(22deg) brightness(111%) contrast(105%);
-      }
-      
-      a {
+      .social-panel {
         display: flex;
         align-items: center;
-        
-      }
-
-      img {
-        width: 26px;
-        height: auto;
-        margin-right: 5px;
-      }
-
-      div {
-        margin-right: 0.2rem;
-        font-size: 22px;
+        font-weight: 700; 
 
         @media screen and (max-width: 768px){
-          margin-right: 0;
+          align-items: flex-end;
+          flex-direction: column;
         }
+
+        .people {
+          filter: invert(100%) sepia(35%) saturate(1546%) hue-rotate(22deg) brightness(111%) contrast(105%);
+        }
+        
+        a {
+          display: flex;
+          align-items: center;
+          
+        }
+  
+        img {
+          width: 26px;
+          height: auto;
+          margin-right: 5px;
+        }
+  
+        div {
+          margin-right: 0.2rem;
+          font-size: 22px;
+  
+          @media screen and (max-width: 768px){
+            margin-right: 0;
+          }
+        }
+      }   
+      
+      .login-panel {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
       }
     }
   }  

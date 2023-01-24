@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PlayersApiService, UserInfo } from '../services/players-api.service';
-
+import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,16 +11,16 @@ import { PlayersApiService, UserInfo } from '../services/players-api.service';
 })
 export class DashboardComponent { 
   mailSnippets: string[] = []
-  userInfo?: UserInfo
+  userInfo?: UserInfo 
 
-  constructor(private readonly googleApi: PlayersApiService) { 
+  constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, private readonly oAuthService: OAuthService) { 
     googleApi.userProfileSubject.subscribe( info => {
       console.log('info', info);
       this.userInfo = info
     })
-    console.log(googleApi.gmail)
+    console.log(googleApi);
   }  
-
+  
   isLoggedIn(): boolean {    
     return this.googleApi.isLoggedIn()
   }
@@ -27,19 +29,19 @@ export class DashboardComponent {
     this.googleApi.signOut()
   }
 
-  async getEmails() {
-    if (!this.userInfo) {
-      return;
-    }
+  // async getEmails() {
+  //   if (!this.userInfo) {
+  //     return;
+  //   }
 
-    const userId = this.userInfo?.info.sub as string
-    const messages = await (this.googleApi.emails(userId)).toPromise()
-    messages.messages.forEach( (element: any) => {
-      const mail = (this.googleApi.getMail(userId, element.id)).toPromise()
-      mail.then( mail => {
-        this.mailSnippets.push(mail.snippet)
-      })
-    });
-  }
+  //   const userId = this.userInfo?.info.sub as string
+  //   const messages = await (this.googleApi.emails(userId)).toPromise()
+  //   messages.messages.forEach( (element: any) => {
+  //     const mail = (this.googleApi.getMail(userId, element.id)).toPromise()
+  //     mail.then( mail => {
+  //       this.mailSnippets.push(mail.snippet)
+  //     })
+  //   });
+  // }
 
 }

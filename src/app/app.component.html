@@ -19,6 +19,7 @@
       <a routerLink="obj-inactive" routerLinkActive="active">{{ 'nav.inactive_obj' | translate }}</a>
       <a routerLink="about" routerLinkActive="active">{{ 'nav.about' | translate }}</a>
       <a routerLink="cup" routerLinkActive="active">Cup</a>
+      <a routerLink="dashboard" routerLinkActive="active">Dashboard</a>
       <form action="">
         <label for="langChange">{{ 'nav.choose' | translate }}</label>
         <select class="language-select" name="langChange" (ngModelChange)="languageChange($event)" [(ngModel)]="languageCode">          
@@ -27,56 +28,60 @@
         </select>
       </form>
     </div>
-    <div class="social">
-      <div *ngIf="players$ | async as numOfPlayers">        
-        <div *ngIf="numOfPlayers.length > 0">
-          <a routerLink="obj-ranking" routerLinkActive="active" title="ACTIVE PLAYERS">
-            <img src="../assets/images/icons/people.png" alt="" class="people">
-            <!-- {{ numOfPlayers.length - 1 }} -->
-            {{ numOfPlayers$ | async }}
-          </a> 
-        </div>        
-      </div>
-      <div *ngIf="matches$ | async as numOfMatches">        
-        <div *ngIf="numOfMatches.length > 0">
-          <a routerLink="obj-matches" routerLinkActive="active" title="MATCHES PLAYED">
-            <img src="../assets/images/icons/avarage.png" alt="">
-            {{ numOfMatches.length }}
-          </a>
-        </div>       
-      </div>
-      <a href="https://discord.gg/ytZSpQ2" target="_blank" title="DISCORD" class="disco">
-        <img src="assets/images/icons/discord.svg" alt="">
-        <div>VISIT DISCORD</div>        
-      </a>  
-         
-    </div>
-    <div class="" *ngIf="_authService.loggedIn()">
-      <!-- <a class="navbar-brand" href="">EventsHub</a> -->
+    <div class="social">  
+      <div class="social-panel">
+        <div *ngIf="players$ | async as numOfPlayers">        
+          <div *ngIf="numOfPlayers.length > 0">
+            <a routerLink="obj-ranking" routerLinkActive="active" title="ACTIVE PLAYERS">
+              <img src="../assets/images/icons/people.png" alt="" class="people">
+              <!-- {{ numOfPlayers.length - 1 }} -->
+              {{ numOfPlayers$ | async }}
+            </a> 
+          </div>        
+        </div>
+        <div *ngIf="matches$ | async as numOfMatches">        
+          <div *ngIf="numOfMatches.length > 0">
+            <a routerLink="obj-matches" routerLinkActive="active" title="MATCHES PLAYED">
+              <img src="../assets/images/icons/avarage.png" alt="">
+              {{ numOfMatches.length }}
+            </a>
+          </div>       
+        </div>
+        <a href="https://discord.gg/ytZSpQ2" target="_blank" title="DISCORD" class="disco">
+          <img src="assets/images/icons/discord.svg" alt="">
+          <div>VISIT DISCORD</div>        
+        </a>  
+      </div>          
+      <div class="login-panel" *ngIf="_authService.loggedIn()">
+        <!-- <a class="navbar-brand" href="">EventsHub</a> -->
+        
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button> -->
       
-      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button> -->
-    
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <!-- <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/" rouetrLinkActive="active">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/users"  *ngIf="isAdmin" rouetrLinkActive="active">Users</a>
-          </li>
-        </ul> -->
-       
-        <ul class="navbar-nav">
-           <a class="nav-link"  routerLink="/login" *ngIf="!_authService.loggedIn()" rouetrLinkActive="active">Login</a>
-           <a class="nav-link" style="cursor:pointer" *ngIf="_authService.loggedIn()" (click)="logoutUser()">{{ 'about.logout' | translate }}</a>
-        </ul>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/" rouetrLinkActive="active">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/users"  *ngIf="isAdmin" rouetrLinkActive="active">Users</a>
+            </li>
+          </ul> -->
+         
+          <ul class="navbar-nav">
+             <a class="nav-link"  routerLink="/login" *ngIf="!_authService.loggedIn()" rouetrLinkActive="active">Login</a>
+             <a class="nav-link" style="cursor:pointer" *ngIf="_authService.loggedIn()" (click)="logoutUser()">{{ 'about.logout' | translate }}</a>
+          </ul>
+        </div>
       </div>
     </div>
+    
   </div>  
 </nav>
+<!-- <iframe style="position: absolute; right: 30px; bottom: 30px; z-index: 99999;" src="https://discord.com/widget?id=716723661909786690&theme=dark" width="350" height="800" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe> -->
+<!-- <iframe style="position: absolute; right: 30px; bottom: 30px; z-index: 99999;" src="https://e.widgetbot.io/channels/716723661909786690" height="600" width="350"></iframe> -->
 
 
 

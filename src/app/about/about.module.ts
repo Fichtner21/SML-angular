@@ -9,7 +9,7 @@ import { WantedComponent } from './wanted/wanted.component';
 import { RouterModule } from '@angular/router';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ConfigComponent } from './config/config.component';
 import { MeetingComponent } from './meeting/meeting.component';
@@ -20,6 +20,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SlugTransformDirective } from './slug-transform.directive';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 
 
 
@@ -33,7 +35,7 @@ export function createTranslateLoader(http: HttpClient){
     MapsComponent, 
     DownloadComponent, 
     LogComponent, 
-    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent, SlugTransformDirective
+    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent
   ],
   imports: [
     CommonModule,      
@@ -45,14 +47,15 @@ export function createTranslateLoader(http: HttpClient){
     FontAwesomeModule,
     HttpClientModule, 
     NgxGalleryModule,
-    ReactiveFormsModule    
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatInputModule       
    ],
   exports: [
     CommonModule,
     TranslateModule,   
-    SecretComponent,
-    SlugTransformDirective 
-  ]
+    SecretComponent     
+  ]  
 })
 export class AboutModule { 
   static forRoot(): ModuleWithProviders<AboutModule> {

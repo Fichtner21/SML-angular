@@ -2,7 +2,8 @@ import {Component, ViewChild, OnInit, QueryList, ViewChildren} from '@angular/co
 import {MapInfoWindow, MapMarker, GoogleMap } from '@angular/google-maps';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+
+import { catchError, map, tap} from 'rxjs/operators';
 import { Contact } from './secret.model';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -10,6 +11,9 @@ import { Router } from '@angular/router';
 import { faTurkishLiraSign } from '@fortawesome/free-solid-svg-icons';
 import { nextTick } from 'process';
 import { get } from 'http';
+import { Country } from 'src/app/models/country.model';
+import { environment } from 'src/environments/environment';
+
 
 
 @Component({
@@ -17,7 +21,9 @@ import { get } from 'http';
   templateUrl: './secret.component.html',
   styleUrls: ['./secret.component.scss']
 })
-export class SecretComponent implements OnInit {
+
+export class SecretComponent implements OnInit { 
+ 
   // @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
   @ViewChildren(MapInfoWindow) infoWindowsView: QueryList<MapInfoWindow>;
   @ViewChild(MapInfoWindow, { static: false }) infoWindow: MapInfoWindow;
@@ -31,9 +37,26 @@ export class SecretComponent implements OnInit {
   userWarcount: BehaviorSubject<any>;
 
   public countPlayers:any = [];
-
+  countries: Country[] = [
+    { value: 'PL', viewValue: 'Poland' },
+    { value: 'EG', viewValue: 'Egypt' },
+    { value: 'EU', viewValue: 'European Union' },
+    { value: 'DE', viewValue: 'Denmark' },
+    { value: 'NL', viewValue: 'Netherlands' },
+    { value: 'ES', viewValue: 'Estonia' },
+    { value: 'BE', viewValue: 'Belgium' },
+    { value: 'RO', viewValue: 'Romania' },
+    { value: 'FR', viewValue: 'France' },
+    { value: 'UK', viewValue: 'United Kingdom' },
+    { value: 'GR', viewValue: 'Greece' },
+    { value: 'PT', viewValue: 'Portugal' },
+    { value: 'FI', viewValue: 'Finland' },
+    { value: 'SE', viewValue: 'Sweden' },
+    { value: 'XX', viewValue: 'Unknown' },
+  ]
 
   constructor(private playersApiService: PlayersApiService, private formBuilder: FormBuilder, private router: Router) {
+    
     // this.markers = [];
     // this.zoom = 7;
     this.googleSheetForm = this.formBuilder.group({
@@ -43,7 +66,7 @@ export class SecretComponent implements OnInit {
       percentile: formBuilder.control(''),
       place: formBuilder.control(''),
       warcount: formBuilder.control(''),
-      nationality: formBuilder.control('EU'),
+      nationality: formBuilder.control(''),
       clanhistory: formBuilder.control('-'),
       cup1on1edition1: formBuilder.control('-'),
       meeting: formBuilder.control(''),
@@ -61,11 +84,9 @@ export class SecretComponent implements OnInit {
       s1fpw: formBuilder.control(''),
       streak: formBuilder.control('')
     })
-  }
+  }  
 
-  ngOnInit() { 
-
-  
+  ngOnInit() {     
 
     this.listPlayersComponent();
    
@@ -79,7 +100,7 @@ export class SecretComponent implements OnInit {
 
     this.googleSheetForm.get("username").valueChanges.subscribe(val => {
       this.googleSheetForm.patchValue({warcount: `=LICZ.JEŻELI('Match History'!A:BK, B${this.countPlayers})`});
-      this.googleSheetForm.patchValue({percentile: `=ROZKŁAD.NORMALNY(C${this.countPlayers},1000,ODCH.STANDARDOWE(Players!$C$2:$C$150)+0.00001,PRAWDA)`});
+      this.googleSheetForm.patchValue({percentile: `=ROZKŁAD.NORMALNY(C${this.countPlayers},1000,ODCH.STANDARDOWE(Players!$C$2:$C$150)+0.00001,PRAWDA)`});      
       this.googleSheetForm.patchValue({ lastwarpc: 
         `=JEŻELI(F${this.countPlayers}=0,0,INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),PODAJ.POZYCJĘ(B${this.countPlayers},INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),0),0)+3)-INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),PODAJ.POZYCJĘ(B${this.countPlayers},INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),0),0)+1))`
       })
@@ -107,17 +128,8 @@ export class SecretComponent implements OnInit {
       // })
     });    
 
-    // this.googleSheetForm.get("percentile").valueChanges.subscribe(val => {
+    this.googleSheetForm.controls['username'].disable();   
 
-    // });
-      
-    //   (`=ROZKŁAD.NORMALNY(C${this.countPlayers},1000,ODCH.STANDARDOWE(Players!$C$2:$C$150)+0.00001,PRAWDA)`);
-    // this.googleSheetForm.get("username").valueChanges.subscribe(val => {
-    //   this.googleSheetForm.patchValue({warcount: `=LICZ.JEŻELI('Match History'!A:BK,'${this.slugify(val)}')`});
-    // });    
-
-    this.googleSheetForm.controls['username'].disable();
-    // this.googleSheetForm.get('warcount').setValue(this.slugUsername);
 
     this.contactPlayers$ = this.playersApiService.getPlayers('Contact').pipe(
       map((response: any) => {
@@ -166,14 +178,14 @@ export class SecretComponent implements OnInit {
     // console.log(this.googleSheetForm.value);
     // this.googleSheetForm.value.warcount = this.slugUsername;
     // console.log(this.googleSheetForm.getRawValue());
-    // console.log('this.slugUsername', this.slugUsername);
+    // console.log('this.slugUsername', this.slugUsername);   
     const playername = this.googleSheetForm.value.playername;
     const username = this.googleSheetForm.getRawValue().username;
     const ranking = this.googleSheetForm.value.ranking;
     const percentile = this.googleSheetForm.value.percentile;
     const place = this.googleSheetForm.value.place;
     const warcount = this.googleSheetForm.getRawValue().warcount;
-    const nationality = this.googleSheetForm.value.nationality;
+    const nationality = this.googleSheetForm.value.nationality;    
     const clanhistory = this.googleSheetForm.value.clanhistory;
     const cup1on1edition1 = this.googleSheetForm.value.cup1on1edition1;
     const meeting = this.googleSheetForm.value.meeting;
@@ -203,10 +215,34 @@ export class SecretComponent implements OnInit {
         'fpwmax': fpwmax,
         'fpwmin': fpwmin,
         'last30days': last30days,
-        'last365days': last365days
+        'last365days': last365days,
+        'nationality': nationality
       }
     )
+
+    const params = {
+      spreadsheetId: environment.SPREADSHEET_ID,
+      range: 'Players',
+      valueInputOption: 'RAW',
+      insertDataOption: 'INSERT_ROWS'
+    }
+
+    const valueRangeBody = {
+      'majorDimension': 'ROWS',
+      'values': [playername, username, percentile, ranking]
+    }
     
+    // this.playersApiService.createPlayer(valueRangeBody).subscribe({
+    //   next: (res) => {
+    //     console.log(res);
+    //     if(res){
+    //       this.router.navigate(['/obj-ranking'])
+    //     }
+    //   },
+    //   error: (error) => {
+    //     console.log('ERROR =>', error.message);
+    //   }
+    // })
     // this.playersApiService.createPlayer(playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({
     //   next: (res) => {
     //     console.log(res);
@@ -215,21 +251,29 @@ export class SecretComponent implements OnInit {
     //     }
     //   },
     //   error: (error) => {
-    //     console.log(error);
+    //     console.log('ERROR =>', error.message);
     //   }
     // })
   }
 
   listPlayersComponent() {
-    this.playersApiService.listPlayers().subscribe({
+    this.playersApiService.getPlayers('Players').subscribe({
       next: (res:any[]) => {
-        this.countPlayers = res.length + 2;
-        // console.log('this.countPlayers', this.countPlayers)
+        this.countPlayers = Number(res.values.length) + 1;  
+        // console.log('this.countPlayers', this.countPlayers)   
       },
       error: (error) => {
         console.log(error);
       }
     })
+    // this.playersApiService.listPlayers().subscribe({
+    //   next: (res:any[]) => {
+    //     this.countPlayers = res.length + 2;      
+    //   },
+    //   error: (error) => {
+    //     console.log(error);
+    //   }
+    // })
   }
 
   public slugify(str:any){

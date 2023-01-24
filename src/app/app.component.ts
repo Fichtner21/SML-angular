@@ -53,6 +53,7 @@ export class AppComponent implements OnInit{
     // this.translateService.onLangChange.subscribe((lang) => {
     //   alert(lang);
     // })  
+   
 
     this.numOfPlayers$ = this.playersApiService.getPlayers('NumPlayers').pipe(
       map((response: any) => {   
@@ -84,6 +85,8 @@ export class AppComponent implements OnInit{
     
     // console.log('local =>', localStorage.getItem('lang'));
   }  
+
+
 
   languageChange($event) {    
     // debugger;  

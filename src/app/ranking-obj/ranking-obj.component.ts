@@ -23,6 +23,7 @@ export class RankingObjComponent implements OnInit {
   booleanVar = false;
   booleanVarRank = false;
   booleanVarFpW = false; 
+  booleanVarS1Wars = false; 
 
   public playersTest$: Observable<any>;
   public playersTest2$: Observable<any>;
@@ -417,7 +418,7 @@ export class RankingObjComponent implements OnInit {
   }
 
   public sortByS1WarsDesc(res:Observable<any>){ 
-    this.booleanVarFpW = !this.booleanVarFpW;    
+    this.booleanVarS1Wars = !this.booleanVarS1Wars;    
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'DESC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
@@ -427,7 +428,7 @@ export class RankingObjComponent implements OnInit {
   }
  
   public sortByS1WarsAsc(res:Observable<any>){ 
-    this.booleanVarFpW = !this.booleanVarFpW;     
+    this.booleanVarS1Wars = !this.booleanVarS1Wars;     
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'ASC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(

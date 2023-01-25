@@ -171,7 +171,7 @@ export class PlayersApiService {
     return from(fetch(url));
   }
 
-  public updatePlayerNEW(username:any, pname:any, uname: string, ranking: any, place: any, warcount: any, nationality:any, clanhistory: any, cup1on1edition1:any, meeting: any, cup3on3:any, active:boolean, ban: boolean, lastwar: any, fpw: any, fpwmax:any, fpwmin:any, last30days:any, last365days:any, lastwarpc:any, s1wars:any, s1fpw:any, streak:any){ 
+  public updatePlayerNEW(pname:any, uname: string, ranking: any, percentile: any, place: any, warcount: any, nationality:any, clanhistory: any, cup1on1edition1:any, meeting: any, cup3on3:any, active:boolean, ban: boolean, lastwar: any, fpw: any, fpwmax:any, fpwmin:any, last30days:any, last365days:any, lastwarpc:any, s1wars:any, s1fpw:any, streak:any){ 
       
     const playerSheet = this.getPlayers('Players').pipe(
       switchMap((res:any) => {              
@@ -180,13 +180,33 @@ export class PlayersApiService {
           row.unshift(index);
           return row;
         }).filter(function (iRow:any) {         
-            return iRow[2] === username;
+            return iRow[2] === uname;
         });        
         this.index = parseInt(this.input[0]) + 1;        
         this.input[0].shift();         
         this.input[0][0] = pname;
         this.input[0][1] = uname;
+        this.input[0][2] = ranking;
+        this.input[0][3] = percentile;
+        this.input[0][4] = place;
+        this.input[0][5] = warcount;
+        this.input[0][6] = nationality;
+        this.input[0][7] = clanhistory;
+        this.input[0][8] = cup1on1edition1;
+        this.input[0][9] = meeting;
+        this.input[0][10] = cup3on3;
         this.input[0][11] = active;
+        this.input[0][12] = ban;
+        this.input[0][13] = lastwar;
+        this.input[0][14] = fpw;
+        this.input[0][15] = fpwmax;
+        this.input[0][16] = fpwmin;
+        this.input[0][17] = last30days;
+        this.input[0][18] = last365days;
+        this.input[0][19] = lastwarpc;
+        this.input[0][20] = s1wars;
+        this.input[0][21] = s1fpw;
+        this.input[0][22] = streak;        
         let values = [
           this.input[0]
         ];
@@ -198,8 +218,7 @@ export class PlayersApiService {
             `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Players!A${this.index}:W${this.index}?valueInputOption=RAW`,             
             {
               "values": [
-                [pname],
-                // [this.input[0][11]]                
+                [pname, uname, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak],                              
               ]
             },
             {

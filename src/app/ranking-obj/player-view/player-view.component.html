@@ -10,11 +10,14 @@
             <ng-container *ngIf="playerDetails.active; then active; else inactive">              
             </ng-container>
             <ng-template #active>
-              <div class="green">active</div>
+              <div class="green">ACTIVE</div>
             </ng-template>
             <ng-template #inactive>
-              <div class="red">inactive</div>
+              <div class="red">INACTIVE</div>
             </ng-template>
+            <div *ngIf="isLoggedIn()">
+              <a routerLink="/dashboard/edit-player/{{playerDetails.username}}" class="edit-player">EDIT Player</a>              
+            </div>
           </div>
         </div>
         <div class="statistics">

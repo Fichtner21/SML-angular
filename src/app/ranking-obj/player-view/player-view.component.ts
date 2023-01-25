@@ -48,9 +48,7 @@ export class PlayerViewComponent implements OnInit {
     // console.log('activatedRoute PlayerView =>', this.activatedRoute);     
    }
 
-  ngOnInit(): void {  
-    
-    
+  ngOnInit(): void { 
     
     this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
       map((response: any) => {        
@@ -328,6 +326,10 @@ export class PlayerViewComponent implements OnInit {
 
     // this.showResult(matchesArr); 
   } 
+
+  isLoggedIn(): boolean {    
+    return this.playersApiService.isLoggedIn()
+  }
 
   clickEvent(){
     this.status = !this.status;    

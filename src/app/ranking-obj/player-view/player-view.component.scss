@@ -23,6 +23,12 @@
       font-size: 22px;      
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      .edit-player {
+        color: #ffffc0;
+      }
 
       .green {
         color: green;

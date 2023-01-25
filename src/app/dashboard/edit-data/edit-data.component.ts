@@ -7,7 +7,14 @@ import { RSA_NO_PADDING } from 'constants';
 import { Country } from 'src/app/models/country.model';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { environment } from 'src/environments/environment';
+import {ThemePalette} from '@angular/material/core';
 
+export interface Task {
+  name: string;
+  completed: boolean;
+  color: ThemePalette;
+  subtasks?: Task[];
+}
 
 @Component({
   selector: 'app-edit-data',
@@ -18,13 +25,24 @@ export class EditDataComponent implements OnInit {
   updateSheetForm!: FormGroup;
   username: string;
   data: any;
+  
+  task: Task = {
+    name: 'Indeterminate',
+    completed: false,
+    color: 'primary',
+    subtasks: [
+      {name: 'Primary', completed: false, color: 'primary'},
+      {name: 'Accent', completed: false, color: 'accent'},
+      {name: 'Warn', completed: false, color: 'warn'},
+    ],
+  };
 
   public countPlayers:any = [];
   countries: Country[] = [
     { value: 'PL', viewValue: 'Poland' },
     { value: 'EG', viewValue: 'Egypt' },
     { value: 'EU', viewValue: 'European Union' },
-    { value: 'DE', viewValue: 'Denmark' },
+    { value: 'DE', viewValue: 'Germany' },
     { value: 'NL', viewValue: 'Netherlands' },
     { value: 'ES', viewValue: 'Estonia' },
     { value: 'BE', viewValue: 'Belgium' },
@@ -35,6 +53,9 @@ export class EditDataComponent implements OnInit {
     { value: 'PT', viewValue: 'Portugal' },
     { value: 'FI', viewValue: 'Finland' },
     { value: 'SE', viewValue: 'Sweden' },
+    { value: 'CH', viewValue: 'Switzerland'},
+    { value: 'SK', viewValue: 'Slovakia'},
+    { value: 'JO', viewValue: 'Jordan'},
     { value: 'XX', viewValue: 'Unknown' },
   ]
 
@@ -51,34 +72,33 @@ export class EditDataComponent implements OnInit {
         ranking: [''],
         percentile: [''],
         nationality: [''],
-        // place: ['', Validators.minLength(3)],
-        // warcount: ['', Validators.minLength(3)],
-        // nationality: ['', Validators.minLength(3)],
-        // clanhistory: ['-', Validators.minLength(3)],
-        // cup1on1edition1: ['-', Validators.minLength(3)],
-        // meeting: ['', Validators.minLength(3)],
-        // cup3on3: ['', Validators.minLength(3)],
-        active: [false, Validators.required],
-        ban: [false, Validators.required],
-        // lastwar: ['', Validators.minLength(3)],
-        // fpw: ['', Validators.minLength(3)],
-        // fpwmax: ['', Validators.minLength(3)],
-        // fpwmin: ['', Validators.minLength(3)],
-        // last30days: ['', Validators.minLength(3)],
-        // last365days: ['', Validators.minLength(3)],
-        // lastwarpc: ['', Validators.minLength(3)],
-        // s1wars: ['', Validators.minLength(3)],
-        // s1fpw: ['', Validators.minLength(3)],
-        // streak: ['', Validators.minLength(3)]
+        place: [''],
+        warcount: [''],        
+        clanhistory: [''],
+        cup1on1edition1: [''],
+        meeting: [''],
+        cup3on3: [''],
+        active: [false],
+        ban: [false],
+        lastwar: [''],
+        fpw: [''],
+        fpwmax: [''],
+        fpwmin: [''],
+        last30days: [''],
+        last365days: [''],
+        lastwarpc: [''],
+        s1wars: [''],
+        s1fpw: [''],
+        streak: ['']
       })
+      // console.log('FORM', this.updateSheetForm.value.active)
     }
 
   ngOnInit() {
+    // console.log('FORM', this.updateSheetForm)
     this.actRoute.params.subscribe((params) => {
-      this.username = params['username'];
-      // console.log(this.username)
-      this.service.getPlayerByUsername(this.username).subscribe((res:any) => {
-        // console.log('RES', res);
+      this.username = params['username'];    
+      this.service.getPlayerByUsername(this.username).subscribe((res:any) => {       
         let batchRowValues = res.values;
         let players: any[] = [];
         for(let i = 1; i < batchRowValues.length; i++){
@@ -89,7 +109,6 @@ export class EditDataComponent implements OnInit {
           players.push(rowObject);
         }     
 
-
         players.forEach((el:any) => {
           if(el.username == this.username){
             this.data = el;
@@ -97,9 +116,25 @@ export class EditDataComponent implements OnInit {
             this.updateSheetForm.get('username')?.setValue(this.data.username);
             this.updateSheetForm.get('ranking')?.setValue(this.data.ranking);
             this.updateSheetForm.get('percentile')?.setValue(this.data.percentile);
+            this.updateSheetForm.get('place')?.setValue(this.data.place);
+            this.updateSheetForm.get('warcount')?.setValue(this.data.warcount);
             this.updateSheetForm.get('nationality')?.setValue(this.data.nationality);
-            this.updateSheetForm.get('active')?.setValue(this.data.active);
-            this.updateSheetForm.get('ban')?.setValue(this.data.ban);
+            this.updateSheetForm.get('clanhistory')?.setValue(this.data.clanhistory);
+            this.updateSheetForm.get('cup1on1edition1')?.setValue(this.data.cup1on1edition1);
+            this.updateSheetForm.get('meeting')?.setValue(this.data.meeting);
+            this.updateSheetForm.get('cup3on3')?.setValue(this.data.cup3on3);
+            this.updateSheetForm.get('active')?.patchValue(this.data.active == 'FALSE' ? false : true);
+            this.updateSheetForm.get('ban')?.patchValue(this.data.ban == 'FALSE' ? false : true);
+            this.updateSheetForm.get('lastwar')?.setValue(this.data.lastwar);
+            this.updateSheetForm.get('fpw')?.setValue(this.data.fpw);
+            this.updateSheetForm.get('fpwmax')?.setValue(this.data.fpwmax);
+            this.updateSheetForm.get('fpwmin')?.setValue(this.data.fpwmin);
+            this.updateSheetForm.get('last30days')?.setValue(this.data.last30days);
+            this.updateSheetForm.get('last365days')?.setValue(this.data.last365days);
+            this.updateSheetForm.get('lastwarpc')?.setValue(this.data.lastwarpc);
+            this.updateSheetForm.get('s1wars')?.setValue(this.data.s1wars);
+            this.updateSheetForm.get('s1fpw')?.setValue(this.data.s1fpw);
+            this.updateSheetForm.get('streak')?.setValue(this.data.streak);
           }
         }) 
         // console.log('el', this.data);   
@@ -121,78 +156,30 @@ export class EditDataComponent implements OnInit {
     const username = this.updateSheetForm.value.username;
     const ranking = this.updateSheetForm.value.ranking;
     const percentile = this.updateSheetForm.value.percentile;
+    const place = this.updateSheetForm.value.place;
+    const warcount = this.updateSheetForm.value.warcount;
     const nationality = this.updateSheetForm.value.nationality;
+    const clanhistory = this.updateSheetForm.value.clanhistory;
+    const cup1on1edition1 = this.updateSheetForm.value.cup1on1edition1;
+    const meeting = this.updateSheetForm.value.meeting;
+    const cup3on3 = this.updateSheetForm.value.cup3on3;
     const active = this.updateSheetForm.value.active;
     const ban = this.updateSheetForm.value.ban;
-
-    // this.service
-    //   .updatePlayer(playername, username, ranking, percentile, nationality)
-    //   // .updatePlayer()
-    //   .subscribe({
-    //     next: (res) => {
-    //       console.log(res);
-    //       if (res) {
-    //         this.router.navigate(['/dashboard/list-players']);
-    //       }
-    //     },
-    //     error: (error) => {
-    //       console.log(error);
-    //     },
-    //   });
-      this.service.updatePlayerNEW(username, playername, active).subscribe({
+    const lastwar = this.updateSheetForm.value.lastwar;
+    const fpw = this.updateSheetForm.value.fpw;
+    const fpwmax = this.updateSheetForm.value.fpwmax;
+    const fpwmin = this.updateSheetForm.value.fpwmin;
+    const last30days = this.updateSheetForm.value.last30days;
+    const last365days = this.updateSheetForm.value.last365days;
+    const lastwarpc = this.updateSheetForm.value.lastwarpc;
+    const s1wars = this.updateSheetForm.value.s1wars;
+    const s1fpw = this.updateSheetForm.value.s1fpw;
+    const streak = this.updateSheetForm.value.streak;
+  
+      this.service.updatePlayerNEW(playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({
         next: (res:any) => {
           console.log('res ***', res);
-          console.log('username ***', username);
-        //   const numRows = res.values ? res.values.length : 0;
-        //   console.log(`${numRows} rows retrieved.`);
-        //   const source = res.values;
-        //   const input = source.map(function (row, index) {
-        //     row.unshift(index);
-        //     return row;
-        //   }).filter(function (iRow:any) {
-        //     // console.log('iRow[1]', iRow[2])
-        //       return iRow[2] === username;
-        //   });
-        //   console.log('input', input);
-        //   var index = parseInt(input[0]) + 1; //Saves the old index
-        //   console.log('index', index);
-        //   input[0].shift(); //Removes the old index from the array
-        //   input[0][2] = "TEST"; //Update the row with stuff
-        //   let values = [
-        //     input[0]
-        //   ];
-        //   const resource = {
-        //       values
-        //   };
-
-        //  return this.http.put<any>(
-        //     `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Players!A${index}:W${index}?valueInputOption=RAW`, 
-        //     {
-        //       "values": [
-        //         [input]
-        //       ]
-        //     },
-        //     {
-        //       headers: this.authHeader()
-        //     }
-        //   )
-
-          // Sheets.spreadsheets.values.update({
-          //   spreadsheetId: "XXXXXXXXXXXXXXXXXXX",
-          //   range: "Tabellenblatt1!A" + index + ":J" + index, //Saves the row at the old index from before
-          //   valueInputOption: "RAW",
-          //   resource : resource
-          // }, (err, result) => {
-          //     if (err) {
-          //         console.log(err);
-          //     } else {
-          //         console.log('%d cells updated.', result.data.updatedRows);
-          //     }
-          // });
-
-          // if (res) {
-          //   this.router.navigate(['/dashboard/list-players']);
-          // }
+          console.log('username ***', username);     
         },
         error: (error) => {
           console.log(error);

@@ -34,7 +34,7 @@
             </div>
             <div style="display:block;">
               <div class="wars" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)" title="sort by Wars">{{ 'ranking.wars' | translate }} </div>
-              <div class="s1wars" *ngIf="isInfo" (click)="booleanVar ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)">sort by Season #1 wars: <span></span></div>
+              <div class="s1wars" *ngIf="isInfo" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)">sort by Season #1 wars: <span></span></div>
             </div> 
                 <!-- <ng-container *ngIf="booleanVar; then up; else down"></ng-container>
                 <ng-template #up>

@@ -1,10 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Country } from 'src/app/models/country.model';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { environment } from 'src/environments/environment';
+
+export interface Task {
+  name: string;
+  completed: boolean;
+  color: ThemePalette;
+  subtasks?: Task[];
+}
+
 
 @Component({
   selector: 'app-create-data',
@@ -15,6 +24,17 @@ export class CreateDataComponent implements OnInit {
   googleSheetForm: FormGroup;
   slugUsername: BehaviorSubject<any>;
   userWarcount: BehaviorSubject<any>;
+
+  task: Task = {
+    name: 'Indeterminate',
+    completed: false,
+    color: 'primary',
+    subtasks: [
+      {name: 'Primary', completed: false, color: 'primary'},
+      {name: 'Accent', completed: false, color: 'accent'},
+      {name: 'Warn', completed: false, color: 'warn'},
+    ],
+  };
 
   public countPlayers:any = [];
   countries: Country[] = [
@@ -48,7 +68,7 @@ export class CreateDataComponent implements OnInit {
       cup1on1edition1: formBuilder.control('-'),
       meeting: formBuilder.control(''),
       cup3on3: formBuilder.control(''),
-      active: formBuilder.control(''),
+      active: formBuilder.control(false),
       ban: formBuilder.control(false),
       lastwar: formBuilder.control(''),
       fpw: formBuilder.control(''),
@@ -110,7 +130,7 @@ export class CreateDataComponent implements OnInit {
 
   get playername() {
     return this.googleSheetForm.get('playername');
- }
+  }
 
   onSubmit(){
     // console.log(this.googleSheetForm.value);

@@ -1,10 +1,10 @@
-import { Observable, Subject } from 'rxjs';
+import { combineLatest, from, Observable, of, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Sheet } from '../models/sheet.model';
 import { environment } from 'src/environments/environment';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { faAreaChart } from '@fortawesome/free-solid-svg-icons';
 
 const authCodeFlowConfig: AuthConfig = {
@@ -167,9 +167,14 @@ export class PlayersApiService {
     // return this.http.get(`https://sheetdb.io/api/v1/yg8kgxivnmkec?single_object=${username}`);
   }
 
-  public updatePlayerNEW(username:any, uname:any){  
+  public fetchAsObservable(url) {
+    return from(fetch(url));
+  }
+
+  public updatePlayerNEW(username:any, pname:any, uname: string, ranking: any, place: any, warcount: any, nationality:any, clanhistory: any, cup1on1edition1:any, meeting: any, cup3on3:any, active:boolean, ban: boolean, lastwar: any, fpw: any, fpwmax:any, fpwmin:any, last30days:any, last365days:any, lastwarpc:any, s1wars:any, s1fpw:any, streak:any){ 
+      
     const playerSheet = this.getPlayers('Players').pipe(
-      tap((res:any) => {              
+      switchMap((res:any) => {              
         const source = res.values;
         this.input = source.map(function (row:any, index:any) {
           row.unshift(index);
@@ -177,56 +182,34 @@ export class PlayersApiService {
         }).filter(function (iRow:any) {         
             return iRow[2] === username;
         });        
-        this.index = parseInt(this.input[0]) + 1; 
-        console.log('index',this.index)
-        this.input[0].shift(); 
-        console.log('index shift',this.index)
-        this.input[0][0] = uname;
+        this.index = parseInt(this.input[0]) + 1;        
+        this.input[0].shift();         
+        this.input[0][0] = pname;
+        this.input[0][1] = uname;
+        this.input[0][11] = active;
         let values = [
           this.input[0]
         ];
         const resource = {
             values
-        };
-        // return this.input;
-        return {
-          index: this.index,
-          name: this.input[0][0]
-        }
-      }) 
-         
-    )
-    .subscribe(
-       
-    );
-    console.log('playerSheet', playerSheet)
-
-    if(playerSheet){
-      return this.http.put<any>(
-        `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Players!A${this.index}:W${this.index}?valueInputOption=RAW`, 
-        // `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Players!A132:W132?valueInputOption=RAW`, 
-        {
-          "values": [
-            [this.input]
-            // ['RCa']
-          ]
-        },
-        {
-          headers: this.authHeader()
-        }
-      )
-    } else {
-      console.log('INCORRECT')
-    }
-    
-    // console.log('playerSheet', playerSheet)
-    // playerSheet.pipe(map(
-    //   (el:any) => {
-    //     console.log('playerSheet map', el);
-    //   }
-    // )).subscribe()
-    // return playerSheet;
-  
+        };       
+        if(this.input){
+          return this.http.put<any>(
+            `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Players!A${this.index}:W${this.index}?valueInputOption=RAW`,             
+            {
+              "values": [
+                [pname],
+                // [this.input[0][11]]                
+              ]
+            },
+            {
+              headers: this.authHeader()
+            }
+          )
+        }       
+      })          
+    )      
+    return playerSheet;
   }
 
   public updatePlayer(         

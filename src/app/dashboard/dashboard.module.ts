@@ -15,6 +15,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { TokenInterceptor } from '../token.interceptor';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from "@angular/material/form-field";
 
 @NgModule({
   declarations: [  
@@ -34,6 +36,8 @@ import { TokenInterceptor } from '../token.interceptor';
     MatInputModule,
     HttpClientModule,  
     MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule
     // OAuthModule.forRoot(),   
    ],
   exports: [

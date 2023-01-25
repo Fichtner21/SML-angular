@@ -58,8 +58,8 @@ export class EditDataComponent implements OnInit {
         // cup1on1edition1: ['-', Validators.minLength(3)],
         // meeting: ['', Validators.minLength(3)],
         // cup3on3: ['', Validators.minLength(3)],
-        // active: [false, Validators.required],
-        // ban: [false, Validators.required],
+        active: [false, Validators.required],
+        ban: [false, Validators.required],
         // lastwar: ['', Validators.minLength(3)],
         // fpw: ['', Validators.minLength(3)],
         // fpwmax: ['', Validators.minLength(3)],
@@ -98,6 +98,8 @@ export class EditDataComponent implements OnInit {
             this.updateSheetForm.get('ranking')?.setValue(this.data.ranking);
             this.updateSheetForm.get('percentile')?.setValue(this.data.percentile);
             this.updateSheetForm.get('nationality')?.setValue(this.data.nationality);
+            this.updateSheetForm.get('active')?.setValue(this.data.active);
+            this.updateSheetForm.get('ban')?.setValue(this.data.ban);
           }
         }) 
         // console.log('el', this.data);   
@@ -120,6 +122,8 @@ export class EditDataComponent implements OnInit {
     const ranking = this.updateSheetForm.value.ranking;
     const percentile = this.updateSheetForm.value.percentile;
     const nationality = this.updateSheetForm.value.nationality;
+    const active = this.updateSheetForm.value.active;
+    const ban = this.updateSheetForm.value.ban;
 
     // this.service
     //   .updatePlayer(playername, username, ranking, percentile, nationality)
@@ -135,65 +139,65 @@ export class EditDataComponent implements OnInit {
     //       console.log(error);
     //     },
     //   });
-      // this.service.updatePlayerNEW(username, playername).subscribe({
-      //   next: (res:any) => {
-      //     console.log('res ***', res);
-      //     console.log('username ***', username);
-      //   //   const numRows = res.values ? res.values.length : 0;
-      //   //   console.log(`${numRows} rows retrieved.`);
-      //   //   const source = res.values;
-      //   //   const input = source.map(function (row, index) {
-      //   //     row.unshift(index);
-      //   //     return row;
-      //   //   }).filter(function (iRow:any) {
-      //   //     // console.log('iRow[1]', iRow[2])
-      //   //       return iRow[2] === username;
-      //   //   });
-      //   //   console.log('input', input);
-      //   //   var index = parseInt(input[0]) + 1; //Saves the old index
-      //   //   console.log('index', index);
-      //   //   input[0].shift(); //Removes the old index from the array
-      //   //   input[0][2] = "TEST"; //Update the row with stuff
-      //   //   let values = [
-      //   //     input[0]
-      //   //   ];
-      //   //   const resource = {
-      //   //       values
-      //   //   };
+      this.service.updatePlayerNEW(username, playername, active).subscribe({
+        next: (res:any) => {
+          console.log('res ***', res);
+          console.log('username ***', username);
+        //   const numRows = res.values ? res.values.length : 0;
+        //   console.log(`${numRows} rows retrieved.`);
+        //   const source = res.values;
+        //   const input = source.map(function (row, index) {
+        //     row.unshift(index);
+        //     return row;
+        //   }).filter(function (iRow:any) {
+        //     // console.log('iRow[1]', iRow[2])
+        //       return iRow[2] === username;
+        //   });
+        //   console.log('input', input);
+        //   var index = parseInt(input[0]) + 1; //Saves the old index
+        //   console.log('index', index);
+        //   input[0].shift(); //Removes the old index from the array
+        //   input[0][2] = "TEST"; //Update the row with stuff
+        //   let values = [
+        //     input[0]
+        //   ];
+        //   const resource = {
+        //       values
+        //   };
 
-      //   //  return this.http.put<any>(
-      //   //     `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Players!A${index}:W${index}?valueInputOption=RAW`, 
-      //   //     {
-      //   //       "values": [
-      //   //         [input]
-      //   //       ]
-      //   //     },
-      //   //     {
-      //   //       headers: this.authHeader()
-      //   //     }
-      //   //   )
+        //  return this.http.put<any>(
+        //     `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Players!A${index}:W${index}?valueInputOption=RAW`, 
+        //     {
+        //       "values": [
+        //         [input]
+        //       ]
+        //     },
+        //     {
+        //       headers: this.authHeader()
+        //     }
+        //   )
 
-      //     // Sheets.spreadsheets.values.update({
-      //     //   spreadsheetId: "XXXXXXXXXXXXXXXXXXX",
-      //     //   range: "Tabellenblatt1!A" + index + ":J" + index, //Saves the row at the old index from before
-      //     //   valueInputOption: "RAW",
-      //     //   resource : resource
-      //     // }, (err, result) => {
-      //     //     if (err) {
-      //     //         console.log(err);
-      //     //     } else {
-      //     //         console.log('%d cells updated.', result.data.updatedRows);
-      //     //     }
-      //     // });
+          // Sheets.spreadsheets.values.update({
+          //   spreadsheetId: "XXXXXXXXXXXXXXXXXXX",
+          //   range: "Tabellenblatt1!A" + index + ":J" + index, //Saves the row at the old index from before
+          //   valueInputOption: "RAW",
+          //   resource : resource
+          // }, (err, result) => {
+          //     if (err) {
+          //         console.log(err);
+          //     } else {
+          //         console.log('%d cells updated.', result.data.updatedRows);
+          //     }
+          // });
 
-      //     // if (res) {
-      //     //   this.router.navigate(['/dashboard/list-players']);
-      //     // }
-      //   },
-      //   error: (error) => {
-      //     console.log(error);
-      //   },
-      // })
+          // if (res) {
+          //   this.router.navigate(['/dashboard/list-players']);
+          // }
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
   }
 
 }

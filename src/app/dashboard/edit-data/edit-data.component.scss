@@ -16,6 +16,11 @@ section {
       margin-right: 10px;
     }
 
+    .readonly {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
     // .edit-player {
     //   display: flex;
     //   justify-content: center;

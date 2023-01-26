@@ -96,43 +96,71 @@ export class EditDataComponent implements OnInit {
 
   ngOnInit() {
     // console.log('FORM', this.updateSheetForm)
-    this.actRoute.params.subscribe((params) => {
+    this.actRoute.params.subscribe((params) => {     
       this.username = params['username'];    
       this.service.getPlayerByUsername(this.username).subscribe((res:any) => {       
         let batchRowValues = res.values;
+        console.log(batchRowValues);
         let players: any[] = [];
-        for(let i = 1; i < batchRowValues.length; i++){
+        for(let i = 1; i < batchRowValues.length; i++){        
           const rowObject: object = {};
-          for(let j = 0; j < batchRowValues[i].length; j++){
+          for(let j = 0; j < batchRowValues[i].length; j++){           
             rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
           }
-          players.push(rowObject);
-        }     
+          players.push(
+            { 
+              data: rowObject,
+              index: i + 1
+            }
+          );
+        }  
+        
+        // console.log('players', players)
 
         players.forEach((el:any) => {
-          if(el.username == this.username){
-            this.data = el;
+          if(el.data.username == this.username){
+            this.data = el.data;
+            // console.log(this.data);
+            // console.log(el);
+           
             this.updateSheetForm.get('playername')?.setValue(this.data.playername);
             this.updateSheetForm.get('username')?.setValue(this.data.username);
-            this.updateSheetForm.get('ranking')?.setValue(this.data.ranking);
-            this.updateSheetForm.get('percentile')?.setValue(this.data.percentile);
+            this.updateSheetForm.get('ranking')?.setValue(this.data.ranking);            
+            this.updateSheetForm.patchValue({
+              percentile: 
+            `=ROZKŁAD.NORMALNY(C${el.index},1000,ODCH.STANDARDOWE(Players!$C$2:$C$154)+0.00001,PRAWDA)`
+            })
             this.updateSheetForm.get('place')?.setValue(this.data.place);
-            this.updateSheetForm.get('warcount')?.setValue(this.data.warcount);
+            this.updateSheetForm.patchValue({warcount: `=LICZ.JEŻELI('Match History'!A:BK, B${el.index})`})
             this.updateSheetForm.get('nationality')?.setValue(this.data.nationality);
             this.updateSheetForm.get('clanhistory')?.setValue(this.data.clanhistory);
             this.updateSheetForm.get('cup1on1edition1')?.setValue(this.data.cup1on1edition1);
             this.updateSheetForm.get('meeting')?.setValue(this.data.meeting);
             this.updateSheetForm.get('cup3on3')?.setValue(this.data.cup3on3);
-            this.updateSheetForm.get('active')?.patchValue(this.data.active == 'FALSE' ? false : true);
+            this.updateSheetForm.patchValue({active: `=ORAZ($N${el.index}>=DZIŚ()-30)`});
             this.updateSheetForm.get('ban')?.patchValue(this.data.ban == 'FALSE' ? false : true);
-            this.updateSheetForm.get('lastwar')?.setValue(this.data.lastwar);
-            this.updateSheetForm.get('fpw')?.setValue(this.data.fpw);
-            this.updateSheetForm.get('fpwmax')?.setValue(this.data.fpwmax);
-            this.updateSheetForm.get('fpwmin')?.setValue(this.data.fpwmin);
-            this.updateSheetForm.get('last30days')?.setValue(this.data.last30days);
-            this.updateSheetForm.get('last365days')?.setValue(this.data.last365days);
-            this.updateSheetForm.get('lastwarpc')?.setValue(this.data.lastwarpc);
-            this.updateSheetForm.get('s1wars')?.setValue(this.data.s1wars);
+            this.updateSheetForm.get('lastwar')?.setValue(this.data.lastwar);            
+            this.updateSheetForm.patchValue({fpw:
+              `=(SUMA.JEŻELI('Match History'!B:B,B${el.index},'Match History'!D:D)+SUMA.JEŻELI('Match History'!F:F,B${el.index},'Match History'!H:H)+SUMA.JEŻELI('Match History'!J:J,B${el.index},'Match History'!L:L)+SUMA.JEŻELI('Match History'!N:N,B${el.index},'Match History'!P:P)+SUMA.JEŻELI('Match History'!R:R,B${el.index},'Match History'!T:T)+SUMA.JEŻELI('Match History'!V:V,B${el.index},'Match History'!X:X)+SUMA.JEŻELI('Match History'!Z:Z,B${el.index},'Match History'!AB:AB)+SUMA.JEŻELI('Match History'!AD:AD,B${el.index},'Match History'!AF:AF)+SUMA.JEŻELI('Match History'!AH:AH,B${el.index},'Match History'!AJ:AJ)+SUMA.JEŻELI('Match History'!AL:AL,B${el.index},'Match History'!AN:AN)+SUMA.JEŻELI('Match History'!AV:AV,B${el.index},'Match History'!AX:AX)+SUMA.JEŻELI('Match History'!AZ:AZ,B${el.index},'Match History'!BB:BB)+SUMA.JEŻELI('Match History'!BD:BD,B${el.index},'Match History'!BF:BF)+SUMA.JEŻELI('Match History'!BH:BH,B${el.index},'Match History'!BJ:BJ))/JEŻELI(F${el.index}=0,1,F${el.index})`
+            });
+            this.updateSheetForm.patchValue({ fpwmax:
+              `=ArrayFormula(MAX(MAX(JEŻELI('Match History'!B:B=B${el.index},'Match History'!D:D,)),MAX(JEŻELI('Match History'!F:F=B${el.index},'Match History'!H:H,)),MAX(JEŻELI('Match History'!J:J=B${el.index},'Match History'!L:L,)),MAX(JEŻELI('Match History'!N:N=B${el.index},'Match History'!P:P,)),MAX(JEŻELI('Match History'!R:R=B${el.index},'Match History'!T:T,)),MAX(JEŻELI('Match History'!V:V=B${el.index},'Match History'!X:X,)),MAX(JEŻELI('Match History'!Z:Z=B${el.index},'Match History'!AB:AB,)),MAX(JEŻELI('Match History'!AD:AD=B${el.index},'Match History'!AF:AF,)),MAX(JEŻELI('Match History'!AH:AH=B${el.index},'Match History'!AJ:AJ,)),MAX(JEŻELI('Match History'!AL:AL=B${el.index},'Match History'!AN:AN,)),MAX(JEŻELI('Match History'!AV:AV=B${el.index},'Match History'!AX:AX,)),MAX(JEŻELI('Match History'!AZ:AZ=B${el.index},'Match History'!BB:BB,)),MAX(JEŻELI('Match History'!BD:BD=B${el.index},'Match History'!BF:BF,)),MAX(JEŻELI('Match History'!BH:BH=B${el.index},'Match History'!BJ:BJ,))))`
+            })
+            this.updateSheetForm.patchValue({ fpwmin:
+              `=JEŻELI(F${el.index}=0,0,ArrayFormula(MIN(MIN(JEŻELI('Match History'!B:B=B${el.index},'Match History'!D:D,999)),MIN(JEŻELI('Match History'!F:F=B${el.index},'Match History'!H:H,999)),MIN(JEŻELI('Match History'!J:J=B${el.index},'Match History'!L:L,999)),MIN(JEŻELI('Match History'!N:N=B${el.index},'Match History'!P:P,999)),MIN(JEŻELI('Match History'!R:R=B${el.index},'Match History'!T:T,999)),MIN(JEŻELI('Match History'!V:V=B${el.index},'Match History'!X:X,999)),MIN(JEŻELI('Match History'!Z:Z=B${el.index},'Match History'!AB:AB,999)),MIN(JEŻELI('Match History'!AD:AD=B${el.index},'Match History'!AF:AF,999)),MIN(JEŻELI('Match History'!AH:AH=B${el.index},'Match History'!AJ:AJ,999)),MIN(JEŻELI('Match History'!AL:AL=B${el.index},'Match History'!AN:AN,999)),MIN(JEŻELI('Match History'!AV:AV=B${el.index},'Match History'!AX:AX,999)),MIN(JEŻELI('Match History'!AZ:AZ=B${el.index},'Match History'!BB:BB,999)),MIN(JEŻELI('Match History'!BD:BD=B${el.index},'Match History'!BF:BF,999)),MIN(JEŻELI('Match History'!BH:BH=B${el.index},'Match History'!BJ:BJ,999)))))`
+            });
+            this.updateSheetForm.patchValue({ last30days:
+              `=LICZ.WARUNKI('Match History'!B:B,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!F:F,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!J:J,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!N:N,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!R:R,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!V:V,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!Z:Z,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!AD:AD,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!AH:AH,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!AL:AL,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!AV:AV,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!AZ:AZ,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!BD:BD,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)+LICZ.WARUNKI('Match History'!BH:BH,B${el.index},'Match History'!A:A,">="&DZIŚ()-30)`
+            })
+            this.updateSheetForm.patchValue({ last365days:
+              `=LICZ.WARUNKI('Match History'!B:B,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!F:F,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!J:J,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!N:N,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!R:R,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!V:V,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!Z:Z,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!AD:AD,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!AH:AH,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!AL:AL,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!AV:AV,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!AZ:AZ,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!BD:BD,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)+LICZ.WARUNKI('Match History'!BH:BH,B${el.index},'Match History'!A:A,">="&DZIŚ()-365)`
+            })
+            this.updateSheetForm.patchValue({ lastwarpc: 
+              `=JEŻELI(F${el.index}=0,0,INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${el.index},'Match History'!A:A,0),PODAJ.POZYCJĘ(B${el.index},INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${el.index},'Match History'!A:A,0),0),0)+3)-INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${el.index},'Match History'!A:A,0),PODAJ.POZYCJĘ(B${el.index},INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${el.index},'Match History'!A:A,0),0),0)+1))`
+            })
+            this.updateSheetForm.patchValue({s1wars: 
+              `=LICZ.WARUNKI('Match History'!B:B,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1), 'Match History'!B:B,B${el.index},'Match History'!A:A,"<="&DATA(2023,3,31))+LICZ.WARUNKI('Match History'!F:F,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!J:J,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!N:N,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!R:R,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!V:V,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!Z:Z,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!AD:AD,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!AH:AH,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!AL:AL,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!AV:AV,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!AZ:AZ,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!BD:BD,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!BH:BH,B${el.index},'Match History'!A:A,">="&DATA(2023,1,1))`
+            });
             this.updateSheetForm.get('s1fpw')?.setValue(this.data.s1fpw);
             this.updateSheetForm.get('streak')?.setValue(this.data.streak);
           }
@@ -177,9 +205,10 @@ export class EditDataComponent implements OnInit {
     const streak = this.updateSheetForm.value.streak;
   
       this.service.updatePlayerNEW(playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({
-        next: (res:any) => {
-          console.log('res ***', res);
-          console.log('username ***', username);     
+        next: (res:any) => {        
+          if(res){
+            alert('Player ' + playername + ' has been edited.')
+          }     
         },
         error: (error) => {
           console.log(error);

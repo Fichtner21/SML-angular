@@ -26,7 +26,8 @@ const authCodeFlowConfig: AuthConfig = {
   // scope: 'openid profile email https://www.googleapis.com/auth/gmail.readonly',
   // scope: 'https://www.googleapis.com/auth/drive.file',       
   // scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets',
-  scope: 'https://www.googleapis.com/auth/spreadsheets',
+  scope: 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',
+  // scope: 'https://www.googleapis.com/auth/script.external_request',
 
   showDebugInformation: true, 
 }
@@ -157,6 +158,38 @@ export class PlayersApiService {
         { headers: this.authHeader()}
       )         
   } 
+
+  runScript() {
+    // Make a request to the API to run the function
+    const scriptId = '176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf';
+    const request = {
+      'function': 'sortTeams'
+    };
+
+    this.http.post(
+      `https://script.googleapis.com/v1/scripts/${scriptId}:run`, 
+      request, 
+      { headers: this.authHeader()})
+      .subscribe(response => {
+        console.log(response);
+      });
+  }
+
+  public testRunScript(method:string):Observable<any>{
+    return this.http.post<any>(
+      `https://script.googleapis.com/v1/scripts/176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf:run`,
+      {
+        "function": method,
+        "parameters": [
+          
+        ],  
+        "devMode": false
+      },
+      {
+        headers: this.authHeader()
+      }
+    )
+  }
    
   public deletePlayer(username:string){
     return this.http.delete(`https://sheetdb.io/api/v1/yg8kgxivnmkec/username/${username}`);

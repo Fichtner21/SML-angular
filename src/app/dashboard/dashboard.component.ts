@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PlayersApiService, UserInfo } from '../services/players-api.service';
+import { PlayersApiService } from '../services/players-api.service';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
@@ -11,23 +11,23 @@ import { Observable, Subject } from 'rxjs';
 })
 export class DashboardComponent { 
   mailSnippets: string[] = []
-  userInfo?: UserInfo 
+  // userInfo?: UserInfo 
 
   constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, private readonly oAuthService: OAuthService) { 
-    googleApi.userProfileSubject.subscribe( info => {
-      console.log('info', info);
-      this.userInfo = info
-    })
-    console.log(googleApi);
+    // googleApi.userProfileSubject.subscribe( info => {
+    //   console.log('info', info);
+    //   this.userInfo = info
+    // })
+    // console.log(googleApi);
   }  
   
-  isLoggedIn(): boolean {    
-    return this.googleApi.isLoggedIn()
-  }
+  // isLoggedIn(): boolean {    
+  //   return this.googleApi.isLoggedIn()
+  // }
 
-  logout() {
-    this.googleApi.signOut()
-  }
+  // logout() {
+  //   this.googleApi.signOut()
+  // }
 
   // async getEmails() {
   //   if (!this.userInfo) {

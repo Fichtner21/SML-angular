@@ -3,80 +3,80 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Sheet } from '../models/sheet.model';
 import { environment } from 'src/environments/environment';
-import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+// import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { faAreaChart } from '@fortawesome/free-solid-svg-icons';
 
-const authCodeFlowConfig: AuthConfig = {
-  // Url of the Identity Provider
-  issuer: 'https://accounts.google.com',
+// const authCodeFlowConfig: AuthConfig = {
+//   // Url of the Identity Provider
+//   issuer: 'https://accounts.google.com',
 
-  // strict discovery document disallows urls which not start with issuers url
-  strictDiscoveryDocumentValidation: false,
+//   // strict discovery document disallows urls which not start with issuers url
+//   strictDiscoveryDocumentValidation: false,
 
-  // URL of the SPA to redirect the user to after login
-  redirectUri: window.location.origin,
+//   // URL of the SPA to redirect the user to after login
+//   redirectUri: window.location.origin,
 
-  // The SPA's id. The SPA is registerd with this id at the auth-server
-  // clientId: 'server.code',
-  // clientId: '719531931759-h0pj1eq3bnjptkd6kppo8fkf68orq87q.apps.googleusercontent.com',
-  clientId: '326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com',
+//   // The SPA's id. The SPA is registerd with this id at the auth-server
+//   // clientId: 'server.code',
+//   // clientId: '719531931759-h0pj1eq3bnjptkd6kppo8fkf68orq87q.apps.googleusercontent.com',
+//   clientId: '326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com',
   
-  // set the scope for the permissions the client should request
-  // scope: 'openid profile email https://www.googleapis.com/auth/gmail.readonly',
-  // scope: 'https://www.googleapis.com/auth/drive.file',       
-  // scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets',
-  scope: 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',
-  // scope: 'https://www.googleapis.com/auth/script.external_request',
+//   // set the scope for the permissions the client should request
+//   // scope: 'openid profile email https://www.googleapis.com/auth/gmail.readonly',
+//   // scope: 'https://www.googleapis.com/auth/drive.file',       
+//   // scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets',
+//   scope: 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',
+//   // scope: 'https://www.googleapis.com/auth/script.external_request',
 
-  showDebugInformation: true, 
-}
+//   showDebugInformation: true, 
+// }
 
-export interface UserInfo {
-  info: {
-    sub: string
-    email: string,
-    name: string,
-    picture: string
-  }
-}
+// export interface UserInfo {
+//   info: {
+//     sub: string
+//     email: string,
+//     name: string,
+//     picture: string
+//   }
+// }
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayersApiService {
-  gmail = 'https://gmail.googleapis.com'
-  userProfileSubject = new Subject<UserInfo>()
+  // gmail = 'https://gmail.googleapis.com'
+  // userProfileSubject = new Subject<UserInfo>()
   index:any;
   input:any;
 
-  constructor(private http: HttpClient, private readonly oAuthService: OAuthService) {  
+  constructor(private http: HttpClient) {  
     
-        // confiure oauth2 service
-     oAuthService.configure(authCodeFlowConfig);
-     // manually configure a logout url, because googles discovery document does not provide it
-     oAuthService.logoutUrl = "https://www.google.com/accounts/Logout";     
+    //     // confiure oauth2 service
+    //  oAuthService.configure(authCodeFlowConfig);
+    //  // manually configure a logout url, because googles discovery document does not provide it
+    //  oAuthService.logoutUrl = "https://www.google.com/accounts/Logout";     
  
-     // loading the discovery document from google, which contains all relevant URL for
-     // the OAuth flow, e.g. login url
-     oAuthService.loadDiscoveryDocument().then( () => {
-       // // This method just tries to parse the token(s) within the url when
-       // // the auth-server redirects the user back to the web-app
-       // // It doesn't send the user the the login page
-       oAuthService.tryLoginImplicitFlow().then( () => {
+    //  // loading the discovery document from google, which contains all relevant URL for
+    //  // the OAuth flow, e.g. login url
+    //  oAuthService.loadDiscoveryDocument().then( () => {
+    //    // // This method just tries to parse the token(s) within the url when
+    //    // // the auth-server redirects the user back to the web-app
+    //    // // It doesn't send the user the the login page
+    //    oAuthService.tryLoginImplicitFlow().then( () => {
  
-         // when not logged in, redirecvt to google for login
-         // else load user profile
-         if (!oAuthService.hasValidAccessToken()) {
-           oAuthService.initLoginFlow()
-         } else {
-           oAuthService.loadUserProfile().then( (userProfile) => {
-             this.userProfileSubject.next(userProfile as UserInfo)
-           })
-         }
+    //      // when not logged in, redirecvt to google for login
+    //      // else load user profile
+    //      if (!oAuthService.hasValidAccessToken()) {
+    //        oAuthService.initLoginFlow()
+    //      } else {
+    //        oAuthService.loadUserProfile().then( (userProfile) => {
+    //          this.userProfileSubject.next(userProfile as UserInfo)
+    //        })
+    //      }
  
-       })
-     });
+    //    })
+    //  });
   }
 
   // emails(userId: string): Observable<any> {
@@ -87,33 +87,33 @@ export class PlayersApiService {
   //   return this.http.get(`${this.gmail}/gmail/v1/users/${userId}/messages/${mailId}`, { headers: this.authHeader() })
   // }
 
-  isLoggedIn(): boolean {    
-    return this.oAuthService.hasValidAccessToken()
-  }
+  // isLoggedIn(): boolean {    
+  //   return this.oAuthService.hasValidAccessToken()
+  // }
 
-  signOut() {
-    this.oAuthService.logOut()
-  }
+  // signOut() {
+  //   this.oAuthService.logOut()
+  // }
 
-  public authHeader() : HttpHeaders { 
-    return new HttpHeaders ({
-      'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`
-    })
-  }
+  // public authHeader() : HttpHeaders { 
+  //   return new HttpHeaders ({
+  //     'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`
+  //   })
+  // }
   
-  public headers = new HttpHeaders({
-    'X-Requested-With': 'XMLHttpRequest',
-    'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`,
-    "Accept": "application/json",
-    "User-Agent": "Other"
-  });
+  // public headers = new HttpHeaders({
+  //   'X-Requested-With': 'XMLHttpRequest',
+  //   'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`,
+  //   "Accept": "application/json",
+  //   "User-Agent": "Other"
+  // });
   // public headers = new HttpHeaders()
   //   .set('Content-Type', 'application/json; charset=utf-8')
   //   .set('Authorization', `Bearer' ${this.oAuthService.getAccessToken()}`)
 
   // TODO create interface for observable. Now I added "any" because I don't know how looks model for this data
   public getPlayers(name: string): Observable<any> {  
-    this.oAuthService.setupAutomaticSilentRefresh();
+    // this.oAuthService.setupAutomaticSilentRefresh();
     return this.http.get<any>(
       `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
       );
@@ -127,19 +127,7 @@ export class PlayersApiService {
   public listPlayers(){
     // return this.http.get(`${environment.CONNECTION_URL}`);
     return this.http.get(`${environment.SHEETDBIO}`);
-  }  
-
-  public params = {
-    spreadsheetId: environment.SPREADSHEET_ID,
-    range: 'Players',
-    valueInputOption: 'RAW',
-    insertDataOption: 'INSERT_ROWS'
-  }
-
-  public valueRangeBody = {
-    'majorDimension': 'ROWS',
-    'values': []
-  }
+  }   
 
   public createPlayer( 
     spreadsheetId:any,  
@@ -155,7 +143,9 @@ export class PlayersApiService {
               [playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak]
           ]                                  
         },
-        { headers: this.authHeader()}
+        // { 
+        //   headers: this.authHeader()
+        // }
       )         
   } 
 
@@ -169,7 +159,10 @@ export class PlayersApiService {
     this.http.post(
       `https://script.googleapis.com/v1/scripts/${scriptId}:run`, 
       request, 
-      { headers: this.authHeader()})
+      // { 
+      //   // headers: this.authHeader()
+      // }
+      )
       .subscribe(response => {
         console.log(response);
       });
@@ -185,9 +178,9 @@ export class PlayersApiService {
         ],  
         "devMode": false
       },
-      {
-        headers: this.authHeader()
-      }
+      // {
+      //   // headers: this.authHeader()
+      // }
     )
   }
    
@@ -254,9 +247,9 @@ export class PlayersApiService {
                 [pname, uname, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak],                              
               ]
             },
-            {
-              headers: this.authHeader()
-            }
+            // {
+            //   // headers: this.authHeader()
+            // }
           )
         }       
       })          

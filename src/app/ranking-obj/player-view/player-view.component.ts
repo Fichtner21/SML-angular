@@ -327,9 +327,9 @@ export class PlayerViewComponent implements OnInit {
     // this.showResult(matchesArr); 
   } 
 
-  isLoggedIn(): boolean {    
-    return this.playersApiService.isLoggedIn()
-  }
+  // isLoggedIn(): boolean {    
+  //   return this.playersApiService.isLoggedIn()
+  // }
 
   clickEvent(){
     this.status = !this.status;    

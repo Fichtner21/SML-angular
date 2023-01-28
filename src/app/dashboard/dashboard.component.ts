@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { PlayersApiService, UserInfo } from '../services/players-api.service';
-import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+// import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
+// import { GoogleSigninService } from '../services/google-signin.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,13 +13,14 @@ import { Observable, Subject } from 'rxjs';
 export class DashboardComponent { 
   mailSnippets: string[] = []
   userInfo?: UserInfo 
+  user: gapi.auth2.GoogleUser
 
-  constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, private readonly oAuthService: OAuthService) { 
-    googleApi.userProfileSubject.subscribe( info => {
-      console.log('info', info);
-      this.userInfo = info
-    })
-    console.log(googleApi);
+  constructor(private readonly googleApi: PlayersApiService, private http: HttpClient) { 
+    // googleApi.userProfileSubject.subscribe( info => {
+    //   console.log('info', info);
+    //   this.userInfo = info
+    // })
+    // console.log(googleApi);
   }  
   
   isLoggedIn(): boolean {    

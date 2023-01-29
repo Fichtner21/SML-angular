@@ -6,6 +6,8 @@ import { environment } from 'src/environments/environment';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { faAreaChart } from '@fortawesome/free-solid-svg-icons';
+import * as gapi from 'gapi-client';
+declare var gapi: any;
 
 const authCodeFlowConfig: AuthConfig = {
   // Url of the Identity Provider
@@ -19,14 +21,13 @@ const authCodeFlowConfig: AuthConfig = {
 
   // The SPA's id. The SPA is registerd with this id at the auth-server
   // clientId: 'server.code',
-  // clientId: '719531931759-h0pj1eq3bnjptkd6kppo8fkf68orq87q.apps.googleusercontent.com',
   clientId: '326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com',
   
   // set the scope for the permissions the client should request
   // scope: 'openid profile email https://www.googleapis.com/auth/gmail.readonly',
   // scope: 'https://www.googleapis.com/auth/drive.file',       
   // scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets',
-  scope: 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',
+  scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',
   // scope: 'https://www.googleapis.com/auth/script.external_request',
 
   showDebugInformation: true, 
@@ -40,6 +41,11 @@ export interface UserInfo {
     picture: string
   }
 }
+
+// const SCRIPT_ID = '176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf';
+const SCRIPT_ID = 'AKfycbw1UM_u6MgkD_a9P2yHtUdhCkz5kxBX-BuVDCA8tXQ';
+// const SCRIPT_ID = 'AKfycbwAjKSpoxzJbMIOXxEk0bUTqLe0h4EZVCgaT6mIIheVPVIdytnggsGJ6ejTAbuck4S6';
+const ENDPOINT = `https://script.googleapis.com/v1/scripts/${SCRIPT_ID}:run`;
 
 @Injectable({
   providedIn: 'root'
@@ -77,15 +83,30 @@ export class PlayersApiService {
  
        })
      });
+
+    //  gapi.load('client', () => {
+    //   gapi.client.init({
+    //     'apiKey': 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU',
+    //     'clientId': '326844544836-lpdua268ku34anm1js1uj28criqm63cs.apps.googleusercontent.com',     
+    //     'discoveryDocs': ['https://script.googleapis.com/$discovery/rest?version=v1'],
+    //     'scope': 'https://www.googleapis.com/auth/script.scriptapp',       
+    //     'access_token': this.oAuthService.getAccessToken()
+    //   }).then(() => {
+        
+    //     // script api is ready
+        
+    //   });
+    // });
+    // gapi.load('client', () => {
+    //   gapi.client.init({
+    //     'apiKey': 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU',
+    //     'clientId': '326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com',
+    //     'scope': 'https://www.googleapis.com/auth/script.projects',
+    //     'discoveryDocs': ['https://script.googleapis.com/$discovery/rest?version=v1'],
+    //     'access_token': this.oAuthService.getAccessToken()
+    //   });
+    // });
   }
-
-  // emails(userId: string): Observable<any> {
-  //   return this.http.get(`${this.gmail}/gmail/v1/users/${userId}/messages`, { headers: this.authHeader() })
-  // }
-
-  // getMail(userId: string, mailId: string): Observable<any> {
-  //   return this.http.get(`${this.gmail}/gmail/v1/users/${userId}/messages/${mailId}`, { headers: this.authHeader() })
-  // }
 
   isLoggedIn(): boolean {    
     return this.oAuthService.hasValidAccessToken()
@@ -100,6 +121,53 @@ export class PlayersApiService {
       'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`
     })
   }
+
+  runScriptFunction(functionName: string): Observable<any> {
+    const accessToken = this.oAuthService.getAccessToken();
+    console.log('accessToken', accessToken)
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${accessToken}`);
+    console.log('headers', headers)
+  
+    const request = {
+      function: functionName,
+      // parameters: parameters
+    };
+
+    console.log('request', request)
+  
+    return this.http.post(ENDPOINT, request, { headers });
+  }
+
+  // runScriptt() {
+  //   // console.log('headers', this.headers);
+  //   // console.log('toekn', this.authHeader());
+  //   // gapi.client.script.scripts.run({
+  //   //   'scriptId': '176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf',
+  //   //   'resource': {
+  //   //     'function': 'getStatistics'
+  //   //   },
+  //   //   // 'headers': this.authHeader()
+  //   // }).then((response) => {
+  //   //   console.log(response.result);
+  //   // });
+    
+  //     gapi.client.request({
+  //       'path': 'https://script.googleapis.com/v1/scripts/176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf:run',
+  //       'method': 'POST',
+  //       'params': {
+  //         'scriptId': '176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf',
+  //       },
+  //       'headers': {
+  //         'Authorization': 'Bearer ' + this.oAuthService.getAccessToken(),
+  //       },
+  //       'body': {
+  //         'function': 'balanceTeams'
+  //       },
+  //     }).then(function (response) {
+  //       console.log('***** => ', response.result);
+  //     });
+   
+  // }
   
   public headers = new HttpHeaders({
     'X-Requested-With': 'XMLHttpRequest',
@@ -117,6 +185,34 @@ export class PlayersApiService {
     return this.http.get<any>(
       `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
       );
+  }
+
+  public runScript(): Observable<any> {
+    // Get the access token
+    const accessToken = this.oAuthService.getAccessToken();
+    console.log('accessToken', accessToken)
+    console.log('authHeader', this.authHeader())
+
+    const head = new HttpHeaders({
+      'X-Requested-With': 'XMLHttpRequest',
+      'Authorization': `Bearer ${accessToken}`,
+      "Accept": "application/json",
+      "User-Agent": "Other"
+    });
+
+    return this.http.post<any>(
+      `https://script.googleapis.com/v1/scripts/176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf:run`,
+      {
+        "function": 'getStatistics',
+        "parameters": [
+          
+        ],  
+        "devMode": false
+      },
+      {
+        headers: head
+      }
+    )   
   }
 
   // public headers = {
@@ -159,21 +255,21 @@ export class PlayersApiService {
       )         
   } 
 
-  runScript() {
-    // Make a request to the API to run the function
-    const scriptId = '176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf';
-    const request = {
-      'function': 'sortTeams'
-    };
+  // runScript() {
+  //   // Make a request to the API to run the function
+  //   const scriptId = '176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf';
+  //   const request = {
+  //     'function': 'sortTeams'
+  //   };
 
-    this.http.post(
-      `https://script.googleapis.com/v1/scripts/${scriptId}:run`, 
-      request, 
-      { headers: this.authHeader()})
-      .subscribe(response => {
-        console.log(response);
-      });
-  }
+  //   this.http.post(
+  //     `https://script.googleapis.com/v1/scripts/${scriptId}:run`, 
+  //     request, 
+  //     { headers: this.authHeader()})
+  //     .subscribe(response => {
+  //       console.log(response);
+  //     });
+  // }
 
   public testRunScript(method:string):Observable<any>{
     return this.http.post<any>(

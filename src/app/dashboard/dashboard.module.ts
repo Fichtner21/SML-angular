@@ -37,8 +37,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
     HttpClientModule,  
     MatButtonModule,
     MatCheckboxModule,
-    MatFormFieldModule
-    // OAuthModule.forRoot(),   
+    MatFormFieldModule     
    ],
   exports: [
     CommonModule,

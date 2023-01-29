@@ -100,7 +100,7 @@ export class EditDataComponent implements OnInit {
       this.username = params['username'];    
       this.service.getPlayerByUsername(this.username).subscribe((res:any) => {       
         let batchRowValues = res.values;
-        console.log(batchRowValues);
+        // console.log(batchRowValues);
         let players: any[] = [];
         for(let i = 1; i < batchRowValues.length; i++){        
           const rowObject: object = {};

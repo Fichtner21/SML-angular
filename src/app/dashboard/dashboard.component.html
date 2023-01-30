@@ -34,20 +34,29 @@
       </div>
       
     </div>
-    <div>
-      <!-- <button (click)="runScript()">RUN</button> -->
-      <button (click)="balanceTeams()">RUN balanceTeams()</button>
-      <hr>
-      <button mat-raised-button color="primary" (click)="selectTeams()">RUN selectTeams()</button>
-      <hr>
-      <button mat-raised-button color="primary" (click)="sortPlayers()">RUN sortPlayers()</button>
-      <!-- <button (click)="runS()">RUN runS()</button> -->
-      <hr>
-      <!-- <button (click)="runScriptFunction()">RUN runScriptFunction()</button> -->
-    </div>
-    <!-- <div style="border: 3px solid red; padding: 20px;">
-      <button (click)="runWithDoubleKill()">runWithDoubleKill()</button>
-    </div> -->
+    <div class="functions">   
+      <mat-card> 
+        <mat-card-header>
+          <h2>Here is the functions to execute remote.</h2>
+        </mat-card-header>
+        <mat-card-content style="padding-top:10px;">
+          <button mat-raised-button (click)="balanceTeams()">RUN balanceTeams()</button>
+          <div class="desc">Click when you add players and  you want to create teams for war.</div>
+        </mat-card-content>
+        <mat-card-content>
+          <button mat-raised-button (click)="selectTeams()">RUN selectTeams()</button>
+          <div class="desc">Click when you want to select team (1 or 2).</div>
+        </mat-card-content>
+        <mat-card-content>
+          <button mat-raised-button (click)="sortPlayers()">RUN sortPlayers()</button>
+          <div class="desc">Click when you want to sort players by ranking.</div> 
+        </mat-card-content>
+        <mat-card-content>
+          <button mat-raised-button color="warn" (click)="getStatistics()">RUN getStatistics()</button>
+          <div class="desc">Click to test connections, check console.</div>
+        </mat-card-content>
+      </mat-card>        
+    </div>   
   <div>
       <!-- <app-list-data></app-list-data> -->
       <router-outlet></router-outlet>

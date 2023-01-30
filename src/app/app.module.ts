@@ -33,6 +33,9 @@ import { TabComponent } from './ranking-obj/tabs/tab.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { TokenInterceptor } from './token.interceptor';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -59,6 +62,9 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
     AngularFirestoreModule,
     NgxLodashPipesModule,
     OAuthModule.forRoot(),
+    MatButtonModule,
+    MatDividerModule,
+    MatCardModule,
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),      
     TranslateModule.forRoot({

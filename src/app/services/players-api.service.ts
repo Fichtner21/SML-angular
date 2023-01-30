@@ -5,9 +5,7 @@ import { Sheet } from '../models/sheet.model';
 import { environment } from 'src/environments/environment';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { map, switchMap, take, tap } from 'rxjs/operators';
-import { faAreaChart } from '@fortawesome/free-solid-svg-icons';
-import * as gapi from 'gapi-client';
-declare var gapi: any;
+
 
 const authCodeFlowConfig: AuthConfig = {
   // Url of the Identity Provider
@@ -23,12 +21,8 @@ const authCodeFlowConfig: AuthConfig = {
   // clientId: 'server.code',
   clientId: '326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com',
   
-  // set the scope for the permissions the client should request
-  // scope: 'openid profile email https://www.googleapis.com/auth/gmail.readonly',
-  // scope: 'https://www.googleapis.com/auth/drive.file',       
-  // scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets',
-  scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',
-  // scope: 'https://www.googleapis.com/auth/script.external_request',
+  // set the scope for the permissions the client should request  
+  scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',  
 
   showDebugInformation: true, 
 }
@@ -42,9 +36,8 @@ export interface UserInfo {
   }
 }
 
-// const SCRIPT_ID = '176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf';
+// this is SCRIPT_ID of deployment with API
 const SCRIPT_ID = 'AKfycbw1UM_u6MgkD_a9P2yHtUdhCkz5kxBX-BuVDCA8tXQ';
-// const SCRIPT_ID = 'AKfycbwAjKSpoxzJbMIOXxEk0bUTqLe0h4EZVCgaT6mIIheVPVIdytnggsGJ6ejTAbuck4S6';
 const ENDPOINT = `https://script.googleapis.com/v1/scripts/${SCRIPT_ID}:run`;
 
 @Injectable({
@@ -82,30 +75,7 @@ export class PlayersApiService {
          }
  
        })
-     });
-
-    //  gapi.load('client', () => {
-    //   gapi.client.init({
-    //     'apiKey': 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU',
-    //     'clientId': '326844544836-lpdua268ku34anm1js1uj28criqm63cs.apps.googleusercontent.com',     
-    //     'discoveryDocs': ['https://script.googleapis.com/$discovery/rest?version=v1'],
-    //     'scope': 'https://www.googleapis.com/auth/script.scriptapp',       
-    //     'access_token': this.oAuthService.getAccessToken()
-    //   }).then(() => {
-        
-    //     // script api is ready
-        
-    //   });
-    // });
-    // gapi.load('client', () => {
-    //   gapi.client.init({
-    //     'apiKey': 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU',
-    //     'clientId': '326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com',
-    //     'scope': 'https://www.googleapis.com/auth/script.projects',
-    //     'discoveryDocs': ['https://script.googleapis.com/$discovery/rest?version=v1'],
-    //     'access_token': this.oAuthService.getAccessToken()
-    //   });
-    // });
+     });  
   }
 
   isLoggedIn(): boolean {    
@@ -136,38 +106,7 @@ export class PlayersApiService {
     console.log('request', request)
   
     return this.http.post(ENDPOINT, request, { headers });
-  }
-
-  // runScriptt() {
-  //   // console.log('headers', this.headers);
-  //   // console.log('toekn', this.authHeader());
-  //   // gapi.client.script.scripts.run({
-  //   //   'scriptId': '176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf',
-  //   //   'resource': {
-  //   //     'function': 'getStatistics'
-  //   //   },
-  //   //   // 'headers': this.authHeader()
-  //   // }).then((response) => {
-  //   //   console.log(response.result);
-  //   // });
-    
-  //     gapi.client.request({
-  //       'path': 'https://script.googleapis.com/v1/scripts/176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf:run',
-  //       'method': 'POST',
-  //       'params': {
-  //         'scriptId': '176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf',
-  //       },
-  //       'headers': {
-  //         'Authorization': 'Bearer ' + this.oAuthService.getAccessToken(),
-  //       },
-  //       'body': {
-  //         'function': 'balanceTeams'
-  //       },
-  //     }).then(function (response) {
-  //       console.log('***** => ', response.result);
-  //     });
-   
-  // }
+  } 
   
   public headers = new HttpHeaders({
     'X-Requested-With': 'XMLHttpRequest',
@@ -175,67 +114,19 @@ export class PlayersApiService {
     "Accept": "application/json",
     "User-Agent": "Other"
   });
-  // public headers = new HttpHeaders()
-  //   .set('Content-Type', 'application/json; charset=utf-8')
-  //   .set('Authorization', `Bearer' ${this.oAuthService.getAccessToken()}`)
-
+ 
   // TODO create interface for observable. Now I added "any" because I don't know how looks model for this data
   public getPlayers(name: string): Observable<any> {  
     this.oAuthService.setupAutomaticSilentRefresh();
     return this.http.get<any>(
       `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
       );
-  }
-
-  public runScript(): Observable<any> {
-    // Get the access token
-    const accessToken = this.oAuthService.getAccessToken();
-    console.log('accessToken', accessToken)
-    console.log('authHeader', this.authHeader())
-
-    const head = new HttpHeaders({
-      'X-Requested-With': 'XMLHttpRequest',
-      'Authorization': `Bearer ${accessToken}`,
-      "Accept": "application/json",
-      "User-Agent": "Other"
-    });
-
-    return this.http.post<any>(
-      `https://script.googleapis.com/v1/scripts/176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf:run`,
-      {
-        "function": 'getStatistics',
-        "parameters": [
-          
-        ],  
-        "devMode": false
-      },
-      {
-        headers: head
-      }
-    )   
-  }
-
-  // public headers = {
-  //   'Authorization': 'Basic ' + btoa('client-id:719531931759-knap6bv72g48p5madeo3poqh4vb979tu.apps.googleusercontent.com'),
-  //   'Content-type': 'application/x-www-form-urlencoded'
-  // } 
+  }  
 
   public listPlayers(){
     // return this.http.get(`${environment.CONNECTION_URL}`);
     return this.http.get(`${environment.SHEETDBIO}`);
-  }  
-
-  public params = {
-    spreadsheetId: environment.SPREADSHEET_ID,
-    range: 'Players',
-    valueInputOption: 'RAW',
-    insertDataOption: 'INSERT_ROWS'
-  }
-
-  public valueRangeBody = {
-    'majorDimension': 'ROWS',
-    'values': []
-  }
+  } 
 
   public createPlayer( 
     spreadsheetId:any,  
@@ -253,39 +144,7 @@ export class PlayersApiService {
         },
         { headers: this.authHeader()}
       )         
-  } 
-
-  // runScript() {
-  //   // Make a request to the API to run the function
-  //   const scriptId = '176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf';
-  //   const request = {
-  //     'function': 'sortTeams'
-  //   };
-
-  //   this.http.post(
-  //     `https://script.googleapis.com/v1/scripts/${scriptId}:run`, 
-  //     request, 
-  //     { headers: this.authHeader()})
-  //     .subscribe(response => {
-  //       console.log(response);
-  //     });
-  // }
-
-  public testRunScript(method:string):Observable<any>{
-    return this.http.post<any>(
-      `https://script.googleapis.com/v1/scripts/176De6l1FHasz8DZjLBR3hqoMzA2XmmafAD81rT8HQCTtCALjNNMecTZf:run`,
-      {
-        "function": method,
-        "parameters": [
-          
-        ],  
-        "devMode": false
-      },
-      {
-        headers: this.authHeader()
-      }
-    )
-  }
+  }  
    
   public deletePlayer(username:string){
     return this.http.delete(`https://sheetdb.io/api/v1/yg8kgxivnmkec/username/${username}`);

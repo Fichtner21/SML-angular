@@ -56,7 +56,21 @@
           <div class="desc">Click to test connections, check console.</div>
         </mat-card-content>
       </mat-card>        
-    </div>   
+    </div> 
+    <ng-container *ngIf="players$ | async as players">
+      <ng-container *ngIf="players.length > 0">
+        <ng-container *ngFor="let player of players; let i = index;">
+          <div>PLAYER: <strong>{{ player.playername }}, ELO: {{ player.ranking }}</strong>, INDEX: {{ i + 1}}</div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="addAmatch$ | async as addAmatch">
+      <ng-container *ngIf="addAmatch.length > 0">
+        <ng-container *ngFor="let element of addAmatch; let i = index;">
+          <div>ELEMENT: {{ element }} INDEX: {{ i }}</div>
+        </ng-container>
+      </ng-container>
+    </ng-container> 
   <div>
       <!-- <app-list-data></app-list-data> -->
       <router-outlet></router-outlet>

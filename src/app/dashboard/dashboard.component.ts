@@ -13,6 +13,8 @@ import { OAuthService } from 'angular-oauth2-oidc';
 export class DashboardComponent implements OnInit { 
   mailSnippets: string[] = []
   userInfo?: UserInfo; 
+  public addAmatch$: Observable<any>;
+  public players$: Observable<any>;
 
   constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, private readonly oAuthService: OAuthService) { 
     // googleApi.userProfileSubject.subscribe( info => {
@@ -23,6 +25,41 @@ export class DashboardComponent implements OnInit {
   }  
 
   ngOnInit(): void { 
+    this.addAmatch$ = this.googleApi.getPlayers('Add+a+Match').pipe(
+      map((response: any) => {             
+        let batchRowValues = response.values;
+        console.log('batchRowValues', batchRowValues)
+        // let players: any[] = [];
+        // for(let i = 1; i < batchRowValues.length; i++){
+        //   const rowObject: object = {};
+        //   for(let j = 0; j < batchRowValues[i].length; j++){
+        //     rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+        //   }
+        //   players.push(rowObject);
+        // }        
+        // return players;
+        return batchRowValues;
+      }),
+    ); 
+    // const addAmatchArray = this.addAmatch$.subscribe();
+    this.players$ = this.googleApi.getPlayers('Players').pipe(
+      map((response: any) => {             
+        let batchRowValues = response.values;
+        console.log('player 1', batchRowValues[1])        
+        let players: any[] = [];
+        for(let i = 1; i < batchRowValues.length; i++){
+          const rowObject: object = {};
+          for(let j = 0; j < batchRowValues[i].length; j++){
+            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+          }
+          
+          players.push(rowObject);
+        }        
+        console.log('players all', players)
+        return players;
+        // return batchRowValues[1];
+      }),
+    ); 
   }
 
   balanceTeams(){

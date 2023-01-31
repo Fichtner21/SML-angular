@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import { DateFormatPipePipe } from './history-obj/date-format-pipe.pipe';
 import { HomeComponent } from './home/home.component';
 import { ChartsModule } from 'ng2-charts';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { SafePipe } from './history-obj/safe.pipe';
@@ -36,6 +36,10 @@ import { TokenInterceptor } from './token.interceptor';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from '@angular/material/input';
+import { NotifierModule } from 'angular-notifier';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -65,6 +69,11 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
     MatButtonModule,
     MatDividerModule,
     MatCardModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    NotifierModule,
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),      
     TranslateModule.forRoot({

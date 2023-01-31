@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { RSA_NO_PADDING } from 'constants';
 import { Country } from 'src/app/models/country.model';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { environment } from 'src/environments/environment';
@@ -78,7 +77,7 @@ export class EditDataComponent implements OnInit {
         cup1on1edition1: [''],
         meeting: [''],
         cup3on3: [''],
-        active: [false],
+        active: [''],
         ban: [false],
         lastwar: [''],
         fpw: [''],

@@ -55,9 +55,122 @@
           <button mat-raised-button color="warn" (click)="getStatistics()">RUN getStatistics()</button>
           <div class="desc">Click to test connections, check console.</div>
         </mat-card-content>
+        <mat-card-content>
+          <!-- <button mat-raised-button color="primary" (click)="updateCell()">RUN updateCell()</button> -->
+          <div class="desc">Click to update cell.</div>
+        </mat-card-content>
       </mat-card>        
     </div> 
-    <ng-container *ngIf="players$ | async as players">
+    <div class="add-match">
+      <form class="example-form" [formGroup]="playersToWar" (ngSubmit)="onSubmit()">
+        <h3>Team 1</h3>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Player 1</mat-label>
+          <input type="text"
+                placeholder="Pick one"
+                aria-label="Player 1"
+                matInput
+                [formControl]="t1p1name"                
+                [matAutocomplete]="auto1">
+          <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptionsT1p1name | async" [value]="option.username">
+              {{option.playername}} ({{ option.ranking }})
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Player 2</mat-label>
+          <input type="text"
+                placeholder="Pick one"
+                aria-label="Player 2"
+                matInput
+                [formControl]="t1p2name"
+                [matAutocomplete]="auto2">
+          <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptionsT1p2name | async" [value]="option.username">
+              {{option.playername}} ({{ option.ranking }})
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Player 3</mat-label>
+          <input type="text"
+                placeholder="Pick one"
+                aria-label="Player 3"
+                matInput
+                [formControl]="t1p3name"
+                [matAutocomplete]="auto3">
+          <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptionsT1p3name | async" [value]="option.username">
+              {{option.playername}} ({{ option.ranking }})
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Player 4</mat-label>
+          <input type="text"
+                placeholder="Pick one"
+                aria-label="Player 4"
+                matInput
+                [formControl]="t1p4name"
+                [matAutocomplete]="auto4">
+          <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptionsT1p4name | async" [value]="option.username">
+              {{option.playername}} ({{ option.ranking }})
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Player 5</mat-label>
+          <input type="text"
+                placeholder="Pick one"
+                aria-label="Player 5"
+                matInput
+                [formControl]="t1p5name"
+                [matAutocomplete]="auto5">
+          <mat-autocomplete autoActiveFirstOption #auto5="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptionsT1p5name | async" [value]="option.username">
+              {{option.playername}} ({{ option.ranking }})
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Player 6</mat-label>
+          <input type="text"
+                placeholder="Pick one"
+                aria-label="Player 6"
+                matInput
+                [formControl]="t1p6name"
+                [matAutocomplete]="auto6">
+          <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptionsT1p6name | async" [value]="option.username">
+              {{option.playername}} ({{ option.ranking }})
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Player 7</mat-label>
+          <input type="text"
+                placeholder="Pick one"
+                aria-label="Player 7"
+                matInput
+                [formControl]="t1p7name"
+                [matAutocomplete]="auto7">
+          <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptionsT1p7name | async" [value]="option.username">
+              {{option.playername}} ({{ option.ranking }})
+            </mat-option>
+          </mat-autocomplete>
+          <div></div>
+        </mat-form-field>
+        <button mat-raised-button type="submit">submit</button>       
+      </form>
+      <button mat-raised-button (click)="clearTeam()">clear</button>
+      <div class="priview" *ngFor="let value of team1preview">
+        <div>{{ value }}</div>
+      </div>
+    </div>
+    <!-- <ng-container *ngIf="players$ | async as players">
       <ng-container *ngIf="players.length > 0">
         <ng-container *ngFor="let player of players; let i = index;">
           <div>PLAYER: <strong>{{ player.playername }}, ELO: {{ player.ranking }}</strong>, INDEX: {{ i + 1}}</div>
@@ -67,10 +180,11 @@
     <ng-container *ngIf="addAmatch$ | async as addAmatch">
       <ng-container *ngIf="addAmatch.length > 0">
         <ng-container *ngFor="let element of addAmatch; let i = index;">
-          <div>ELEMENT: {{ element }} INDEX: {{ i }}</div>
+          <div>ELEMENT: {{ element | json }} INDEX: {{ i }}</div>
         </ng-container>
       </ng-container>
-    </ng-container> 
+    </ng-container>  -->
+    
   <div>
       <!-- <app-list-data></app-list-data> -->
       <router-outlet></router-outlet>

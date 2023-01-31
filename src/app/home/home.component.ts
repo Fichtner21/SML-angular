@@ -153,7 +153,7 @@ export class HomeComponent implements OnInit {
                   return 'rgba(255,0,0,0.6)';
                 }
                 return 'rgba(239, 239, 240, 0.6)';
-              }),              
+              }),                        
               borderWidth: 1
             }] 
           },                  

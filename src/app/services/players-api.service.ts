@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Sheet } from '../models/sheet.model';
 import { environment } from 'src/environments/environment';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { map, startWith, switchMap, take, tap } from 'rxjs/operators';
 
 
 const authCodeFlowConfig: AuthConfig = {
@@ -39,6 +39,10 @@ export interface UserInfo {
 // this is SCRIPT_ID of deployment with API
 const SCRIPT_ID = 'AKfycbw1UM_u6MgkD_a9P2yHtUdhCkz5kxBX-BuVDCA8tXQ';
 const ENDPOINT = `https://script.googleapis.com/v1/scripts/${SCRIPT_ID}:run`;
+// const spreadsheetId = '1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo';
+// const sheetName = 'Add a Match';
+// const cellRange = 'A12';
+// const ENDPOINT_CELL = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}`
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +51,9 @@ export class PlayersApiService {
   gmail = 'https://gmail.googleapis.com'
   userProfileSubject = new Subject<UserInfo>()
   index:any;
-  input:any;
+  input:any;  
+  // filteredOptions: Observable<any>;
+  // options: any[] = [];
 
   constructor(private http: HttpClient, private readonly oAuthService: OAuthService) {  
     
@@ -121,7 +127,19 @@ export class PlayersApiService {
     return this.http.get<any>(
       `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
       );
-  }  
+  } 
+  
+  // public getPlayer(fieldname:any, filteredOptions:Observable<any>){
+  //   filteredOptions = fieldname.valueChanges.pipe(
+  //     startWith(''),
+  //     map((value:any) => this._filter(value || ''))
+  //   )
+  // }
+
+  // private _filter(value: string, options: any[] = []): any[] {
+  //   const filterValue = value.toLowerCase();
+  //   return options.filter(option => option.playername.toLowerCase().includes(filterValue));     
+  // }
 
   public listPlayers(){
     // return this.http.get(`${environment.CONNECTION_URL}`);
@@ -155,9 +173,48 @@ export class PlayersApiService {
     // return this.http.get(`https://sheetdb.io/api/v1/yg8kgxivnmkec?single_object=${username}`);
   }
 
+  public getPriviewPlayers(){
+    return this.http.get(`https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Add+a+Match!A12:A18`
+    // {
+    //   params: {
+    //     ranges: [`Add a Match!A12:A18`]
+    //   }
+    // }
+    )
+  }
+
   public fetchAsObservable(url) {
     return from(fetch(url));
   }
+
+  updateCell(spreadsheetId: string, sheetName: string, cellRange: string, t1p1name: string, t1p2name: string, t1p3name: string, t1p4name: string, t1p5name: string, t1p6name: string, t1p7name: string){
+    // const body = {
+    //   "value": [[value]]
+    // };
+    return this.http.put<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`,
+      {
+        "values":
+        [[t1p1name],[t1p2name], [t1p3name], [t1p4name], [t1p5name], [t1p6name], [t1p7name]]
+      },
+      // body,
+      { 
+        headers: this.authHeader()
+      }    
+    );
+  }
+
+  updateCells(
+    spreadsheetId: string, sheetName: string, cellRange: string, t1p1name: string, t1p2name: string, t1p3name: string, t1p4name: string, t1p5name: string, t1p6name: string, t1p7name: string
+  ){
+    const playersUpdateCells = this.getPriviewPlayers().pipe(
+      map((res:any) => {
+        const values = res.values;
+        console.log('values', values)
+      })
+    )
+  }
+
 
   public updatePlayerNEW(pname:any, uname: string, ranking: any, percentile: any, place: any, warcount: any, nationality:any, clanhistory: any, cup1on1edition1:any, meeting: any, cup3on3:any, active:boolean, ban: boolean, lastwar: any, fpw: any, fpwmax:any, fpwmin:any, last30days:any, last365days:any, lastwarpc:any, s1wars:any, s1fpw:any, streak:any){ 
       

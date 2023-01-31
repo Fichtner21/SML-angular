@@ -173,8 +173,8 @@ export class PlayersApiService {
     // return this.http.get(`https://sheetdb.io/api/v1/yg8kgxivnmkec?single_object=${username}`);
   }
 
-  public getPriviewPlayers(){
-    return this.http.get(`https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Add+a+Match!A12:A18`
+  public getMultipleRanges(ranges: string){
+    return this.http.get(`https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Add+a+Match!${ranges}`
     // {
     //   params: {
     //     ranges: [`Add a Match!A12:A18`]
@@ -207,7 +207,7 @@ export class PlayersApiService {
   updateCells(
     spreadsheetId: string, sheetName: string, cellRange: string, t1p1name: string, t1p2name: string, t1p3name: string, t1p4name: string, t1p5name: string, t1p6name: string, t1p7name: string
   ){
-    const playersUpdateCells = this.getPriviewPlayers().pipe(
+    const playersUpdateCells = this.getMultipleRanges('A12:A18').pipe(
       map((res:any) => {
         const values = res.values;
         console.log('values', values)

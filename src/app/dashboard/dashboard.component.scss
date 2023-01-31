@@ -2,7 +2,7 @@ section {
   padding-top: 80px;  
   background-image: linear-gradient(0deg, rgba(252, 252, 252, 1) 25%, rgba(245, 245, 245, 1) 25%, rgba(245, 245, 245, 1) 50%, rgba(252, 252, 252, 1) 50%, rgba(252, 252, 252, 1) 75%, rgba(245, 245, 245, 1) 75%, rgba(245, 245, 245, 1) 100%);
         background-size: 4px 4px;  
-  height: 100%;
+  height: 100vh;
 
   .container {
     margin: 0 auto;
@@ -72,7 +72,13 @@ section {
 }
 
 .add-match {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: auto;
+  gap: 15px;
+}
+
+.readonly {
+  opacity: 0.5;
+  pointer-events: none;
 }

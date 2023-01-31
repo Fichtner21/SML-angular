@@ -39,12 +39,53 @@ import { MatCardModule } from '@angular/material/card';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
-import { NotifierModule } from 'angular-notifier';
+import { NotifierModule, NotifierOptions } from 'angular-notifier';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }
+
+const customNotifierOptions: NotifierOptions = {
+  position: {
+		horizontal: {
+			position: 'left',
+			distance: 12
+		},
+		vertical: {
+			position: 'bottom',
+			distance: 12,
+			gap: 10
+		}
+	},
+  theme: 'material',
+  behaviour: {
+    autoHide: 5000,
+    onClick: 'hide',
+    onMouseover: 'pauseAutoHide',
+    showDismissButton: true,
+    stacking: 4
+  },
+  animations: {
+    enabled: true,
+    show: {
+      preset: 'slide',
+      speed: 300,
+      easing: 'ease'
+    },
+    hide: {
+      preset: 'fade',
+      speed: 300,
+      easing: 'ease',
+      offset: 50
+    },
+    shift: {
+      speed: 300,
+      easing: 'ease'
+    },
+    overlap: 150
+  }
+};
 
 @NgModule({
   declarations: [    
@@ -73,7 +114,7 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
-    NotifierModule,
+    NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),      
     TranslateModule.forRoot({

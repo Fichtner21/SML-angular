@@ -6,6 +6,7 @@ import { map, startWith, tap } from 'rxjs/operators';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { NotifierService } from 'angular-notifier';
+import { ViewEncapsulation } from '@angular/core';
 // import _ from "lodash";
 
 @Component({
@@ -14,6 +15,7 @@ import { NotifierService } from 'angular-notifier';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit { 
+  encapsulation: ViewEncapsulation.None;
   mailSnippets: string[] = []
   userInfo?: UserInfo; 
   public addAmatch$: Observable<any>;
@@ -293,6 +295,8 @@ export class DashboardComponent implements OnInit {
       // If less then 7 players add array with empty string
       const t1preview = this.team1preview.concat(Array(9 - this.team1preview.length).fill(['']))      
 
+      console.log('t1preview', t1preview);
+
       // Add everytimes 3 fieldsin row
       const t1p1row = t1preview[0].concat(Array(3 - t1preview[0].length).fill(''));      
       const t1p2row = t1preview[1].concat(Array(3 - t1preview[1].length).fill(''));      
@@ -305,8 +309,8 @@ export class DashboardComponent implements OnInit {
       // set value from values from GET
       this.t1p1name?.setValue(t1p1row[0]); 
       this.t1p2name?.setValue(t1p2row[0]); 
-      this.t1p4name?.setValue(t1p3row[0]); 
-      this.t1p3name?.setValue(t1p4row[0]); 
+      this.t1p3name?.setValue(t1p3row[0]); 
+      this.t1p4name?.setValue(t1p4row[0]); 
       this.t1p5name?.setValue(t1p5row[0]);
       this.t1p6name?.setValue(t1p6row[0]);
       this.t1p7name?.setValue(t1p7row[0]);  
@@ -319,21 +323,20 @@ export class DashboardComponent implements OnInit {
       this.t1p5preelo?.setValue(t1p5row[1]);
       this.t1p6preelo?.setValue(t1p6row[1]);
       this.t1p7preelo?.setValue(t1p7row[1]);
-      this.t1cumulative?.setValue('');
+      this.t1cumulative?.setValue(Number(t1preview[7][1]).toFixed(2));
 
       // console.log('t1preview', t1preview)
     }, error => {
       console.log('error getPriviewPlayers', error)
     })
 
-    
-
     // *** TEAM TWO ***    
-    this.googleApi.getMultipleRanges('A23:C29').subscribe(data => {
+    this.googleApi.getMultipleRanges('A23:C30').subscribe(data => {
       this.team2preview = data['values'];    
   
       // If less then 7 players add array with empty string
-      const t2preview = this.team2preview.concat(Array(7 - this.team2preview.length).fill(['']))      
+      const t2preview = this.team2preview.concat(Array(9 - this.team2preview.length).fill(['']))  
+      console.log('t2preview', t2preview)    
 
       // Add everytimes 3 fieldsin row
       const t2p1row = t2preview[0].concat(Array(3 - t2preview[0].length).fill(''));      
@@ -361,7 +364,7 @@ export class DashboardComponent implements OnInit {
       this.t2p5preelo?.setValue(t2p5row[1]);
       this.t2p6preelo?.setValue(t2p6row[1]);
       this.t2p7preelo?.setValue(t2p7row[1]);
-      this.t2cumulative?.setValue('');
+      this.t2cumulative?.setValue(Number(t2preview[7][1]).toFixed(2));
 
       // console.log('t2preview', t2preview)
     }, error => {
@@ -467,14 +470,7 @@ export class DashboardComponent implements OnInit {
       't1p5name', t1p5name,
       't1p6name', t1p6name,
       't1p7name', t1p7name
-    )
-  
-    // const playerToPick = this.playersToWar.value.t1p1name.value;
-    // console.log('playerToPick form:', playerToPick)
-    // console.log('value form:', value.t1p1name.value)
-    // console.log('value form:', value.t1p2name.value)
-    // this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', '', '', '', '', '', '', '').subscribe();
-   
+    )   
 
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', t1p1name, t1p2name, t1p3name, t1p4name, t1p5name,  t1p6name, t1p7name).subscribe({
         next: (res) => {
@@ -543,6 +539,8 @@ export class DashboardComponent implements OnInit {
   }
 
   balanceTeams(){
+    this.notifier.notify('warning', 'TEAMS MIXED done!');
+    this.onSubmit();
     this.googleApi.runScriptFunction('balanceTeams').subscribe({
       next: (res) => {
         console.log('BALANCE res =>', res)
@@ -551,84 +549,82 @@ export class DashboardComponent implements OnInit {
         this.googleApi.runScriptFunction('selectTeams').subscribe({
           next: (res) => {
             console.log(' SELECT res =>', res)
-            setTimeout(() => {
+            
               // *** TEAM ONE ***
-             this.googleApi.getMultipleRanges('A12:B19').subscribe(data => {
-               this.team1preview = data['values'];         
-               // If less then 7 players add array with empty string
-               const t1preview = this.team1preview.concat(Array(8 - this.team1preview.length).fill(['']))      
-         
-               // Add everytimes 3 fieldsin row
-               const t1p1row = t1preview[0].concat(Array(2 - t1preview[0].length).fill(''));     
-               const t1p2row = t1preview[1].concat(Array(2 - t1preview[1].length).fill(''));      
-               const t1p3row = t1preview[2].concat(Array(2 - t1preview[2].length).fill(''));      
-               const t1p4row = t1preview[3].concat(Array(2 - t1preview[3].length).fill(''));      
-               const t1p5row = t1preview[4].concat(Array(2 - t1preview[4].length).fill(''));      
-               const t1p6row = t1preview[5].concat(Array(2 - t1preview[5].length).fill(''));      
-               const t1p7row = t1preview[6].concat(Array(2 - t1preview[6].length).fill(''));      
-         
-               // set value from values from GET
-               this.t1p1name?.setValue(t1p1row[0]); 
-               this.t1p2name?.setValue(t1p2row[0]); 
-               this.t1p4name?.setValue(t1p3row[0]); 
-               this.t1p3name?.setValue(t1p4row[0]); 
-               this.t1p5name?.setValue(t1p5row[0]);
-               this.t1p6name?.setValue(t1p6row[0]);
-               this.t1p7name?.setValue(t1p7row[0]);  
+            this.googleApi.getMultipleRanges('A12:A18').subscribe(data => {
+              const t1preview = data['values'];         
                
-               //Team 1 Initial ELO
-               this.t1p1preelo?.setValue(t1p1row[1]);
-               this.t1p2preelo?.setValue(t1p2row[1]);
-               this.t1p3preelo?.setValue(t1p3row[1]);
-               this.t1p4preelo?.setValue(t1p4row[1]);
-               this.t1p5preelo?.setValue(t1p5row[1]);
-               this.t1p6preelo?.setValue(t1p6row[1]);
-               this.t1p7preelo?.setValue(t1p7row[1]);
+               // set value from values from GET
+               this.t1p1name?.setValue(t1preview[0]); 
+               this.t1p2name?.setValue(t1preview[1]); 
+               this.t1p4name?.setValue(t1preview[2]); 
+               this.t1p3name?.setValue(t1preview[3]); 
+               this.t1p5name?.setValue(t1preview[4]);
+               this.t1p6name?.setValue(t1preview[5]);
+               this.t1p7name?.setValue(t1preview[6]);  
+               
+               
          
                // console.log('t1preview', t1preview)
              }, error => {
                console.log('error getPriviewPlayers', error)
-             })
+            })
+
+            this.googleApi.getMultipleRanges('B12:B20').subscribe( data => {
+              const t1preview = data['values'];  
+              //Team 1 Initial ELO
+              this.t1p1preelo?.setValue(t1preview[0]);
+              this.t1p2preelo?.setValue(t1preview[1]);
+              this.t1p3preelo?.setValue(t1preview[2]);
+              this.t1p4preelo?.setValue(t1preview[3]);
+              this.t1p5preelo?.setValue(t1preview[4]);
+              this.t1p6preelo?.setValue(t1preview[5]);
+              this.t1p7preelo?.setValue(t1preview[6]);
+              this.t1cumulative?.setValue(Number(t1preview[7]).toFixed(2));
+            }, error => {
+              console.log("getMultipleRanges('B12:B20')", error)
+            })
          
              // *** TEAM TWO ***    
-             this.googleApi.getMultipleRanges('A23:B30').subscribe(data => {
-               this.team2preview = data['values'];    
+             this.googleApi.getMultipleRanges('A23:A29').subscribe(data => {
+              const t2preview = data['values'];    
            
                // If less then 7 players add array with empty string
-               const t2preview = this.team2preview.concat(Array(8 - this.team2preview.length).fill(['']))      
+                    
          
-               // Add everytimes 3 fieldsin row
-               const t2p1row = t2preview[0].concat(Array(2 - t2preview[0].length).fill(''));      
-               const t2p2row = t2preview[1].concat(Array(2 - t2preview[1].length).fill(''));      
-               const t2p3row = t2preview[2].concat(Array(2 - t2preview[2].length).fill(''));      
-               const t2p4row = t2preview[3].concat(Array(2 - t2preview[3].length).fill(''));      
-               const t2p5row = t2preview[4].concat(Array(2 - t2preview[4].length).fill(''));      
-               const t2p6row = t2preview[5].concat(Array(2 - t2preview[5].length).fill(''));      
-               const t2p7row = t2preview[6].concat(Array(2 - t2preview[6].length).fill(''));      
+               
          
                // TEAM 2 set value from values from GET
-               this.t2p1name?.setValue(t2p1row[0]);            
-               this.t2p2name?.setValue(t2p2row[0]); 
-               this.t2p3name?.setValue(t2p3row[0]); 
-               this.t2p4name?.setValue(t2p4row[0]); 
-               this.t2p5name?.setValue(t2p5row[0]);
-               this.t2p6name?.setValue(t2p6row[0]);
-               this.t2p7name?.setValue(t2p7row[0]);  
+               this.t2p1name?.setValue(t2preview[0]);            
+               this.t2p2name?.setValue(t2preview[1]); 
+               this.t2p3name?.setValue(t2preview[2]); 
+               this.t2p4name?.setValue(t2preview[3]); 
+               this.t2p5name?.setValue(t2preview[4]);
+               this.t2p6name?.setValue(t2preview[5]);
+               this.t2p7name?.setValue(t2preview[6]);  
                
-               //Team 2 Initial ELO
-               this.t2p1preelo?.setValue(t2p1row[1]);
-               this.t2p2preelo?.setValue(t2p2row[1]);
-               this.t2p3preelo?.setValue(t2p3row[1]);
-               this.t2p4preelo?.setValue(t2p4row[1]);
-               this.t2p5preelo?.setValue(t2p5row[1]);
-               this.t2p6preelo?.setValue(t2p6row[1]);
-               this.t2p7preelo?.setValue(t2p7row[1]);
+              
          
                // console.log('t2preview', t2preview)
              }, error => {
                console.log('error getPriviewPlayers', error)
              })
-           }, 3000)
+
+             this.googleApi.getMultipleRanges('B23:B30').subscribe(data => {
+              const t2preview = data['values']; 
+               //Team 2 Initial ELO
+               this.t2p1preelo?.setValue(t2preview[0]);
+               this.t2p2preelo?.setValue(t2preview[1]);
+               this.t2p3preelo?.setValue(t2preview[2]);
+               this.t2p4preelo?.setValue(t2preview[3]);
+               this.t2p5preelo?.setValue(t2preview[4]);
+               this.t2p6preelo?.setValue(t2preview[5]);
+               this.t2p7preelo?.setValue(t2preview[6]);
+               this.t2cumulative?.setValue(Number(t2preview[7]).toFixed(2));
+             }, error => {
+              console.log("getMultipleRanges('B23:B30')", error)
+             })
+          
           },
           error: (err) => {
             console.log(' SELECT err =>', err)
@@ -697,7 +693,21 @@ export class DashboardComponent implements OnInit {
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', '','','','','', '', '').subscribe({
       next: (res) => {
         console.log('res CLEAR A12:A18 =>', res)       
-        
+        this.t1p1name.reset()
+        this.t1p2name.reset()
+        this.t1p3name.reset()
+        this.t1p4name.reset()
+        this.t1p5name.reset()
+        this.t1p6name.reset()
+        this.t1p7name.reset()
+
+        this.t1p1preelo.reset()
+        this.t1p2preelo.reset()
+        this.t1p3preelo.reset()
+        this.t1p4preelo.reset()
+        this.t1p5preelo.reset()
+        this.t1p6preelo.reset()
+        this.t1p7preelo.reset()
       },
       error: (err) => {
         console.log('err clear A12:A18 =>', err)
@@ -707,43 +717,26 @@ export class DashboardComponent implements OnInit {
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', '','','','','', '', '').subscribe({
       next: (res) => {
         console.log('res CLEAR A23:A29 =>', res)    
-        
+        this.t2p1name.reset()
+        this.t2p2name.reset()
+        this.t2p3name.reset()
+        this.t2p4name.reset()
+        this.t2p5name.reset()
+        this.t2p6name.reset()
+        this.t2p7name.reset()
+
+        this.t2p1preelo.reset()
+        this.t2p2preelo.reset()
+        this.t2p3preelo.reset()
+        this.t2p4preelo.reset()
+        this.t2p5preelo.reset()
+        this.t2p6preelo.reset()
+        this.t2p7preelo.reset()
       },
       error: (err) => {
         console.log('err clear A23:A29 =>', err)       
       }
     })
-    // this.t1p1name.reset()
-    // this.t1p2name.reset()
-    // this.t1p3name.reset()
-    // this.t1p4name.reset()
-    // this.t1p5name.reset()
-    // this.t1p6name.reset()
-    // this.t1p7name.reset()
-    
-    this.t1p1preelo.reset()
-    this.t1p2preelo.reset()
-    this.t1p3preelo.reset()
-    this.t1p4preelo.reset()
-    this.t1p5preelo.reset()
-    this.t1p6preelo.reset()
-    this.t1p7preelo.reset()
-
-    // this.t2p1name.reset()
-    // this.t2p2name.reset()
-    // this.t2p3name.reset()
-    // this.t2p4name.reset()
-    // this.t2p5name.reset()
-    // this.t2p6name.reset()
-    // this.t2p7name.reset()
-
-    this.t2p1preelo.reset()
-    this.t2p2preelo.reset()
-    this.t2p3preelo.reset()
-    this.t2p4preelo.reset()
-    this.t2p5preelo.reset()
-    this.t2p6preelo.reset()
-    this.t2p7preelo.reset()
   }
 
   public showNotification( type: string, message: string ): void {

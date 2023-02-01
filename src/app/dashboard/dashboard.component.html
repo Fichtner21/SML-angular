@@ -63,353 +63,360 @@
       </mat-card>        
     </div> 
     <div class="add-match">
-
-      <form class="example-form" [formGroup]="playersToWar" (ngSubmit)="onSubmit()">
-        <h3>Team 1</h3>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 1</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 1"
-                matInput
-                [formControl]="t1p1name"                
-                [matAutocomplete]="auto1">
-          <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
-            <mat-option *ngFor="let option of filteredOptionsT1p1name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 2</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 2"
-                matInput
-                [formControl]="t1p2name"
-                [matAutocomplete]="auto2">
-          <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
-            <mat-option *ngFor="let option of filteredOptionsT1p2name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 3</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 3"
-                matInput
-                [formControl]="t1p3name"
-                [matAutocomplete]="auto3">
-          <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
-            <mat-option *ngFor="let option of filteredOptionsT1p3name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 4</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 4"
-                matInput
-                [formControl]="t1p4name"
-                [matAutocomplete]="auto4">
-          <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT1p4name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 5</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 5"
-                matInput
-                [formControl]="t1p5name"
-                [matAutocomplete]="auto5">
-          <mat-autocomplete autoActiveFirstOption #auto5="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT1p5name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 6</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 6"
-                matInput
-                [formControl]="t1p6name"
-                [matAutocomplete]="auto6">
-          <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT1p6name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 7</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 7"
-                matInput
-                [formControl]="t1p7name"
-                [matAutocomplete]="auto7">
-          <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT1p7name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-          <div></div>
-        </mat-form-field>
-        <button mat-raised-button type="submit">submit</button>  
-        <notifier-container></notifier-container>     
-      </form>
-      <form [formGroup]="preEloTeamOne">
-        <h3>Initial ELO</h3>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t1p1preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t1p2preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t1p3preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t1p4preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t1p5preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t1p6preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t1p7preelo"> 
-        </mat-form-field>
-      </form>
-      <div>
-        <form [formGroup]="scoreTeamOne" (ngSubmit)="scoresTwoTeams()">
-          <h3>Combat score</h3>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 1</mat-label>
-            <input matInput formControlName="t1p1score">
+      <div class="team">
+        <form class="example-form team1name" [formGroup]="playersToWar" (ngSubmit)="onSubmit()">
+          <h3>Team 1</h3>
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 1</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 1"
+                  matInput
+                  [formControl]="t1p1name"                
+                  [matAutocomplete]="auto1">
+            <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
+              <mat-option *ngFor="let option of filteredOptionsT1p1name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 2</mat-label>
-            <input matInput formControlName="t1p2score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 2</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 2"
+                  matInput
+                  [formControl]="t1p2name"
+                  [matAutocomplete]="auto2">
+            <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
+              <mat-option *ngFor="let option of filteredOptionsT1p2name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 3</mat-label>
-            <input matInput formControlName="t1p3score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 3</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 3"
+                  matInput
+                  [formControl]="t1p3name"
+                  [matAutocomplete]="auto3">
+            <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
+              <mat-option *ngFor="let option of filteredOptionsT1p3name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 4</mat-label>
-            <input matInput formControlName="t1p4score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 4</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 4"
+                  matInput
+                  [formControl]="t1p4name"
+                  [matAutocomplete]="auto4">
+            <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT1p4name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 5</mat-label>
-            <input matInput formControlName="t1p5score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 5</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 5"
+                  matInput
+                  [formControl]="t1p5name"
+                  [matAutocomplete]="auto5">
+            <mat-autocomplete autoActiveFirstOption #auto5="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT1p5name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 6</mat-label>
-            <input matInput formControlName="t1p6score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 6</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 6"
+                  matInput
+                  [formControl]="t1p6name"
+                  [matAutocomplete]="auto6">
+            <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT1p6name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 7</mat-label>
-            <input matInput formControlName="t1p7score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 7</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 7"
+                  matInput
+                  [formControl]="t1p7name"
+                  [matAutocomplete]="auto7">
+            <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT1p7name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
+            <div></div>
           </mat-form-field>
-          <!-- <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Team 1 Rounds Won</mat-label>
-            <input matInput formControlName="t1roundsWon">
-          </mat-form-field> -->
           <!-- <button mat-raised-button type="submit">submit</button>   -->
+          <notifier-container></notifier-container>     
         </form>
-        <form [formGroup]="teamOneRoundsWon" (ngSubmit)="scoresTwoTeams()">
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Team 1 Rounds Won</mat-label>
-            <input matInput formControlName="t1roundsWonInput">
+        <form [formGroup]="preEloTeamOne">
+          <h3>Initial ELO <span>(non editable)</span></h3>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t1p1preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t1p2preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t1p3preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t1p4preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t1p5preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t1p6preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t1p7preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t1cumulative"> 
           </mat-form-field>
         </form>
+        <div>
+          <form [formGroup]="scoreTeamOne" (ngSubmit)="scoresTwoTeams()">
+            <h3>Combat score</h3>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 1</mat-label>
+              <input matInput formControlName="t1p1score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 2</mat-label>
+              <input matInput formControlName="t1p2score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 3</mat-label>
+              <input matInput formControlName="t1p3score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 4</mat-label>
+              <input matInput formControlName="t1p4score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 5</mat-label>
+              <input matInput formControlName="t1p5score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 6</mat-label>
+              <input matInput formControlName="t1p6score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 7</mat-label>
+              <input matInput formControlName="t1p7score">
+            </mat-form-field>
+            <!-- <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Team 1 Rounds Won</mat-label>
+              <input matInput formControlName="t1roundsWon">
+            </mat-form-field> -->
+            <!-- <button mat-raised-button type="submit">submit</button>   -->
+          </form>
+          <form [formGroup]="teamOneRoundsWon" (ngSubmit)="scoresTwoTeams()">
+            <mat-form-field class="example-full-width rounds" apperance="fill">
+              <mat-label>Team 1 Rounds Won</mat-label>
+              <input matInput formControlName="t1roundsWonInput">
+            </mat-form-field>
+          </form>
+        </div>
       </div>
-      
-      <div></div>
-      <form class="example-form" [formGroup]="teamTwoToWar">
-        <h3>Team 2</h3>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 1</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 1"
-                matInput
-                [formControl]="t2p1name"                
-                [matAutocomplete]="auto7">
-          <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT2p1name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 2</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 2"
-                matInput
-                [formControl]="t2p2name"
-                [matAutocomplete]="auto8">
-          <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT2p2name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 3</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 3"
-                matInput
-                [formControl]="t2p3name"
-                [matAutocomplete]="auto9">
-          <mat-autocomplete autoActiveFirstOption #auto9="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT2p3name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 4</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 4"
-                matInput
-                [formControl]="t2p4name"
-                [matAutocomplete]="auto10">
-          <mat-autocomplete autoActiveFirstOption #auto10="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT2p4name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 5</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 5"
-                matInput
-                [formControl]="t2p5name"
-                [matAutocomplete]="auto11">
-          <mat-autocomplete autoActiveFirstOption #auto11="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT2p5name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 6</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 6"
-                matInput
-                [formControl]="t2p6name"
-                [matAutocomplete]="auto12">
-          <mat-autocomplete autoActiveFirstOption #auto12="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT2p6name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Player 7</mat-label>
-          <input type="text"
-                placeholder="Pick one"
-                aria-label="Player 7"
-                matInput
-                [formControl]="t2p7name"
-                [matAutocomplete]="auto13">
-          <mat-autocomplete autoActiveFirstOption #auto13="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsT2p7name | async" [value]="option.username">
-              {{option.playername}} ({{ option.ranking }})
-            </mat-option>
-          </mat-autocomplete>
-          <div></div>
-        </mat-form-field>
-        <!-- <button mat-raised-button type="submit">submit</button>   -->
-        <notifier-container></notifier-container> 
-      </form>       
-      <form [formGroup]="preEloTeamTwo">
-        <h3>Initial ELO</h3>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t2p1preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t2p2preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t2p3preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t2p4preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t2p5preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t2p6preelo"> 
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="readonly">
-          <input type="text" matInput [formControl]="t2p7preelo"> 
-        </mat-form-field>
-      </form>   
-      <div>
-        <form [formGroup]="scoreTeamTwo" (ngSubmit)="scoresTwoTeams()">
-          <h3>Combat score</h3>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 1</mat-label>
-            <input matInput formControlName="t2p1score">
+      <div class="team">
+        <form class="example-form" [formGroup]="teamTwoToWar">
+          <h3>Team 2</h3>
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 1</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 1"
+                  matInput
+                  [formControl]="t2p1name"                
+                  [matAutocomplete]="auto7">
+            <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT2p1name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 2</mat-label>
-            <input matInput formControlName="t2p2score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 2</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 2"
+                  matInput
+                  [formControl]="t2p2name"
+                  [matAutocomplete]="auto8">
+            <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT2p2name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 3</mat-label>
-            <input matInput formControlName="t2p3score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 3</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 3"
+                  matInput
+                  [formControl]="t2p3name"
+                  [matAutocomplete]="auto9">
+            <mat-autocomplete autoActiveFirstOption #auto9="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT2p3name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 4</mat-label>
-            <input matInput formControlName="t2p4score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 4</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 4"
+                  matInput
+                  [formControl]="t2p4name"
+                  [matAutocomplete]="auto10">
+            <mat-autocomplete autoActiveFirstOption #auto10="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT2p4name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 5</mat-label>
-            <input matInput formControlName="t2p5score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 5</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 5"
+                  matInput
+                  [formControl]="t2p5name"
+                  [matAutocomplete]="auto11">
+            <mat-autocomplete autoActiveFirstOption #auto11="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT2p5name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 6</mat-label>
-            <input matInput formControlName="t2p6score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 6</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 6"
+                  matInput
+                  [formControl]="t2p6name"
+                  [matAutocomplete]="auto12">
+            <mat-autocomplete autoActiveFirstOption #auto12="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT2p6name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Frags Player 7</mat-label>
-            <input matInput formControlName="t2p7score">
+          <mat-form-field class="example-full-width name" appearance="fill">
+            <mat-label>Player 7</mat-label>
+            <input type="text"
+                  placeholder="Pick one"
+                  aria-label="Player 7"
+                  matInput
+                  [formControl]="t2p7name"
+                  [matAutocomplete]="auto13">
+            <mat-autocomplete autoActiveFirstOption #auto13="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptionsT2p7name | async" [value]="option.username">
+                {{option.playername}} ({{ option.ranking }})
+              </mat-option>
+            </mat-autocomplete>
+            <div></div>
           </mat-form-field>
-          <!-- <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Team 2 Rounds Won</mat-label>
-            <input matInput formControlName="t2roundsWon">
-          </mat-form-field> -->
-        </form>
-        <form [formGroup]="teamTwoRoundsWon" (ngSubmit)="scoresTwoTeams()">
-          <mat-form-field class="example-full-width score" apperance="fill">
-            <mat-label>Team 2 Rounds Won</mat-label>
-            <input matInput formControlName="t2roundsWonInput">
+          <!-- <button mat-raised-button type="submit">submit</button>   -->
+          <notifier-container></notifier-container> 
+        </form>       
+        <form [formGroup]="preEloTeamTwo">
+          <h3>Initial ELO <span>(non editable)</span></h3>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t2p1preelo"> 
           </mat-form-field>
-        </form>
-      </div>   
-      
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t2p2preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t2p3preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t2p4preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t2p5preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t2p6preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t2p7preelo"> 
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="initial-elo readonly">
+            <input type="text" matInput [formControl]="t2cumulative"> 
+          </mat-form-field>
+        </form>   
+        <div>
+          <form [formGroup]="scoreTeamTwo" (ngSubmit)="scoresTwoTeams()">
+            <h3>Combat score</h3>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 1</mat-label>
+              <input matInput formControlName="t2p1score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 2</mat-label>
+              <input matInput formControlName="t2p2score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 3</mat-label>
+              <input matInput formControlName="t2p3score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 4</mat-label>
+              <input matInput formControlName="t2p4score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 5</mat-label>
+              <input matInput formControlName="t2p5score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 6</mat-label>
+              <input matInput formControlName="t2p6score">
+            </mat-form-field>
+            <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Frags Player 7</mat-label>
+              <input matInput formControlName="t2p7score">
+            </mat-form-field>
+            <!-- <mat-form-field class="example-full-width score" apperance="fill">
+              <mat-label>Team 2 Rounds Won</mat-label>
+              <input matInput formControlName="t2roundsWon">
+            </mat-form-field> -->
+          </form>
+          <form [formGroup]="teamTwoRoundsWon" (ngSubmit)="scoresTwoTeams()">
+            <mat-form-field class="example-full-width rounds" apperance="fill">
+              <mat-label>Team 2 Rounds Won</mat-label>
+              <input matInput formControlName="t2roundsWonInput">
+            </mat-form-field>
+          </form>
+        </div> 
+      </div>
     
       <button mat-raised-button (click)="clearTeam()">clear</button>
       <button mat-raised-button color="warn" (click)="scoresTwoTeams()">Send score (UPDATE ELO)</button>

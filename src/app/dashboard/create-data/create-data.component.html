@@ -2,43 +2,20 @@
   <div class="container">
     <form action="" [formGroup]="googleSheetForm" (ngSubmit)="onSubmit()">
       <div>
-<!--      
-      <div>     
-        <label for="playername" class="form-label">Player Name</label>
-        <input type="text" name="" id="playername" class="form-control" formControlName="playername" minlength="3">
-        <div *ngIf="playername.errors?.maxlength">
-          Name can be min 3 characters long.
-        </div>
-      </div> -->
       <mat-form-field class="example-full-width edit">
         <mat-label>Player Name</mat-label>
         <input matInput placeholder="Player Name" formControlName="playername" minlength="2">
         <mat-hint *ngIf="playername.errors?.minlength">Name can be min 2 characters long.</mat-hint>
-      </mat-form-field>   
-     
-      <!-- <div>
-        <label for="username">User name</label>
-        <input type="text" name="username" id="username" appSlugTransform formControlName="username" disabled class="form-control">
-      </div> -->
-
+      </mat-form-field> 
       <mat-form-field class="example-full-width readonly">
         <mat-label>User Name</mat-label>
         <input matInput placeholder="" formControlName="username" readonly appSlugTransform>
       </mat-form-field>
-      <!-- <div>
-        <label for="ranking">Ranking</label>
-        <input type="text" name="ranking" id="" formControlName="ranking" class="form-control" disabled>
-      </div> -->
-
       <mat-form-field class="example-full-width readonly">
         <mat-label>Ranking</mat-label>
         <input matInput placeholder="" formControlName="ranking" readonly>
       </mat-form-field>
-    </div>
-      <!-- <div>
-        <label for="percentile">Percentile</label>
-        <input type="text" name="percentile" id="" formControlName="percentile" disabled class="form-control">
-      </div> -->
+    </div>    
     <div>
       <mat-form-field class="full-width readonly">
         <mat-label>Percentile</mat-label>
@@ -59,19 +36,12 @@
         </mat-select>
       </mat-form-field>   
     </div>
-    <div>
-      <!-- <label for="warcount">War count</label>
-      <input type="text" name="warcount" id="" formControlName="warcount" disabled class="form-control"> -->
+    <div>    
       <mat-form-field class="full-width readonly">
         <mat-label>War count</mat-label>
         <input matInput placeholder="" formControlName="warcount" readonly>
       </mat-form-field>
-    </div>
-      
-      <!-- <div>
-        <label for="clanhistory">Clan History</label>
-        <input type="text" name="clanhistory" id="" formControlName="clanhistory" class="form-control">
-      </div> -->
+    </div>    
       <div>
         <mat-checkbox class="checkbox edit" formControlName="active" [color]="task.color">Active</mat-checkbox>
         <mat-checkbox class="checkbox edit" formControlName="ban" [color]="task.color">Ban</mat-checkbox>
@@ -135,55 +105,8 @@
           <mat-label>Streak</mat-label>
           <input matInput placeholder="" formControlName="streak" readonly>
         </mat-form-field>
-      </div>
-      <!-- <div>
-        <label for="active">Active</label>
-        <input type="checkbox" name="active" id="" formControlName="active">
-      </div>
-      <div>
-        <label for="ban">Ban</label>
-        <input type="checkbox" name="ban" id="" formControlName="ban">
-      </div> -->
-      <!-- <div>
-        <label for="lastwar">Last war</label>
-        <textarea type="text" name="" id="" class="form-control" formControlName="lastwar" disabled></textarea>
-      </div> -->
-      <!-- <div>
-        <label for="fpw">FpW</label>
-        <textarea name="fpw" id="" formControlName="fpw" class="form-control" disabled></textarea>
-      </div> -->
-      <!-- <div>
-        <label for="fpwmax">FpW max</label>
-        <textarea type="text" name="fpwmax" id="" formControlName="fpwmax" class="form-control" disabled></textarea>
-      </div>
-      <div>
-        <label for="fpwmin">FpW min</label>
-        <textarea type="text" name="fpwmin" id="" formControlName="fpwmin" class="form-control" disabled></textarea>
-      </div>
-      <div>
-        <label for="last30days">Last 30 days</label>
-        <textarea type="text" name="last30days" id="" formControlName="last30days" class="form-control" disabled></textarea>
-      </div>
-      <div>
-        <label for="last365days">Last 365 days</label>
-        <textarea type="text" name="last365days" id="" formControlName="last365days" class="form-control" disabled></textarea>
-      </div>
-      <div>
-        <label for="lastwarpc">Last war pc</label>
-        <textarea type="text" name="lastwarpc" id="" formControlName="lastwarpc" class="form-control" disabled></textarea>
-      </div>
-      <div>
-        <label for="s1wars">Season #1 wars</label>
-        <textarea type="text" name="" id="" formControlName="s1wars" class="form-control" disabled></textarea>
-      </div>
-      <div>
-        <label for="s1fpw">Season #1 FpW</label>
-        <textarea type="text" name="" id="" formControlName="s1fpw" class="form-control" disabled></textarea>
-      </div>
-      <div>
-        <label for="streak">Streak</label>
-        <textarea type="text" name="" id="" formControlName="streak" class="form-control" disabled></textarea>
-      </div> -->
+      </div>     
+      
       <!-- <button>Add player</button> -->
       <button mat-raised-button type="submit" color="primary" [disabled]="googleSheetForm.invalid || googleSheetForm.pristine">Submit</button>
     </form>

@@ -1,9 +1,10 @@
 section {
   padding-top: 80px;  
-  background-image: linear-gradient(0deg, rgba(252, 252, 252, 1) 25%, rgba(245, 245, 245, 1) 25%, rgba(245, 245, 245, 1) 50%, rgba(252, 252, 252, 1) 50%, rgba(252, 252, 252, 1) 75%, rgba(245, 245, 245, 1) 75%, rgba(245, 245, 245, 1) 100%);
-  background-size: 4px 4px;  
-  min-height: 100%;
-  background-color: red;
+  // background-image: linear-gradient(0deg, rgba(252, 252, 252, 1) 25%, rgba(245, 245, 245, 1) 25%, rgba(245, 245, 245, 1) 50%, rgba(252, 252, 252, 1) 50%, rgba(252, 252, 252, 1) 75%, rgba(245, 245, 245, 1) 75%, rgba(245, 245, 245, 1) 100%);
+  // background-size: 4px 4px;  
+  background-image: linear-gradient(0deg, rgba(64, 65, 95, .2) 25%, rgba(47, 48, 96, .2) 25%, rgba(47, 48, 96, .2) 50%, rgba(64, 65, 95, .2) 50%, rgba(64, 65, 95, .2) 75%, rgba(47, 48, 96, .2) 75%, rgba(47, 48, 96, .2) 100%);
+  background-size: 4px 4px;
+  min-height: 100%;  
 
   .container {
     margin: 0 auto;
@@ -30,7 +31,7 @@ section {
       .grid-item {
         background-image: linear-gradient(0deg, rgba(64, 65, 95, 1) 25%, rgba(47, 48, 96, 1) 25%, rgba(47, 48, 96, 1) 50%, rgba(64, 65, 95, 1) 50%, rgba(64, 65, 95, 1) 75%, rgba(47, 48, 96, 1) 75%, rgba(47, 48, 96, 1) 100%);
         background-size: 4px 4px;  
-        transition: .4 all;
+        transition: .4s background-image;
 
         a {
           display: flex;
@@ -40,7 +41,7 @@ section {
           color: #ffffc8;
           text-decoration: none;
           font-size: 40px;
-          transition: .4 all;
+          // transition: .4s all;
           cursor: pointer;
 
           &:hover {
@@ -48,7 +49,7 @@ section {
             background-size: 4px 4px; 
             border: 3px solid #010141;
             color: #010141; 
-            transition: .4 all;
+            // transition: background-image .1s;
           }
         }
       }
@@ -62,21 +63,19 @@ section {
   }
 }
 
-.example-form {
-  min-width: 150px;
-  max-width: 300px;
-  width: 100%;
-}
-
-.example-full-width {
-  width: 100%;
-}
-
 .add-match {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   grid-template-rows: auto;
-  gap: 15px;
+  column-gap: 100px;
+  row-gap: 50px;
+  overflow: hidden;  
+  padding: 30px 0;
+
+  .team {
+    display: flex;
+    justify-content: space-between;     
+  }
 }
 
 .readonly {
@@ -85,12 +84,82 @@ section {
 }
 
 h3 {
-  padding: 10px 0;
+  padding: 10px;
+  background-image: linear-gradient(0deg, rgba(64, 65, 95, .8) 25%, rgba(47, 48, 96, .8) 25%, rgba(47, 48, 96, .8) 50%, rgba(64, 65, 95, .8) 50%, rgba(64, 65, 95, .8) 75%, rgba(47, 48, 96, .8) 75%, rgba(47, 48, 96, .8) 100%);
+  background-size: 4px 4px;
+  color: #ffffc8;
+
+  span {
+    font-size: 12px;
+  }
 }
 
-.score {
-  height: 58px;
-  margin-bottom: 20px;
+.name, .initial-elo, .score {
+  width: 100%;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
+  padding: 0.35rem 0 0.25rem 0;
+}
+
+::ng-deep input.mat-input-element {
+  font-weight: 700;
+}
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-infix {
+  padding: 0.35rem 0 0.25rem 0;
+}
+
+::ng-deep .mat-form-field-flex {
+  padding: .75rem .75rem 0 .75rem;
+  // background-color: #ffffc8; 
+  // background: repeating-linear-gradient(45deg, #ffffc8 90%, #2f3060); 
+}
+
+::ng-deep .score .mat-form-field-flex {
+  padding: .75rem .75rem 0 .75rem;
+  background-color: #ffffc8;  
+  border-top: 1px solid rgba(47, 48, 96, 1);
+  border-right: 1px solid rgba(47, 48, 96, 1);
+  border-bottom: 1px solid rgba(47, 48, 96, 1);
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+::ng-deep .initial-elo .mat-form-field-flex {  
+  border-top: 1px solid rgba(47, 48, 96, 1);
+  // border-right: 2px solid rgba(47, 48, 96, 1);
+  border-bottom: 1px solid rgba(47, 48, 96, 1);
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  // box-shadow: 0px 5px 2.5px rgba(47, 48, 96, 1), 0px -5px 2.5px rgba(47, 48, 96, 1);
+}
+
+::ng-deep .name .mat-form-field-flex {    
+  border-top: 1px solid rgba(47, 48, 96, 1);
+  border-left: 1px solid rgba(47, 48, 96, 1);
+  border-bottom: 1px solid rgba(47, 48, 96, 1);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 0 !important;
+  border-bottom-left-radius: 5px;
+  box-shadow: 0px -5px 5px -5px rgba(47, 48, 96, 1);
+}
+
+::ng-deep input.mat-input-element {
+  margin-top: 0 !important;
+}
+
+::ng-deep .mat-form-field-infix {
+  width: auto !important;
+}
+
+// ::ng-deep .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+//   padding-bottom: 1.34375rm !important;
+// }
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 1.3rem !important;
+  margin-bottom: -1rem !important;
 }
 
 /* Success syling */
@@ -114,4 +183,20 @@ h3 {
 
 .mat-icon-button.mat-success {
   color:#155724;
+}
+
+::ng-deep .rounds .mat-form-field-wrapper {
+  background-color: #FF9900;
+  padding: 2px;
+}
+
+::ng-deep .mat-option-text {
+  display: flex !important;
+  align-items: center;
+}
+
+::ng-deep .mat-option-text img {
+  width: 30px;
+  border: 1px solid black;
+  margin-right: 5px;
 }

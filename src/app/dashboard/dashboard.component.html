@@ -40,15 +40,15 @@
           <h2>Here is the functions to execute remote.</h2>
         </mat-card-header>
         <mat-card-content style="padding-top:10px;">
-          <button mat-raised-button (click)="balanceTeams()">RUN balanceTeams()</button>
+          <button mat-raised-button color="primary" (click)="balanceTeams()">RUN balanceTeams()</button>
           <div class="desc">Click when you add players and  you want to create teams for war.</div>
         </mat-card-content>
-        <mat-card-content>
+        <!-- <mat-card-content>
           <button mat-raised-button (click)="selectTeams()">RUN selectTeams()</button>
           <div class="desc">Click when you want to select team (1 or 2).</div>
-        </mat-card-content>
+        </mat-card-content> -->
         <mat-card-content>
-          <button mat-raised-button (click)="sortPlayers()">RUN sortPlayers()</button>
+          <button mat-raised-button color="accent" (click)="sortPlayers()">RUN sortPlayers()</button>
           <div class="desc">Click when you want to sort players by ranking.</div> 
         </mat-card-content>
         <mat-card-content>
@@ -56,10 +56,10 @@
           <div class="desc">Click to test connections, check console.</div>
           
         </mat-card-content>
-        <mat-card-content>
-          <!-- <button mat-raised-button color="primary" (click)="updateCell()">RUN updateCell()</button> -->
+        <!-- <mat-card-content>
+          <button mat-raised-button color="primary" (click)="updateCell()">RUN updateCell()</button>
           <div class="desc">Click to update cell.</div>
-        </mat-card-content>
+        </mat-card-content> -->
       </mat-card>        
     </div> 
     <div class="add-match">
@@ -74,7 +74,7 @@
                 matInput
                 [formControl]="t1p1name"                
                 [matAutocomplete]="auto1">
-          <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
+          <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
             <mat-option *ngFor="let option of filteredOptionsT1p1name | async" [value]="option.username">
               {{option.playername}} ({{ option.ranking }})
             </mat-option>
@@ -88,7 +88,7 @@
                 matInput
                 [formControl]="t1p2name"
                 [matAutocomplete]="auto2">
-          <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
+          <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
             <mat-option *ngFor="let option of filteredOptionsT1p2name | async" [value]="option.username">
               {{option.playername}} ({{ option.ranking }})
             </mat-option>
@@ -102,7 +102,7 @@
                 matInput
                 [formControl]="t1p3name"
                 [matAutocomplete]="auto3">
-          <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete">
+          <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
             <mat-option *ngFor="let option of filteredOptionsT1p3name | async" [value]="option.username">
               {{option.playername}} ({{ option.ranking }})
             </mat-option>
@@ -192,42 +192,51 @@
           <input type="text" matInput [formControl]="t1p7preelo"> 
         </mat-form-field>
       </form>
-      <form [formGroup]="scoreTeamOne" (ngSubmit)="scoresTwoTeams()">
-        <h3>Combat score</h3>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 1</mat-label>
-          <input matInput formControlName="t1p1score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 2</mat-label>
-          <input matInput formControlName="t1p2score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 3</mat-label>
-          <input matInput formControlName="t1p3score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 4</mat-label>
-          <input matInput formControlName="t1p4score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 5</mat-label>
-          <input matInput formControlName="t1p5score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 6</mat-label>
-          <input matInput formControlName="t1p6score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 7</mat-label>
-          <input matInput formControlName="t1p7score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Team 1 Rounds Won</mat-label>
-          <input matInput formControlName="t1roundsWon">
-        </mat-form-field>
-        <!-- <button mat-raised-button type="submit">submit</button>   -->
-      </form>
+      <div>
+        <form [formGroup]="scoreTeamOne" (ngSubmit)="scoresTwoTeams()">
+          <h3>Combat score</h3>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 1</mat-label>
+            <input matInput formControlName="t1p1score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 2</mat-label>
+            <input matInput formControlName="t1p2score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 3</mat-label>
+            <input matInput formControlName="t1p3score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 4</mat-label>
+            <input matInput formControlName="t1p4score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 5</mat-label>
+            <input matInput formControlName="t1p5score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 6</mat-label>
+            <input matInput formControlName="t1p6score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 7</mat-label>
+            <input matInput formControlName="t1p7score">
+          </mat-form-field>
+          <!-- <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Team 1 Rounds Won</mat-label>
+            <input matInput formControlName="t1roundsWon">
+          </mat-form-field> -->
+          <!-- <button mat-raised-button type="submit">submit</button>   -->
+        </form>
+        <form [formGroup]="teamOneRoundsWon" (ngSubmit)="scoresTwoTeams()">
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Team 1 Rounds Won</mat-label>
+            <input matInput formControlName="t1roundsWonInput">
+          </mat-form-field>
+        </form>
+      </div>
+      
       <div></div>
       <form class="example-form" [formGroup]="teamTwoToWar">
         <h3>Team 2</h3>
@@ -356,48 +365,59 @@
         <mat-form-field appearance="fill" class="readonly">
           <input type="text" matInput [formControl]="t2p7preelo"> 
         </mat-form-field>
-      </form>      
-      <form [formGroup]="scoreTeamTwo" (ngSubmit)="scoresTwoTeams()">
-        <h3>Combat score</h3>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 1</mat-label>
-          <input matInput formControlName="t2p1score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 2</mat-label>
-          <input matInput formControlName="t2p2score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 3</mat-label>
-          <input matInput formControlName="t2p3score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 4</mat-label>
-          <input matInput formControlName="t2p4score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 5</mat-label>
-          <input matInput formControlName="t2p5score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 6</mat-label>
-          <input matInput formControlName="t2p6score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Frags Player 7</mat-label>
-          <input matInput formControlName="t2p7score">
-        </mat-form-field>
-        <mat-form-field class="example-full-width score" apperance="fill">
-          <mat-label>Team 2 Rounds Won</mat-label>
-          <input matInput formControlName="t2roundsWon">
-        </mat-form-field>
-      </form>
+      </form>   
+      <div>
+        <form [formGroup]="scoreTeamTwo" (ngSubmit)="scoresTwoTeams()">
+          <h3>Combat score</h3>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 1</mat-label>
+            <input matInput formControlName="t2p1score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 2</mat-label>
+            <input matInput formControlName="t2p2score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 3</mat-label>
+            <input matInput formControlName="t2p3score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 4</mat-label>
+            <input matInput formControlName="t2p4score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 5</mat-label>
+            <input matInput formControlName="t2p5score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 6</mat-label>
+            <input matInput formControlName="t2p6score">
+          </mat-form-field>
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Frags Player 7</mat-label>
+            <input matInput formControlName="t2p7score">
+          </mat-form-field>
+          <!-- <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Team 2 Rounds Won</mat-label>
+            <input matInput formControlName="t2roundsWon">
+          </mat-form-field> -->
+        </form>
+        <form [formGroup]="teamTwoRoundsWon" (ngSubmit)="scoresTwoTeams()">
+          <mat-form-field class="example-full-width score" apperance="fill">
+            <mat-label>Team 2 Rounds Won</mat-label>
+            <input matInput formControlName="t2roundsWonInput">
+          </mat-form-field>
+        </form>
+      </div>   
+      
     
       <button mat-raised-button (click)="clearTeam()">clear</button>
       <button mat-raised-button color="warn" (click)="scoresTwoTeams()">Send score (UPDATE ELO)</button>
-      <div class="priview" *ngFor="let value of team1preview">
+
+      <!-- <div class="priview" *ngFor="let value of team1preview">
         <div>{{ value }}</div>
-      </div>
+      </div> -->
+
     </div>
    
     <!-- <ng-container *ngIf="players$ | async as players">

@@ -1,8 +1,9 @@
 section {
   padding-top: 80px;  
   background-image: linear-gradient(0deg, rgba(252, 252, 252, 1) 25%, rgba(245, 245, 245, 1) 25%, rgba(245, 245, 245, 1) 50%, rgba(252, 252, 252, 1) 50%, rgba(252, 252, 252, 1) 75%, rgba(245, 245, 245, 1) 75%, rgba(245, 245, 245, 1) 100%);
-        background-size: 4px 4px;  
-  height: 100vh;
+  background-size: 4px 4px;  
+  min-height: 100%;
+  background-color: red;
 
   .container {
     margin: 0 auto;
@@ -90,4 +91,27 @@ h3 {
 .score {
   height: 58px;
   margin-bottom: 20px;
+}
+
+/* Success syling */
+
+.mat-button.mat-success,
+.mat-stroked-button.mat-success {
+    color: #155724;
+}
+.mat-button.mat-success:hover,
+.mat-stroked-button.mat-success:hover {
+  background-color: #f0fff3;
+}
+
+.mat-raised-button.mat-success,
+.mat-flat-button.mat-success,
+.mat-fab.mat-success,
+.mat-mini-fab.mat-success {
+  color: #f0fff3;
+  background-color: #155724;
+}
+
+.mat-icon-button.mat-success {
+  color:#155724;
 }

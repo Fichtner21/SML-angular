@@ -41,7 +41,7 @@ export class CreateDataComponent implements OnInit {
     { value: 'PL', viewValue: 'Poland' },
     { value: 'EG', viewValue: 'Egypt' },
     { value: 'EU', viewValue: 'European Union' },
-    { value: 'DE', viewValue: 'Denmark' },
+    { value: 'DE', viewValue: 'Germany' },
     { value: 'NL', viewValue: 'Netherlands' },
     { value: 'ES', viewValue: 'Estonia' },
     { value: 'BE', viewValue: 'Belgium' },
@@ -57,7 +57,7 @@ export class CreateDataComponent implements OnInit {
 
   constructor(private playersApiService: PlayersApiService, private formBuilder: FormBuilder, private router: Router) { 
     this.googleSheetForm = this.formBuilder.group({
-      playername: formBuilder.control('', [Validators.minLength(3), Validators.maxLength(10)]),
+      playername: formBuilder.control('', [Validators.minLength(3), Validators.maxLength(16)]),
       username: formBuilder.control(''),
       ranking: formBuilder.control('1000'),
       percentile: formBuilder.control(''),

@@ -204,6 +204,19 @@ export class PlayersApiService {
     );
   }
 
+  updateRoundsWon(spreadsheetId: string, sheetName: string, cellRange: string, roundsWon: string){
+    return this.http.put<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`,
+      {
+        "values":
+        [[roundsWon]]
+      },     
+      { 
+        headers: this.authHeader()
+      }
+    )
+  }
+
   sendScore(spreadsheetId: string, sheetName: string, cellRange: string, t1p1score: string, t1p2score: string, t1p3score: string, t1p4score: string, t1p5score: string, t1p6score: string, t1p7score: string, t1sumFrags: string, t1roundsWon: number, emptyCell: string, headDesc: string, t2p1score: string, t2p2score: string, t2p3score: string, t2p4score: string, t2p5score: string, t2p6score: string, t2p7score: string, t2sumFrags: string, t2roundsWon: number){
     return this.http.put<any>(
       `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`,

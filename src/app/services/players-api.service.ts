@@ -204,6 +204,21 @@ export class PlayersApiService {
     );
   }
 
+  sendScore(spreadsheetId: string, sheetName: string, cellRange: string, t1p1score: string, t1p2score: string, t1p3score: string, t1p4score: string, t1p5score: string, t1p6score: string, t1p7score: string, t1sumFrags: string, t1roundsWon: number, emptyCell: string, headDesc: string, t2p1score: string, t2p2score: string, t2p3score: string, t2p4score: string, t2p5score: string, t2p6score: string, t2p7score: string, t2sumFrags: string, t2roundsWon: number){
+    return this.http.put<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`,
+      {
+        "values":
+        [
+          [t1p1score], [t1p2score], [t1p3score], [t1p4score], [t1p5score], [t1p6score], [t1p7score], [t1sumFrags], [t1roundsWon], [emptyCell], [headDesc], [t2p1score], [t2p2score], [t2p3score], [t2p4score], [t2p5score], [t2p6score], [t2p7score], [t2sumFrags], [t2roundsWon]
+        ]
+      },
+      {
+        headers: this.authHeader()
+      }
+    )
+  }
+
   updateCells(
     spreadsheetId: string, sheetName: string, cellRange: string, t1p1name: string, t1p2name: string, t1p3name: string, t1p4name: string, t1p5name: string, t1p6name: string, t1p7name: string
   ){

@@ -168,7 +168,7 @@
         <button mat-raised-button type="submit">submit</button>  
         <notifier-container></notifier-container>     
       </form>
-      <form [formGroup]="eloAndScoreTeamOne">
+      <form [formGroup]="preEloTeamOne">
         <h3>Initial ELO</h3>
         <mat-form-field appearance="fill" class="readonly">
           <input type="text" matInput [formControl]="t1p1preelo"> 
@@ -192,11 +192,44 @@
           <input type="text" matInput [formControl]="t1p7preelo"> 
         </mat-form-field>
       </form>
-      <form action="">
+      <form [formGroup]="scoreTeamOne" (ngSubmit)="scoresTwoTeams()">
         <h3>Combat score</h3>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 1</mat-label>
+          <input matInput formControlName="t1p1score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 2</mat-label>
+          <input matInput formControlName="t1p2score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 3</mat-label>
+          <input matInput formControlName="t1p3score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 4</mat-label>
+          <input matInput formControlName="t1p4score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 5</mat-label>
+          <input matInput formControlName="t1p5score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 6</mat-label>
+          <input matInput formControlName="t1p6score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 7</mat-label>
+          <input matInput formControlName="t1p7score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Team 1 Rounds Won</mat-label>
+          <input matInput formControlName="t1roundsWon">
+        </mat-form-field>
+        <!-- <button mat-raised-button type="submit">submit</button>   -->
       </form>
       <div></div>
-      <form [formGroup]="teamTwoToWar">
+      <form class="example-form" [formGroup]="teamTwoToWar">
         <h3>Team 2</h3>
         <mat-form-field class="example-full-width" appearance="fill">
           <mat-label>Player 1</mat-label>
@@ -300,7 +333,7 @@
         <!-- <button mat-raised-button type="submit">submit</button>   -->
         <notifier-container></notifier-container> 
       </form>       
-      <form [formGroup]="eloAndScoreTeamTwo">
+      <form [formGroup]="preEloTeamTwo">
         <h3>Initial ELO</h3>
         <mat-form-field appearance="fill" class="readonly">
           <input type="text" matInput [formControl]="t2p1preelo"> 
@@ -324,11 +357,44 @@
           <input type="text" matInput [formControl]="t2p7preelo"> 
         </mat-form-field>
       </form>      
-      <form action="">
+      <form [formGroup]="scoreTeamTwo" (ngSubmit)="scoresTwoTeams()">
         <h3>Combat score</h3>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 1</mat-label>
+          <input matInput formControlName="t2p1score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 2</mat-label>
+          <input matInput formControlName="t2p2score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 3</mat-label>
+          <input matInput formControlName="t2p3score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 4</mat-label>
+          <input matInput formControlName="t2p4score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 5</mat-label>
+          <input matInput formControlName="t2p5score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 6</mat-label>
+          <input matInput formControlName="t2p6score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Frags Player 7</mat-label>
+          <input matInput formControlName="t2p7score">
+        </mat-form-field>
+        <mat-form-field class="example-full-width score" apperance="fill">
+          <mat-label>Team 2 Rounds Won</mat-label>
+          <input matInput formControlName="t2roundsWon">
+        </mat-form-field>
       </form>
-
+    
       <button mat-raised-button (click)="clearTeam()">clear</button>
+      <button mat-raised-button color="warn" (click)="scoresTwoTeams()">Send score (UPDATE ELO)</button>
       <div class="priview" *ngFor="let value of team1preview">
         <div>{{ value }}</div>
       </div>

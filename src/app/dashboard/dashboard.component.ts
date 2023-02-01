@@ -26,6 +26,8 @@ export class DashboardComponent implements OnInit {
   t1p5name = new FormControl('');
   t1p6name = new FormControl('');
   t1p7name = new FormControl('');
+  cumulativeTeamOne = new FormControl('');
+  roundsWonTeamOne = new FormControl('');
   t1p1preelo = new FormControl('');
   t1p2preelo = new FormControl('');
   t1p3preelo = new FormControl('');
@@ -40,6 +42,15 @@ export class DashboardComponent implements OnInit {
   filteredOptionsT1p5name: Observable<any>;
   filteredOptionsT1p6name: Observable<any>;
   filteredOptionsT1p7name: Observable<any>;
+  t1p1score = new FormControl('');
+  t1p2score = new FormControl('');
+  t1p3score = new FormControl('');
+  t1p4score = new FormControl('');
+  t1p5score = new FormControl('');
+  t1p6score = new FormControl('');
+  t1p7score = new FormControl('');
+  t1sumFrags = new FormControl('');
+  t1roundsWon = new FormControl('');
   // Team 2
   t2p1name = new FormControl('');
   t2p2name = new FormControl('');
@@ -62,11 +73,24 @@ export class DashboardComponent implements OnInit {
   filteredOptionsT2p5name: Observable<any>;
   filteredOptionsT2p6name: Observable<any>;
   filteredOptionsT2p7name: Observable<any>;
+  t2p1score = new FormControl('');
+  t2p2score = new FormControl('');
+  t2p3score = new FormControl('');
+  t2p4score = new FormControl('');
+  t2p5score = new FormControl('');
+  t2p6score = new FormControl('');
+  t2p7score = new FormControl('');
+  t2sumFrags = new FormControl('');
+  t2roundsWon = new FormControl('');
+  emptyCell = new FormControl('');
+  headDesc = new FormControl('');
   options: any[] = [];
   playersToWar: FormGroup;
   teamTwoToWar: FormGroup;
-  eloAndScoreTeamOne: FormGroup;
-  eloAndScoreTeamTwo: FormGroup;
+  preEloTeamOne: FormGroup;
+  scoreTeamOne: FormGroup;
+  preEloTeamTwo: FormGroup;
+  scoreTeamTwo: FormGroup;
   team1preview: any;
   team2preview: any;
   private readonly notifier: NotifierService;  
@@ -102,14 +126,17 @@ export class DashboardComponent implements OnInit {
       t2p7name: [''],
     });
 
-    this.eloAndScoreTeamOne = this.formBuilder.group({
+    this.preEloTeamOne = this.formBuilder.group({
       t1p1preelo: [''],
       t1p2preelo: [''],
       t1p3preelo: [''],
       t1p4preelo: [''],
       t1p5preelo: [''],
       t1p6preelo: [''],
-      t1p7preelo: [''],
+      t1p7preelo: [''],      
+    })
+
+    this.scoreTeamOne = this.formBuilder.group({
       t1p1score: [''],
       t1p2score: [''],
       t1p3score: [''],
@@ -117,16 +144,23 @@ export class DashboardComponent implements OnInit {
       t1p5score: [''],
       t1p6score: [''],
       t1p7score: [''],
+      t1sumFrags: [''],
+      t1roundsWon: ['']
     })
 
-    this.eloAndScoreTeamTwo = this.formBuilder.group({
+    this.preEloTeamTwo = this.formBuilder.group({
       t2p1preelo: [''],
       t2p2preelo: [''],
       t2p3preelo: [''],
       t2p4preelo: [''],
       t2p5preelo: [''],
       t2p6preelo: [''],
-      t2p7preelo: [''],
+      t2p7preelo: ['']    
+    })
+
+    this.scoreTeamTwo = this.formBuilder.group({
+      emptyCell: [''],
+      headDesc: [''],
       t2p1score: [''],
       t2p2score: [''],
       t2p3score: [''],
@@ -134,6 +168,8 @@ export class DashboardComponent implements OnInit {
       t2p5score: [''],
       t2p6score: [''],
       t2p7score: [''],
+      t2sumFrags: [''],
+      t2roundsWon: ['']
     })
   }  
 
@@ -235,13 +271,11 @@ export class DashboardComponent implements OnInit {
       this.options = data;
     })
 
-    this.googleApi.getMultipleRanges('A12:C18').subscribe(data => {
-      this.team1preview = data['values'];    
-      console.log('this.team1preview 0 0', this.team1preview[0][1])
-      console.log('this.team1preview 1 1', this.team1preview[0][2])
-      console.log('this.team1preview', this.team1preview)
+    // *** TEAM ONE ***    
+    this.googleApi.getMultipleRanges('A12:C20').subscribe(data => {
+      this.team1preview = data['values'];         
       // If less then 7 players add array with empty string
-      const t1preview = this.team1preview.concat(Array(7 - this.team1preview.length).fill(['']))      
+      const t1preview = this.team1preview.concat(Array(9 - this.team1preview.length).fill(['']))      
 
       // Add everytimes 3 fieldsin row
       const t1p1row = t1preview[0].concat(Array(3 - t1preview[0].length).fill(''));      
@@ -270,16 +304,17 @@ export class DashboardComponent implements OnInit {
       this.t1p6preelo?.setValue(t1p6row[1]);
       this.t1p7preelo?.setValue(t1p7row[1]);
 
-      console.log('t1preview', t1preview)
+      // console.log('t1preview', t1preview)
     }, error => {
       console.log('error getPriviewPlayers', error)
     })
 
+    
+
+    // *** TEAM TWO ***    
     this.googleApi.getMultipleRanges('A23:C29').subscribe(data => {
       this.team2preview = data['values'];    
-      console.log('this.team1preview 0 0', this.team2preview[0][1])
-      console.log('this.team1preview 1 1', this.team2preview[0][2])
-      console.log('this.team1preview', this.team2preview)
+  
       // If less then 7 players add array with empty string
       const t2preview = this.team2preview.concat(Array(7 - this.team2preview.length).fill(['']))      
 
@@ -295,8 +330,8 @@ export class DashboardComponent implements OnInit {
       // TEAM 2 set value from values from GET
       this.t2p1name?.setValue(t2p1row[0]); 
       this.t2p2name?.setValue(t2p2row[0]); 
-      this.t2p4name?.setValue(t2p3row[0]); 
-      this.t2p3name?.setValue(t2p4row[0]); 
+      this.t2p3name?.setValue(t2p3row[0]); 
+      this.t2p4name?.setValue(t2p4row[0]); 
       this.t2p5name?.setValue(t2p5row[0]);
       this.t2p6name?.setValue(t2p6row[0]);
       this.t2p7name?.setValue(t2p7row[0]);  
@@ -310,7 +345,7 @@ export class DashboardComponent implements OnInit {
       this.t2p6preelo?.setValue(t2p6row[1]);
       this.t2p7preelo?.setValue(t2p7row[1]);
 
-      console.log('t1preview', t2preview)
+      // console.log('t2preview', t2preview)
     }, error => {
       console.log('error getPriviewPlayers', error)
     })
@@ -320,6 +355,44 @@ export class DashboardComponent implements OnInit {
   private _filter(value: string): any[] {
     const filterValue = value.toLowerCase();
     return this.options.filter(option => option.playername.toLowerCase().includes(filterValue));     
+  }
+
+  scoresTwoTeams(){
+    const formValues = {
+      ...this.scoreTeamOne.value,
+      ...this.scoreTeamTwo.value
+    }
+    console.log('formValues', formValues)
+    const t1p1score = formValues.t1p1score;
+    const t1p2score = formValues.t1p2score;
+    const t1p3score = formValues.t1p3score;
+    const t1p4score = formValues.t1p4score;
+    const t1p5score = formValues.t1p5score;
+    const t1p6score = formValues.t1p6score;
+    const t1p7score = formValues.t1p7score;
+    const t1sumFrags = '=SUMA.JEŻELI(C12:C18,"<>#N/A")';
+    const t1roundsWon = Number(formValues.t1roundsWon);
+    const emptyCell = '';
+    const headDesc = 'Combat Score';
+    const t2p1score = formValues.t2p1score;
+    const t2p2score = formValues.t2p2score;
+    const t2p3score = formValues.t2p3score;
+    const t2p4score = formValues.t2p4score;
+    const t2p5score = formValues.t2p5score;
+    const t2p6score = formValues.t2p6score;
+    const t2p7score = formValues.t2p7score;
+    const t2sumFrags = '=SUMA.JEŻELI(C23:C29,"<>#N/A")';
+    const t2roundsWon = Number(formValues.t2roundsWon);
+   
+    this.googleApi.sendScore('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','C12:C31', t1p1score, t1p2score, t1p3score, t1p4score, t1p5score, t1p6score, t1p7score, t1sumFrags, t1roundsWon, emptyCell, headDesc, t2p1score, t2p2score, t2p3score, t2p4score, t2p5score, t2p6score, t2p7score, t2sumFrags, t2roundsWon).subscribe({
+      next: (res) => {
+        console.log('sendScore res =>', res)
+        
+      },
+      error: (err) => {
+        console.log('sendScore err =>', err)
+      }
+    })
   }
 
   onSubmit(){
@@ -368,16 +441,15 @@ export class DashboardComponent implements OnInit {
           console.log('update cell err =>', err)
         }
     });
-  setTimeout(() => {
-    
-    this.googleApi.getMultipleRanges('A12:C18').subscribe(data => {
+
+    setTimeout(() => {    
+      this.googleApi.getMultipleRanges('A12:C18').subscribe(data => {
         this.team1preview = data['values'];
         // console.log('this.team1preview', this.team1preview)
         // console.log('this.team1preview', data)
       }, error => {
         console.log('error getPriviewPlayers', error)
-      })      
-     
+      })
     }, 3000)    
   }
 
@@ -405,6 +477,17 @@ export class DashboardComponent implements OnInit {
 
   sortPlayers(){
     this.googleApi.runScriptFunction('sortPlayers').subscribe({
+      next: (res) => {
+        console.log('res =>', res)
+      },
+      error: (err) => {
+        console.log('err =>', err)
+      }
+    })
+  }
+
+  updateELO(){
+    this.googleApi.runScriptFunction('updateELO').subscribe({
       next: (res) => {
         console.log('res =>', res)
       },

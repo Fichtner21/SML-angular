@@ -19,10 +19,16 @@
       </div>
     </div> -->
     <div class="grid">
+      <button mat-raised-button color="primary" routerLink="/dashboard/create-player">Create player</button>
+        <button mat-raised-button color="primary" routerLink="/dashboard/list-players">List players</button>
+        <ng-container *ngIf="isLoggedIn()">
+          <button mat-raised-button color="warn" (click)="logout()">Logout from Google</button>
+        </ng-container>
       <div class="grid-item">
-        <a routerLink="/dashboard/create-player">Create player</a> 
+        
+        <!-- <a routerLink="/dashboard/create-player">Create player</a>  -->
       </div>
-      <div class="grid-item">
+      <!-- <div class="grid-item">
         <a routerLink="/dashboard/list-players">List players</a> 
       </div>
       <div class="grid-item" *ngIf="isLoggedIn()">
@@ -31,13 +37,13 @@
           <img src="{{ userInfo?.info?.picture }}">
           Logout from Google
         </a>
-      </div>
+      </div> -->
       
     </div>
     <div class="functions">   
       <mat-card> 
         <mat-card-header>
-          <h2>Here is the functions to execute remote.</h2>
+          <!-- <h2>Here is the functions to execute remote.</h2> -->
         </mat-card-header>
         <mat-card-content style="padding-top:10px;">
           <button mat-raised-button color="primary" (click)="balanceTeams()">RUN balanceTeams()</button>
@@ -51,11 +57,11 @@
           <button mat-raised-button color="accent" (click)="sortPlayers()">RUN sortPlayers()</button>
           <div class="desc">Click when you want to sort players by ranking.</div> 
         </mat-card-content>
-        <mat-card-content>
+        <!-- <mat-card-content>
           <button mat-raised-button color="warn" (click)="getStatistics()">RUN getStatistics()</button>
           <div class="desc">Click to test connections, check console.</div>
           
-        </mat-card-content>
+        </mat-card-content> -->
         <!-- <mat-card-content>
           <button mat-raised-button color="primary" (click)="updateCell()">RUN updateCell()</button>
           <div class="desc">Click to update cell.</div>
@@ -73,7 +79,8 @@
                   aria-label="Player 1"
                   matInput
                   [formControl]="t1p1name"                
-                  [matAutocomplete]="auto1">
+                  [matAutocomplete]="auto1"                  
+                  >
             <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
               <mat-option *ngFor="let option of filteredOptionsT1p1name | async" [value]="option.username">
                 <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
@@ -81,6 +88,7 @@
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
+        
           <mat-form-field class="example-full-width name" appearance="fill">
             <mat-label>Player 2</mat-label>
             <input type="text"
@@ -91,6 +99,7 @@
                   [matAutocomplete]="auto2">
             <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
               <mat-option *ngFor="let option of filteredOptionsT1p2name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -105,6 +114,7 @@
                   [matAutocomplete]="auto3">
             <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
               <mat-option *ngFor="let option of filteredOptionsT1p3name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -119,6 +129,7 @@
                   [matAutocomplete]="auto4">
             <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT1p4name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -133,6 +144,7 @@
                   [matAutocomplete]="auto5">
             <mat-autocomplete autoActiveFirstOption #auto5="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT1p5name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -147,6 +159,7 @@
                   [matAutocomplete]="auto6">
             <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT1p6name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -161,6 +174,7 @@
                   [matAutocomplete]="auto7">
             <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT1p7name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -170,7 +184,7 @@
           <notifier-container></notifier-container>     
         </form>
         <form [formGroup]="preEloTeamOne">
-          <h3>Initial ELO <span>(non editable)</span></h3>
+          <h3>Initial ELO</h3>
           <mat-form-field appearance="fill" class="initial-elo readonly">
             <input type="text" matInput [formControl]="t1p1preelo"> 
           </mat-form-field>
@@ -347,7 +361,7 @@
           <notifier-container></notifier-container> 
         </form>       
         <form [formGroup]="preEloTeamTwo">
-          <h3>Initial ELO <span>(non editable)</span></h3>
+          <h3>Initial ELO</h3>
           <mat-form-field appearance="fill" class="initial-elo readonly">
             <input type="text" matInput [formControl]="t2p1preelo"> 
           </mat-form-field>
@@ -448,3 +462,5 @@
     </div>
   </div>
 </section>
+<ng-http-loader>    
+</ng-http-loader>

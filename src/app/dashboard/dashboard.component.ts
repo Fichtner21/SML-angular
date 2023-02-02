@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
   t1p6preelo = new FormControl('');
   t1p7preelo = new FormControl('');
   t1cumulative = new FormControl('');
-  filteredOptionsT1p1name: Observable<any>;
+  filteredOptionsT1p1name: Observable<any[]>;
   filteredOptionsT1p2name: Observable<any>;
   filteredOptionsT1p3name: Observable<any>;
   filteredOptionsT1p4name: Observable<any>;
@@ -103,6 +103,7 @@ export class DashboardComponent implements OnInit {
   team2preview: any;
   private readonly notifier: NotifierService;  
   disabled: boolean = true;
+  public selectedOptionT1p1name;
 
   constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, private readonly oAuthService: OAuthService, private formBuilder: FormBuilder,notifierService: NotifierService) { 
     // googleApi.userProfileSubject.subscribe( info => {
@@ -189,9 +190,7 @@ export class DashboardComponent implements OnInit {
     this.teamTwoRoundsWon = this.formBuilder.group({
       t2roundsWonInput: ['']
     });
-  }  
 
-  ngOnInit(): void { 
     this.addAmatch$ = this.googleApi.getPlayers('Add+a+Match').pipe(
       map((response: any) => {             
         let batchRowValues = response.values;       
@@ -228,10 +227,22 @@ export class DashboardComponent implements OnInit {
       }),
     ); 
 
+    this.players$.subscribe(data => {
+      this.options = data;
+    })
+  }  
+
+  ngOnInit(): void { 
+   
+
+    // this.filteredOptionsT1p1name = this.t1p1name.valueChanges.pipe(
+    //   startWith(''),
+    //   map(value => this._filter(value || ''))
+    // )   
     this.filteredOptionsT1p1name = this.t1p1name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    );
     this.filteredOptionsT1p2name = this.t1p2name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
@@ -285,9 +296,7 @@ export class DashboardComponent implements OnInit {
       map(value => this._filter(value || ''))
     )   
 
-    this.players$.subscribe(data => {
-      this.options = data;
-    })
+    
 
     // *** TEAM ONE ***    
     this.googleApi.getMultipleRanges('A12:C20').subscribe(data => {
@@ -373,9 +382,28 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  private _filter(value: string): any[] {
-    const filterValue = value.toLowerCase();
+  private _filter(value: string): any[] {    
+    const filterValue = value.toLowerCase();    
     return this.options.filter(option => option.playername.toLowerCase().includes(filterValue));     
+    // return this.options.filter(option => option.playername.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  // displayFn(value: any): any {
+  //   console.log('displayFn value', value);
+  //   console.log('displayFn playername', value.playername);
+  //   console.log('displayFn value typeof', typeof value);
+  //   // value.forEach((el:any) => {
+  //   //   return el && typeof el === 'object' ? el.playername : el;
+  //   // })
+
+  //   return value ? value.playername : value;
+  //   // return value && typeof value === 'object' ? value.playername : value;
+  // }
+  
+
+  onOptionSelectedOne(event) {
+    this.selectedOptionT1p1name = event.option.value;
+    this.t1p1name.setValue(this.selectedOptionT1p1name.playername);
   }
 
   scoresTwoTeams(){
@@ -493,9 +521,9 @@ export class DashboardComponent implements OnInit {
     });       
   }
 
-  onOptionSelectedOne(event: any) {
-    console.log('************* event =>', event.option)    
-  }
+  // onOptionSelectedOne(event: any) {
+  //   console.log('************* event =>', event.option.value)    
+  // }
   getInitialEloTeamOne(range: string){
     this.googleApi.getMultipleRanges(range).subscribe(data => {
       const values = data['values'];
@@ -557,8 +585,8 @@ export class DashboardComponent implements OnInit {
                // set value from values from GET
                this.t1p1name?.setValue(t1preview[0]); 
                this.t1p2name?.setValue(t1preview[1]); 
-               this.t1p4name?.setValue(t1preview[2]); 
-               this.t1p3name?.setValue(t1preview[3]); 
+               this.t1p3name?.setValue(t1preview[2]); 
+               this.t1p4name?.setValue(t1preview[3]); 
                this.t1p5name?.setValue(t1preview[4]);
                this.t1p6name?.setValue(t1preview[5]);
                this.t1p7name?.setValue(t1preview[6]);  

@@ -7,6 +7,7 @@ import { Country } from 'src/app/models/country.model';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { environment } from 'src/environments/environment';
 import {ThemePalette} from '@angular/material/core';
+import { switchMap } from 'rxjs/operators';
 
 export interface Task {
   name: string;
@@ -24,6 +25,8 @@ export class EditDataComponent implements OnInit {
   updateSheetForm!: FormGroup;
   username: string;
   data: any;
+  index:any;
+  input:any;  
   
   task: Task = {
     name: 'Indeterminate',
@@ -169,11 +172,7 @@ export class EditDataComponent implements OnInit {
     })
   }
 
-  public authHeader() : HttpHeaders { 
-    return new HttpHeaders ({
-      'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`
-    })
-  }
+  
 
   onSubmit() {
     const { value } = this.updateSheetForm;
@@ -215,4 +214,5 @@ export class EditDataComponent implements OnInit {
       })
   }
 
+  
 }

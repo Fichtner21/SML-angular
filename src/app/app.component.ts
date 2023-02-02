@@ -14,6 +14,7 @@ import * as Chart from 'chart.js';
 import { Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 
 @Component({
@@ -34,7 +35,7 @@ export class AppComponent implements OnInit{
   languageCode = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';
   monthPlaying: any;  
 
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router) {
+  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router, private oAuthService: OAuthService) {
     translateService.setDefaultLang(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');    
   }
 
@@ -86,7 +87,10 @@ export class AppComponent implements OnInit{
     // console.log('local =>', localStorage.getItem('lang'));
   }  
 
-
+  logoutTest() {
+    this.oAuthService.logOut();
+    this.router.navigate(['/']);
+  }
 
   languageChange($event) {    
     // debugger;  

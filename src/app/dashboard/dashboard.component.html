@@ -21,30 +21,23 @@
     <div class="grid">
       <button mat-raised-button color="primary" routerLink="/dashboard/create-player">Create player</button>
         <button mat-raised-button color="primary" routerLink="/dashboard/list-players">List players</button>
-        <ng-container *ngIf="isLoggedIn()">
-          <button mat-raised-button color="warn" (click)="logout()">Logout from Google</button>
-        </ng-container>
-      <div class="grid-item">
-        
+       
+      <!-- <div class="grid-item"> -->
+        <button mat-raised-button color="primary" *ngIf="!oAuthService.hasValidAccessToken()" (click)="loginTest()">Login</button>
+        <button mat-raised-button color="primary" *ngIf="oAuthService.hasValidAccessToken()" (click)="logoutTest()">Logout</button>
         <!-- <a routerLink="/dashboard/create-player">Create player</a>  -->
-      </div>
+      <!-- </div> -->
       <!-- <div class="grid-item">
         <a routerLink="/dashboard/list-players">List players</a> 
       </div>
-      <div class="grid-item" *ngIf="isLoggedIn()">
-        
-        <a (click)="logout()">
-          <img src="{{ userInfo?.info?.picture }}">
-          Logout from Google
-        </a>
-      </div> -->
+     
       
     </div>
     <div class="functions">   
       <mat-card> 
         <mat-card-header>
-          <!-- <h2>Here is the functions to execute remote.</h2> -->
-        </mat-card-header>
+          <h2>Here is the functions to execute remote.</h2> -->
+      <mat-card>
         <mat-card-content style="padding-top:10px;">
           <button mat-raised-button color="primary" (click)="balanceTeams()">RUN balanceTeams()</button>
           <div class="desc">Click when you add players and  you want to create teams for war.</div>
@@ -62,12 +55,175 @@
           <div class="desc">Click to test connections, check console.</div>
           
         </mat-card-content> -->
+        <mat-card-content>
+          <button mat-raised-button color="warn" (click)="refresh()">RUN refresh Token()</button>
+          <div class="desc">Click to refresh token.</div>
+          
+        </mat-card-content>
         <!-- <mat-card-content>
           <button mat-raised-button color="primary" (click)="updateCell()">RUN updateCell()</button>
           <div class="desc">Click to update cell.</div>
         </mat-card-content> -->
-      </mat-card>        
-    </div> 
+      </mat-card>   
+      <mat-card class="last">
+        <h4>Last match:</h4>
+        <ng-container *ngIf="matchRow as match">
+          <div class="match-row">
+            <div class="match-row__date">
+              <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>                
+              <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>                     
+            </div>
+            <div class="match-row__team">
+              <div class="teamrounds">{{ match.t1roundswon }}</div>
+              <div class="teaminfo">
+                <div>preELO</div>
+                <div>{{ 'matches.name' | translate }}</div>
+                <div>{{ 'matches.frags' | translate }}</div>
+                <div>postELO</div>
+                <div>{{ 'matches.pc' | translate }}</div>
+              </div>
+              <div class="match-row__team--player">
+                <div>{{ match.t1p1preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p1username}}">{{ match.t1p1playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t1p1score }} </div>
+                <div>{{ match.t1p1postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t1p1postelo - match.t1p1preelo) > 0, 'lost': (match.t1p1postelo - match.t1p1preelo) < 0, 'draw': (match.t1p1postelo - match.t1p1preelo === 0) }"><span>{{ match.t1p1postelo - match.t1p1preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t1p2playername !== ''">
+                <div>{{ match.t1p2preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p2username}}">{{ match.t1p2playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t1p2score }} </div>
+                <div>{{ match.t1p2postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t1p2postelo - match.t1p2preelo) > 0, 'lost': (match.t1p2postelo - match.t1p2preelo) < 0, 'draw': (match.t1p2postelo - match.t1p2preelo === 0) }"><span>{{ match.t1p2postelo - match.t1p2preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t1p3playername !== ''">
+                <div>{{ match.t1p3preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p3username}}">{{ match.t1p3playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t1p3score }} </div>
+                <div>{{ match.t1p3postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t1p3postelo - match.t1p3preelo) > 0, 'lost': (match.t1p3postelo - match.t1p3preelo) < 0, 'draw': (match.t1p3postelo - match.t1p3preelo === 0) }"><span>{{ match.t1p3postelo - match.t1p3preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t1p4playername !== ''">
+                <div>{{ match.t1p4preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p4playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t1p4score }} </div>
+                <div>{{ match.t1p4postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t1p4postelo - match.t1p4preelo) > 0, 'lost': (match.t1p4postelo - match.t1p4preelo) < 0, 'draw': (match.t1p4postelo - match.t1p4preelo === 0) }"><span>{{ match.t1p4postelo - match.t1p4preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t1p5playername !== ''">
+                <div>{{ match.t1p5preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p5playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t1p5score }} </div>
+                <div>{{ match.t1p5postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t1p5postelo - match.t1p5preelo) > 0, 'lost': (match.t1p5postelo - match.t1p5preelo) < 0, 'draw': (match.t1p5postelo - match.t1p5preelo === 0) }"><span>{{ match.t1p5postelo - match.t1p5preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t1p6playername !== ''">
+                <div>{{ match.t1p6preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p6username}}">{{ match.t1p6playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t1p6score }} </div>
+                <div>{{ match.t1p6postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t1p6postelo - match.t1p6preelo) > 0, 'lost': (match.t1p6postelo - match.t1p6preelo) < 0, 'draw': (match.t1p6postelo - match.t1p6preelo === 0) }"><span>{{ match.t1p6postelo - match.t1p6preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t1p7username !== ''">
+                <div>{{ match.t1p7preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p7username}}">{{ match.t1p7playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t1p7score }} </div>
+                <div>{{ match.t1p7postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t1p7postelo - match.t1p7preelo) > 0, 'lost': (match.t1p7postelo - match.t1p7preelo) < 0, 'draw': (match.t1p7postelo - match.t1p7preelo === 0) }"><span>{{ match.t1p7postelo - match.t1p7preelo | number: '.1-2'}}</span></div>
+              </div>   
+              <div class="preelo-info">
+                <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>            
+                <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div> 
+              </div>  
+              <!-- <div class="preelo-info">
+                <div class="bet">
+                  <img src="../../assets/images/80-163.png" alt="">
+                  <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
+                </div>
+                <div class="bet">
+                  <img src="../../assets/images/80-165.png" alt="">
+                  <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
+                </div>                   
+              </div>                                -->
+            </div>
+            <div class="match-row__team">
+              <div class="teamrounds">{{ match.t2roundswon }}</div>
+              <div class="teaminfo">
+                <div>preELO</div>
+                <div>{{ 'matches.name' | translate }}</div>
+                <div>{{ 'matches.frags' | translate }}</div>
+                <div>postELO</div>
+                <div>{{ 'matches.pc' | translate}}</div>
+              </div>
+              <div class="match-row__team--player">
+                <div>{{ match.t2p1preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p1username}}">{{ match.t2p1playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t2p1score }} </div>
+                <div>{{ match.t2p1postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t2p1postelo - match.t2p1preelo) > 0, 'lost': (match.t2p1postelo - match.t2p1preelo) < 0, 'draw': (match.t2p1postelo - match.t2p1preelo === 0) }"><span>{{ match.t2p1postelo - match.t2p1preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t2p2username !== ''">
+                <div>{{ match.t2p2preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p2username}}">{{ match.t2p2playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t2p2score }} </div>
+                <div>{{ match.t2p2postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t2p2postelo - match.t2p2preelo) > 0, 'lost': (match.t2p2postelo - match.t2p2preelo) < 0, 'draw': (match.t2p2postelo - match.t2p2preelo === 0) }"><span>{{ match.t2p2postelo - match.t2p2preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t2p3username !== ''">
+                <div>{{ match.t2p3preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p3username}}">{{ match.t2p3playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t2p3score }} </div>
+                <div>{{ match.t2p3postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t2p3postelo - match.t2p3preelo) > 0, 'lost': (match.t2p3postelo - match.t2p3preelo) < 0, 'draw': (match.t2p3postelo - match.t2p3preelo === 0) }"><span>{{ match.t2p3postelo - match.t2p3preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t2p4username !== ''">
+                <div>{{ match.t2p4preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p4username}}">{{ match.t2p4playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t2p4score }} </div>
+                <div>{{ match.t2p4postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t2p4postelo - match.t2p4preelo) > 0, 'lost': (match.t2p4postelo - match.t2p4preelo) < 0, 'draw': (match.t2p4postelo - match.t2p4preelo === 0) }"><span>{{ match.t2p4postelo - match.t2p4preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t2p5username !== ''">
+                <div>{{ match.t2p5preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p5username}}">{{ match.t2p5playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t2p5score }} </div>
+                <div>{{ match.t2p5postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t2p5postelo - match.t2p5preelo) > 0, 'lost': (match.t2p5postelo - match.t2p5preelo) < 0, 'draw': (match.t2p5postelo - match.t2p5preelo === 0) }"><span>{{ match.t2p5postelo - match.t2p5preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t2p6username !== ''">
+                <div>{{ match.t2p6preelo | number: '1.0-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p6username}}">{{ match.t2p6playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t2p6score }} </div>
+                <div>{{ match.t2p6postelo | number: '1.0-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t2p6postelo - match.t2p6preelo) > 0, 'lost': (match.t2p6postelo - match.t2p6preelo) < 0, 'draw': (match.t2p6postelo - match.t2p6preelo === 0) }"><span>{{ match.t2p6postelo - match.t2p6preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="match-row__team--player" *ngIf="match.t2p7username !== ''">
+                <div>{{ match.t2p7preelo | number: '.1-2' }}</div>
+                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p7username}}">{{ match.t2p7playername }}</a></div>
+                <div class="match-row__team--player__score">{{ match.t2p7score }} </div>
+                <div>{{ match.t2p7postelo | number: '.1-2' }}</div>
+                <div [ngClass]="{ 'won': (match.t2p7postelo - match.t2p7preelo) > 0, 'lost': (match.t2p7postelo - match.t2p7preelo) < 0, 'draw': (match.t2p7postelo - match.t2p7preelo === 0) }"><span>{{ match.t2p7postelo - match.t2p7preelo | number: '.1-2'}}</span></div>
+              </div>
+              <div class="preelo-info">
+                <div class="preelo_war">preELO before war: {{ match.t2preelo | number:'1.0-2'}}</div>
+                <div [ngClass]="{ 'teamFavorite': (match.t2preelo > match.t1preelo), 'teamNotFavorite': (match.t1preelo > match.t2preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{ match.t1chance }} %</div>
+              </div>
+              <!-- <div class="preelo-info">
+                <div class="bet">
+                  <img src="../../assets/images/80-163.png" alt="">
+                  <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
+                </div>
+                <div class="bet">
+                  <img src="../../assets/images/80-165.png" alt="">
+                  <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
+                </div>                   
+              </div>                  -->
+            </div>
+          </div>
+        </ng-container>
+      </mat-card>  
+    </div>
+   
     <div class="add-match">
       <div class="team">
         <form class="example-form team1name" [formGroup]="playersToWar" (ngSubmit)="onSubmit()">
@@ -78,9 +234,8 @@
                   placeholder="Pick one"
                   aria-label="Player 1"
                   matInput
-                  [formControl]="t1p1name"                
-                  [matAutocomplete]="auto1"                  
-                  >
+                  [formControl]="t1p1name"
+                  [matAutocomplete]="auto1">
             <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
               <mat-option *ngFor="let option of filteredOptionsT1p1name | async" [value]="option.username">
                 <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
@@ -268,6 +423,7 @@
                   [matAutocomplete]="auto7">
             <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT2p1name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -282,6 +438,7 @@
                   [matAutocomplete]="auto8">
             <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT2p2name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -296,6 +453,7 @@
                   [matAutocomplete]="auto9">
             <mat-autocomplete autoActiveFirstOption #auto9="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT2p3name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -310,6 +468,7 @@
                   [matAutocomplete]="auto10">
             <mat-autocomplete autoActiveFirstOption #auto10="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT2p4name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -324,6 +483,7 @@
                   [matAutocomplete]="auto11">
             <mat-autocomplete autoActiveFirstOption #auto11="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT2p5name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -338,6 +498,7 @@
                   [matAutocomplete]="auto12">
             <mat-autocomplete autoActiveFirstOption #auto12="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT2p6name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -352,6 +513,7 @@
                   [matAutocomplete]="auto13">
             <mat-autocomplete autoActiveFirstOption #auto13="matAutocomplete">
               <mat-option *ngFor="let option of filteredOptionsT2p7name | async" [value]="option.username">
+                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
                 {{option.playername}} ({{ option.ranking }})
               </mat-option>
             </mat-autocomplete>
@@ -441,6 +603,7 @@
 
     </div>
    
+   
     <!-- <ng-container *ngIf="players$ | async as players">
       <ng-container *ngIf="players.length > 0">
         <ng-container *ngFor="let player of players; let i = index;">
@@ -462,5 +625,19 @@
     </div>
   </div>
 </section>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ modalHeader }}</h4>
+    <!-- <button mat-raised-button color="warn" type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button> -->
+  </div>
+  <div class="modal-body">
+    {{ errorMessage }}
+  </div>
+  <div class="modal-footer">
+    <button mat-raised-button color="warn" type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+  </div>
+</ng-template>
 <ng-http-loader>    
 </ng-http-loader>

@@ -31,7 +31,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsComponent } from './ranking-obj/tabs/tabs.component';
 import { TabComponent } from './ranking-obj/tabs/tab.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { OAuthModule } from 'angular-oauth2-oidc';
+import { OAuthModule, OAuthStorage } from 'angular-oauth2-oidc';
 import { TokenInterceptor } from './token.interceptor';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -138,6 +138,7 @@ const customNotifierOptions: NotifierOptions = {
   {
     provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true
   },
+  { provide: OAuthStorage, useValue: localStorage },
   {
     provide: LocationStrategy,
     useClass: PathLocationStrategy

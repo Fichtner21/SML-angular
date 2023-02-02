@@ -1,11 +1,14 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Country } from 'src/app/models/country.model';
+import { Sheet } from 'src/app/models/sheet.model';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { environment } from 'src/environments/environment';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 export interface Task {
   name: string;
@@ -55,7 +58,7 @@ export class CreateDataComponent implements OnInit {
     { value: 'XX', viewValue: 'Unknown' },
   ]
 
-  constructor(private playersApiService: PlayersApiService, private formBuilder: FormBuilder, private router: Router) { 
+  constructor(private playersApiService: PlayersApiService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient, private oAuthService: OAuthService) { 
     this.googleSheetForm = this.formBuilder.group({
       playername: formBuilder.control('', [Validators.minLength(3), Validators.maxLength(16)]),
       username: formBuilder.control(''),
@@ -198,7 +201,7 @@ export class CreateDataComponent implements OnInit {
       ]
     }
     
-    this.playersApiService.createPlayer(environment.SPREADSHEET_ID, "USER_ENTERED", playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({      
+    this.createPlayer(environment.SPREADSHEET_ID, "USER_ENTERED", playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({      
       next: (res) => {
         console.log(res);
         if(res){
@@ -251,4 +254,28 @@ export class CreateDataComponent implements OnInit {
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '');
   }
+
+  public authHeader() : HttpHeaders { 
+    return new HttpHeaders ({
+      'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`
+    })
+  }
+
+  public createPlayer( 
+    spreadsheetId:any,  
+    valueInputOption: any,
+    playername: string, username: string, ranking: string, percentile:   string,   place: string,
+    warcount: string, nationality: string, clanhistory: string, cup1on1edition1: string, meeting: string, cup3on3: string, active: string, ban: boolean, lastwar: string, fpw: string, fpwmax: string, fpwmin: string, last30days: string,  last365days: string, lastwarpc: string, s1wars: string, s1fpw: string, streak: string
+    ): Observable<Sheet>{
+      return this.http.post<Sheet>(       
+        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Players:append?valueInputOption=${valueInputOption}`
+        ,
+        {  
+          "values": [
+              [playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak]
+          ]                                  
+        },
+        { headers: this.authHeader()}
+      )         
+  }  
 }

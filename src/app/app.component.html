@@ -72,7 +72,7 @@
          
           <ul class="navbar-nav">
              <a class="nav-link"  routerLink="/login" *ngIf="!_authService.loggedIn()" rouetrLinkActive="active">Login</a>
-             <a class="nav-link" style="cursor:pointer" *ngIf="_authService.loggedIn()" (click)="logoutUser()">{{ 'about.logout' | translate }}</a>
+             <a class="nav-link" style="cursor:pointer" *ngIf="_authService.loggedIn()" (click)="logoutUser(); logoutTest();">{{ 'about.logout' | translate }}</a>
           </ul>
         </div>
       </div>

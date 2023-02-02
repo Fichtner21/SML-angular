@@ -2,10 +2,6 @@
 
 @import 'styles/ngtt-styles.scss';
 
-.container {
-  // display: flex;
-}
-
 body {
   margin: 0 !important;
 }
@@ -19,3 +15,53 @@ body {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 50px;
+  box-shadow: 0 0 10px;
+  opacity: .95;
+
+  .modal-header {
+    position: relative;
+    height: 50px;
+
+    .close {
+      position: absolute;
+      top: -35px;
+      right: -35px;
+      font-size: 22px;
+    }
+  } 
+
+  .modal-body {
+    font-size: 18px;
+  }
+
+  .modal-footer {
+    position: relative;
+    height: 50px;
+
+    .btn {
+      position: absolute;
+      bottom: -35px;
+      right: -35px;
+      font-size: 22px;
+    }
+  }
+}
+
+.success {
+  // background-color: green;
+
+  .modal-title {
+    font-weight: 700;
+    color: green;
+    margin-bottom: 10px;
+  }
+}

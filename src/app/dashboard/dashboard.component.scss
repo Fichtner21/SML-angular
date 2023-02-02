@@ -202,3 +202,164 @@ h3 {
   border: 1px solid black;
   margin-right: 5px;
 }
+
+.match-row {
+  display: grid;
+  grid-template-columns: 0.3fr 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 10px;
+  color: #ffffc8; 
+  font-size: 14px;
+
+  a {
+    color: #ffffc8;
+  }
+
+  @media screen and (max-width: 800px){
+    grid-template-columns: 1fr;
+  }
+
+  >:nth-child(2){
+    border-left: 5px solid transparent;
+  }
+
+  >:nth-child(3){
+    border-right: 5px solid transparent;
+  }
+
+  &__date {
+    background-color: #40415f;
+    padding: 15px;
+    font-size: 20px;
+
+    .video-icon {
+      margin-top: 10px;
+      filter: invert(100%) sepia(99%) saturate(439%) hue-rotate(358deg) brightness(107%) contrast(101%);
+    }
+  }
+
+  .teamrounds {
+    text-align: center;
+    padding-bottom: 15px;
+    font-size: 32px;
+    font-weight: 700;
+    // border-bottom: 3px solid #ffffc8;
+  }
+
+  .teaminfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.5fr 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 0 10px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: 3px solid #ffffc8;
+    background-image: linear-gradient(
+      0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+          background-size: 4px 4px;
+    color: #ffffc8;
+    font-weight: 700;   
+  }
+
+  .roundswon_row {
+    border-color:green;
+  }
+
+  .roundslose_row {
+    border-color:red;
+  }
+
+  .roundsdraw_row {
+    border-color: gray;
+  }
+
+  .teamFavorite {
+    color: green;
+    // font-weight: 700;
+  }
+  
+  .teamNotFavorite {
+    color: red;
+    // font-weight: 700;
+  }
+  
+  .teamWithoutFavorite {
+    color: gray;
+    // font-weight: 700;
+  }
+  
+  .preelo_war {  
+    font-style: italic;
+  }
+
+  &__team {
+    background-color: #2f3060;
+    padding: 15px;
+
+    &--player {
+      display: grid;
+      grid-template-columns: 1fr 1fr 0.5fr 1fr 1fr;
+      grid-template-rows: auto;
+      gap: 0 10px;
+      position: relative;       
+      
+      >div{
+        display: flex;
+        align-items: center;
+      }
+
+      .won {
+        position: relative;
+       
+        span {
+          &:after {
+            position: absolute;
+            top: 10px;
+            margin-left: 5px;
+            content: " ";
+            background-image: url("/assets/images/uprate.gif");
+            width: 10px;
+            height: 5px;
+          }
+        }        
+      }
+
+      .lost {
+        position: relative;
+
+        span {
+          &:after {
+            position: absolute;
+            top: 10px;
+            margin-left: 5px;
+            content: "";
+            background-image: url("/assets/images/downrate.gif");
+            width: 10px;
+            height: 5px;
+          }
+        }       
+      }
+
+      &__name {
+        font-size: 16px;
+      }
+
+      &__score {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.preelo-info {
+  padding-top: 5px;
+  margin-top: 5px;
+  border-top: 3px solid #ffffc0;
+  background-image: linear-gradient(
+      0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+          background-size: 4px 4px;
+}
+
+.last {
+  grid-column: span 2;
+}

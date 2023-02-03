@@ -18,6 +18,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { LinksComponent } from './links/links.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+import { RulesComponent } from './rules/rules.component';
 
 
 export function createTranslateLoader(http: HttpClient){
@@ -30,7 +31,7 @@ export function createTranslateLoader(http: HttpClient){
     MapsComponent, 
     DownloadComponent, 
     LogComponent, 
-    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent
+    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent, RulesComponent
   ],
   imports: [
     CommonModule,      

@@ -8,6 +8,7 @@ import { LinksComponent } from './links/links.component';
 import { LogComponent } from './log/log.component';
 import { MapsComponent } from './maps/maps.component';
 import { MeetingComponent } from './meeting/meeting.component';
+import { RulesComponent } from './rules/rules.component';
 import { SecretComponent } from './secret/secret.component';
 import { WantedComponent } from './wanted/wanted.component';
 
@@ -40,6 +41,10 @@ const routes: Routes = [
   {
     path: 'meeting',
     component: MeetingComponent
+  },
+  {
+    path: 'rules',
+    component: RulesComponent
   },
   {
     path: 'secret',

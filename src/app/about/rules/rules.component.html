@@ -1,0 +1,26 @@
+<section>
+  <div class="container">
+    <h2>Rules</h2>   
+      <ng-container *ngIf="rules$ | async as rules">
+        <ng-container *ngIf="rules.length > 0">
+          <div class="rules" *ngFor="let rule of rules; let i = index;">            
+            <div class="rule"><span>{{ rule.rule ? i + 1 : ''}}{{ rule.rule ? '.' : ''}}</span> {{ rule.rule }}</div>       
+          </div>
+        </ng-container>
+      </ng-container>   
+    <h2>Problems or questions</h2>
+    <div class="problems">
+      <ng-container *ngIf="rules$ | async as rules">
+        <ng-container *ngIf="rules.length > 0">
+          <div class="rules-grid" *ngFor="let rule of rules; let i = index;">
+            <div class="ask"><span>{{ rule.problem_or_ask ? i + 1 : ''}}{{ rule.problem_or_ask ? '.' : ''}}</span> {{ rule.problem_or_ask }}</div>
+            <div *ngIf="rule">
+              <fa-icon [icon]="arrowRightIcon"></fa-icon>
+            </div>
+            <div class="solution"><span>{{ rule.solutions ? i + 1 : ''}}{{ rule.solutions ? '.' : ''}}</span> {{ rule.solutions }}</div>                   
+          </div>
+        </ng-container>
+      </ng-container>   
+    </div>
+  </div>
+</section>

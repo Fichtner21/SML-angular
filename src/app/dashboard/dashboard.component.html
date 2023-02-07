@@ -1,628 +1,642 @@
 <section>
   <div class="container">
-    <!-- <nav>
-      <a routerLink="/dashboard/create-player">Create player</a>    
-      <a routerLink="/dashboard/list-players">List players</a>      
-    </nav> -->
-    <!-- <div *ngIf="isLoggedIn()" style="border:3px solid red; margin: 20px; padding: 20px;">
-      <div class="container">Hi and welcome!</div>
-      <div class="container">Name: {{ userInfo?.info?.name }}</div>
-      <div class="container"><img src="{{ userInfo?.info?.picture }}"></div> -->
-      <!-- <div class="container">
-        <button (click)="getEmails()">List Emails</button>
-      </div> -->
-      <!-- <div class="container" *ngFor="let snippet of mailSnippets">
-        {{ snippet }}
-      </div>
-      <div class="container">
-        <button (click)="logout()">Logout from Google</button>
-      </div>
-    </div> -->
-    <div class="grid">
-      <button mat-raised-button color="primary" routerLink="/dashboard/create-player">Create player</button>
-        <button mat-raised-button color="primary" routerLink="/dashboard/list-players">List players</button>
-       
-      <!-- <div class="grid-item"> -->
-        <button mat-raised-button color="primary" *ngIf="!oAuthService.hasValidAccessToken()" (click)="loginTest()">Login</button>
-        <button mat-raised-button color="primary" *ngIf="oAuthService.hasValidAccessToken()" (click)="logoutTest()">Logout</button>
-        <!-- <a routerLink="/dashboard/create-player">Create player</a>  -->
-      <!-- </div> -->
-      <!-- <div class="grid-item">
-        <a routerLink="/dashboard/list-players">List players</a> 
-      </div>
-     
-      
-    </div>
-    <div class="functions">   
-      <mat-card> 
-        <mat-card-header>
-          <h2>Here is the functions to execute remote.</h2> -->
-      <mat-card>
-        <mat-card-content style="padding-top:10px;">
-          <button mat-raised-button color="primary" (click)="balanceTeams()">RUN balanceTeams()</button>
-          <div class="desc">Click when you add players and  you want to create teams for war.</div>
-        </mat-card-content>
-        <!-- <mat-card-content>
-          <button mat-raised-button (click)="selectTeams()">RUN selectTeams()</button>
-          <div class="desc">Click when you want to select team (1 or 2).</div>
-        </mat-card-content> -->
-        <mat-card-content>
-          <button mat-raised-button color="accent" (click)="sortPlayers()">RUN sortPlayers()</button>
-          <div class="desc">Click when you want to sort players by ranking.</div> 
-        </mat-card-content>
-        <!-- <mat-card-content>
-          <button mat-raised-button color="warn" (click)="getStatistics()">RUN getStatistics()</button>
-          <div class="desc">Click to test connections, check console.</div>
+  
+    <div class="main-grid">
+      <div class="grid span4">
+        <mat-card class="span3">
+          <button mat-raised-button color="primary" routerLink="/dashboard/create-player">Create player <fa-icon [icon]="userPlusIcon"></fa-icon></button>
+        </mat-card>
+        <mat-card class="span3">
+          <button mat-raised-button color="primary" routerLink="/dashboard/list-players">List players <fa-icon [icon]="usersIcon"></fa-icon></button>     
+        </mat-card>
+        <mat-card class="span1">
+          <button mat-raised-button color="primary" *ngIf="!oAuthService.hasValidAccessToken()" (click)="loginTest()">Login <fa-icon [icon]="doorOpen"></fa-icon></button>
+          <button mat-raised-button color="primary" *ngIf="oAuthService.hasValidAccessToken()" (click)="logoutTest()">Logout <fa-icon [icon]="rightFromBracket"></fa-icon></button> 
+        </mat-card> 
+
+        <div class="team span3">
+          <form class="example-form team1name" [formGroup]="playersToWar" (ngSubmit)="onSubmit()">
+            <h3>Team 1</h3>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 1</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 1"
+                    matInput
+                    [formControl]="t1p1name"
+                    [matAutocomplete]="auto1"                    
+                    >
+              <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT1p1name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
           
-        </mat-card-content> -->
-        <mat-card-content>
-          <button mat-raised-button color="warn" (click)="refresh()">RUN refresh Token()</button>
-          <div class="desc">Click to refresh token.</div>
-          
-        </mat-card-content>
-        <!-- <mat-card-content>
-          <button mat-raised-button color="primary" (click)="updateCell()">RUN updateCell()</button>
-          <div class="desc">Click to update cell.</div>
-        </mat-card-content> -->
-      </mat-card>   
-      <mat-card class="last">
-        <h4>Last match:</h4>
-        <ng-container *ngIf="matchRow as match">
-          <div class="match-row">
-            <div class="match-row__date">
-              <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>                
-              <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>                     
-            </div>
-            <div class="match-row__team">
-              <div class="teamrounds">{{ match.t1roundswon }}</div>
-              <div class="teaminfo">
-                <div>preELO</div>
-                <div>{{ 'matches.name' | translate }}</div>
-                <div>{{ 'matches.frags' | translate }}</div>
-                <div>postELO</div>
-                <div>{{ 'matches.pc' | translate }}</div>
-              </div>
-              <div class="match-row__team--player">
-                <div>{{ match.t1p1preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p1username}}">{{ match.t1p1playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t1p1score }} </div>
-                <div>{{ match.t1p1postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t1p1postelo - match.t1p1preelo) > 0, 'lost': (match.t1p1postelo - match.t1p1preelo) < 0, 'draw': (match.t1p1postelo - match.t1p1preelo === 0) }"><span>{{ match.t1p1postelo - match.t1p1preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t1p2playername !== ''">
-                <div>{{ match.t1p2preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p2username}}">{{ match.t1p2playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t1p2score }} </div>
-                <div>{{ match.t1p2postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t1p2postelo - match.t1p2preelo) > 0, 'lost': (match.t1p2postelo - match.t1p2preelo) < 0, 'draw': (match.t1p2postelo - match.t1p2preelo === 0) }"><span>{{ match.t1p2postelo - match.t1p2preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t1p3playername !== ''">
-                <div>{{ match.t1p3preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p3username}}">{{ match.t1p3playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t1p3score }} </div>
-                <div>{{ match.t1p3postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t1p3postelo - match.t1p3preelo) > 0, 'lost': (match.t1p3postelo - match.t1p3preelo) < 0, 'draw': (match.t1p3postelo - match.t1p3preelo === 0) }"><span>{{ match.t1p3postelo - match.t1p3preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t1p4playername !== ''">
-                <div>{{ match.t1p4preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p4playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t1p4score }} </div>
-                <div>{{ match.t1p4postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t1p4postelo - match.t1p4preelo) > 0, 'lost': (match.t1p4postelo - match.t1p4preelo) < 0, 'draw': (match.t1p4postelo - match.t1p4preelo === 0) }"><span>{{ match.t1p4postelo - match.t1p4preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t1p5playername !== ''">
-                <div>{{ match.t1p5preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p5playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t1p5score }} </div>
-                <div>{{ match.t1p5postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t1p5postelo - match.t1p5preelo) > 0, 'lost': (match.t1p5postelo - match.t1p5preelo) < 0, 'draw': (match.t1p5postelo - match.t1p5preelo === 0) }"><span>{{ match.t1p5postelo - match.t1p5preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t1p6playername !== ''">
-                <div>{{ match.t1p6preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p6username}}">{{ match.t1p6playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t1p6score }} </div>
-                <div>{{ match.t1p6postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t1p6postelo - match.t1p6preelo) > 0, 'lost': (match.t1p6postelo - match.t1p6preelo) < 0, 'draw': (match.t1p6postelo - match.t1p6preelo === 0) }"><span>{{ match.t1p6postelo - match.t1p6preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t1p7username !== ''">
-                <div>{{ match.t1p7preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p7username}}">{{ match.t1p7playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t1p7score }} </div>
-                <div>{{ match.t1p7postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t1p7postelo - match.t1p7preelo) > 0, 'lost': (match.t1p7postelo - match.t1p7preelo) < 0, 'draw': (match.t1p7postelo - match.t1p7preelo === 0) }"><span>{{ match.t1p7postelo - match.t1p7preelo | number: '.1-2'}}</span></div>
-              </div>   
-              <div class="preelo-info">
-                <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>            
-                <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div> 
-              </div>  
-              <!-- <div class="preelo-info">
-                <div class="bet">
-                  <img src="../../assets/images/80-163.png" alt="">
-                  <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
-                </div>
-                <div class="bet">
-                  <img src="../../assets/images/80-165.png" alt="">
-                  <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
-                </div>                   
-              </div>                                -->
-            </div>
-            <div class="match-row__team">
-              <div class="teamrounds">{{ match.t2roundswon }}</div>
-              <div class="teaminfo">
-                <div>preELO</div>
-                <div>{{ 'matches.name' | translate }}</div>
-                <div>{{ 'matches.frags' | translate }}</div>
-                <div>postELO</div>
-                <div>{{ 'matches.pc' | translate}}</div>
-              </div>
-              <div class="match-row__team--player">
-                <div>{{ match.t2p1preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p1username}}">{{ match.t2p1playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t2p1score }} </div>
-                <div>{{ match.t2p1postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t2p1postelo - match.t2p1preelo) > 0, 'lost': (match.t2p1postelo - match.t2p1preelo) < 0, 'draw': (match.t2p1postelo - match.t2p1preelo === 0) }"><span>{{ match.t2p1postelo - match.t2p1preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t2p2username !== ''">
-                <div>{{ match.t2p2preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p2username}}">{{ match.t2p2playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t2p2score }} </div>
-                <div>{{ match.t2p2postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t2p2postelo - match.t2p2preelo) > 0, 'lost': (match.t2p2postelo - match.t2p2preelo) < 0, 'draw': (match.t2p2postelo - match.t2p2preelo === 0) }"><span>{{ match.t2p2postelo - match.t2p2preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t2p3username !== ''">
-                <div>{{ match.t2p3preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p3username}}">{{ match.t2p3playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t2p3score }} </div>
-                <div>{{ match.t2p3postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t2p3postelo - match.t2p3preelo) > 0, 'lost': (match.t2p3postelo - match.t2p3preelo) < 0, 'draw': (match.t2p3postelo - match.t2p3preelo === 0) }"><span>{{ match.t2p3postelo - match.t2p3preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t2p4username !== ''">
-                <div>{{ match.t2p4preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p4username}}">{{ match.t2p4playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t2p4score }} </div>
-                <div>{{ match.t2p4postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t2p4postelo - match.t2p4preelo) > 0, 'lost': (match.t2p4postelo - match.t2p4preelo) < 0, 'draw': (match.t2p4postelo - match.t2p4preelo === 0) }"><span>{{ match.t2p4postelo - match.t2p4preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t2p5username !== ''">
-                <div>{{ match.t2p5preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p5username}}">{{ match.t2p5playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t2p5score }} </div>
-                <div>{{ match.t2p5postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t2p5postelo - match.t2p5preelo) > 0, 'lost': (match.t2p5postelo - match.t2p5preelo) < 0, 'draw': (match.t2p5postelo - match.t2p5preelo === 0) }"><span>{{ match.t2p5postelo - match.t2p5preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t2p6username !== ''">
-                <div>{{ match.t2p6preelo | number: '1.0-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p6username}}">{{ match.t2p6playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t2p6score }} </div>
-                <div>{{ match.t2p6postelo | number: '1.0-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t2p6postelo - match.t2p6preelo) > 0, 'lost': (match.t2p6postelo - match.t2p6preelo) < 0, 'draw': (match.t2p6postelo - match.t2p6preelo === 0) }"><span>{{ match.t2p6postelo - match.t2p6preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="match-row__team--player" *ngIf="match.t2p7username !== ''">
-                <div>{{ match.t2p7preelo | number: '.1-2' }}</div>
-                <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p7username}}">{{ match.t2p7playername }}</a></div>
-                <div class="match-row__team--player__score">{{ match.t2p7score }} </div>
-                <div>{{ match.t2p7postelo | number: '.1-2' }}</div>
-                <div [ngClass]="{ 'won': (match.t2p7postelo - match.t2p7preelo) > 0, 'lost': (match.t2p7postelo - match.t2p7preelo) < 0, 'draw': (match.t2p7postelo - match.t2p7preelo === 0) }"><span>{{ match.t2p7postelo - match.t2p7preelo | number: '.1-2'}}</span></div>
-              </div>
-              <div class="preelo-info">
-                <div class="preelo_war">preELO before war: {{ match.t2preelo | number:'1.0-2'}}</div>
-                <div [ngClass]="{ 'teamFavorite': (match.t2preelo > match.t1preelo), 'teamNotFavorite': (match.t1preelo > match.t2preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{ match.t1chance }} %</div>
-              </div>
-              <!-- <div class="preelo-info">
-                <div class="bet">
-                  <img src="../../assets/images/80-163.png" alt="">
-                  <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
-                </div>
-                <div class="bet">
-                  <img src="../../assets/images/80-165.png" alt="">
-                  <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
-                </div>                   
-              </div>                  -->
-            </div>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 2</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 2"
+                    matInput
+                    [formControl]="t1p2name"
+                    [matAutocomplete]="auto2">
+              <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
+                <mat-option *ngFor="let option of filteredOptionsT1p2name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 3</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 3"
+                    matInput
+                    [formControl]="t1p3name"
+                    [matAutocomplete]="auto3">
+              <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
+                <mat-option *ngFor="let option of filteredOptionsT1p3name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 4</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 4"
+                    matInput
+                    [formControl]="t1p4name"
+                    [matAutocomplete]="auto4">
+              <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT1p4name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 5</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 5"
+                    matInput
+                    [formControl]="t1p5name"
+                    [matAutocomplete]="auto5">
+              <mat-autocomplete autoActiveFirstOption #auto5="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT1p5name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 6</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 6"
+                    matInput
+                    [formControl]="t1p6name"
+                    [matAutocomplete]="auto6">
+              <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT1p6name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 7</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 7"
+                    matInput
+                    [formControl]="t1p7name"
+                    [matAutocomplete]="auto7">
+              <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT1p7name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+              <div></div>
+            </mat-form-field>
+            <!-- <button mat-raised-button type="submit">submit</button>   -->
+            <notifier-container></notifier-container>     
+          </form>
+          <form [formGroup]="preEloTeamOne">
+            <h3>Initial ELO</h3>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t1p1preelo" [(ngModel)]="t1p1preeloNgModel"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t1p2preelo" [(ngModel)]="t1p2preeloNgModel">
+            </mat-form-field>           
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t1p3preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t1p4preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t1p5preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t1p6preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t1p7preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t1cumulative" [(ngModel)]="t1cumulativeNgModel"> 
+              
+            </mat-form-field>
+            <!-- <p style="border:3px solid red; padding: 10px;">{{ sum }}</p> -->
+          </form>
+          <div>
+            <form [formGroup]="scoreTeamOne" (ngSubmit)="scoresTwoTeams()">
+              <h3>Frags</h3>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 1</mat-label>
+                <input matInput formControlName="t1p1score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 2</mat-label>
+                <input matInput formControlName="t1p2score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 3</mat-label>
+                <input matInput formControlName="t1p3score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 4</mat-label>
+                <input matInput formControlName="t1p4score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 5</mat-label>
+                <input matInput formControlName="t1p5score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 6</mat-label>
+                <input matInput formControlName="t1p6score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 7</mat-label>
+                <input matInput formControlName="t1p7score">
+              </mat-form-field>
+              <!-- <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Team 1 Rounds Won</mat-label>
+                <input matInput formControlName="t1roundsWon">
+              </mat-form-field> -->
+              <!-- <button mat-raised-button type="submit">submit</button>   -->
+            </form>
+            <form [formGroup]="teamOneRoundsWon" (ngSubmit)="scoresTwoTeams()">
+              <mat-form-field class="example-full-width rounds" apperance="fill">
+                <mat-label>Team 1 Rounds Won</mat-label>
+                <input matInput formControlName="t1roundsWonInput">
+              </mat-form-field>
+            </form>
           </div>
-        </ng-container>
-      </mat-card>  
+        </div>
+        <div class="buttons span1">
+          <mat-card class="" style="margin-bottom: 20px;">
+            <mat-card-content>
+              <button mat-raised-button (click)="clearTeam()">Clear</button>
+            </mat-card-content>
+            <mat-card-content>
+              <button mat-raised-button color="warn" (click)="scoresTwoTeams()">Send score (UPDATE ELO) <fa-icon [icon]="paperPlaneTop"></fa-icon></button>
+            </mat-card-content>
+            <mat-card-content style="padding-top:10px;">
+              <button mat-raised-button color="primary" (click)="balanceTeams()">Mix Teams <fa-icon [icon]="balanced"></fa-icon></button>
+              <div class="desc"> Click when you add players and  you want to create teams for war.</div>
+            </mat-card-content>
+            <mat-card-content>
+              <button mat-raised-button color="primary" (click)="sendPlayersManually()">Confirm Players <fa-icon [icon]="puzzle"></fa-icon></button> Click here if u want to add player manualy, next u can sort by ELO or stay manualy.
+            </mat-card-content>
+            <!-- <mat-card-content>
+              <button mat-raised-button (click)="selectTeams()">RUN selectTeams()</button>
+              <div class="desc">Click when you want to select team (1 or 2).</div>
+            </mat-card-content> -->
+            
+            <!-- <mat-card-content>
+              <button mat-raised-button color="warn" (click)="getStatistics()">RUN getStatistics()</button>
+              <div class="desc">Click to test connections, check console.</div>
+              
+            </mat-card-content> -->
+            <mat-card-content>
+              <button mat-raised-button color="warn" (click)="refresh()">Refresh Token <fa-icon [icon]="refreshIcon"></fa-icon></button>
+              <div class="desc">Click to refresh token.</div>
+              
+            </mat-card-content>
+            <!-- <mat-card-content>
+              <button mat-raised-button color="primary" (click)="updateCell()">RUN updateCell()</button>
+              <div class="desc">Click to update cell.</div>
+            </mat-card-content> -->
+          </mat-card> 
+          <mat-card>
+            <mat-card-content>
+              <button mat-raised-button color="accent" (click)="sortPlayers()"> Update ranking<fa-icon [icon]="arrowUpArrowDown"></fa-icon></button>
+              <div class="desc">Click when you want to sort players by ranking.</div> 
+            </mat-card-content>
+          </mat-card>  
+        </div>
+        <div class="team span3">
+          <form class="example-form" [formGroup]="teamTwoToWar">
+            <h3>Team 2</h3>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 1</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 1"
+                    matInput
+                    [formControl]="t2p1name"                
+                    [matAutocomplete]="auto15">
+              <mat-autocomplete autoActiveFirstOption #auto15="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT2p1name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 2</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 2"
+                    matInput
+                    [formControl]="t2p2name"
+                    [matAutocomplete]="auto8">
+              <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT2p2name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 3</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 3"
+                    matInput
+                    [formControl]="t2p3name"
+                    [matAutocomplete]="auto9">
+              <mat-autocomplete autoActiveFirstOption #auto9="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT2p3name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 4</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 4"
+                    matInput
+                    [formControl]="t2p4name"
+                    [matAutocomplete]="auto10">
+              <mat-autocomplete autoActiveFirstOption #auto10="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT2p4name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 5</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 5"
+                    matInput
+                    [formControl]="t2p5name"
+                    [matAutocomplete]="auto11">
+              <mat-autocomplete autoActiveFirstOption #auto11="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT2p5name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 6</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 6"
+                    matInput
+                    [formControl]="t2p6name"
+                    [matAutocomplete]="auto12">
+              <mat-autocomplete autoActiveFirstOption #auto12="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT2p6name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="example-full-width name" appearance="fill">
+              <mat-label>Player 7</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Player 7"
+                    matInput
+                    [formControl]="t2p7name"
+                    [matAutocomplete]="auto13">
+              <mat-autocomplete autoActiveFirstOption #auto13="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsT2p7name | async" [value]="option.username">
+                  <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
+                  {{option.playername}} ({{ option.ranking }})
+                </mat-option>
+              </mat-autocomplete>
+              <div></div>
+            </mat-form-field>
+            <!-- <button mat-raised-button type="submit">submit</button>   -->
+            <notifier-container></notifier-container> 
+          </form>       
+          <form [formGroup]="preEloTeamTwo">
+            <h3>Initial ELO</h3>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t2p1preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t2p2preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t2p3preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t2p4preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t2p5preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t2p6preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t2p7preelo"> 
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t2cumulative"> 
+            </mat-form-field>
+          </form>   
+          <div>
+            <form [formGroup]="scoreTeamTwo" (ngSubmit)="scoresTwoTeams()">
+              <h3>Frags</h3>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 1</mat-label>
+                <input matInput formControlName="t2p1score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 2</mat-label>
+                <input matInput formControlName="t2p2score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 3</mat-label>
+                <input matInput formControlName="t2p3score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 4</mat-label>
+                <input matInput formControlName="t2p4score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 5</mat-label>
+                <input matInput formControlName="t2p5score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 6</mat-label>
+                <input matInput formControlName="t2p6score">
+              </mat-form-field>
+              <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Frags Player 7</mat-label>
+                <input matInput formControlName="t2p7score">
+              </mat-form-field>
+              <!-- <mat-form-field class="example-full-width score" apperance="fill">
+                <mat-label>Team 2 Rounds Won</mat-label>
+                <input matInput formControlName="t2roundsWon">
+              </mat-form-field> -->
+            </form>
+            <form [formGroup]="teamTwoRoundsWon" (ngSubmit)="scoresTwoTeams()">
+              <mat-form-field class="example-full-width rounds" apperance="fill">
+                <mat-label>Team 2 Rounds Won</mat-label>
+                <input matInput formControlName="t2roundsWonInput">
+              </mat-form-field>
+            </form>
+          </div> 
+        </div> 
+
+        
+        <mat-card class="last span7">
+          <h4>Last match:</h4>
+          <ng-container *ngIf="matchRow as match">
+            <div class="match-row">
+              <div class="match-row__date">
+                <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>                
+                <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>                     
+              </div>
+              <div class="match-row__team">
+                <div class="teamrounds">{{ match.t1roundswon }}</div>
+                <div class="teaminfo">
+                  <div>preELO</div>
+                  <div>{{ 'matches.name' | translate }}</div>
+                  <div>{{ 'matches.frags' | translate }}</div>
+                  <div>postELO</div>
+                  <div>{{ 'matches.pc' | translate }}</div>
+                </div>
+                <div class="match-row__team--player">
+                  <div>{{ match.t1p1preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p1username}}">{{ match.t1p1playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p1score }} </div>
+                  <div>{{ match.t1p1postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p1postelo - match.t1p1preelo) > 0, 'lost': (match.t1p1postelo - match.t1p1preelo) < 0, 'draw': (match.t1p1postelo - match.t1p1preelo === 0) }"><span>{{ match.t1p1postelo - match.t1p1preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p2playername !== ''">
+                  <div>{{ match.t1p2preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p2username}}">{{ match.t1p2playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p2score }} </div>
+                  <div>{{ match.t1p2postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p2postelo - match.t1p2preelo) > 0, 'lost': (match.t1p2postelo - match.t1p2preelo) < 0, 'draw': (match.t1p2postelo - match.t1p2preelo === 0) }"><span>{{ match.t1p2postelo - match.t1p2preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p3playername !== ''">
+                  <div>{{ match.t1p3preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p3username}}">{{ match.t1p3playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p3score }} </div>
+                  <div>{{ match.t1p3postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p3postelo - match.t1p3preelo) > 0, 'lost': (match.t1p3postelo - match.t1p3preelo) < 0, 'draw': (match.t1p3postelo - match.t1p3preelo === 0) }"><span>{{ match.t1p3postelo - match.t1p3preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p4playername !== ''">
+                  <div>{{ match.t1p4preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p4playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p4score }} </div>
+                  <div>{{ match.t1p4postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p4postelo - match.t1p4preelo) > 0, 'lost': (match.t1p4postelo - match.t1p4preelo) < 0, 'draw': (match.t1p4postelo - match.t1p4preelo === 0) }"><span>{{ match.t1p4postelo - match.t1p4preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p5playername !== ''">
+                  <div>{{ match.t1p5preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p5playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p5score }} </div>
+                  <div>{{ match.t1p5postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p5postelo - match.t1p5preelo) > 0, 'lost': (match.t1p5postelo - match.t1p5preelo) < 0, 'draw': (match.t1p5postelo - match.t1p5preelo === 0) }"><span>{{ match.t1p5postelo - match.t1p5preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p6playername !== ''">
+                  <div>{{ match.t1p6preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p6username}}">{{ match.t1p6playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p6score }} </div>
+                  <div>{{ match.t1p6postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p6postelo - match.t1p6preelo) > 0, 'lost': (match.t1p6postelo - match.t1p6preelo) < 0, 'draw': (match.t1p6postelo - match.t1p6preelo === 0) }"><span>{{ match.t1p6postelo - match.t1p6preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p7username !== ''">
+                  <div>{{ match.t1p7preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p7username}}">{{ match.t1p7playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p7score }} </div>
+                  <div>{{ match.t1p7postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p7postelo - match.t1p7preelo) > 0, 'lost': (match.t1p7postelo - match.t1p7preelo) < 0, 'draw': (match.t1p7postelo - match.t1p7preelo === 0) }"><span>{{ match.t1p7postelo - match.t1p7preelo | number: '.1-2'}}</span></div>
+                </div>   
+                <div class="preelo-info">
+                  <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>            
+                  <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div> 
+                </div>  
+                <!-- <div class="preelo-info">
+                  <div class="bet">
+                    <img src="../../assets/images/80-163.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
+                  </div>
+                  <div class="bet">
+                    <img src="../../assets/images/80-165.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
+                  </div>                   
+                </div>                                -->
+              </div>
+              <div class="match-row__team">
+                <div class="teamrounds">{{ match.t2roundswon }}</div>
+                <div class="teaminfo">
+                  <div>preELO</div>
+                  <div>{{ 'matches.name' | translate }}</div>
+                  <div>{{ 'matches.frags' | translate }}</div>
+                  <div>postELO</div>
+                  <div>{{ 'matches.pc' | translate}}</div>
+                </div>
+                <div class="match-row__team--player">
+                  <div>{{ match.t2p1preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p1username}}">{{ match.t2p1playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p1score }} </div>
+                  <div>{{ match.t2p1postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p1postelo - match.t2p1preelo) > 0, 'lost': (match.t2p1postelo - match.t2p1preelo) < 0, 'draw': (match.t2p1postelo - match.t2p1preelo === 0) }"><span>{{ match.t2p1postelo - match.t2p1preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p2username !== ''">
+                  <div>{{ match.t2p2preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p2username}}">{{ match.t2p2playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p2score }} </div>
+                  <div>{{ match.t2p2postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p2postelo - match.t2p2preelo) > 0, 'lost': (match.t2p2postelo - match.t2p2preelo) < 0, 'draw': (match.t2p2postelo - match.t2p2preelo === 0) }"><span>{{ match.t2p2postelo - match.t2p2preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p3username !== ''">
+                  <div>{{ match.t2p3preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p3username}}">{{ match.t2p3playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p3score }} </div>
+                  <div>{{ match.t2p3postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p3postelo - match.t2p3preelo) > 0, 'lost': (match.t2p3postelo - match.t2p3preelo) < 0, 'draw': (match.t2p3postelo - match.t2p3preelo === 0) }"><span>{{ match.t2p3postelo - match.t2p3preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p4username !== ''">
+                  <div>{{ match.t2p4preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p4username}}">{{ match.t2p4playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p4score }} </div>
+                  <div>{{ match.t2p4postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p4postelo - match.t2p4preelo) > 0, 'lost': (match.t2p4postelo - match.t2p4preelo) < 0, 'draw': (match.t2p4postelo - match.t2p4preelo === 0) }"><span>{{ match.t2p4postelo - match.t2p4preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p5username !== ''">
+                  <div>{{ match.t2p5preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p5username}}">{{ match.t2p5playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p5score }} </div>
+                  <div>{{ match.t2p5postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p5postelo - match.t2p5preelo) > 0, 'lost': (match.t2p5postelo - match.t2p5preelo) < 0, 'draw': (match.t2p5postelo - match.t2p5preelo === 0) }"><span>{{ match.t2p5postelo - match.t2p5preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p6username !== ''">
+                  <div>{{ match.t2p6preelo | number: '1.0-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p6username}}">{{ match.t2p6playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p6score }} </div>
+                  <div>{{ match.t2p6postelo | number: '1.0-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p6postelo - match.t2p6preelo) > 0, 'lost': (match.t2p6postelo - match.t2p6preelo) < 0, 'draw': (match.t2p6postelo - match.t2p6preelo === 0) }"><span>{{ match.t2p6postelo - match.t2p6preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p7username !== ''">
+                  <div>{{ match.t2p7preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p7username}}">{{ match.t2p7playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p7score }} </div>
+                  <div>{{ match.t2p7postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p7postelo - match.t2p7preelo) > 0, 'lost': (match.t2p7postelo - match.t2p7preelo) < 0, 'draw': (match.t2p7postelo - match.t2p7preelo === 0) }"><span>{{ match.t2p7postelo - match.t2p7preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="preelo-info">
+                  <div class="preelo_war">preELO before war: {{ match.t2preelo | number:'1.0-2'}}</div>
+                  <div [ngClass]="{ 'teamFavorite': (match.t2preelo > match.t1preelo), 'teamNotFavorite': (match.t1preelo > match.t2preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{ match.t1chance }} %</div>
+                </div>
+                <!-- <div class="preelo-info">
+                  <div class="bet">
+                    <img src="../../assets/images/80-163.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
+                  </div>
+                  <div class="bet">
+                    <img src="../../assets/images/80-165.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
+                  </div>                   
+                </div>                  -->
+              </div>
+            </div>
+          </ng-container>
+        </mat-card>  
+      </div>
+      <div class="ranking span2">
+        <ng-container *ngIf="players$ | async as players">
+          <ng-container *ngIf="players.length > 0">
+            <mat-card>
+              <mat-card-header>
+                <h2>All players</h2>
+              </mat-card-header>
+              
+                       
+            <!-- <ng-container *ngFor="let player of players; let i = index;">
+              <div>PLAYER: <strong>{{ player.playername }}, ELO: {{ player.ranking }}</strong>, INDEX: {{ i + 1}}</div>
+            </ng-container> -->
+              <mat-form-field appearance="standard" class="full-width">
+                <mat-label>Filter</mat-label>
+                <input
+                  matInput
+                  (keyup)="applyFilter($event)"
+                  placeholder="Search Columns"
+                  #input
+                />
+              </mat-form-field>
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table-all">
+                <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+                  <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+                  <td mat-cell *matCellDef="let emp" scope="row">{{ emp[column] }}</td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+              </table>
+            </mat-card> 
+          </ng-container>
+        </ng-container>            
+      </div>
     </div>
+    
    
     <div class="add-match">
-      <div class="team">
-        <form class="example-form team1name" [formGroup]="playersToWar" (ngSubmit)="onSubmit()">
-          <h3>Team 1</h3>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 1</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 1"
-                  matInput
-                  [formControl]="t1p1name"
-                  [matAutocomplete]="auto1">
-            <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
-              <mat-option *ngFor="let option of filteredOptionsT1p1name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 2</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 2"
-                  matInput
-                  [formControl]="t1p2name"
-                  [matAutocomplete]="auto2">
-            <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
-              <mat-option *ngFor="let option of filteredOptionsT1p2name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 3</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 3"
-                  matInput
-                  [formControl]="t1p3name"
-                  [matAutocomplete]="auto3">
-            <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete" (optionSelected)="onOptionSelectedOne($event)">
-              <mat-option *ngFor="let option of filteredOptionsT1p3name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 4</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 4"
-                  matInput
-                  [formControl]="t1p4name"
-                  [matAutocomplete]="auto4">
-            <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT1p4name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 5</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 5"
-                  matInput
-                  [formControl]="t1p5name"
-                  [matAutocomplete]="auto5">
-            <mat-autocomplete autoActiveFirstOption #auto5="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT1p5name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 6</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 6"
-                  matInput
-                  [formControl]="t1p6name"
-                  [matAutocomplete]="auto6">
-            <mat-autocomplete autoActiveFirstOption #auto6="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT1p6name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 7</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 7"
-                  matInput
-                  [formControl]="t1p7name"
-                  [matAutocomplete]="auto7">
-            <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT1p7name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-            <div></div>
-          </mat-form-field>
-          <!-- <button mat-raised-button type="submit">submit</button>   -->
-          <notifier-container></notifier-container>     
-        </form>
-        <form [formGroup]="preEloTeamOne">
-          <h3>Initial ELO</h3>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t1p1preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t1p2preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t1p3preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t1p4preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t1p5preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t1p6preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t1p7preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t1cumulative"> 
-          </mat-form-field>
-        </form>
-        <div>
-          <form [formGroup]="scoreTeamOne" (ngSubmit)="scoresTwoTeams()">
-            <h3>Combat score</h3>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 1</mat-label>
-              <input matInput formControlName="t1p1score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 2</mat-label>
-              <input matInput formControlName="t1p2score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 3</mat-label>
-              <input matInput formControlName="t1p3score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 4</mat-label>
-              <input matInput formControlName="t1p4score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 5</mat-label>
-              <input matInput formControlName="t1p5score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 6</mat-label>
-              <input matInput formControlName="t1p6score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 7</mat-label>
-              <input matInput formControlName="t1p7score">
-            </mat-form-field>
-            <!-- <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Team 1 Rounds Won</mat-label>
-              <input matInput formControlName="t1roundsWon">
-            </mat-form-field> -->
-            <!-- <button mat-raised-button type="submit">submit</button>   -->
-          </form>
-          <form [formGroup]="teamOneRoundsWon" (ngSubmit)="scoresTwoTeams()">
-            <mat-form-field class="example-full-width rounds" apperance="fill">
-              <mat-label>Team 1 Rounds Won</mat-label>
-              <input matInput formControlName="t1roundsWonInput">
-            </mat-form-field>
-          </form>
-        </div>
-      </div>
-      <div class="team">
-        <form class="example-form" [formGroup]="teamTwoToWar">
-          <h3>Team 2</h3>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 1</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 1"
-                  matInput
-                  [formControl]="t2p1name"                
-                  [matAutocomplete]="auto7">
-            <mat-autocomplete autoActiveFirstOption #auto7="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT2p1name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 2</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 2"
-                  matInput
-                  [formControl]="t2p2name"
-                  [matAutocomplete]="auto8">
-            <mat-autocomplete autoActiveFirstOption #auto8="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT2p2name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 3</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 3"
-                  matInput
-                  [formControl]="t2p3name"
-                  [matAutocomplete]="auto9">
-            <mat-autocomplete autoActiveFirstOption #auto9="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT2p3name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 4</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 4"
-                  matInput
-                  [formControl]="t2p4name"
-                  [matAutocomplete]="auto10">
-            <mat-autocomplete autoActiveFirstOption #auto10="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT2p4name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 5</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 5"
-                  matInput
-                  [formControl]="t2p5name"
-                  [matAutocomplete]="auto11">
-            <mat-autocomplete autoActiveFirstOption #auto11="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT2p5name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 6</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 6"
-                  matInput
-                  [formControl]="t2p6name"
-                  [matAutocomplete]="auto12">
-            <mat-autocomplete autoActiveFirstOption #auto12="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT2p6name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field class="example-full-width name" appearance="fill">
-            <mat-label>Player 7</mat-label>
-            <input type="text"
-                  placeholder="Pick one"
-                  aria-label="Player 7"
-                  matInput
-                  [formControl]="t2p7name"
-                  [matAutocomplete]="auto13">
-            <mat-autocomplete autoActiveFirstOption #auto13="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptionsT2p7name | async" [value]="option.username">
-                <img [src]='"assets/images/flags_svg/" + option.nationality + ".SVG"'>
-                {{option.playername}} ({{ option.ranking }})
-              </mat-option>
-            </mat-autocomplete>
-            <div></div>
-          </mat-form-field>
-          <!-- <button mat-raised-button type="submit">submit</button>   -->
-          <notifier-container></notifier-container> 
-        </form>       
-        <form [formGroup]="preEloTeamTwo">
-          <h3>Initial ELO</h3>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t2p1preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t2p2preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t2p3preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t2p4preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t2p5preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t2p6preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t2p7preelo"> 
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="initial-elo readonly">
-            <input type="text" matInput [formControl]="t2cumulative"> 
-          </mat-form-field>
-        </form>   
-        <div>
-          <form [formGroup]="scoreTeamTwo" (ngSubmit)="scoresTwoTeams()">
-            <h3>Combat score</h3>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 1</mat-label>
-              <input matInput formControlName="t2p1score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 2</mat-label>
-              <input matInput formControlName="t2p2score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 3</mat-label>
-              <input matInput formControlName="t2p3score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 4</mat-label>
-              <input matInput formControlName="t2p4score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 5</mat-label>
-              <input matInput formControlName="t2p5score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 6</mat-label>
-              <input matInput formControlName="t2p6score">
-            </mat-form-field>
-            <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Frags Player 7</mat-label>
-              <input matInput formControlName="t2p7score">
-            </mat-form-field>
-            <!-- <mat-form-field class="example-full-width score" apperance="fill">
-              <mat-label>Team 2 Rounds Won</mat-label>
-              <input matInput formControlName="t2roundsWon">
-            </mat-form-field> -->
-          </form>
-          <form [formGroup]="teamTwoRoundsWon" (ngSubmit)="scoresTwoTeams()">
-            <mat-form-field class="example-full-width rounds" apperance="fill">
-              <mat-label>Team 2 Rounds Won</mat-label>
-              <input matInput formControlName="t2roundsWonInput">
-            </mat-form-field>
-          </form>
-        </div> 
-      </div>
-    
-      <button mat-raised-button (click)="clearTeam()">clear</button>
-      <button mat-raised-button color="warn" (click)="scoresTwoTeams()">Send score (UPDATE ELO)</button>
-
-      <!-- <div class="priview" *ngFor="let value of team1preview">
-        <div>{{ value }}</div>
-      </div> -->
-
+      
+         
+      
     </div>
    
    
-    <!-- <ng-container *ngIf="players$ | async as players">
-      <ng-container *ngIf="players.length > 0">
-        <ng-container *ngFor="let player of players; let i = index;">
-          <div>PLAYER: <strong>{{ player.playername }}, ELO: {{ player.ranking }}</strong>, INDEX: {{ i + 1}}</div>
-        </ng-container>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf="addAmatch$ | async as addAmatch">
-      <ng-container *ngIf="addAmatch.length > 0">
-        <ng-container *ngFor="let element of addAmatch; let i = index;">
-          <div>ELEMENT: {{ element | json }} INDEX: {{ i }}</div>
-        </ng-container>
-      </ng-container>
-    </ng-container>  -->
+   
     
-  <div>
-      <!-- <app-list-data></app-list-data> -->
+  
+      
       <router-outlet></router-outlet>
-    </div>
+     
   </div>
 </section>
 <ng-template #content let-modal>

@@ -40,6 +40,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
+import { MatTableModule } from '@angular/material/table';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -114,6 +115,7 @@ const customNotifierOptions: NotifierOptions = {
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatTableModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),      

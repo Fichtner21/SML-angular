@@ -1,12 +1,13 @@
 import { map } from 'rxjs/operators';
 import { PlayersApiService } from './../services/players-api.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-ranking-obj',
@@ -28,6 +29,8 @@ export class RankingObjComponent implements OnInit {
   public playersTest$: Observable<any>;
   public playersTest2$: Observable<any>;
   public historyMatches$: Observable<any>;
+
+  @Output() ranking:EventEmitter<any> = new EventEmitter();
 
   currentInfo: any = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';  
   infoCode = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';
@@ -155,6 +158,8 @@ export class RankingObjComponent implements OnInit {
     } else {
       this.router.navigate(['/obj-ranking'], { queryParams: {  } });
     }
+
+    this.ranking.emit(this.lastWarOfPlayer$);
   } 
   
   infoChange($event){

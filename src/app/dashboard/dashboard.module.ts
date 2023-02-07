@@ -17,6 +17,7 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 import { TokenInterceptor } from '../token.interceptor';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [  
@@ -37,7 +38,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
     HttpClientModule,  
     MatButtonModule,
     MatCheckboxModule,
-    MatFormFieldModule     
+    MatFormFieldModule,
+    FontAwesomeModule     
    ],
   exports: [
     CommonModule,

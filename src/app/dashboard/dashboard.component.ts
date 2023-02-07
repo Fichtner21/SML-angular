@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { PlayersApiService } from '../services/players-api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap, switchMap } from 'rxjs/operators';
 import { OAuthService, AuthConfig } from 'angular-oauth2-oidc';
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
@@ -10,6 +10,13 @@ import { ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Sheet } from '../models/sheet.model';
 import { environment } from 'src/environments/environment';
+import { faArrowDownUpAcrossLine, faArrowsUpDown, faDoorOpen, faPaperPlane, faPuzzlePiece, faRightFromBracket, faRotateRight, faScaleBalanced, faUserPlus, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSelectChange } from '@angular/material/select';
+import { threadId } from 'worker_threads';
+import { MatOption } from '@angular/material/core';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+
 
 export interface UserInfo {
   info: {
@@ -19,6 +26,36 @@ export interface UserInfo {
     picture: string
   }
 }
+
+export interface EmpFilter {
+  name:string;
+  options:string[];
+  defaultValue:string;
+}
+
+export interface filterOption{
+  name:string;
+  value:string;
+  isdefault:boolean;
+}
+
+export interface Employee {
+  // id : number,	
+  // firstname:string,	
+  // lastname:string,	
+  // email:string,
+  // gender:string,	
+  // jobtitle:string,
+  // department:string
+  index: number;
+  name: string,
+  elo: string,
+  active: boolean,
+  ban: boolean,
+  flag: string,
+  wars: string
+}
+
 
 const authCodeFlowConfig: AuthConfig = {
   // Url of the Identity Provider
@@ -48,8 +85,17 @@ const authCodeFlowConfig: AuthConfig = {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit { 
-  
+export class DashboardComponent implements OnInit, OnDestroy { 
+  @Input() ranking:any;
+  userPlusIcon = faUserPlus;
+  usersIcon = faUsers;
+  rightFromBracket = faRightFromBracket;
+  balanced = faScaleBalanced;
+  arrowUpArrowDown = faArrowsUpDown;
+  refreshIcon = faRotateRight;
+  doorOpen = faDoorOpen;
+  paperPlaneTop = faPaperPlane;
+  puzzle = faPuzzlePiece;
   gmail = 'https://gmail.googleapis.com';
   errorMessage = '';
   modalHeader = '';
@@ -61,6 +107,8 @@ export class DashboardComponent implements OnInit {
   public players$: Observable<any>;
   public lastMatch$: Observable<any>;
   public lastMatchDisplay$: Observable<any>;
+  public listPlayers$: Observable<any>;
+  sumSubscription: Subscription;
   // Team 1
   t1p1name = new FormControl('');
   t1p2name = new FormControl('');
@@ -72,6 +120,8 @@ export class DashboardComponent implements OnInit {
   cumulativeTeamOne = new FormControl('');
   roundsWonTeamOne = new FormControl('');
   t1p1preelo = new FormControl('');
+  t1p1preeloNgModel = new FormControl('');
+  t1p2preeloNgModel = new FormControl('');
   t1p2preelo = new FormControl('');
   t1p3preelo = new FormControl('');
   t1p4preelo = new FormControl('');
@@ -79,6 +129,7 @@ export class DashboardComponent implements OnInit {
   t1p6preelo = new FormControl('');
   t1p7preelo = new FormControl('');
   t1cumulative = new FormControl('');
+  t1cumulativeNgModel = new FormControl();
   filteredOptionsT1p1name: Observable<any>;
   filteredOptionsT1p2name: Observable<any>;
   filteredOptionsT1p3name: Observable<any>;
@@ -148,6 +199,26 @@ export class DashboardComponent implements OnInit {
   chanceOfWinTeamTwoShow: any; 
   // public selectedOptionT1p1name;  
   matchRow:any;
+  public sumCumulativeTeamOne:any;
+  public sumCumulativeTeamTwo:number = 0;
+  selectedValues: number[] = [];
+ 
+  // displayedColumns: string[] = ['Name', 'ELO', 'Active', 'Flag'];
+  displayedColumns: string[];
+  EmpData: Employee[];
+  playerRowArray: any[] = [];
+  filterDictionary= new Map<string,string>();
+  dataSource: any;
+  dataSourceFilters: any;
+  empFilters: EmpFilter[] = [];
+  defaultValue = "All";
+
+  selectedValues1: string[] = [];
+  selectedValues2: string[] = [];
+  sum = 0;
+
+  firstFormValue: string;
+  @Output() firstFormValueChange = new EventEmitter<string>();
 
   constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, public oAuthService: OAuthService, private formBuilder: FormBuilder,notifierService: NotifierService, private modalService: NgbModal) { 
 
@@ -207,7 +278,7 @@ export class DashboardComponent implements OnInit {
     });
 
     this.preEloTeamOne = this.formBuilder.group({
-      t1p1preelo: [''],
+      t1p1preelo: [''],    
       t1p2preelo: [''],
       t1p3preelo: [''],
       t1p4preelo: [''],
@@ -318,18 +389,72 @@ export class DashboardComponent implements OnInit {
     )
 
     this.players$.subscribe(data => {
-      this.options = data;
+      this.options = data;      
+      }     
+    )
+
+    this.listPlayers$ = this.players$;
+
+    this.listPlayers$.subscribe(data => {
+      
+      // console.log('data =>', data)
+      for(let [index, value] of data.entries()){
+        const obj = {
+          index: Number(index) + 1,
+          name: value.playername,
+          elo: value.ranking,
+          active: value.active == 'TRUE' ? true : false,
+          ban: value.ban == 'TRUE' ? true : false,
+          flag: value.nationality,
+          wars: value.warcount
+        }
+        // console.log('OBJ', obj)
+        this.playerRowArray.push(obj)
+      }
+      // console.log('playerRowArray', this.playerRowArray)
+      return this.playerRowArray;
     })
+
+    // this.players$.pipe(
+    //   map((name:any) => {
+    //     this.AllPlayers = {       
+    //       name:name.playername, 
+    //       elo: name.ranking, 
+    //       active: name.active, 
+    //       flag: name.nationality
+    //     }
+    //   }) 
+    // )
+
+   
   }  
 
   ngOnInit(): void { 
     this.oAuthService.setupAutomaticSilentRefresh();   
-    
-    // console.log('PERMUTATION:', this.splitPermutations([1000,1001,1002,1003,1004,1005]))
+ 
+    this.displayedColumns= ['index','name','elo','flag','wars','active', 'ban'];
+   
+    this.dataSource = new MatTableDataSource(this.playerRowArray);
+    this.dataSourceFilters = new MatTableDataSource(this.playerRowArray);
+
+    this.dataSourceFilters.filterPredicate = function (record,filter) {
+      debugger;
+      var map = new Map(JSON.parse(filter));
+      let isMatch = false;
+      for(let [key,value] of map){
+        isMatch = (value=="All") || (record[key as keyof Employee] == value); 
+        if(!isMatch) return false;
+      }
+      return isMatch;
+    }
+
+   
+    // console.log('PERMUTATION:', this.splitPermutations([1000,1001,1002,1003,1004,1005,1009,1010, 1023,1023]))
 
     this.filteredOptionsT1p1name = this.t1p1name.valueChanges.pipe(
       startWith(''),    
-      map(value => this._filter(value || ''))      
+      map(value => this._filter(value || '')),
+            
     );
     this.filteredOptionsT1p2name = this.t1p2name.valueChanges.pipe(
       startWith(''),
@@ -382,104 +507,17 @@ export class DashboardComponent implements OnInit {
     this.filteredOptionsT2p7name = this.t2p7name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
-
-
-    // this.lastMatchDisplay$ = combineLatest([this.players$, this.lastMatch$]).pipe(
-    //   map(([players, lastmatch]) => {
-    //     let lastMatchRow;
-    //     for(let player of players){
-    //       lastMatchRow = {
-    //       timestamp: el.timestamp,
-    //       idwar: el.idwar,
-    //       t1roundswon: el.t1roundswon,
-    //       t2roundswon: el.t2roundswon, 
-    //       video: el.video,
-    //       info: el.info,        
-    //       t1p1playername: this.addPlayerLink(match.t1p1name, players, inactive),
-    //       t1p1username: match.t1p1name,
-    //       t1p1preelo: match.t1p1preelo,
-    //       t1p1score: match.t1p1score,
-    //       t1p1postelo: match.t1p1postelo,
-    //       // t1p2playername: this.addPlayerLink(match.t1p2name, players, inactive),
-    //       // t1p2username: match.t1p2name,
-    //       // t1p2preelo: match.t1p2preelo,
-    //       // t1p2score: match.t1p2score,
-    //       // t1p2postelo: match.t1p2postelo,
-    //       // t1p3playername: this.addPlayerLink(match.t1p3name, players, inactive),
-    //       // t1p3username: match.t1p3name,
-    //       // t1p3preelo: match.t1p3preelo,
-    //       // t1p3score: match.t1p3score,
-    //       // t1p3postelo: match.t1p3postelo,
-    //       // t1p4playername: this.addPlayerLink(match.t1p4name, players, inactive),
-    //       // t1p4username: match.t1p4name,
-    //       // t1p4preelo: match.t1p4preelo,
-    //       // t1p4score: match.t1p4score,
-    //       // t1p4postelo: match.t1p4postelo,
-    //       // t1p5playername: this.addPlayerLink(match.t1p5name, players, inactive),
-    //       // t1p5username: match.t1p5name,
-    //       // t1p5preelo: match.t1p5preelo,
-    //       // t1p5score: match.t1p5score,
-    //       // t1p5postelo: match.t1p5postelo,
-    //       // t1p6playername: this.addPlayerLink(match.t1p6name, players, inactive),
-    //       // t1p6username: match.t1p6name,
-    //       // t1p6preelo: match.t1p6preelo,
-    //       // t1p6score: match.t1p6score,
-    //       // t1p6postelo: match.t1p6postelo,
-    //       // t1p7playername: this.addPlayerLink(match.t1p7name, players, inactive),
-    //       // t1p7username: match.t1p7name,
-    //       // t1p7preelo: match.t1p7preelo,
-    //       // t1p7score: match.t1p7score,
-    //       // t1p7postelo: match.t1p7postelo,
-    //       // t2p1playername: this.addPlayerLink(match.t2p1name, players, inactive),
-    //       // t2p1username: match.t2p1name,
-    //       // t2p1preelo: match.t2p1preelo,
-    //       // t2p1score: match.t2p1score,
-    //       // t2p1postelo: match.t2p1postelo,
-    //       // t2p2playername: this.addPlayerLink(match.t2p2name, players, inactive),
-    //       // t2p2username: match.t2p2name,
-    //       // t2p2preelo: match.t2p2preelo,
-    //       // t2p2score: match.t2p2score,
-    //       // t2p2postelo: match.t2p2postelo,
-    //       // t2p3playername: this.addPlayerLink(match.t2p3name, players, inactive),
-    //       // t2p3username: match.t2p3name,
-    //       // t2p3preelo: match.t2p3preelo,
-    //       // t2p3score: match.t2p3score,
-    //       // t2p3postelo: match.t2p3postelo,
-    //       // t2p4playername: this.addPlayerLink(match.t2p4name, players, inactive),
-    //       // t2p4username: match.t2p4name,
-    //       // t2p4preelo: match.t2p4preelo,
-    //       // t2p4score: match.t2p4score,
-    //       // t2p4postelo: match.t2p4postelo,
-    //       // t2p5playername: this.addPlayerLink(match.t2p5name, players, inactive),
-    //       // t2p5username: match.t2p5name,
-    //       // t2p5preelo: match.t2p5preelo,
-    //       // t2p5score: match.t2p5score,
-    //       // t2p5postelo: match.t2p5postelo,
-    //       // t2p6playername: this.addPlayerLink(match.t2p6name, players, inactive),
-    //       // t2p6username: match.t2p6name,
-    //       // t2p6preelo: match.t2p6preelo,
-    //       // t2p6score: match.t2p6score,
-    //       // t2p6postelo: match.t2p6postelo,
-    //       // t2p7playername: this.addPlayerLink(match.t2p7name, players, inactive),
-    //       // t2p7username: match.t2p7name,
-    //       // t2p7preelo: match.t2p7preelo,
-    //       // t2p7score: match.t2p7score,
-    //       // t2p7postelo: match.t2p7postelo,
-    //       }
-    //     }
-    //   })
-    // )
-
-    
+    ) 
 
     // *** TEAM ONE ***    
-    this.googleApi.getMultipleRanges('A12:C20').subscribe(data => {
+    this.googleApi.getMultipleRanges('A12:B19').subscribe(data => {
       this.team1preview = data['values'];         
+      console.log('this.team1preview', this.team1preview)
       // If less then 7 players add array with empty string
-      const t1preview = this.team1preview.concat(Array(9 - this.team1preview.length).fill(['']))      
+      const t1preview = this.team1preview.concat(Array(8 - this.team1preview.length).fill(['']))      
 
-      console.log('t1preview', t1preview);
+
+      // console.log('t1preview ! =>', t1preview);
 
       // Add everytimes 3 fieldsin row
       const t1p1row = t1preview[0].concat(Array(3 - t1preview[0].length).fill(''));      
@@ -501,14 +539,16 @@ export class DashboardComponent implements OnInit {
     
       
       // Team 1 Initial ELO
+     
       this.t1p1preelo?.setValue(t1p1row[1]);
-      this.t1p2preelo?.setValue(t1p2row[1]);
+      this.t1p2preelo?.setValue(t1p2row[1]);   
       this.t1p3preelo?.setValue(t1p3row[1]);
       this.t1p4preelo?.setValue(t1p4row[1]);
       this.t1p5preelo?.setValue(t1p5row[1]);
       this.t1p6preelo?.setValue(t1p6row[1]);
       this.t1p7preelo?.setValue(t1p7row[1]);
     
+      // this.t1cumulative?.setValue('');
       this.t1cumulative?.setValue(Number(t1preview[7][1]).toFixed(2));
   
 
@@ -523,7 +563,7 @@ export class DashboardComponent implements OnInit {
   
       // If less then 7 players add array with empty string
       const t2preview = this.team2preview.concat(Array(9 - this.team2preview.length).fill(['']))  
-      console.log('t2preview', t2preview)    
+      // console.log('t2preview', t2preview)    
 
       // Add everytimes 3 fieldsin row
       const t2p1row = t2preview[0].concat(Array(3 - t2preview[0].length).fill(''));      
@@ -579,8 +619,8 @@ export class DashboardComponent implements OnInit {
           (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) + 
           (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0) 
         ].reduce(this.addPreelo, 0); 
-        console.log('THIS.OPTIONS', this.options)
-        console.log('MATCH', match)
+        // console.log('THIS.OPTIONS', this.options)
+        // console.log('MATCH', match)
         
         this.matchRow = {
           timestamp: match.timestamp,
@@ -665,12 +705,63 @@ export class DashboardComponent implements OnInit {
           t2p7score: match.t2p7score,
           t2p7postelo: match.t2p7postelo,
         }
-        console.log('el =>', this.matchRow)
+        // console.log('el =>', this.matchRow)
         return this.matchRow;
       })
       
-    ).subscribe();
+    ).subscribe();    
+
+    this.t1p1name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t1p1preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p1preeloNgModel)  
+                
+        }
+      })      
+    })
+    this.t1p2name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t1p2preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })
     
+    // this.playersToWar.valueChanges.subscribe(value => {
+      
+    //   this.options.forEach((el:any) => {
+    //     if(el.username == value){
+    //       const eloPlayer = el.ranking;
+    //       console.log('eloPlayer', eloPlayer)
+    //   //     this.sumCumulativeTeamOne = eloPlayer.reduce((sum, item) => sum + +item, 0);
+    //   //     // this.sumCumulativeTeamOne = value
+    //   //     // .map(value => +value)
+    //   //     // .filter(value => !isNaN(value))
+    //   //     // .reduce((acc, value) => acc + value, 0);
+    //     }
+    //   })      
+    // })     
+  }
+
+  applyEmpFilter(ob:MatSelectChange,empfilter:EmpFilter) {
+
+    this.filterDictionary.set(empfilter.name,ob.value);
+
+
+    var jsonString = JSON.stringify(Array.from(this.filterDictionary.entries()));
+    
+    this.dataSourceFilters.filter = jsonString;
+    //console.log(this.filterValues);
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   loginTest() {
@@ -720,6 +811,61 @@ export class DashboardComponent implements OnInit {
   onOptionSelectedOne(event) {
     // this.selectedOptionT1p1name = event.option.value;
     // this.t1p1name.setValue(this.selectedOptionT1p1name.playername);
+  }
+
+  sendPlayersManually(){
+    const t1p1name = this.t1p1name.value != null ? this.t1p1name.value : ''; 
+    const t1p2name = this.t1p2name.value != null ? this.t1p2name.value : '';
+    const t1p3name = this.t1p3name.value != null ? this.t1p3name.value : '';
+    const t1p4name = this.t1p4name.value != null ? this.t1p4name.value : '';
+    const t1p5name = this.t1p5name.value != null ? this.t1p5name.value : '';
+    const t1p6name = this.t1p6name.value != null ? this.t1p6name.value : '';
+    const t1p7name = this.t1p7name.value != null ? this.t1p7name.value : '';
+
+    //TEAM 2
+    const t2p1name = this.t2p1name.value != null ? this.t2p1name.value : ''; 
+    const t2p2name = this.t2p2name.value != null ? this.t2p2name.value : '';
+    const t2p3name = this.t2p3name.value != null ? this.t2p3name.value : '';
+    const t2p4name = this.t2p4name.value != null ? this.t2p4name.value : '';
+    const t2p5name = this.t2p5name.value != null ? this.t2p5name.value : '';
+    const t2p6name = this.t2p6name.value != null ? this.t2p6name.value : '';
+    const t2p7name = this.t2p7name.value != null ? this.t2p7name.value : '';
+    
+    this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', t1p1name, t1p2name, t1p3name, t1p4name, t1p5name, t1p6name, t1p7name).subscribe({
+      next: (res) => {
+        if(res.done = true){
+         
+          this.modalHeader = 'SUCCESS'
+          this.errorMessage = 'Teams updated!'
+          this.modalService.open(
+            this.content, 
+            { 
+              centered: true,
+              windowClass: 'success' 
+            }
+          );
+        }
+      }
+    })
+    this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', t2p1name, t2p2name, t2p3name, t2p4name, t2p5name, t2p6name, t2p7name).subscribe({
+      next: (res) => {
+        // if(res.done = true){
+        //   const infoTeamTwo = 'Teams 2 updated';
+        
+        //   this.modalHeader = 'SUCCESS'
+        //   this.errorMessage = 'Teams updated'
+        //   this.modalService.open(
+        //     this.content, 
+        //     { 
+        //       centered: true,
+        //       windowClass: 'success' 
+        //     }
+        //   );
+        // }
+      }, error: (err) => {
+        console.log('err', err);
+      }
+    })
   }
 
   scoresTwoTeams(){
@@ -906,34 +1052,25 @@ export class DashboardComponent implements OnInit {
             }
 
               // *** TEAM ONE ***
-            this.googleApi.getMultipleRanges('A12:A18').subscribe(data => {
+            this.googleApi.getMultipleRanges('A12:A19').subscribe(data => {
               const t1preview = data['values'];         
-               console.log('t1preview => =>', t1preview)
+              //  console.log('t1preview => =>', t1preview)
                // set value from values from GET
            
-              //  this.playersToWar.controls['t1p1name'].setValue(t1preview[0])
-              //  this.playersToWar.controls['t1p2name'].setValue(t1preview[1])
-              //  this.playersToWar.controls['t1p3name'].setValue(t1preview[2])
-              //  this.playersToWar.controls['t1p4name'].setValue(t1preview[3])
-              //  this.playersToWar.controls['t1p5name'].setValue(t1preview[4])
-              //  this.playersToWar.controls['t1p6name'].setValue(t1preview[5])
-              //  this.playersToWar.controls['t1p7name'].setValue(t1preview[6])
                this.t1p1name?.setValue(t1preview[0]); 
                this.t1p2name?.setValue(t1preview[1]); 
                this.t1p3name?.setValue(t1preview[2]); 
                this.t1p4name?.setValue(t1preview[3]); 
                this.t1p5name?.setValue(t1preview[4]);
                this.t1p6name?.setValue(t1preview[5]);
-               this.t1p7name?.setValue(t1preview[6]);  
-               
-               
+               this.t1p7name?.setValue(t1preview[6]);
          
                // console.log('t1preview', t1preview)
              }, error => {
                console.log('error getPriviewPlayers', error)
             })
 
-            this.googleApi.getMultipleRanges('B12:B20').subscribe( data => {
+            this.googleApi.getMultipleRanges('B12:B19').subscribe( data => {
               const t1preview = data['values'];  
               //Team 1 Initial ELO
               
@@ -954,13 +1091,13 @@ export class DashboardComponent implements OnInit {
               this.t1cumulative?.setValue(Number(t1preview[7]).toFixed(2));
               // this.preEloTeamOne.controls['t1cumulative'].setValue(Number(t1preview[7]).toFixed(2));
             }, error => {
-              console.log("getMultipleRanges('B12:B20')", error)
+              console.log("getMultipleRanges('B12:B19')", error)
             })
          
              // *** TEAM TWO ***    
              this.googleApi.getMultipleRanges('A23:A29').subscribe(data => {
               const t2preview = data['values'];    
-              console.log('t1preview => =>', t2preview)
+              // console.log('t1preview => =>', t2preview)
              // TEAM 2 set value from values from GET
             //  this.teamTwoToWar.controls['t2p1name'].setValue(t2preview[0])
             //  this.teamTwoToWar.controls['t2p2name'].setValue(t2preview[1])
@@ -976,6 +1113,7 @@ export class DashboardComponent implements OnInit {
                this.t2p5name?.setValue(t2preview[4]);
                this.t2p6name?.setValue(t2preview[5]);
                this.t2p7name?.setValue(t2preview[6]);
+               
                // console.log('t2preview', t2preview)
              }, error => {
                console.log('error getPriviewPlayers', error)
@@ -1043,10 +1181,14 @@ export class DashboardComponent implements OnInit {
     this.googleApi.runScriptFunction('updateELO').subscribe({
       next: (res) => {
         console.log('updateELO res =>', res)
-       
+        // Clear score from Team One
         this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C12:C18', '','','','','', '', '')
-       
+        // Clear score from Team Two
         this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C23:C29', '','','','','', '', '')
+        // Clear players from Team One
+        this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', '','','','','', '', '')
+        // Clear players from Team Two
+        this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', '','','','','', '', '')
 
         if(res.response.result == false){
           this.modalHeader = 'FAILED';
@@ -1085,6 +1227,7 @@ export class DashboardComponent implements OnInit {
         this.t1p5name.reset()
         this.t1p6name.reset()
         this.t1p7name.reset()
+        
 
         this.t1p1preelo.reset()
         this.t1p2preelo.reset()
@@ -1093,6 +1236,14 @@ export class DashboardComponent implements OnInit {
         this.t1p5preelo.reset()
         this.t1p6preelo.reset()
         this.t1p7preelo.reset()
+        this.googleApi.clearCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'B19', '=SUMA.JEŻELI(B12:B18,"<>#N/A")').subscribe({
+          next: (res) => {
+            console.log('clearCell', res)
+            this.t1cumulative.reset()
+          }, error: (err) => {
+            console.log('clearCell err', err)
+          }
+        })
       },
       error: (err) => {
         console.log('err clear A12:A18 =>', err)
@@ -1117,6 +1268,15 @@ export class DashboardComponent implements OnInit {
         this.t2p5preelo.reset()
         this.t2p6preelo.reset()
         this.t2p7preelo.reset()
+
+        this.googleApi.clearCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'B30', '=SUMA.JEŻELI(B23:B29,"<>#N/A")').subscribe({
+          next: (res) => {
+            console.log('clearCell', res)
+            this.t2cumulative.reset()
+          }, error: (err) => {
+            console.log('clearCell err', err)
+          }
+        })
       },
       error: (err) => {
         console.log('err clear A23:A29 =>', err)       
@@ -1192,5 +1352,11 @@ export class DashboardComponent implements OnInit {
   public ceilPrecised(number, precision) {
     const power = Math.pow(10, precision);
     return Math.ceil(number * power) / power;
+  }
+
+  ngOnDestroy() {
+    if (this.sumSubscription) {
+      this.sumSubscription.unsubscribe();
+    }
   }
 }

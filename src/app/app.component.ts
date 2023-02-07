@@ -22,7 +22,8 @@ import { OAuthService } from 'angular-oauth2-oidc';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
+  parentRanking: any;
   title = 'SH MIX';
   players$: Observable<any>;
   matches$: Observable<any>;

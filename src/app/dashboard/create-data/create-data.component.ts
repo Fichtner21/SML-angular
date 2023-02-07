@@ -201,19 +201,7 @@ export class CreateDataComponent implements OnInit {
       ]
     }
     
-    this.createPlayer(environment.SPREADSHEET_ID, "USER_ENTERED", playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({      
-      next: (res) => {
-        console.log(res);
-        if(res){
-          this.router.navigate(['/obj-ranking'])
-        }
-      },
-      error: (error) => {
-        console.log('ERROR =>', error.message);        
-      }
-    })
-
-    // this.playersApiService.createPlayer(playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({      
+    // this.createPlayer(environment.SPREADSHEET_ID, "USER_ENTERED", playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({      
     //   next: (res) => {
     //     console.log(res);
     //     if(res){
@@ -224,6 +212,18 @@ export class CreateDataComponent implements OnInit {
     //     console.log('ERROR =>', error.message);        
     //   }
     // })
+
+    this.playersApiService.createPlayer(environment.SPREADSHEET_ID, "USER_ENTERED", playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak).subscribe({      
+      next: (res) => {
+        console.log(res);
+        if(res){
+          this.router.navigate([`/obj-ranking/${username}`])
+        }
+      },
+      error: (error) => {
+        console.log('ERROR =>', error.message);        
+      }
+    })
   }
 
   listPlayersComponent() {
@@ -261,21 +261,5 @@ export class CreateDataComponent implements OnInit {
     })
   }
 
-  public createPlayer( 
-    spreadsheetId:any,  
-    valueInputOption: any,
-    playername: string, username: string, ranking: string, percentile:   string,   place: string,
-    warcount: string, nationality: string, clanhistory: string, cup1on1edition1: string, meeting: string, cup3on3: string, active: string, ban: boolean, lastwar: string, fpw: string, fpwmax: string, fpwmin: string, last30days: string,  last365days: string, lastwarpc: string, s1wars: string, s1fpw: string, streak: string
-    ): Observable<Sheet>{
-      return this.http.post<Sheet>(       
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Players:append?valueInputOption=${valueInputOption}`
-        ,
-        {  
-          "values": [
-              [playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s1fpw, streak]
-          ]                                  
-        },
-        { headers: this.authHeader()}
-      )         
-  }  
+  
 }

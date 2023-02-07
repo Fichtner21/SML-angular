@@ -240,9 +240,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (!oAuthService.hasValidAccessToken()) {
           oAuthService.initLoginFlow()
         } else {
-          oAuthService.loadUserProfile().then( (userProfile) => {
-            // this.userProfileSubject.next(userProfile as UserInfo)
-          })
+          // oAuthService.loadUserProfile().then( (userProfile) => {
+          //   // this.userProfileSubject.next(userProfile as UserInfo)
+          // })
         }
 
       })
@@ -512,7 +512,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // *** TEAM ONE ***    
     this.googleApi.getMultipleRanges('A12:B19').subscribe(data => {
       this.team1preview = data['values'];         
-      console.log('this.team1preview', this.team1preview)
+      // console.log('this.team1preview', this.team1preview)
       // If less then 7 players add array with empty string
       const t1preview = this.team1preview.concat(Array(8 - this.team1preview.length).fill(['']))      
 
@@ -1181,14 +1181,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.googleApi.runScriptFunction('updateELO').subscribe({
       next: (res) => {
         console.log('updateELO res =>', res)
-        // Clear score from Team One
-        this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C12:C18', '','','','','', '', '')
-        // Clear score from Team Two
-        this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C23:C29', '','','','','', '', '')
-        // Clear players from Team One
-        this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', '','','','','', '', '')
-        // Clear players from Team Two
-        this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', '','','','','', '', '')
+        // // Clear score from Team One
+        // this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C12:C18', '','','','','', '', '')
+        // // Clear score from Team Two
+        // this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C23:C29', '','','','','', '', '')
+        // // Clear players from Team One
+        // this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', '','','','','', '', '')
+        // // Clear players from Team Two
+        // this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', '','','','','', '', '')
+        this.clearTeam();
 
         if(res.response.result == false){
           this.modalHeader = 'FAILED';
@@ -1226,8 +1227,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.t1p4name.reset()
         this.t1p5name.reset()
         this.t1p6name.reset()
-        this.t1p7name.reset()
-        
+        this.t1p7name.reset()        
 
         this.t1p1preelo.reset()
         this.t1p2preelo.reset()
@@ -1236,6 +1236,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.t1p5preelo.reset()
         this.t1p6preelo.reset()
         this.t1p7preelo.reset()
+
+        this.t1p1score.reset()
+        this.t1p2score.reset()
+        this.t1p3score.reset()
+        this.t1p4score.reset()
+        this.t1p5score.reset()
+        this.t1p6score.reset()
+        this.t1p7score.reset()
+        this.t1roundsWonInput.reset()
+
         this.googleApi.clearCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'B19', '=SUMA.JEŻELI(B12:B18,"<>#N/A")').subscribe({
           next: (res) => {
             console.log('clearCell', res)
@@ -1250,6 +1260,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         
       }
     })
+    this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C12:C18', '','','','','', '', '')
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', '','','','','', '', '').subscribe({
       next: (res) => {
         console.log('res CLEAR A23:A29 =>', res)    
@@ -1269,6 +1280,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.t2p6preelo.reset()
         this.t2p7preelo.reset()
 
+        this.t2p1score.reset()
+        this.t2p2score.reset()
+        this.t2p3score.reset()
+        this.t2p4score.reset()
+        this.t2p5score.reset()
+        this.t2p6score.reset()
+        this.t2p7score.reset()
+        this.t2roundsWonInput.reset()
+
         this.googleApi.clearCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'B30', '=SUMA.JEŻELI(B23:B29,"<>#N/A")').subscribe({
           next: (res) => {
             console.log('clearCell', res)
@@ -1282,6 +1302,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         console.log('err clear A23:A29 =>', err)       
       }
     })
+    this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C23:C29', '','','','','', '', '')
   }
 
   public showNotification( type: string, message: string ): void {

@@ -2,7 +2,7 @@
   <div class="container">
   
     <div class="main-grid">
-      <div class="grid span4">
+      <div class="grid span5">
         <mat-card class="span3">
           <button mat-raised-button color="primary" routerLink="/dashboard/create-player">Create player <fa-icon [icon]="userPlusIcon"></fa-icon></button>
         </mat-card>
@@ -201,49 +201,7 @@
               </mat-form-field>
             </form>
           </div>
-        </div>
-        <div class="buttons span1">
-          <mat-card class="" style="margin-bottom: 20px;">
-            <mat-card-content>
-              <button mat-raised-button (click)="clearTeam()">Clear</button>
-            </mat-card-content>
-            <mat-card-content>
-              <button mat-raised-button color="warn" (click)="scoresTwoTeams()">Send score (UPDATE ELO) <fa-icon [icon]="paperPlaneTop"></fa-icon></button>
-            </mat-card-content>
-            <mat-card-content style="padding-top:10px;">
-              <button mat-raised-button color="primary" (click)="balanceTeams()">Mix Teams <fa-icon [icon]="balanced"></fa-icon></button>
-              <div class="desc"> Click when you add players and  you want to create teams for war.</div>
-            </mat-card-content>
-            <mat-card-content>
-              <button mat-raised-button color="primary" (click)="sendPlayersManually()">Confirm Players <fa-icon [icon]="puzzle"></fa-icon></button> Click here if u want to add player manualy, next u can sort by ELO or stay manualy.
-            </mat-card-content>
-            <!-- <mat-card-content>
-              <button mat-raised-button (click)="selectTeams()">RUN selectTeams()</button>
-              <div class="desc">Click when you want to select team (1 or 2).</div>
-            </mat-card-content> -->
-            
-            <!-- <mat-card-content>
-              <button mat-raised-button color="warn" (click)="getStatistics()">RUN getStatistics()</button>
-              <div class="desc">Click to test connections, check console.</div>
-              
-            </mat-card-content> -->
-            <mat-card-content>
-              <button mat-raised-button color="warn" (click)="refresh()">Refresh Token <fa-icon [icon]="refreshIcon"></fa-icon></button>
-              <div class="desc">Click to refresh token.</div>
-              
-            </mat-card-content>
-            <!-- <mat-card-content>
-              <button mat-raised-button color="primary" (click)="updateCell()">RUN updateCell()</button>
-              <div class="desc">Click to update cell.</div>
-            </mat-card-content> -->
-          </mat-card> 
-          <mat-card>
-            <mat-card-content>
-              <button mat-raised-button color="accent" (click)="sortPlayers()"> Update ranking<fa-icon [icon]="arrowUpArrowDown"></fa-icon></button>
-              <div class="desc">Click when you want to sort players by ranking.</div> 
-            </mat-card-content>
-          </mat-card>  
-        </div>
+        </div>       
         <div class="team span3">
           <form class="example-form" [formGroup]="teamTwoToWar">
             <h3>Team 2</h3>
@@ -426,8 +384,36 @@
               </mat-form-field>
             </form>
           </div> 
+        </div>
+        <div class="buttons span1">
+          <mat-card class="" style="margin-bottom: 20px;">
+            <h3>Match:</h3>
+            <mat-card-content>
+              <button mat-raised-button color="primary" (click)="sendPlayersManually()">Confirm Players <fa-icon [icon]="stamp"></fa-icon></button> Click here if u want to add player manualy, next u can sort by ELO or stay manualy.
+            </mat-card-content> 
+            <mat-card-content style="padding-top:10px;">
+              <button mat-raised-button color="primary" (click)="balanceTeams()">Mix Teams <fa-icon [icon]="balanced"></fa-icon></button>
+              <div class="desc"> Click when you add players and  you want to create teams for war.</div>
+            </mat-card-content>
+            <mat-card-content>
+              <button mat-raised-button color="warn" (click)="scoresTwoTeams()">Send score (UPDATE ELO) <fa-icon [icon]="paperPlaneTop"></fa-icon></button>
+            </mat-card-content>            
+            <mat-card-content>
+              <button mat-raised-button (click)="clearTeam()">Clear</button>
+            </mat-card-content>      
+          </mat-card> 
+          <mat-card>
+            <h3>To all site:</h3>
+            <mat-card-content>
+              <button mat-raised-button color="accent" (click)="sortPlayers()"> Update ranking<fa-icon [icon]="arrowUpArrowDown"></fa-icon></button>
+              <div class="desc">Click when you want to sort players by ranking.</div> 
+            </mat-card-content>
+            <mat-card-content>
+              <button mat-raised-button color="warn" (click)="refresh()">Refresh Token <fa-icon [icon]="refreshIcon"></fa-icon></button>
+              <div class="desc">Click to refresh token.</div>              
+            </mat-card-content>
+          </mat-card>  
         </div> 
-
         
         <mat-card class="last span7">
           <h4>Last match:</h4>
@@ -604,7 +590,7 @@
                 <input
                   matInput
                   (keyup)="applyFilter($event)"
-                  placeholder="Search Columns"
+                  placeholder="Search Player"
                   #input
                 />
               </mat-form-field>
@@ -623,19 +609,7 @@
       </div>
     </div>
     
-   
-    <div class="add-match">
-      
-         
-      
-    </div>
-   
-   
-   
-    
-  
-      
-      <router-outlet></router-outlet>
+    <router-outlet></router-outlet>
      
   </div>
 </section>

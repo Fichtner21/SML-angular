@@ -25,7 +25,7 @@ section {
 
     .main-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(7, 1fr);
       grid-template-rows: auto;
       gap: 20px;
 
@@ -108,9 +108,7 @@ section {
   column-gap: 100px;
   row-gap: 50px;
   overflow: hidden;  
-  padding: 30px 0;
-
-  
+  padding: 30px 0;  
 }
 
 .readonly {

@@ -10,7 +10,7 @@ import { ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Sheet } from '../models/sheet.model';
 import { environment } from 'src/environments/environment';
-import { faArrowDownUpAcrossLine, faArrowsUpDown, faDoorOpen, faPaperPlane, faPuzzlePiece, faRightFromBracket, faRotateRight, faScaleBalanced, faUserPlus, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDownUpAcrossLine, faArrowsUpDown, faDoorOpen, faPaperPlane, faPuzzlePiece, faRightFromBracket, faRotateRight, faScaleBalanced, faStamp, faUserPlus, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSelectChange } from '@angular/material/select';
 import { threadId } from 'worker_threads';
@@ -49,6 +49,7 @@ export interface Employee {
   // department:string
   index: number;
   name: string,
+  username: string,
   elo: string,
   active: boolean,
   ban: boolean,
@@ -96,6 +97,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   doorOpen = faDoorOpen;
   paperPlaneTop = faPaperPlane;
   puzzle = faPuzzlePiece;
+  stamp = faStamp;
   gmail = 'https://gmail.googleapis.com';
   errorMessage = '';
   modalHeader = '';
@@ -401,6 +403,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       for(let [index, value] of data.entries()){
         const obj = {
           index: Number(index) + 1,
+          username: value.username,
           name: value.playername,
           elo: value.ranking,
           active: value.active == 'TRUE' ? true : false,
@@ -414,25 +417,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       // console.log('playerRowArray', this.playerRowArray)
       return this.playerRowArray;
     })
-
-    // this.players$.pipe(
-    //   map((name:any) => {
-    //     this.AllPlayers = {       
-    //       name:name.playername, 
-    //       elo: name.ranking, 
-    //       active: name.active, 
-    //       flag: name.nationality
-    //     }
-    //   }) 
-    // )
-
-   
   }  
 
   ngOnInit(): void { 
     this.oAuthService.setupAutomaticSilentRefresh();   
  
-    this.displayedColumns= ['index','name','elo','flag','wars','active', 'ban'];
+    this.displayedColumns= ['index','name','username','elo','flag','wars','active', 'ban'];
    
     this.dataSource = new MatTableDataSource(this.playerRowArray);
     this.dataSourceFilters = new MatTableDataSource(this.playerRowArray);
@@ -772,8 +762,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.oAuthService.logOut();
   }
 
-  private _filter(value: string): any[] {    
-    const filterValue = value.toLowerCase();    
+  private _filter(value: string): any[] {        
+    // const filterValue = value.toLowerCase();    
+    const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
     return this.options.filter(option => option.playername.toLowerCase().includes(filterValue));     
     // return this.options.filter(option => option.playername.toLowerCase().indexOf(filterValue) === 0);
   }
@@ -844,9 +835,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
               windowClass: 'success' 
             }
           );
+
+          this.googleApi.getMultipleRanges('B19').subscribe(data =>{      
+            const values = data['values'];     
+            this.t1cumulative?.setValue(values[0]);       
+          })
         }
       }
     })
+
+    
+
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', t2p1name, t2p2name, t2p3name, t2p4name, t2p5name, t2p6name, t2p7name).subscribe({
       next: (res) => {
         // if(res.done = true){
@@ -862,6 +861,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         //     }
         //   );
         // }
+        this.googleApi.getMultipleRanges('B30').subscribe(data =>{      
+          const values = data['values'];     
+          this.t2cumulative?.setValue(values[0]);       
+        })
       }, error: (err) => {
         console.log('err', err);
       }
@@ -1170,6 +1173,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.googleApi.runScriptFunction('sortPlayers').subscribe({
       next: (res) => {
         console.log('res =>', res)
+        if(res.done == true){
+          this.modalHeader = 'SUCCESS'
+          this.errorMessage = 'Ranking update!';
+          this.modalService.open(
+            this.content, 
+            { 
+              centered: true,
+              windowClass: 'success' 
+            }
+          );
+        }
       },
       error: (err) => {
         console.log('err =>', err)

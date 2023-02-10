@@ -41,6 +41,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { MatTableModule } from '@angular/material/table';
+import { MixUsComponent } from './mix-us/mix-us.component';
+import { MatSelectModule } from '@angular/material/select';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -93,7 +95,7 @@ const customNotifierOptions: NotifierOptions = {
     AppComponent,
     HomeComponent,    
     DateFormatPipePipe,     
-    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent
   ],
   imports: [
     CommonModule,
@@ -116,6 +118,7 @@ const customNotifierOptions: NotifierOptions = {
     ReactiveFormsModule,
     MatInputModule,
     MatTableModule,
+    MatSelectModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),      

@@ -6,9 +6,6 @@ import { environment } from 'src/environments/environment';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { map, startWith, switchMap, take, tap } from 'rxjs/operators';
 
-
-
-
 const SCRIPT_ID = 'AKfycbw1UM_u6MgkD_a9P2yHtUdhCkz5kxBX-BuVDCA8tXQ';
 const ENDPOINT = `https://script.googleapis.com/v1/scripts/${SCRIPT_ID}:run`;
 

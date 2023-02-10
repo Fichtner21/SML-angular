@@ -20,6 +20,7 @@
       <a routerLink="about" routerLinkActive="active">{{ 'nav.about' | translate }}</a>
       <a routerLink="cup" routerLinkActive="active">Cup</a>
       <a routerLink="dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="mix" routerLinkActive="mix">Mix</a>
       <form action="">
         <label for="langChange">{{ 'nav.choose' | translate }}</label>
         <select class="language-select" name="langChange" (ngModelChange)="languageChange($event)" [(ngModel)]="languageCode">          

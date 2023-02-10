@@ -71,7 +71,7 @@ export class CreateDataComponent implements OnInit {
       cup1on1edition1: formBuilder.control('-'),
       meeting: formBuilder.control(''),
       cup3on3: formBuilder.control(''),
-      active: formBuilder.control(false),
+      active: formBuilder.control(''),
       ban: formBuilder.control(false),
       lastwar: formBuilder.control(''),
       fpw: formBuilder.control(''),

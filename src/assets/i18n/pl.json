@@ -85,5 +85,24 @@
     "lost": "Przegrane wojny:",
     "won": "Wygrane wojny:",
     "drawn": "Zremisowane wojny:"
+  },
+  "dashboard": {
+    "create_player": "Dodaj gracza",
+    "list_players": "Lista graczy",
+    "logout": "Wyloguj",
+    "confirm": "Zatwierdź graczy",
+    "confirm_desc": "Kliknij aby potwierdzić dodanie graczy do meczu, jeśli dodajesz lub usuwasz gracza, musisz to potwierdzić.",
+    "mix": "Mixuj teamy",
+    "mix_desc": "Kliknij aby podzielić graczy na teamy według ELO.",
+    "send":"Wyślij wynik (PRZELICZ ELO)",
+    "send_desc": "Upewnij się, że wszystko jest dobrze dodane, jeśli jest kliknij aby dodać wojne.",
+    "clear_teams": "Wyczyść teamy.",
+    "desc": "Jeśli coś nie działa lub wracasz po długiej nieobecności, kliknij za każdym razem REFRESH. Jeśli nie jesteś pewny że gracz został dodany poprawnie możesz go wyszukać z listy wszystkich graczy i skopoiować jego 'username' wkleić do składu, zatwierdzić i polosować ponownie.",
+    "refresh": "Odśwież",
+    "refresh_desc": "Kliknij aby przeładować dane.",
+    "ranking": "Odśwież ranking",
+    "ranking_desc": "Klikając tutaj posortujesz graczy według rankingu na stronie rankingu.",
+    "last": "Ostatnia wojna:",
+    "all": "Wszyscy gracze"
   }
 }

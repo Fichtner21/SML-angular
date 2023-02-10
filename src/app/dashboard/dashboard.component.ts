@@ -119,11 +119,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   t1p5name = new FormControl('');
   t1p6name = new FormControl('');
   t1p7name = new FormControl('');
+  selectedUsername: string = '';
+  selectedPlayername: string = '';
   cumulativeTeamOne = new FormControl('');
   roundsWonTeamOne = new FormControl('');
   t1p1preelo = new FormControl('');
   t1p1preeloNgModel = new FormControl('');
   t1p2preeloNgModel = new FormControl('');
+  t1p3preeloNgModel = new FormControl('');
+  t1p4preeloNgModel = new FormControl('');
+  t1p5preeloNgModel = new FormControl('');
+  t1p6preeloNgModel = new FormControl('');
+  t1p7preeloNgModel = new FormControl('');
   t1p2preelo = new FormControl('');
   t1p3preelo = new FormControl('');
   t1p4preelo = new FormControl('');
@@ -149,6 +156,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   t1sumFrags = new FormControl('');
   t1roundsWon = new FormControl('');
   t1roundsWonInput = new FormControl('');
+  cumulativeTeamOneArray: any[];
   // Team 2
   t2p1name = new FormControl('');
   t2p2name = new FormControl('');
@@ -164,6 +172,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   t2p5preelo = new FormControl('');
   t2p6preelo = new FormControl('');
   t2p7preelo = new FormControl('');
+  t2p1preeloNgModel = new FormControl('');
+  t2p2preeloNgModel = new FormControl('');
+  t2p3preeloNgModel = new FormControl('');
+  t2p4preeloNgModel = new FormControl('');
+  t2p5preeloNgModel = new FormControl('');
+  t2p6preeloNgModel = new FormControl('');
+  t2p7preeloNgModel = new FormControl('');
   t2cumulative = new FormControl('');
   filteredOptionsT2p1name: Observable<any>;
   filteredOptionsT2p2name: Observable<any>;
@@ -402,13 +417,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       // console.log('data =>', data)
       for(let [index, value] of data.entries()){
         const obj = {
-          index: Number(index) + 1,
+          nr: Number(index) + 1,
           username: value.username,
           name: value.playername,
           elo: value.ranking,
           active: value.active == 'TRUE' ? true : false,
           ban: value.ban == 'TRUE' ? true : false,
-          flag: value.nationality,
+          // flag: value.nationality,
           wars: value.warcount
         }
         // console.log('OBJ', obj)
@@ -422,7 +437,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void { 
     this.oAuthService.setupAutomaticSilentRefresh();   
  
-    this.displayedColumns= ['index','name','username','elo','flag','wars','active', 'ban'];
+    this.displayedColumns= ['nr','name','username','elo','wars','active', 'ban'];
    
     this.dataSource = new MatTableDataSource(this.playerRowArray);
     this.dataSourceFilters = new MatTableDataSource(this.playerRowArray);
@@ -703,19 +718,145 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.t1p1name.
     valueChanges.subscribe(value => {
+      console.log('value', value)
       this.options.forEach((el:any) => {
         if(el.username == value){
           this.t1p1preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p1preeloNgModel)  
-                
         }
       })      
     })
+
+    // this.t1p1name.valueChanges.subscribe(value => {
+    //   this.cumulativeTeamOneArray.push(value);
+    //   console.log('cumulativeTeamOneArray 1', this.cumulativeTeamOneArray)  
+    // })
     this.t1p2name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p2preeloNgModel = el.ranking;
+          this.t1p2preeloNgModel = el.ranking;                      
+        }
+      })      
+    })
+    // this.t1p2name.valueChanges.subscribe(value => {
+    //   this.cumulativeTeamOneArray.push(value);
+    //   console.log('cumulativeTeamOneArray 2', this.cumulativeTeamOneArray) 
+    // })
+    this.t1p3name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t1p3preeloNgModel = el.ranking;
+          this.cumulativeTeamOneArray.push(el.ranking)  
+          console.log('cumulativeTeamOneArray 3', this.cumulativeTeamOneArray)          
+        }
+      })      
+    })
+    this.t1p4name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t1p4preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })
+    this.t1p5name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t1p5preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })
+    this.t1p6name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t1p6preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })
+    this.t1p7name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t1p7preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })
+    this.t2p1name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t2p1preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })
+    this.t2p2name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t2p2preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })  
+    this.t2p3name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t2p3preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })
+    this.t2p4name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t2p4preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })
+    this.t2p5name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t2p5preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })
+    this.t2p6name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t2p6preeloNgModel = el.ranking;
+          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
+          
+        }
+      })      
+    })
+    this.t2p7name.
+    valueChanges.subscribe(value => {
+      this.options.forEach((el:any) => {
+        if(el.username == value){
+          this.t2p7preeloNgModel = el.ranking;
           // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
           
         }
@@ -934,6 +1075,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     })
   }
+
+  // updateSelectedValue(event: any) {
+
+  //   if (event.option) {
+  //     this.selectedUsername = event.option.username;
+  //     this.selectedPlayername = event.option.playername;
+  //     console.log('event', event);
+  //     console.log('event.option', event.option);
+  //     console.log('event.option.value', event.option.value);
+  //     console.log('event.option.value.username', event.option.username);
+  //     console.log('event.option.username', event.option.username);
+  //     console.log('event.option.playername', event.option.playername);
+  //   }
+  //   // this.selectedUsername = event.option.value.username;
+  //   // this.selectedPlayername = event.option.value.playername;
+  // }
 
   onSubmit(){
     // const { value } = this.playersToWar;
@@ -1388,6 +1545,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const power = Math.pow(10, precision);
     return Math.ceil(number * power) / power;
   }
+
+  updateSelectedValue(event: any) {
+    if (event.source.value) {
+      this.selectedPlayername = event.source.value.playername;
+      console.log(this.selectedPlayername);
+    }
+  }
+
+  setSelectedPlayer(option) {
+    if (option) {
+      this.selectedUsername = option.username;
+      this.selectedPlayername = option.playername;
+    } else {
+      this.selectedUsername = undefined;
+      this.selectedPlayername = undefined;
+      }
+    }
 
   ngOnDestroy() {
     if (this.sumSubscription) {

@@ -1,0 +1,43 @@
+<section>
+  <div class="container">
+    <p>mix-us works!</p>
+    <form [formGroup]="form">
+      <mat-form-field>
+        <mat-label>Wybierz zawodników</mat-label>
+        <mat-select formControlName="selectedPlayers" multiple>
+          <mat-option *ngFor="let player of players$ | async" [value]="player">
+            <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'>
+            {{player.playername}} ({{ player.ranking }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button (click)="onSubmit()">Zapisz</button>
+    </form>
+    <div>
+      <button (click)="maxSumArrays(selectedPlayersArray)">POKAŻ SKŁADY</button>
+    </div>
+    <h2>Selected Players</h2> 
+    <div *ngFor="let player of selectedPlayersArray" class="selected">
+      <div style="display: flex;" class="selectedPlayer">
+        <span class="playername">{{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'><span> ({{ player.ranking }})</span> 
+      </div>
+    </div>
+   
+    <div class="teams">
+      <div class="team"> 
+        <h2>Team 1</h2>
+        <div *ngFor="let player of array1" class="player">        
+          <span class="playername">{{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'><span> ({{ player.ranking }})</span>        
+        </div>
+      </div>
+      <div class="team">
+        <h2>Team 2</h2> 
+        <div *ngFor="let player of array2" class="player">          
+          <span class="playername">{{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'><span> ({{ player.ranking }})</span>        
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

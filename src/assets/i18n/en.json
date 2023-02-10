@@ -85,5 +85,24 @@
     "lost": "Lost wars:",
     "won": "Won wars:",
     "drawn": "Drawn wars:"
+  },
+  "dashboard": {
+    "create_player": "Create player",
+    "list_players": "List players",
+    "logout": "Logout",
+    "confirm": "Confirm Players",
+    "confirm_desc": "Click here to confirm added players, if u add one more or remove, need to click once again.",
+    "mix": "Mix Teams",
+    "mix_desc": "Click when you add players and you want to create teams for war.",
+    "send":"Send score (UPDATE ELO)",
+    "send_desc": "If everything is correct, just click!",
+    "clear_teams": "Clear teams.",
+    "desc": "If something not working properly, just click REFRESH button. If u are not sure about added player, find player in All Players Table, copy - paste his 'username' and CONFIRM teams once again.",
+    "refresh": "Refresh",
+    "refresh_desc": "Click to refresh token. Reload dashboard data.",
+    "ranking": "Update ranking",
+    "ranking_desc": "Click when you want to sort players by ranking.",
+    "last": "Last match:",
+    "all": "All players"
   }
 }

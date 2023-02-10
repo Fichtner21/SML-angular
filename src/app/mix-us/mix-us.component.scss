@@ -1,0 +1,100 @@
+section {
+  padding-top: 80px;   
+  background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%);
+  background-size: 4px 4px;
+  min-height: 100%;
+
+  .container {
+    margin: 0 auto;
+    padding: 0 15px;
+    max-width: 1300px;
+
+    form {
+      
+    }
+  }
+}
+
+::ng-deep .mat-option-text img {
+  width: 30px;
+  // border: 1px solid black;
+  margin-right: 5px;
+}
+
+.teams {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 20px;
+
+  .team {
+       
+  }
+
+  img {
+    width: 30px;
+    // border: 1px solid black;
+    margin-right: 5px;
+  }
+}
+
+.selected {
+  display: flex;
+  padding: 5px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+
+  .playername {
+    font-weight: 700;
+  }
+
+  span {
+    margin-right: 5px;
+    font-size: 20px;
+    color: #ffffc0;
+  }
+
+  &:nth-of-type(2n-1){        
+    background-image: linear-gradient(0deg, rgba(64, 65, 95, .7) 25%, rgba(47, 48, 96, .7) 25%, rgba(47, 48, 96, .7) 50%, rgba(64, 65, 95, .7) 50%, rgba(64, 65, 95, .7) 75%, rgba(47, 48, 96, .7) 75%, rgba(47, 48, 96, .7) 100%);
+    background-size: 4px 4px;
+  }
+
+  &:nth-of-type(2n){        
+    background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
+    background-size: 4px 4px;
+  }
+}
+
+.player {
+  display: flex;
+  padding: 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+
+  .playername {
+    font-weight: 700;
+  }
+
+  span {
+    margin-right: 5px;
+    font-size: 18px;
+    color: #ffffc0;
+  }
+
+  &:nth-of-type(2n-1){        
+    background-image: linear-gradient(0deg, rgba(64, 65, 95, .7) 25%, rgba(47, 48, 96, .7) 25%, rgba(47, 48, 96, .7) 50%, rgba(64, 65, 95, .7) 50%, rgba(64, 65, 95, .7) 75%, rgba(47, 48, 96, .7) 75%, rgba(47, 48, 96, .7) 100%);
+    background-size: 4px 4px;
+  }
+
+  &:nth-of-type(2n){        
+    background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
+    background-size: 4px 4px;
+  }
+} 
+
+.selectedPlayer {
+  img {
+    width: 30px;
+    border: 1px solid black;
+    margin-right: 5px;
+  }
+}

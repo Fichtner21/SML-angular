@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './auth.guard';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
+import { MixUsComponent } from './mix-us/mix-us.component';
 
 const routes: Routes = [{
   path: '',
@@ -32,6 +34,10 @@ const routes: Routes = [{
 {
   path: 'dashboard',
   loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+},
+{
+  path: 'mix',
+  component: MixUsComponent  
 },
 { 
   path: 'login' , 

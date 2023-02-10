@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('token', 'secretToken');
       localStorage.setItem('is_admin', 'true');
       // this.router.navigate(['/about/secret']);
-      this.router.navigate(['/dashboard/list-players']);
+      this.router.navigate(['/dashboard']);
     } else {
       const btnCont = document.querySelector('.btn-cont');      
       if(!document.querySelector('.btn-cont .wrong')){

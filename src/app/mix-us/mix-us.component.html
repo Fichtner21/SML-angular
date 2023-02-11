@@ -1,41 +1,78 @@
 <section>
   <div class="container">
-    <p>mix-us works!</p>
-    <form [formGroup]="form">
-      <mat-form-field>
-        <mat-label>Wybierz zawodników</mat-label>
-        <mat-select formControlName="selectedPlayers" multiple>
-          <mat-option *ngFor="let player of players$ | async" [value]="player">
-            <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'>
-            {{player.playername}} ({{ player.ranking }})
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <button mat-raised-button (click)="onSubmit()">Zapisz</button>
-    </form>
-    <div>
-      <button (click)="maxSumArrays(selectedPlayersArray)">POKAŻ SKŁADY</button>
-    </div>
-    <h2>Selected Players</h2> 
-    <div *ngFor="let player of selectedPlayersArray" class="selected">
-      <div style="display: flex;" class="selectedPlayer">
-        <span class="playername">{{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'><span> ({{ player.ranking }})</span> 
+    <div class="mix">
+      <div class="mix-list">
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
+        </mat-form-field>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="selectUser(row)"
+                            [checked]="selectedUsers.indexOf(row) > -1" [color]="task.color">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+        
+          <!-- Nr Column -->
+          <ng-container matColumnDef="nr">
+            <th mat-header-cell *matHeaderCellDef> Place </th>
+            <td mat-cell *matCellDef="let row"> {{row.nr}} </td>
+          </ng-container>
+        
+          <!-- Username Column -->
+          <ng-container matColumnDef="playername">
+            <th mat-header-cell *matHeaderCellDef> Playername </th>
+            <td mat-cell *matCellDef="let row"> {{row.playername}} </td>
+          </ng-container>
+          <ng-container matColumnDef="flag">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let row"> <img [src]='"assets/images/flags_svg/" + row.flag + ".SVG"'></td>
+          </ng-container>
+          <!-- Username Column -->
+          <ng-container matColumnDef="ranking">
+            <th mat-header-cell *matHeaderCellDef> Ranking </th>
+            <td mat-cell *matCellDef="let row"> {{row.ranking}} </td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
       </div>
-    </div>
-   
-    <div class="teams">
-      <div class="team"> 
-        <h2>Team 1</h2>
-        <div *ngFor="let player of array1" class="player">        
-          <span class="playername">{{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'><span> ({{ player.ranking }})</span>        
+      <div class="mix-result">
+        <h2 class="imp">IMPORTANT!</h2>
+        <p>This tab is only used to draw a team based on ELO, when there is no admin, the draw is performed only on your computer. After the war, send the screens and results (rounds and frags) to the admin on discord. Still no one to enter the match? Draw and keep playing!</p>
+        <div class="selectedTeams">
+          <h2 class="h2Select">Selected Players</h2>
+          <button mat-raised-button color="primary" (click)="maxSumArrays(selectedUsers)">Mix teams!</button>
+        </div>    
+        <div class="selected-cont">
+          <div *ngFor="let player of selectedUsers; let i = index;" class="selected">          
+            <div style="display: flex;" class="selectedPlayer">
+              <span class="playername">  {{ i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span> 
+            </div>
+          </div>  
         </div>
-      </div>
-      <div class="team">
-        <h2>Team 2</h2> 
-        <div *ngFor="let player of array2" class="player">          
-          <span class="playername">{{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'><span> ({{ player.ranking }})</span>        
-        </div>
+        <div class="teams">
+          <div class="team"> 
+            <h2>Team 1</h2>
+            <div *ngFor="let player of array1; let i = index;" class="player">        
+              <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>                    
+            </div>
+            <div>Cumulative: {{ sumTeam1 }}</div>  
+          </div>
+          <div class="team">
+            <h2>Team 2</h2> 
+            <div *ngFor="let player of array2; let i = index;" class="player">          
+              <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>        
+            </div>
+            <div>Cumulative: {{ sumTeam2 }}</div>
+          </div>
+        </div> 
       </div>
     </div>
   </div>

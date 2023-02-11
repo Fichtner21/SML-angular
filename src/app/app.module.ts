@@ -43,6 +43,7 @@ import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { MatTableModule } from '@angular/material/table';
 import { MixUsComponent } from './mix-us/mix-us.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -119,6 +120,7 @@ const customNotifierOptions: NotifierOptions = {
     MatInputModule,
     MatTableModule,
     MatSelectModule,
+    MatCheckboxModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),      

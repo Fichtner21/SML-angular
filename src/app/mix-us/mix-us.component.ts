@@ -1,8 +1,37 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators  } from '@angular/forms';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PlayersApiService } from '../services/players-api.service';
+// import {MatListModule} from '@angular/material/list';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+import { ThemePalette } from '@angular/material/core';
+
+export interface UserData {
+  nr: string;
+  name: string;
+  username: string;
+  ranking: string;
+  wars: string;
+  active: string;
+  ban: string;
+}
+
+interface User {
+  nr: number;
+  username: string;
+  ranking: string;
+  playername: string;
+  flag: string;
+}
+
+export interface Task {
+  name: string;
+  completed: boolean;
+  color: ThemePalette;
+  subtasks?: Task[];
+}
 
 @Component({
   selector: 'app-mix-us',
@@ -10,15 +39,46 @@ import { PlayersApiService } from '../services/players-api.service';
   styleUrls: ['./mix-us.component.scss']
 })
 export class MixUsComponent implements OnInit {
-  public players$: Observable<any>;
+  public players$: Observable<any[]>;
   form: FormGroup;
   selectedPlayersArray: any[];
-  array1: any[];
-  array2: any[];
- 
-  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder) { }
+  array1: any[] = [];
+  array2: any[] = [];
+  sum1: any[];
+  sum2: any[];
+  sumTeam1: any;
+  sumTeam2: any; 
+  // dataSource: MatTableDataSource<any>;
+  // dataSource = new MatTableDataSource<any>([]);
+  selectedRows = [];
+  dataSource: any;
+  public listPlayers$: Observable<any[]>;
+  playerRowArray: any[] = [];
+  public selectedArr: any[] = [];
+  options: any[] = [];
+  // 
+  players: any;
+  displayedColumns: string[] = ['select', 'nr', 'ranking', 'playername','flag'];
+  
+    
+  task: Task = {
+    name: 'Indeterminate',
+    completed: false,
+    color: 'primary',
+    subtasks: [
+      {name: 'Primary', completed: false, color: 'primary'},
+      {name: 'Accent', completed: false, color: 'accent'},
+      {name: 'Warn', completed: false, color: 'warn'},
+    ],
+  };
+  selectedUsers: User[] = [];
+  // displayedColumns: string[];
+  // dataSource = new MatTableDataSource<PeriodicElement>(this.players$);
+  selection = new SelectionModel<UserData>(true, []);
 
-  ngOnInit(): void {
+ 
+
+  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder) { 
     this.players$ = this.googleApi.getPlayers('Players').pipe(
       map((response: any) => {             
         let batchRowValues = response.values;
@@ -35,19 +95,92 @@ export class MixUsComponent implements OnInit {
      
         return players;       
       }),
-    );     
-    
-    this.form = this.formBuilder.group({
-      selectedPlayers: [[]]
+    ); 
+    this.listPlayers$ = this.players$;
+   
+    this.listPlayers$.subscribe(data => {
+      
+      // console.log('data =>', data)
+      for(let [index, value] of data.entries()){
+        
+        const obj = {
+          // nr: Number(index) + 1,
+          nr: (index + 1).toString(),
+          // username: value.username,
+          playername: value.playername,
+          ranking: value.ranking,
+          // active: value.active == 'TRUE' ? true : false,
+          // active: value.active,
+          // ban: value.ban == 'TRUE' ? true : false,
+          // ban: value.ban,
+          flag: value.nationality,
+          // wars: value.warcount
+        }
+        // console.log('OBJ', obj)
+        this.playerRowArray.push(obj)
+        // this.players.push(obj)
+      }
+      console.log('playerRowArray', this.playerRowArray)
+      return this.dataSource = new MatTableDataSource(this.playerRowArray);
+      // console.log('PLAYERS', this.players)
+      // return players;
     })
   }
 
-  onSubmit() {
-    this.selectedPlayersArray = this.form.value.selectedPlayers;
-    console.log('SELECTED PLAYERS:', this.selectedPlayersArray)
+  ngOnInit(): void {
+   
+    const arr = this.playerRowArray;
+      
+    // this.dataSource = new MatTableDataSource(arr);
+
+    // this.form = this.formBuilder.group({
+    //   selectedPlayers: [[]]
+    // })
+
+    // this.displayedColumns = ['select','nr', 'username'];
+
+    
+    // this.dataSource = new MatTableDataSource(players)
+    console.log('this.dataSource', this.dataSource)
+    console.log('this.playerRowArray', arr)
+  }
+  selectUser(user: User) {
+    const index = this.selectedUsers.indexOf(user);
+    if (index === -1) {
+      this.selectedUsers.push(user);
+    } else {
+      this.selectedUsers.splice(index, 1);
+    }
+  }
+ 
+  // sum(numbers){
+  //   let sum = 0;
+  //   numbers.forEach(element => {
+  //     sum += parseFloat(element.ranking);
+  //   });
+  //   console.log('SUM', sum)
+  //   return sum;
+  // }
+
+  addSelectedRows() {
+    // this.selected$.subscribe(elements => {
+      this.selection.selected.forEach(selectedElement => {
+        this.selectedArr.push(selectedElement);
+      });
+    // });
   }
 
+  // transferSelectedRows() {
+  //   this.selectedRows = this.dataSource.data.filter(row => row.selected);
+  //   this.selectedRows.forEach(row => {
+  //     row.selected = false;
+  //   });
+  // }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
   maxSumArrays(objects) {
     objects.sort((a, b) => b.ranking - a.ranking);
@@ -63,7 +196,18 @@ export class MixUsComponent implements OnInit {
  
     this.array1 = array1;
     this.array2 = array2;
+
+    this.sumTeam1 = this.sumRanking(array1)
+    this.sumTeam2 = this.sumRanking(array2) 
+
     return [array1, array2];
   }
 
+  public sumRanking(array: any[]):number {
+    let sum = 0;  
+    array.forEach((el) => {
+      sum += parseFloat(el.ranking.replace(/,/g, ''));
+    })
+    return sum;
+  }
 }

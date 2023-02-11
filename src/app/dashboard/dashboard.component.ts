@@ -1360,6 +1360,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', '','','','','', '', '')
         // // Clear players from Team Two
         // this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', '','','','','', '', '')
+        this.googleApi.runScriptFunction('sortPlayers').subscribe({
+          next: (res) => {
+            console.log('sortPlayer', res);
+          },
+          error: (err) => {
+            console.log('sortPlayers', err);
+          }
+        })
         this.clearTeam();
 
         if(res.response.result == false){

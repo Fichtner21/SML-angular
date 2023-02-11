@@ -210,4 +210,51 @@ export class MixUsComponent implements OnInit {
     })
     return sum;
   }
+
+  permutate(array: User[], currentPermutation: User[]): User[][] {
+    if (array.length === 0) {
+      return [currentPermutation];
+    }
+
+    let allPermutations: User[][] = [];
+    for (let i = 0; i < array.length; i++) {
+      let newArray = [...array.slice(0, i), ...array.slice(i + 1)];
+      let newPermutation = [...currentPermutation, array[i]];
+      allPermutations = [...allPermutations, ...this.permutate(newArray, newPermutation)];
+    }
+
+    return allPermutations;
+  }
+
+  splitArrayIntoTwo(inputArray: User[]): [User[], User[]] {
+    // Przekonwertuj pola ranking na wartości liczbowe
+    inputArray.forEach(obj => parseFloat(obj.ranking.replace(/,/g, '')));
+
+    // Wygeneruj wszystkie możliwe permutacje tablicy
+    let allPermutations = this.permutate(inputArray, []);
+
+    // Znajdź permutację, której dwie części mają najmniejszą różnicę w sumie rankingów
+    let bestSplit: [User[], User[]] = [[], []];
+    let bestDifference = Number.MAX_VALUE;
+    allPermutations.forEach(permutation => {
+      for (let i = 0; i < permutation.length; i++) {
+        let array1 = permutation.slice(0, i);
+        let array2 = permutation.slice(i);
+        let array1Sum = array1.reduce((sum, obj) => sum + parseFloat(obj.ranking.replace(/,/g, '')), 2);
+        let array2Sum = array2.reduce((sum, obj) => sum + parseFloat(obj.ranking.replace(/,/g, '')), 2);
+        let difference = Math.abs(array1Sum - array2Sum);
+        if (difference < bestDifference) {
+          bestDifference = difference;
+          bestSplit = [array1, array2];
+          this.array1 = array1;
+          this.array2 = array2;
+
+          this.sumTeam1 = this.sumRanking(array1)
+          this.sumTeam2 = this.sumRanking(array2)
+        }
+      }
+    });
+    console.log('bestSplit', bestSplit)
+  return bestSplit;
+  }
 }

@@ -44,37 +44,49 @@
         </table>
       </div>
       <div class="mix-result">
-        <h2 class="imp">IMPORTANT!</h2>
-        <p>This tab is only used to draw a team based on ELO, when there is no admin, the draw is performed only on your computer. After the war, send the screens and results (rounds and frags) to the admin on discord. Still no one to enter the match? Draw and keep playing!</p>
-        <div class="selectedTeams">
-          <h2 class="h2Select">Selected Players</h2>
-          <button mat-raised-button color="primary" (click)="maxSumArrays(selectedUsers)">Mix teams!</button>
-        </div>    
-        <div class="selected-cont">
-          <div *ngFor="let player of selectedUsers; let i = index;" class="selected">          
-            <div style="display: flex;" class="selectedPlayer">
-              <span class="playername">  {{ i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span> 
+        <div class="mix-sticky">
+          <h2 class="imp">IMPORTANT!</h2>
+          <p>This tab is only used to draw a team based on ELO, when there is no admin, the draw is performed only on your computer. After the war, send the screens and results (rounds and frags) to the admin on discord. Still no one to enter the match? Draw and keep playing!</p>
+          <div class="selectedTeams">
+            <h2 class="h2Select">Selected Players</h2>
+            <div class="btn-cont">
+              <button mat-raised-button color="primary" class="lp" (click)="    
+            maxSumArrays(selectedUsers)">Mix teams! LP</button>
+              <div>LP - Lower precision, no limit players.</div>
             </div>
-          </div>  
+            <div class="btn-cont">
+              <button mat-raised-button color="warn" class="hp" (click)="          
+            splitArrayIntoTwo(selectedUsers)">Mix teams! HP</button>
+              <div>HP - Higher precision, limit max 5on5.</div>
+            </div>          
+          </div>    
+          <div class="selected-cont">
+            <div *ngFor="let player of selectedUsers; let i = index;" class="selected">          
+              <div style="display: flex;" class="selectedPlayer">
+                <span class="playername">  {{ i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span> 
+              </div>
+            </div>  
+          </div>
+          <div class="teams">
+            <div class="team"> 
+              <h2>Team 1</h2>
+              <div *ngFor="let player of array1; let i = index;" class="player">        
+                <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>                    
+              </div>
+              <div>Cumulative: {{ sumTeam1 | number : '1.2-2' }}</div>  
+            </div>
+            <div class="team">
+              <h2>Team 2</h2> 
+              <div *ngFor="let player of array2; let i = index;" class="player">          
+                <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>        
+              </div>
+              <div>Cumulative: {{ sumTeam2 | number : '1.2-2' }}</div>
+            </div>
+          </div> 
         </div>
-        <div class="teams">
-          <div class="team"> 
-            <h2>Team 1</h2>
-            <div *ngFor="let player of array1; let i = index;" class="player">        
-              <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>                    
-            </div>
-            <div>Cumulative: {{ sumTeam1 }}</div>  
-          </div>
-          <div class="team">
-            <h2>Team 2</h2> 
-            <div *ngFor="let player of array2; let i = index;" class="player">          
-              <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>        
-            </div>
-            <div>Cumulative: {{ sumTeam2 }}</div>
-          </div>
-        </div> 
       </div>
     </div>
   </div>
 </section>
-
+<ng-http-loader>    
+</ng-http-loader>

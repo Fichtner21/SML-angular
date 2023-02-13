@@ -107,7 +107,21 @@ section {
               justify-content: center;
               border: 1px solid #ffffc0;
             }
-          }        
+          } 
+          
+          .step-info {
+            a {
+              color:#ffffc0;
+              font-weight: 700;
+            }
+
+            span {
+              color:rgba(47, 48, 96, 1);
+              background-color: #ffffc0;
+              padding: 2px;
+              font-weight: 700;
+            }
+          }
         }
 
         .dashboard-tab {
@@ -119,15 +133,15 @@ section {
           }
           
           mat-card-content {
-            display: flex;
-            align-items: center;
+            // display: flex;
+            // align-items: center;
 
             @media screen and (max-width: 600px){
               display: block;
             }
 
             button {
-              margin-right: 10px;
+              margin-bottom: 5px;
             }
           }
         }
@@ -145,15 +159,15 @@ section {
           }
 
           mat-card-content {
-            display: flex;
-            align-items: center;
+            // display: flex;
+            // align-items: center;
 
             @media screen and (max-width: 600px){
               display: block;
             }
 
             button {
-              margin-right: 10px;
+              margin-bottom: 5px;
             }
           }
         }

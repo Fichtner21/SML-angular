@@ -25,9 +25,23 @@ section {
  display: grid;
  grid-template-columns: 1fr 1fr;
  gap: 20px;
+ margin-bottom: 20px;
 
   .team {
-       
+    .teamFavorite {
+      color: green;
+      font-weight: 700;
+    }
+    
+    .teamNotFavorite {
+      color: red;
+      font-weight: 700;
+    }
+    
+    .teamWithoutFavorite {
+      color: gray;
+      font-weight: 700;
+    }
   }
 
   img {
@@ -74,6 +88,7 @@ section {
   padding: 5px 20px;
   border-radius: 20px;
   margin-bottom: 5px;
+  border: 2px solid #ffffc0;
 
   .playername {
     font-weight: 700;
@@ -186,6 +201,26 @@ td img {
       overflow-x:hidden;
       max-width: 600px;
       margin-bottom: 20px;
+
+      .restricted-btn {
+        border: 2px solid #010141;
+        padding: 10px;
+        color: #ffffc0;
+        background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
+        background-size: 4px 4px;
+        margin-bottom: 20px;
+
+        a {
+          text-decoration: underline;          
+          font-weight: 700;
+          transition: .4s all;
+          color: #ffffc0;
+
+          &:hover {
+            color: darkred;
+          }
+        }
+      }      
     }
 
     .mix-sticky::-webkit-scrollbar {

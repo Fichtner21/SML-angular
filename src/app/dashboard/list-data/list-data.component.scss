@@ -4,6 +4,7 @@ section {
   .container {
     margin: 0 auto;
     padding: 0 15px;
+    max-width: 1300px;
 
     table {
       thead {
@@ -26,6 +27,17 @@ section {
   
           &:nth-child(2n-1){
             background-color: lighten(lightgray, 5%);
+          }
+
+          td {
+            img {
+              width: 25px;
+              border: 1px solid #000;
+            }
+          }
+
+          .flag {
+            text-align: center;
           }
         }
       }

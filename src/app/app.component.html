@@ -19,7 +19,7 @@
       <a routerLink="obj-inactive" routerLinkActive="active">{{ 'nav.inactive_obj' | translate }}</a>
       <a routerLink="about" routerLinkActive="active">{{ 'nav.about' | translate }}</a>
       <a routerLink="cup" routerLinkActive="active">Cup</a>
-      <a routerLink="dashboard" routerLinkActive="active">Dashboard</a>
+      
       <a routerLink="mix" routerLinkActive="mix">Mix</a>
       <form action="">
         <label for="langChange">{{ 'nav.choose' | translate }}</label>
@@ -52,6 +52,9 @@
           <img src="assets/images/icons/discord.svg" alt="">
           <div>VISIT DISCORD</div>        
         </a>  
+        <a routerLink="dashboard" routerLinkActive="active" title="Dashboard">
+          <fa-icon [icon]="home"></fa-icon>
+        </a>
       </div>          
       <div class="login-panel" *ngIf="_authService.loggedIn()">
         <!-- <a class="navbar-brand" href="">EventsHub</a> -->
@@ -70,10 +73,11 @@
               <a class="nav-link" routerLink="/users"  *ngIf="isAdmin" rouetrLinkActive="active">Users</a>
             </li>
           </ul> -->
-         
+          
           <ul class="navbar-nav">
-             <a class="nav-link"  routerLink="/login" *ngIf="!_authService.loggedIn()" rouetrLinkActive="active">Login</a>
-             <a class="nav-link" style="cursor:pointer" *ngIf="_authService.loggedIn()" (click)="logoutUser(); logoutTest();">{{ 'about.logout' | translate }}</a>
+            
+            <a class="nav-link"  routerLink="/login" *ngIf="!_authService.loggedIn()" rouetrLinkActive="active">Login</a>
+            <a class="nav-link" style="cursor:pointer" *ngIf="_authService.loggedIn()" (click)="logoutUser(); logoutTest();">{{ 'about.logout' | translate }}</a>
           </ul>
         </div>
       </div>

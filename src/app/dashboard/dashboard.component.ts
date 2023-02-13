@@ -1,22 +1,16 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { PlayersApiService } from '../services/players-api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
-import { map, startWith, tap, switchMap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { OAuthService, AuthConfig } from 'angular-oauth2-oidc';
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { NotifierService } from 'angular-notifier';
 import { ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Sheet } from '../models/sheet.model';
-import { environment } from 'src/environments/environment';
-import { faArrowDownUpAcrossLine, faArrowsUpDown, faDoorOpen, faPaperPlane, faPuzzlePiece, faRightFromBracket, faRotateRight, faScaleBalanced, faStamp, faUserPlus, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsUpDown, faDoorOpen, faPaperPlane, faPuzzlePiece, faRightFromBracket, faRotateRight, faScaleBalanced, faShareFromSquare, faStamp, faUserPlus, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSelectChange } from '@angular/material/select';
-import { threadId } from 'worker_threads';
-import { MatOption } from '@angular/material/core';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-
 
 export interface UserInfo {
   info: {
@@ -39,14 +33,7 @@ export interface filterOption{
   isdefault:boolean;
 }
 
-export interface Employee {
-  // id : number,	
-  // firstname:string,	
-  // lastname:string,	
-  // email:string,
-  // gender:string,	
-  // jobtitle:string,
-  // department:string
+export interface Employee {  
   index: number;
   name: string,
   username: string,
@@ -98,6 +85,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   paperPlaneTop = faPaperPlane;
   puzzle = faPuzzlePiece;
   stamp = faStamp;
+  shareFromSquare = faShareFromSquare;
   gmail = 'https://gmail.googleapis.com';
   errorMessage = '';
   modalHeader = '';
@@ -352,19 +340,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.addAmatch$ = this.googleApi.getPlayers('Add+a+Match').pipe(
       map((response: any) => {             
-        let batchRowValues = response.values;       
-        // let players: any[] = [];
-        // for(let i = 1; i < batchRowValues.length; i++){
-        //   const rowObject: object = {};
-        //   for(let j = 0; j < batchRowValues[i].length; j++){
-        //     rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
-        //   }
-        //   players.push(rowObject);
-        // }        
-        // console.log('Add a Match values:', players)
-        // return players;
+        let batchRowValues = response.values;      
         return batchRowValues;
-      }),
+      })
     ); 
     // const addAmatchArray = this.addAmatch$.subscribe();
     this.players$ = this.googleApi.getPlayers('Players').pipe(
@@ -388,20 +366,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.lastMatch$ = this.googleApi.getPlayers('Match+History').pipe(
       map((response: any) => {             
-        let batchRowValues = response.values;
-        // console.log('player 1', batchRowValues[1])        
+        let batchRowValues = response.values;          
         let players: any[] = [];
         for(let i = 1; i < batchRowValues.length; i++){
           const rowObject: object = {};
           for(let j = 0; j < batchRowValues[i].length; j++){
             rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
-          }
-          
+          }          
           players.push(rowObject);
-        }     
-     
-        return players[players.length -1];
-        // return batchRowValues[1];
+        } 
+        return players[players.length -1];       
       }),
     )
 
@@ -452,7 +426,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
       return isMatch;
     }
-
    
     // console.log('PERMUTATION:', this.splitPermutations([1000,1001,1002,1003,1004,1005,1009,1010, 1023,1023]))
 
@@ -709,27 +682,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
           t2p7preelo: match.t2p7preelo,
           t2p7score: match.t2p7score,
           t2p7postelo: match.t2p7postelo,
-        }
-        // console.log('el =>', this.matchRow)
+        }       
         return this.matchRow;
       })
       
     ).subscribe();    
 
     this.t1p1name.
-    valueChanges.subscribe(value => {
-      console.log('value', value)
+    valueChanges.subscribe(value => {     
       this.options.forEach((el:any) => {
         if(el.username == value){
           this.t1p1preeloNgModel = el.ranking;
         }
       })      
     })
-
-    // this.t1p1name.valueChanges.subscribe(value => {
-    //   this.cumulativeTeamOneArray.push(value);
-    //   console.log('cumulativeTeamOneArray 1', this.cumulativeTeamOneArray)  
-    // })
+  
     this.t1p2name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
@@ -738,17 +705,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       })      
     })
-    // this.t1p2name.valueChanges.subscribe(value => {
-    //   this.cumulativeTeamOneArray.push(value);
-    //   console.log('cumulativeTeamOneArray 2', this.cumulativeTeamOneArray) 
-    // })
+  
     this.t1p3name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
           this.t1p3preeloNgModel = el.ranking;
-          this.cumulativeTeamOneArray.push(el.ranking)  
-          console.log('cumulativeTeamOneArray 3', this.cumulativeTeamOneArray)          
+          this.cumulativeTeamOneArray.push(el.ranking)                   
         }
       })      
     })
@@ -756,9 +719,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p4preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t1p4preeloNgModel = el.ranking; 
         }
       })      
     })
@@ -766,9 +727,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p5preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t1p5preeloNgModel = el.ranking;         
         }
       })      
     })
@@ -776,9 +735,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p6preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t1p6preeloNgModel = el.ranking;          
         }
       })      
     })
@@ -786,9 +743,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p7preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t1p7preeloNgModel = el.ranking; 
         }
       })      
     })
@@ -796,9 +751,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p1preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t2p1preeloNgModel = el.ranking;          
         }
       })      
     })
@@ -806,9 +759,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p2preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t2p2preeloNgModel = el.ranking;         
         }
       })      
     })  
@@ -816,9 +767,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p3preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t2p3preeloNgModel = el.ranking;          
         }
       })      
     })
@@ -826,9 +775,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p4preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t2p4preeloNgModel = el.ranking;          
         }
       })      
     })
@@ -836,9 +783,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p5preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t2p5preeloNgModel = el.ranking;          
         }
       })      
     })
@@ -846,9 +791,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p6preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t2p6preeloNgModel = el.ranking;          
         }
       })      
     })
@@ -856,38 +799,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p7preeloNgModel = el.ranking;
-          // cumulativeTeamOneArray.push(this.t1p2preeloNgModel) 
-          
+          this.t2p7preeloNgModel = el.ranking;          
         }
       })      
-    })
-    
-    // this.playersToWar.valueChanges.subscribe(value => {
-      
-    //   this.options.forEach((el:any) => {
-    //     if(el.username == value){
-    //       const eloPlayer = el.ranking;
-    //       console.log('eloPlayer', eloPlayer)
-    //   //     this.sumCumulativeTeamOne = eloPlayer.reduce((sum, item) => sum + +item, 0);
-    //   //     // this.sumCumulativeTeamOne = value
-    //   //     // .map(value => +value)
-    //   //     // .filter(value => !isNaN(value))
-    //   //     // .reduce((acc, value) => acc + value, 0);
-    //     }
-    //   })      
-    // })     
+    })   
   }
 
   applyEmpFilter(ob:MatSelectChange,empfilter:EmpFilter) {
-
     this.filterDictionary.set(empfilter.name,ob.value);
-
-
-    var jsonString = JSON.stringify(Array.from(this.filterDictionary.entries()));
-    
-    this.dataSourceFilters.filter = jsonString;
-    //console.log(this.filterValues);
+    var jsonString = JSON.stringify(Array.from(this.filterDictionary.entries()));    
+    this.dataSourceFilters.filter = jsonString;   
   }
 
   applyFilter(event: Event) {
@@ -903,29 +824,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.oAuthService.logOut();
   }
 
-  private _filter(value: string): any[] {        
-    // const filterValue = value.toLowerCase();    
+  private _filter(value: string): any[] {
     const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
     return this.options.filter(option => option.playername.toLowerCase().includes(filterValue));     
     // return this.options.filter(option => option.playername.toLowerCase().indexOf(filterValue) === 0);
   }
-
-  // private _filterT2p1name(value: string): any[] {
-  //   const filterValue = value.toLowerCase();
-  //   return this.options.filter(option => option.username.toLowerCase().includes(filterValue))
-  // }
-
-  // displayFn(value: any): any {
-  //   console.log('displayFn value', value);
-  //   console.log('displayFn playername', value.playername);
-  //   console.log('displayFn value typeof', typeof value);
-  //   // value.forEach((el:any) => {
-  //   //   return el && typeof el === 'object' ? el.playername : el;
-  //   // })
-
-  //   return value ? value.playername : value;
-  //   // return value && typeof value === 'object' ? value.playername : value;
-  // }
+ 
   public addPlayerLink(player:string, obj:any) {
     let convertedPlayer = '';
     obj.forEach((el:any) => {     
@@ -965,8 +869,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', t1p1name, t1p2name, t1p3name, t1p4name, t1p5name, t1p6name, t1p7name).subscribe({
       next: (res) => {
-        if(res.done = true){
-         
+        if(res.done = true){         
           this.modalHeader = 'SUCCESS'
           this.errorMessage = 'Teams updated!'
           this.modalService.open(
@@ -985,29 +888,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     })
 
-    
-
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', t2p1name, t2p2name, t2p3name, t2p4name, t2p5name, t2p6name, t2p7name).subscribe({
-      next: (res) => {
-        // if(res.done = true){
-        //   const infoTeamTwo = 'Teams 2 updated';
-        
-        //   this.modalHeader = 'SUCCESS'
-        //   this.errorMessage = 'Teams updated'
-        //   this.modalService.open(
-        //     this.content, 
-        //     { 
-        //       centered: true,
-        //       windowClass: 'success' 
-        //     }
-        //   );
-        // }
+      next: (res) => {        
         this.googleApi.getMultipleRanges('B30').subscribe(data =>{      
           const values = data['values'];     
-          this.t2cumulative?.setValue(values[0]);       
+          this.t2cumulative?.setValue(values[0]);     
+          this.notifier.notify('success', 'Confirm Players successful.');  
         })
       }, error: (err) => {
-        console.log('err', err);
+        this.notifier.notify('error', 'Confirm Players error.', err); 
       }
     })
   }
@@ -1019,7 +908,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ...this.teamOneRoundsWon.value,
       ...this.teamTwoRoundsWon.value
     }
-    console.log('formValues', formValues)
+    // console.log('formValues', formValues)
     const t1p1score = formValues.t1p1score;
     const t1p2score = formValues.t1p2score;
     const t1p3score = formValues.t1p3score;
@@ -1046,28 +935,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
     //TEAM ONE
     this.googleApi.updateRoundsWon('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','B20', t1roundsWonInput).subscribe({
       next: (res) => {
-            console.log('updateRoundsWon res =>', res)
-            
-          },
-          error: (err) => {
-            console.log('updateRoundsWon err =>', err)
-          }
+        // console.log('updateRoundsWon res =>', res)    
+        this.notifier.notify('success', 'Update Rounds Won Team 1 successful.');       
+      },
+      error: (err) => {
+        console.log('updateRoundsWon err =>', err)
+      }
     })
 
     //TEAM TWO
     this.googleApi.updateRoundsWon('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','B31', t2roundsWonInput).subscribe({
       next: (res) => {
-            console.log('updateRoundsWon res =>', res)
-            
-          },
-          error: (err) => {
-            console.log('updateRoundsWon err =>', err)
-          }
+        // console.log('updateRoundsWon res =>', res)
+        this.notifier.notify('success', 'Update Rounds Won Team 2 successful.');  
+      },
+      error: (err) => {
+        console.log('updateRoundsWon err =>', err)
+      }
     })
 
     this.googleApi.sendScore('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','C12:C31', t1p1score, t1p2score, t1p3score, t1p4score, t1p5score, t1p6score, t1p7score, t1sumFrags, t1roundsWon, emptyCell, headDesc, t2p1score, t2p2score, t2p3score, t2p4score, t2p5score, t2p6score, t2p7score, t2sumFrags, t2roundsWon).subscribe({
       next: (res) => {
-        console.log('sendScore res =>', res)
+        // console.log('sendScore res =>', res)
+        this.notifier.notify('success', 'Send Score successful.'); 
         this.updateELO();
       },
       error: (err) => {
@@ -1112,19 +1002,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const t2p5name = this.t2p5name.value != null ? this.t2p5name.value : '';
     const t2p6name = this.t2p6name.value != null ? this.t2p6name.value : '';
     const t2p7name = this.t2p7name.value != null ? this.t2p7name.value : '';
-    console.log(
-      't1p1name', t1p1name,
-      't1p2name', t1p2name,
-      't1p3name', t1p3name,
-      't1p4name', t1p4name,
-      't1p5name', t1p5name,
-      't1p6name', t1p6name,
-      't1p7name', t1p7name
-    )   
+    // console.log(
+    //   't1p1name', t1p1name,
+    //   't1p2name', t1p2name,
+    //   't1p3name', t1p3name,
+    //   't1p4name', t1p4name,
+    //   't1p5name', t1p5name,
+    //   't1p6name', t1p6name,
+    //   't1p7name', t1p7name
+    // )   
 
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', t1p1name, t1p2name, t1p3name, t1p4name, t1p5name,  t1p6name, t1p7name).subscribe({
         next: (res) => {
-          console.log('update cells A12:A18 res =>', res)
+          // console.log('update cells A12:A18 res =>', res)
+          this.notifier.notify('success', 'Update Team 1 successful.'); 
           this.getInitialEloTeamOne('B12:B19'); 
         },
         error: (err) => {
@@ -1134,7 +1025,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', t2p1name, t2p2name, t2p3name, t2p4name, t2p5name,  t2p6name, t2p7name).subscribe({
         next: (res) => {
-          console.log('update cells A23:A29 res =>', res)
+          // console.log('update cells A23:A29 res =>', res)
+          this.notifier.notify('success', 'Update Team 2 successful.'); 
           this.getInitialEloTeamTwo('B23:B30') 
         },
         error: (err) => {
@@ -1158,12 +1050,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.t1p6preelo?.setValue(values[5]);
       this.t1p7preelo?.setValue(values[6]);
       this.t1cumulative?.setValue(values[7]);
-      console.log(
-        'values[0]', values[0],
-        'values[1]', values[1],
-        'values[2]', values[2],
-        'values[7]', values[7]
-      )
+      // console.log(
+      //   'values[0]', values[0],
+      //   'values[1]', values[1],
+      //   'values[2]', values[2],
+      //   'values[7]', values[7]
+      // )
     })
   }
 
@@ -1179,12 +1071,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.t2p6preelo?.setValue(values[5]);
       this.t2p7preelo?.setValue(values[6]);
       this.t2cumulative?.setValue(values[7]);
-      console.log(
-        'values[0]', values[0],
-        'values[1]', values[1],
-        'values[2]', values[2],
-        'values[7]', values[7]
-      )
+      // console.log(
+      //   'values[0]', values[0],
+      //   'values[1]', values[1],
+      //   'values[2]', values[2],
+      //   'values[7]', values[7]
+      // )
+    })
+  }
+
+  sendLastWar(){
+    this.googleApi.runScriptFunction('sendLastRowToDiscord').subscribe({
+      next: (res) => {
+        this.notifier.notify('success', 'Send Last War to BOT successful.');
+      }, error: (err) => {
+        this.notifier.notify('error', 'Something went wrong.');
+      }
     })
   }
 
@@ -1193,12 +1095,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.onSubmit();
     this.googleApi.runScriptFunction('balanceTeams').subscribe({
       next: (res) => {
-        console.log('BALANCE res =>', res)
+        // console.log('BALANCE res =>', res)
         // this.selectTeams();
        
         this.googleApi.runScriptFunction('selectTeams').subscribe({
           next: (res) => {
-            console.log(' SELECT res =>', res)
+            // console.log(' SELECT res =>', res)
             if(res.done == true){
               this.modalHeader = 'SUCCESS'
               this.errorMessage = 'Teams are balanced successfuly!';
@@ -1329,7 +1231,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   sortPlayers(){
     this.googleApi.runScriptFunction('sortPlayers').subscribe({
       next: (res) => {
-        console.log('res =>', res)
+        // console.log('res =>', res)
         if(res.done == true){
           this.modalHeader = 'SUCCESS'
           this.errorMessage = 'Ranking update!';
@@ -1351,7 +1253,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   updateELO(){
     this.googleApi.runScriptFunction('updateELO').subscribe({
       next: (res) => {
-        console.log('updateELO res =>', res)
+        // console.log('updateELO res =>', res)
         // // Clear score from Team One
         // this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C12:C18', '','','','','', '', '')
         // // Clear score from Team Two
@@ -1385,8 +1287,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getStatistics(){
     this.googleApi.runScriptFunction('getStatistics').subscribe({
       next: (res) => {
-        console.log('res =>', res)
-        console.log('this.notifier', this.notifier)
+        // console.log('res =>', res)
+        // console.log('this.notifier', this.notifier)
         this.notifier.notify('success', 'getStatistics() done!');
       },
       error: (err) => {
@@ -1399,7 +1301,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   clearTeam(){
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', '','','','','', '', '').subscribe({
       next: (res) => {
-        console.log('res CLEAR A12:A18 =>', res)       
+        // console.log('res CLEAR A12:A18 =>', res)       
         this.t1p1name.reset()
         this.t1p2name.reset()
         this.t1p3name.reset()
@@ -1427,7 +1329,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.googleApi.clearCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'B19', '=SUMA.JEŻELI(B12:B18,"<>#N/A")').subscribe({
           next: (res) => {
-            console.log('clearCell', res)
+            // console.log('clearCell', res)
             this.t1cumulative.reset()
           }, error: (err) => {
             console.log('clearCell err', err)
@@ -1435,14 +1337,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         })
       },
       error: (err) => {
-        console.log('err clear A12:A18 =>', err)
-        
+        console.log('err clear A12:A18 =>', err)        
       }
     })
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C12:C18', '','','','','', '', '')
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', '','','','','', '', '').subscribe({
       next: (res) => {
-        console.log('res CLEAR A23:A29 =>', res)    
+        // console.log('res CLEAR A23:A29 =>', res)    
         this.t2p1name.reset()
         this.t2p2name.reset()
         this.t2p3name.reset()
@@ -1470,7 +1371,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.googleApi.clearCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'B30', '=SUMA.JEŻELI(B23:B29,"<>#N/A")').subscribe({
           next: (res) => {
-            console.log('clearCell', res)
+            // console.log('clearCell', res)
             this.t2cumulative.reset()
           }, error: (err) => {
             console.log('clearCell err', err)
@@ -1557,7 +1458,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   updateSelectedValue(event: any) {
     if (event.source.value) {
       this.selectedPlayername = event.source.value.playername;
-      console.log(this.selectedPlayername);
+      // console.log(this.selectedPlayername);
     }
   }
 

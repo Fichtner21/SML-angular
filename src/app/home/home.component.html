@@ -52,8 +52,7 @@
     <div>{{ 'home.cumulative' | translate }} {{ teamOneCumulative }}</div>
     <div>{{ 'home.cumulative' | translate }} {{ teamTwoCumulative }}</div>
     <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShow > chanceOfWinTeamOneShow), 'teamNotFavorite': (chanceOfWinTeamTwoShow < chanceOfWinTeamOneShow), 'teamWithoutFavorite': (chanceOfWinTeamTwoShow == chanceOfWinTeamOneShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamTwoShow | number : '.2-2' }} %</div>
-    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>
-    
+    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>    
   </div>
 </div>
 <ng-http-loader 

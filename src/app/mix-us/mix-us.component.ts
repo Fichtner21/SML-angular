@@ -7,6 +7,9 @@ import { PlayersApiService } from '../services/players-api.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ThemePalette } from '@angular/material/core';
+import { NotifierService } from 'angular-notifier';
+import { HideRowDirective } from '../hide-row.directive';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 export interface UserData {
   nr: string;
@@ -24,6 +27,7 @@ interface User {
   ranking: string;
   playername: string;
   flag: string;
+  ban: boolean;
 }
 
 export interface Task {
@@ -48,6 +52,8 @@ export class MixUsComponent implements OnInit {
   sum2: any[];
   sumTeam1: any;
   sumTeam2: any; 
+  chanceOfWinTeamOneShow: any;
+  chanceOfWinTeamTwoShow: any;
   // dataSource: MatTableDataSource<any>;
   // dataSource = new MatTableDataSource<any>([]);
   selectedRows = [];
@@ -56,6 +62,7 @@ export class MixUsComponent implements OnInit {
   playerRowArray: any[] = [];
   public selectedArr: any[] = [];
   options: any[] = [];
+  a = [{ranking: "1"}, {ranking: "3"}, {ranking: "5"}, {ranking: "7"}];
   // 
   players: any;
   displayedColumns: string[] = ['select', 'nr', 'ranking', 'playername','flag'];
@@ -78,7 +85,7 @@ export class MixUsComponent implements OnInit {
 
  
 
-  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder) { 
+  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService) { 
     this.players$ = this.googleApi.getPlayers('Players').pipe(
       map((response: any) => {             
         let batchRowValues = response.values;
@@ -106,12 +113,12 @@ export class MixUsComponent implements OnInit {
         const obj = {
           // nr: Number(index) + 1,
           nr: (index + 1).toString(),
-          // username: value.username,
+          username: value.username,
           playername: value.playername,
           ranking: value.ranking,
           // active: value.active == 'TRUE' ? true : false,
           // active: value.active,
-          // ban: value.ban == 'TRUE' ? true : false,
+          ban: value.ban == 'TRUE' ? true : false,
           // ban: value.ban,
           flag: value.nationality,
           // wars: value.warcount
@@ -120,7 +127,7 @@ export class MixUsComponent implements OnInit {
         this.playerRowArray.push(obj)
         // this.players.push(obj)
       }
-      console.log('playerRowArray', this.playerRowArray)
+      // console.log('playerRowArray', this.playerRowArray)
       return this.dataSource = new MatTableDataSource(this.playerRowArray);
       // console.log('PLAYERS', this.players)
       // return players;
@@ -141,8 +148,8 @@ export class MixUsComponent implements OnInit {
 
     
     // this.dataSource = new MatTableDataSource(players)
-    console.log('this.dataSource', this.dataSource)
-    console.log('this.playerRowArray', arr)
+    // console.log('this.dataSource', this.dataSource)
+    // console.log('this.playerRowArray', arr)
   }
   selectUser(user: User) {
     const index = this.selectedUsers.indexOf(user);
@@ -183,10 +190,12 @@ export class MixUsComponent implements OnInit {
   }
 
   maxSumArrays(objects) {
+    this.notifier.notify('default', 'MIX TEAMS LP has been called');
     objects.sort((a, b) => b.ranking - a.ranking);
     const array1 = [];
     const array2 = [];
     for (let i = 0; i < objects.length; i++) {
+      // this.notifier.notify('info', 'Performing operations...');
       if (array1.length <= array2.length) {
         array1.push(objects[i]);
       } else {
@@ -199,7 +208,7 @@ export class MixUsComponent implements OnInit {
 
     this.sumTeam1 = this.sumRanking(array1)
     this.sumTeam2 = this.sumRanking(array2) 
-
+    this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
     return [array1, array2];
   }
 
@@ -227,6 +236,7 @@ export class MixUsComponent implements OnInit {
   }
 
   splitArrayIntoTwo(inputArray: User[]): [User[], User[]] {
+    this.notifier.notify('default', 'MIX TEAMS HP has been called');
     // Przekonwertuj pola ranking na wartości liczbowe
     inputArray.forEach(obj => parseFloat(obj.ranking.replace(/,/g, '')));
 
@@ -237,6 +247,7 @@ export class MixUsComponent implements OnInit {
     let bestSplit: [User[], User[]] = [[], []];
     let bestDifference = Number.MAX_VALUE;
     allPermutations.forEach(permutation => {
+      // this.notifier.notify('info', 'Performing operations...');
       for (let i = 0; i < permutation.length; i++) {
         let array1 = permutation.slice(0, i);
         let array2 = permutation.slice(i);
@@ -251,10 +262,184 @@ export class MixUsComponent implements OnInit {
 
           this.sumTeam1 = this.sumRanking(array1)
           this.sumTeam2 = this.sumRanking(array2)
+          const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;        
+          const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
+          this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+          this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
         }
       }
     });
     console.log('bestSplit', bestSplit)
+    this.notifier.notify('success', 'MIX TEAMS HP has finished executing');
   return bestSplit;
   }
+
+  splitRanking(objects: User[], startIndex: number, firstArray: User[], secondArray: User[], halfSum: number): [User[], User[]] | null {
+    if (startIndex >= objects.length) {
+      const sumFirstArray = firstArray.reduce((acc, curr) => acc + parseFloat(curr.ranking.replace(/,/g, '')), 0);
+      const sumSecondArray = secondArray.reduce((acc, curr) => acc + parseFloat(curr.ranking.replace(/,/g, '')), 0);
+      if (sumFirstArray === sumSecondArray) {
+        return [firstArray, secondArray];
+      } else if (Math.abs(sumFirstArray - sumSecondArray) <= halfSum) {
+        return [firstArray, secondArray];
+      }
+      return null;
+    }
+  
+    const currentObject = objects[startIndex];
+    const resultWithFirstArray = this.splitRanking(objects, startIndex + 1, [...firstArray, currentObject], secondArray, halfSum);
+    if (resultWithFirstArray !== null) {
+      return resultWithFirstArray;
+    }
+  
+    const resultWithSecondArray = this.splitRanking(objects, startIndex + 1, firstArray, [...secondArray, currentObject], halfSum);
+    if (resultWithSecondArray !== null) {
+      return resultWithSecondArray;
+    }   
+  
+    return null;
+  }
+
+  optimalSplit(objects: User[]): [User[], User[]] | null {
+    const sum = objects.reduce((acc, curr) => acc + parseFloat(curr.ranking.replace(/,/g, '')), 0);
+    const halfSum = sum / 2;
+
+    const result = this.splitRanking(objects, 0, [], [], halfSum);
+
+    if (result !== null) {
+      this.array1 = result[0];
+      this.array2 = result[1];      
+    }
+
+    return result;
+  }
+  
+  splitRanking2(array) {
+    array.sort((a, b) => parseFloat(b.ranking.replace(',', '')) - parseFloat(a.ranking.replace(',', '')));
+    let firstArray = [];
+    let secondArray = [];
+    let firstArraySum = 0;
+    let secondArraySum = 0;
+    
+    for (let i = 0; i < array.length; i++) {
+      let currentRanking = parseFloat(array[i].ranking.replace(',', ''));
+      if (firstArraySum <= secondArraySum) {
+        firstArray.push(array[i]);
+        firstArraySum += currentRanking;
+      } else {
+        secondArray.push(array[i]);
+        secondArraySum += currentRanking;
+      }
+    }
+    this.array1 = firstArray;
+    this.array2 = secondArray;
+
+    this.sumTeam1 = this.sumRanking(firstArray)
+    this.sumTeam2 = this.sumRanking(secondArray)
+    
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+    this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+    this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+    this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
+    return [firstArray, secondArray];
+  }
+
+  public floorPrecised(number:any, precision:any) {
+    const power = Math.pow(10, precision);
+    return Math.floor(number * power) / power;
+  }
+  public ceilPrecised(number:any, precision:any) {
+    const power = Math.pow(10, precision);
+    return Math.ceil(number * power) / power;
+  }
+
+  isAuthenticated() {
+    return this.oauthService.hasValidIdToken();
+  }
+
+  confirmTeams(){
+    let t1p4name = '';
+    let t1p5name = '';
+    let t1p6name = '';
+    let t1p7name = '';
+    const t1p1name = this.array1[0].username ? this.array1[0].username : '';
+    const t1p2name = this.array1[1].username ? this.array1[1].username : '';
+    const t1p3name = this.array1[2].username ? this.array1[2].username : '';
+    // const t1p4name = (this.array1[3].username != 'undefined') ? this.array1[3].username : '';
+    if (this.array1[3]) {
+      t1p4name = this.array1[3].username ? this.array1[3].username : '';
+    } else {
+      t1p4name = '';
+    }
+    if (this.array1[4]) {
+      t1p5name = this.array1[4].username ? this.array1[4].username : '';
+    } else {
+      t1p5name = '';
+    }
+    if (this.array1[5]) {
+      t1p6name = this.array1[5].username ? this.array1[5].username : '';
+    } else {
+      t1p6name = '';
+    }
+    if (this.array1[6]) {
+      t1p7name = this.array1[6].username ? this.array1[6].username : '';
+    } else {
+      t1p7name = '';
+    }
+    // const t1p5name = this.array1[4].username ? this.array1[4].username : '';
+    // const t1p6name = this.array1[5].username ? this.array1[5].username : '';
+    // const t1p7name = this.array1[6].username ? this.array1[6].username : '';
+    let t2p4name = '';
+    let t2p5name = '';
+    let t2p6name = '';
+    let t2p7name = '';
+    const t2p1name = this.array2[0].username ? this.array2[0].username : '';
+    const t2p2name = this.array2[1].username ? this.array2[1].username : '';
+    const t2p3name = this.array2[2].username ? this.array2[2].username : '';
+    if (this.array2[3]) {
+      t2p4name = this.array2[3].username ? this.array2[3].username : '';
+    } else {
+      t2p4name = '';
+    }
+    if (this.array2[4]) {
+      t2p5name = this.array2[4].username ? this.array2[4].username : '';
+    } else {
+      t2p5name = '';
+    }
+    if (this.array2[5]) {
+      t2p6name = this.array2[5].username ? this.array2[5].username : '';
+    } else {
+      t2p6name = '';
+    }
+    if (this.array2[6]) {
+      t2p7name = this.array2[6].username ? this.array2[6].username : '';
+    } else {
+      t2p7name = '';
+    }
+    // const t2p4name = this.array2[3].username ? this.array2[3].username : '';
+    // const t2p5name = this.array2[4].username ? this.array2[4].username : '';
+    // const t2p6name = this.array2[5].username ? this.array2[5].username : '';
+    // const t2p7name = this.array2[6].username ? this.array2[6].username : '';
+
+    this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', t1p1name, t1p2name, t1p3name, t1p4name, t1p5name, t1p6name, t1p7name).subscribe({
+      next: (res) => {
+        if(res.done = true){    
+          this.notifier.notify('success', 'Team 1 successful added.');          
+        }
+      }
+    })
+
+    this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', t2p1name, t2p2name, t2p3name, t2p4name, t2p5name, t2p6name, t2p7name).subscribe({
+      next: (res) => {
+        if(res.done = true){    
+          this.notifier.notify('success', 'Team 2 successful added.');          
+        }        
+      }, error: (err) => {
+        console.log('err', err);
+      }
+    })
+  }
 }
+
+

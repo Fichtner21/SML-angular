@@ -399,10 +399,10 @@
             <mat-card-content style="padding-top:10px;">
               <div class="step">
                 <div class="step-number">2</div>
-                <button mat-raised-button color="primary" (click)="balanceTeams()">Mix Teams <fa-icon [icon]="balanced"></fa-icon></button>
+                <button mat-raised-button color="primary" (click)="balanceTeams()">Mix Teams HP <fa-icon [icon]="balanced"></fa-icon></button>
               </div>
               <div class="step-info">
-                Click when you add players and  you want to create teams for war.
+               HP - Higher precision mix, up to <span>5v5</span>, if u want mix 6v6 or 7v7 go to <a routerLink="/mix">mix page</a> and use LP.
               </div>
             </mat-card-content>
             <mat-card-content>
@@ -425,16 +425,27 @@
           </mat-card>           
         </div> 
         <!-- <div class="span4"> -->
-          <mat-card class="dashboard-tab span4">
+          <mat-card class="dashboard-tab span2">
             <h3>Dashboard:</h3>
             <mat-card-content>
               <button mat-raised-button color="warn" (click)="refresh()">Refresh <fa-icon [icon]="refreshIcon"></fa-icon></button>
               <div class="desc">Click to refresh token. Reload dashboard data.</div>              
             </mat-card-content>
           </mat-card>  
+          <mat-card class="ranking-tab span3">
+            <h3>BOT Last War:</h3>
+            <mat-card-content>
+              <button mat-raised-button color="primary" (click)="sendLastWar()">
+                Last War BOT <fa-icon [icon]="shareFromSquare"></fa-icon>
+              </button>
+              <div class="desc">
+                Click here to send manually info about Last War to Discord by BOT.
+              </div>
+            </mat-card-content>
+          </mat-card>
         <!-- </div>
         <div class="span3"> -->
-          <mat-card class="ranking-tab span3">
+          <mat-card class="ranking-tab span2">
             <h3>Ranking:</h3>
             <mat-card-content>
               <button mat-raised-button color="accent" (click)="sortPlayers()"> Update ranking <fa-icon [icon]="arrowUpArrowDown"></fa-icon></button>

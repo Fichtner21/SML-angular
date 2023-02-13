@@ -44,6 +44,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MixUsComponent } from './mix-us/mix-us.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { HideRowDirective } from './hide-row.directive';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -96,7 +97,7 @@ const customNotifierOptions: NotifierOptions = {
     AppComponent,
     HomeComponent,    
     DateFormatPipePipe,     
-    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective
   ],
   imports: [
     CommonModule,

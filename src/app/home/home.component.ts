@@ -94,11 +94,11 @@ export class HomeComponent implements OnInit {
           selectedArray.push(selected);          
         }
 
-        const chanceFutureTeamOne = parseInt(selectedArray[selectedArray.length -1].t1preelo.replace(/,/g,''), 10);       
-        const chanceFutureTeamTwo = parseInt(selectedArray[selectedArray.length -1].t2preelo.replace(/,/g,''), 10);            
+        const chanceFutureTeamOne = parseInt(selectedArray[selectedArray.length -1].t1preelo.replace(/,/g,''), 10);           
+        const chanceFutureTeamTwo = parseInt(selectedArray[selectedArray.length -1].t2preelo.replace(/,/g,''), 10);                  
 
-        const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne - chanceFutureTeamTwo) / 400)) * 100;
-        const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;      
+        const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne - chanceFutureTeamTwo) / 400)) * 100;       
+        const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;
 
         this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
         this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);       

@@ -103,14 +103,19 @@
               <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>  
             </div>
           </div> 
+          <div class="restricted-btn">
+            <button mat-raised-button color="primary" class="lp" (click)="    
+            sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
+            <div>Click here to send squads for next war to discord.</div>
+          </div>
           <ng-container *ngIf="isAuthenticated()">                      
             <div class="restricted-btn">
               <h1>Restricted Content</h1>
               <p>This content is only visible to authenticated users.</p>  
               <button mat-raised-button color="primary" class="lp" (click)="    
-              confirmTeams()">Confirm Teams</button>
+              confirmTeams()">Confirm Teams <fa-icon [icon]="stamp"></fa-icon></button>
               <div>Click here to send balanced teams to database. Go to <a routerLink="/dashboard">Dashboard</a> to fill score after war.</div>
-            </div>
+            </div>            
           </ng-container>
           <ng-container *ngIf="!isAuthenticated()">
             <h1>Access Denied</h1>

@@ -12,6 +12,8 @@ import { HideRowDirective } from '../hide-row.directive';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { faPaperPlane, faStamp } from '@fortawesome/free-solid-svg-icons';
 
 export interface UserData {
   nr: string;
@@ -58,6 +60,8 @@ export class MixUsComponent implements OnInit {
   chanceOfWinTeamTwoShow: any;
   isStickyShown = false;
   allSelected: boolean = false;
+  sendIcon = faPaperPlane;
+  stamp = faStamp;
   // dataSource: MatTableDataSource<any>;
   // dataSource = new MatTableDataSource<any>([]);
   selectedRows = [];
@@ -89,7 +93,7 @@ export class MixUsComponent implements OnInit {
 
  
 
-  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute) { 
+  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient) { 
     this.players$ = this.googleApi.getPlayers('Players').pipe(
       map((response: any) => {             
         let batchRowValues = response.values;
@@ -530,6 +534,62 @@ export class MixUsComponent implements OnInit {
     this.playerRowArray.forEach(user => {
       user.selected = event.checked;
     });
+  }
+
+  sendToDiscord() {
+    const webhookUrl = 'https://discord.com/api/webhooks/1075178845067563138/FpKf7iiu3dhI9NTxyS-VkMNcv4mdq2KORNhNUbkeZnfCgLtDaJSIFxi9Uz5YUTCDPqmX';
+
+    const arr1 = this.array1;
+    const arr2 = this.array2;
+   
+    const t1p1name = (arr1.length > 0 && arr1[0] && arr1[0].playername) ? arr1[0].playername : '';
+    const t1p2name = (arr1.length > 1 && arr1[1] && arr1[1].playername) ? arr1[1].playername : '';
+    const t1p3name = (arr1.length > 2 && arr1[2] && arr1[2].playername) ? arr1[2].playername : '';
+    const t1p4name = (arr1.length > 3 && arr1[3] && arr1[3].playername) ? arr1[3].playername : '';
+    const t1p5name = (arr1.length > 4 && arr1[4] && arr1[4].playername) ? arr1[4].playername : '';
+    const t1p6name = (arr1.length > 5 && arr1[5] && arr1[5].playername) ? arr1[5].playername : '';
+    const t1p7name = (arr1.length > 6 && arr1[6] && arr1[6].playername) ? arr1[6].playername : '';
+    const t2p1name = (arr2.length > 0 && arr2[0] && arr2[0].playername) ? arr2[0].playername : '';
+    const t2p2name = (arr2.length > 0 && arr2[1] && arr2[1].playername) ? arr2[1].playername : '';
+    const t2p3name = (arr2.length > 0 && arr2[2] && arr2[2].playername) ? arr2[2].playername : '';
+    const t2p4name = (arr2.length > 0 && arr2[3] && arr2[3].playername) ? arr2[3].playername : '';
+    const t2p5name = (arr2.length > 0 && arr2[4] && arr2[4].playername) ? arr2[4].playername : '';
+    const t2p6name = (arr2.length > 0 && arr2[5] && arr2[5].playername) ? arr2[5].playername : '';
+    const t2p7name = (arr2.length > 0 && arr2[6] && arr2[6].playername) ? arr2[6].playername : '';
+
+    const now = new Date();
+    const day = ("0" + now.getDate()).slice(-2);
+    const month = ("0" + (now.getMonth() + 1)).slice(-2);
+    const year = now.getFullYear();
+    const hours = ("0" + now.getHours()).slice(-2);
+    const minutes = ("0" + now.getMinutes()).slice(-2);
+    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
+    
+    let nextMatch = "";
+    nextMatch += "**NEXT MATCH**, created: " + formattedDate + "\n";
+    nextMatch += "----------" + "\n";
+    nextMatch += "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "\n";
+    nextMatch += "TEAM 1 Chance for win: " + this.chanceOfWinTeamTwoShow + " %" + "\n";
+    nextMatch += "----------" + "\n";
+    nextMatch += "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + "\n";
+    nextMatch += "TEAM 2 Chance for win: " + this.chanceOfWinTeamOneShow + " %" + "\n";
+    nextMatch += "----------" + "\n";
+    nextMatch += "Good Luck & Have Fun!";
+    // console.log('nextM', nextMatch);
+    const payload = {
+      content: nextMatch
+    };
+    this.http.post(webhookUrl, payload).subscribe({
+      next: (res) => {
+        this.notifier.notify('success', "Teams Send successful!")
+      }, error: (err) => {
+        this.notifier.notify('error', 'Something went wrong')
+      }
+    });    
+  } 
+
+  isValid(): boolean {
+    return this.array1 && this.array1.length > 2 && this.array2 && this.array2.length > 2;
   }
 }
 

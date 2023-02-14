@@ -160,7 +160,7 @@ td img {
 .mat-table {
   box-shadow: 0 10px 10px #010141;
 
-  .mat-column-nr, .mat-column-ranking, .mat-column-flag {
+  .mat-column-nr, .mat-column-ranking {
     @media screen and (max-width: 600px){
       display: none;
     }

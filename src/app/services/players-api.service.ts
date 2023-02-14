@@ -73,8 +73,6 @@ export class PlayersApiService {
     // return this.http.get(`${environment.CONNECTION_URL}`);
     return this.http.get(`${environment.SHEETDBIO}`);
   } 
-
- 
    
   public deletePlayer(username:string){
     return this.http.delete(`https://sheetdb.io/api/v1/yg8kgxivnmkec/username/${username}`);
@@ -85,55 +83,9 @@ export class PlayersApiService {
     // return this.http.get(`https://sheetdb.io/api/v1/yg8kgxivnmkec?single_object=${username}`);
   }
 
-  
-
   public fetchAsObservable(url) {
     return from(fetch(url));
   }
-
- 
- 
-
- 
-
-  // public updatePlayer(         
-  //   playername: string, 
-  //   username: string, 
-  //   ranking: string, 
-  //   percentile: string, 
-  //   nationality: string 
-  //   //  place: string,
-  //   // warcount: string, nationality: string, clanhistory: string, cup1on1edition1: string, meeting: string, cup3on3: string, active: boolean, ban: boolean, lastwar: string, fpw: string, fpwmax: string, fpwmin: string, last30days: string,  last365days: string, lastwarpc: string, s1wars: string, s1fpw: string, streak: string
-  //   ): Observable<Sheet>{
-  //     return this.http.put<Sheet>(       
-  //       `https://sheetdb.io/api/v1/yg8kgxivnmkec/username/${username}`, 
-  //       {
-  //         playername,
-  //         username,
-  //         ranking,
-  //         percentile,
-  //         // place,
-  //         // warcount,
-  //         nationality,
-  //         // clanhistory,
-  //         // cup1on1edition1,
-  //         // meeting,
-  //         // cup3on3,
-  //         // active,
-  //         // ban,
-  //         // lastwar,
-  //         // fpw,
-  //         // fpwmax,
-  //         // fpwmin,
-  //         // last30days,
-  //         // last365days,
-  //         // lastwarpc,
-  //         // s1wars,
-  //         // s1fpw,
-  //         // streak     
-  //       }
-  //     )      
-  // }
 
   public updatePlayerNEW(pname:any, uname: string, ranking: any, percentile: any, place: any, warcount: any, nationality:any, clanhistory: any, cup1on1edition1:any, meeting: any, cup3on3:any, active:boolean, ban: boolean, lastwar: any, fpw: any, fpwmax:any, fpwmin:any, last30days:any, last365days:any, lastwarpc:any, s1wars:any, s1fpw:any, streak:any){ 
       

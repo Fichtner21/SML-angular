@@ -10,6 +10,8 @@ import { ThemePalette } from '@angular/material/core';
 import { NotifierService } from 'angular-notifier';
 import { HideRowDirective } from '../hide-row.directive';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { HttpParams } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface UserData {
   nr: string;
@@ -54,6 +56,8 @@ export class MixUsComponent implements OnInit {
   sumTeam2: any; 
   chanceOfWinTeamOneShow: any;
   chanceOfWinTeamTwoShow: any;
+  isStickyShown = false;
+  allSelected: boolean = false;
   // dataSource: MatTableDataSource<any>;
   // dataSource = new MatTableDataSource<any>([]);
   selectedRows = [];
@@ -85,7 +89,7 @@ export class MixUsComponent implements OnInit {
 
  
 
-  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService) { 
+  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute) { 
     this.players$ = this.googleApi.getPlayers('Players').pipe(
       map((response: any) => {             
         let batchRowValues = response.values;
@@ -132,9 +136,72 @@ export class MixUsComponent implements OnInit {
       // console.log('PLAYERS', this.players)
       // return players;
     })
+
+    this.route.queryParams.subscribe(params => {
+      // this.array1 = params['a1'] ? JSON.parse(params['a1']).map(username => ({username})) : [];
+      // this.array2 = params['a2'] ? JSON.parse(params['a2']).map(username => ({username})) : [];
+      
+
+      // setTimeout(() => {
+      //   this.array1 = params['a1'] ? JSON.parse(params['a1']) : [];
+      //   this.array2 = params['a2'] ? JSON.parse(params['a2']) : [];
+      //   this.dataSource.data.forEach(item => {
+      //     // console.log('item con', item)
+      //     // check if the username of the item matches a username in array1
+      //     let match1 = this.array1.find(arrayItem => arrayItem.username === item.username);
+      //     // if there is a match, set the checkbox value to true
+      //     if (match1) {
+      //       item.checkbox1 = true;
+      //     }
+      // console.log('selectedUsers', this.selectedUsers);
+      //     // check if the username of the item matches a username in array2
+      //     let match2 = this.array2.find(arrayItem => arrayItem.username === item.username);
+      //     // if there is a match, set the checkbox value to true
+      //     if (match2) {
+      //       item.checkbox2 = true;
+      //     }
+      //   });
+      // }, 2000)
+      
+    });
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      // this.array1 = params['a1'] ? JSON.parse(params['a1']).map(username => ({username})) : [];
+      // this.array2 = params['a2'] ? JSON.parse(params['a2']).map(username => ({username})) : [];
+      if(this.selectedUsers.length > 0){
+        this.selectedUsers = [];
+      }
+
+      setTimeout(() => {
+        this.array1 = params['a1'] ? JSON.parse(params['a1']) : [];
+        this.array2 = params['a2'] ? JSON.parse(params['a2']) : [];
+        this.dataSource.data.forEach(item => {
+          // console.log('item oninit', item)
+          // check if the username of the item matches a username in array1
+          let match1 = this.array1.find(arrayItem => arrayItem.username === item.username);
+          // if there is a match, set the checkbox value to true
+          if (match1) {
+            // console.log('item1', item)
+            // this.selectedUsers = [];
+            this.selectedUsers.push(item)
+            item.checkbox1 = true;
+          }
+      
+          // check if the username of the item matches a username in array2
+          let match2 = this.array2.find(arrayItem => arrayItem.username === item.username);
+          // if there is a match, set the checkbox value to true
+          if (match2) {
+            // console.log('item2', item)
+            // this.selectedUsers = [];
+            this.selectedUsers.push(item)
+            item.checkbox2 = true;
+          }
+        });
+      }, 1000)
+      
+    });
    
     const arr = this.playerRowArray;
       
@@ -269,9 +336,10 @@ export class MixUsComponent implements OnInit {
         }
       }
     });
-    console.log('bestSplit', bestSplit)
+    // console.log('bestSplit', bestSplit)
+    this.addArrayToUrl(this.array1, this.array2)
     this.notifier.notify('success', 'MIX TEAMS HP has finished executing');
-  return bestSplit;
+    return bestSplit;
   }
 
   splitRanking(objects: User[], startIndex: number, firstArray: User[], secondArray: User[], halfSum: number): [User[], User[]] | null {
@@ -342,8 +410,20 @@ export class MixUsComponent implements OnInit {
     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
     this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
+
+
+   
+    this.addArrayToUrl(firstArray, secondArray)
     return [firstArray, secondArray];
   }
+
+  addArrayToUrl(a1, a2) {
+    // let a1Usernames = a1.map(item => item.username);
+    // let a2Usernames = a2.map(item => item.username);
+    // this.router.navigate(['mix/'], { queryParams: { a2: JSON.stringify(a2Usernames), a1: JSON.stringify(a1Usernames) } });
+    this.router.navigate(['mix/'], { queryParams: { a2: JSON.stringify(a2), a1: JSON.stringify(a1) } });
+  }
+
 
   public floorPrecised(number:any, precision:any) {
     const power = Math.pow(10, precision);
@@ -439,6 +519,17 @@ export class MixUsComponent implements OnInit {
         console.log('err', err);
       }
     })
+  }
+
+  toggleSticky() {
+    this.isStickyShown = !this.isStickyShown;
+  }
+
+  selectAll(event) {
+    this.allSelected = event.checked;
+    this.playerRowArray.forEach(user => {
+      user.selected = event.checked;
+    });
   }
 }
 

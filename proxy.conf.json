@@ -1,0 +1,14 @@
+{
+  "/dashboard": {
+    "target": "https://accounts.google.com/.well-known/openid-configuration",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "headers": {
+      "Access-Control-Allow-Origin": "*"
+    },
+    "pathRewrite": {
+      "^/dashboard": ""
+    }
+  }
+}

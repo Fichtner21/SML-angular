@@ -27,6 +27,10 @@ section {
  gap: 20px;
  margin-bottom: 20px;
 
+ @media screen and (max-width: 600px){
+  grid-template-columns: 1fr;
+ }
+
   .team {
     .teamFavorite {
       color: green;
@@ -48,6 +52,9 @@ section {
     width: 30px;
     // border: 1px solid black;
     margin-right: 5px;
+    @media screen and (max-width: 600px){
+      width: 15px;
+    }
   }
 
   h2 {
@@ -62,14 +69,25 @@ section {
   border-radius: 20px;
   margin-bottom: 10px;
 
+  @media screen and (max-width: 600px){
+    padding: 5px;
+  }
+
   .playername {
     font-weight: 700;
+
+    @media screen and (max-width: 600px){
+      font-size: 12px;
+    }
   }
 
   span {
     margin-right: 5px;
     font-size: 16px;
     color: #ffffc0;
+    @media screen and (max-width: 600px){
+      font-size: 12px;
+    }
   }
 
   &:nth-of-type(2n-1){        
@@ -90,6 +108,11 @@ section {
   margin-bottom: 5px;
   border: 2px solid #ffffc0;
 
+  @media screen and (max-width: 600px){
+    padding: 5px;
+    border-width: 1px;
+  }
+
   .playername {
     font-weight: 700;
   }
@@ -98,6 +121,10 @@ section {
     margin-right: 5px;
     font-size: 18px;
     color: #ffffc0;
+
+    @media screen and (max-width: 600px){
+      font-size: 14px;
+    }
   }
 
   &:nth-of-type(2n-1){        
@@ -116,6 +143,11 @@ section {
     width: 30px;
     border: 1px solid black;
     margin-right: 5px;
+
+    @media screen and (max-width: 600px){
+      width: 15px;
+      border: none;
+    }
   }
 }
 
@@ -127,6 +159,12 @@ td img {
 
 .mat-table {
   box-shadow: 0 10px 10px #010141;
+
+  .mat-column-nr, .mat-column-ranking, .mat-column-flag {
+    @media screen and (max-width: 600px){
+      display: none;
+    }
+  }
 
   .mat-header-row {
     display: grid;
@@ -166,6 +204,10 @@ td img {
     td {
       color: #ffffc0;
       font-size: 16px;
+
+      @media screen and (max-width: 600px){
+        font-size: 14px;
+      }
     }
   
     .mat-column-playername {
@@ -184,14 +226,32 @@ td img {
   grid-template-rows: auto;
   gap: 50px;
 
-  @media screen and (max-width: 600px){
+  @media screen and (max-width: 1024px){
     grid-template-columns: 1fr;
+  }
+
+  .sticky-btn {
+    position: fixed;
+    top: 88px;
+    right: 15px;
+    opacity: 1;
+    background-color: #ffffc0;
+    font-weight: 700;
+
+    @media screen and (min-width: 1024px) {
+      display: none !important;
+    }
   }
 
   .mix-result {
     padding-top: 65px;
-    position: relative;
+    position: relative;   
     
+    @media screen and (max-height: 1024px) {
+      .mix-sticky.show {
+        right: 0;
+      }
+    }
 
     .mix-sticky {
       top: 145px;
@@ -200,7 +260,25 @@ td img {
       overflow-y:scroll;
       overflow-x:hidden;
       max-width: 600px;
-      margin-bottom: 20px;
+      margin-bottom: 0 15px 20px 15px;
+
+      p {
+        @media screen and (max-width: 600px){
+          display: none;
+        }
+      }
+
+      @media screen and (max-width: 1024px){
+        position: fixed;
+        top: 145px;
+        right: -65%;
+        width: 65%;
+        // height: 100%;
+        transition: right 0.3s;
+        z-index: 1;
+        background-image: linear-gradient(0deg, rgba(64, 65, 95, .7) 25%, rgba(47, 48, 96, .7) 25%, rgba(47, 48, 96, .7) 50%, rgba(64, 65, 95, .7) 50%, rgba(64, 65, 95, .7) 75%, rgba(47, 48, 96, .7) 75%, rgba(47, 48, 96, .7) 100%);
+        background-size: 4px 4px;        
+      }
 
       .restricted-btn {
         border: 2px solid #010141;
@@ -222,6 +300,11 @@ td img {
         }
       }      
     }
+
+   
+    
+      
+    
 
     .mix-sticky::-webkit-scrollbar {
       display: none;
@@ -259,6 +342,10 @@ td img {
       background-size: 4px 4px;
       margin-bottom: 20px;
       padding: 15px;
+
+      @media screen and (max-width: 600px){
+        display: block;
+      }
 
       .h2select {
         background-image: none;

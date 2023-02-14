@@ -9,5 +9,11 @@ export const environment = {
     messagingSenderId: '719531931759',
     measurementId: 'G-7WB1MRGPB5',
   },
-  production: true
+  production: true,
+  CONNECTION_URL: 'https://sheet.best/api/sheets/d58b442c-790c-4e5b-a033-bf718908baa0',
+  SPREADSHEET_ID: '1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo',
+  CLIENT_ID: '719531931759-h0pj1eq3bnjptkd6kppo8fkf68orq87q.apps.googleusercontent.com',
+  API_KEY: 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU',
+  SCOPE: 'https://www.googleapis.com/auth/spreadsheets',
+  SHEETDBIO: 'https://sheetdb.io/api/v1/yg8kgxivnmkec',
 };

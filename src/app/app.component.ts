@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { faHome, faHouse } from '@fortawesome/free-solid-svg-icons';
+import { faEuro, faHome, faHouse } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
   ctx: any;
   house = faHouse;
   home = faHome;
+  euro = faEuro;
   // public lang = new FormControl('en');
   currentLanguage: any = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';  
   languageCode = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';

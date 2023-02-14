@@ -44,7 +44,6 @@ export interface Employee {
   wars: string
 }
 
-
 const authCodeFlowConfig: AuthConfig = {
   // Url of the Identity Provider
   issuer: 'https://accounts.google.com',
@@ -62,11 +61,12 @@ const authCodeFlowConfig: AuthConfig = {
   
   // set the scope for the permissions the client should request  
   scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',  
+  
+  // maybe help with CORS?
+  oidc: true,
 
-  showDebugInformation: true, 
+  showDebugInformation: true  
 }
-
-
 
 @Component({
   selector: 'app-dashboard',

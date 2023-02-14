@@ -198,14 +198,20 @@ export class PlayersApiService {
   public authHeader() : HttpHeaders { 
     return new HttpHeaders ({
       'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`
+      // ,
+      // 'Access-Control-Allow-Origin': 'https://mohsh.pl/, http://localhost:4500/',
+      // 'Access-Control-Allow-Headers' : 'Authorization, Content-Type',
+      // 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
     })
   }
 
   runScriptFunction(functionName: string): Observable<any> {
     const accessToken = this.oAuthService.getAccessToken();
-    console.log('accessToken', accessToken)
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${accessToken}`);
-    console.log('headers', headers)
+    // console.log('accessToken', accessToken)
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
+    
+    // .set('Access-Control-Allow-Origin', 'https://mohsh.pl, http://localhost:4500').set('Access-Control-Allow-Headers', 'Authorization, Content-Type').set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    // console.log('headers', headers)
   
     const request = {
       function: functionName,

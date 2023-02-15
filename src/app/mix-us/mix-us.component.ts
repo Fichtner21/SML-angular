@@ -569,10 +569,10 @@ export class MixUsComponent implements OnInit {
     nextMatch += "**NEXT MATCH**, created: " + formattedDate + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "\n";
-    nextMatch += "TEAM 1 Chance for win: " + this.chanceOfWinTeamTwoShow + " %" + "\n";
+    nextMatch += "TEAM 1 Chance for win: " + this.chanceOfWinTeamOneShow + " %" + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + "\n";
-    nextMatch += "TEAM 2 Chance for win: " + this.chanceOfWinTeamOneShow + " %" + "\n";
+    nextMatch += "TEAM 2 Chance for win: " + this.chanceOfWinTeamTwoShow + " %" + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "Good Luck & Have Fun!";
     // console.log('nextM', nextMatch);

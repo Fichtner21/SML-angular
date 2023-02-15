@@ -44,7 +44,7 @@ export interface Employee {
   wars: string
 }
 
-const authCodeFlowConfig: AuthConfig = {
+export const authCodeFlowConfig: AuthConfig = {
   // Url of the Identity Provider
   issuer: 'https://accounts.google.com',
 
@@ -710,8 +710,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p3preeloNgModel = el.ranking;
-          this.cumulativeTeamOneArray.push(el.ranking)                   
+          this.t1p3preeloNgModel = el.ranking;                        
         }
       })      
     })

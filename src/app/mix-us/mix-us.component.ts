@@ -124,7 +124,7 @@ export class MixUsComponent implements OnInit {
           username: value.username,
           playername: value.playername,
           ranking: value.ranking,
-          // active: value.active == 'TRUE' ? true : false,
+          active: value.active == 'TRUE' ? true : false,
           // active: value.active,
           ban: value.ban == 'TRUE' ? true : false,
           // ban: value.ban,
@@ -537,7 +537,11 @@ export class MixUsComponent implements OnInit {
   }
 
   sendToDiscord() {
-    const webhookUrl = 'https://discord.com/api/webhooks/1075178845067563138/FpKf7iiu3dhI9NTxyS-VkMNcv4mdq2KORNhNUbkeZnfCgLtDaJSIFxi9Uz5YUTCDPqmX';
+    // Last War and Log
+    // const webhookUrl = 'https://discord.com/api/webhooks/1075178845067563138/FpKf7iiu3dhI9NTxyS-VkMNcv4mdq2KORNhNUbkeZnfCgLtDaJSIFxi9Uz5YUTCDPqmX';
+
+    // General Chat
+    const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
 
     const arr1 = this.array1;
     const arr2 = this.array2;
@@ -563,16 +567,28 @@ export class MixUsComponent implements OnInit {
     const year = now.getFullYear();
     const hours = ("0" + now.getHours()).slice(-2);
     const minutes = ("0" + now.getMinutes()).slice(-2);
-    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
+    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;    
+
+    const chanceFutureTeamOne = this.sumRanking(arr1)
+    const chanceFutureTeamTwo = this.sumRanking(arr2)    
+
+    let chanceOfWinTeamOneShow = 0;
+    let chanceOfWinTeamTwoShow = 0;
+
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne - chanceFutureTeamTwo) / 400)) * 100;       
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;
+
+    chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+    chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
     
     let nextMatch = "";
     nextMatch += "**NEXT MATCH**, created: " + formattedDate + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "\n";
-    nextMatch += "TEAM 1 Chance for win: " + this.chanceOfWinTeamOneShow + " %" + "\n";
+    nextMatch += "TEAM 1 Chance for win: " + chanceOfWinTeamTwoShow + " %" + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + "\n";
-    nextMatch += "TEAM 2 Chance for win: " + this.chanceOfWinTeamTwoShow + " %" + "\n";
+    nextMatch += "TEAM 2 Chance for win: " + chanceOfWinTeamOneShow + " %" + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "Good Luck & Have Fun!";
     // console.log('nextM', nextMatch);

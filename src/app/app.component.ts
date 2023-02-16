@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { faEuro, faHome, faHouse } from '@fortawesome/free-solid-svg-icons';
-
+import { faPaypal } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -35,6 +35,7 @@ export class AppComponent implements OnInit {
   house = faHouse;
   home = faHome;
   euro = faEuro;
+  paypal = faPaypal;
   // public lang = new FormControl('en');
   currentLanguage: any = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';  
   languageCode = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';

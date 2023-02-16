@@ -53,14 +53,18 @@
           <div>DISCORD</div>        
         </a>  
         
-        <div class="donation">
-          <a href="https://zrzutka.pl/en/t4ujr8">
-            <span>Donate League</span>
-            <fa-icon [icon]="euro"></fa-icon> 
-          </a>
-        </div> 
+        <!-- <div class="donation">
+          
+        </div>  -->
       </div>     
       <div class="login-panel">
+        <a href="https://zrzutka.pl/en/t4ujr8" title="Donate with zrzutka.pl" target="_blank" class="donation">
+          <span>Donate League</span>
+          <fa-icon [icon]="euro"></fa-icon> 
+        </a>
+        <a href="https://www.paypal.com/donate/?hosted_button_id=K5HHU9LGEWULS" target="_blank" title="Donate with PayPal" class="donation">
+          <span>Donate with</span> <fa-icon [icon]="paypal"></fa-icon>
+        </a>
         <a routerLink="dashboard" routerLinkActive="active" title="Dashboard">
           <fa-icon [icon]="home"></fa-icon>
         </a>

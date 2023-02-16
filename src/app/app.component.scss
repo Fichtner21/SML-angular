@@ -107,6 +107,7 @@ nav {
       .social-panel {
         display: flex;
         align-items: center;
+        justify-content: flex-end;
         font-weight: 700; 
 
         @media screen and (max-width: 768px){
@@ -156,6 +157,24 @@ nav {
         display: flex;
         align-items: center;
         justify-content: flex-end;
+        flex-wrap: wrap-reverse;
+        margin-top: 3px;
+
+        .donation {
+          background-image: linear-gradient(0deg, rgba(255, 255, 0, .5) 25%, rgba(255, 255, 0, .5) 50%, rgba(255, 255, 0, .5) 75%);
+            background-size: 4px 4px;
+            color: #2f3060;
+            padding: 2px 5px;
+        }
+
+        span {
+          margin-right: 3px;
+        }
+
+        a {
+          display: flex;
+          align-items: center;
+        }
       }
     }
   }  

@@ -20,6 +20,13 @@ export const environment = {
   API_KEY: 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU',
   SCOPE: 'https://www.googleapis.com/auth/spreadsheets',
   SHEETDBIO: 'https://sheetdb.io/api/v1/yg8kgxivnmkec',
+  authConfig: {
+    issuer: 'https://accounts.google.com',
+    redirectUri: 'http://localhost:4500/dashboard',
+    clientId: '719531931759-h0pj1eq3bnjptkd6kppo8fkf68orq87q.apps.googleusercontent.com',
+    responseType: 'code',
+    scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',
+  },
   // players: {
   //   spreadsheetId: '1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo',
   //   worksheetId: 1,

@@ -1,16 +1,20 @@
+<!-- <script src="https://accounts.google.com/gsi/client" async defer></script> -->
 <section>
-  <div class="container">
-  
+  <div class="container">   
     <div class="main-grid">
       <div class="grid span5">
         <mat-card class="span3 menage">
           <button mat-raised-button color="primary" routerLink="/dashboard/create-player"><span>Create player</span> <fa-icon [icon]="userPlusIcon"></fa-icon></button>
+          <div>
+          
+          </div>
         </mat-card>
         <mat-card class="span3 menage">
           <button mat-raised-button color="primary" routerLink="/dashboard/list-players"><span>List players</span> <fa-icon [icon]="usersIcon"></fa-icon></button>     
         </mat-card>
         <mat-card class="span1 menage logout">
           <button mat-raised-button color="primary" *ngIf="!oAuthService.hasValidAccessToken()" (click)="loginTest()"><span>Login</span> <fa-icon [icon]="doorOpen"></fa-icon></button>
+         
           <button mat-raised-button color="primary" *ngIf="oAuthService.hasValidAccessToken()" (click)="logoutTest()"><span>Logout</span> <fa-icon [icon]="rightFromBracket"></fa-icon></button> 
         </mat-card> 
        

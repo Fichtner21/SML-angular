@@ -48,7 +48,7 @@
           <div class="players-list">
             <ng-container *ngFor="let player of lastWarOfPlayers; let i = index;">
               <!-- <ng-container *ngIf="player.ban"> -->
-                <div class="character-card" [ngClass]="{'cyan': player.meeting == 1 }" *ngIf="!player.active">                
+                <div class="character-card" [ngClass]="{'cyan': player.meeting == 1 }" *ngIf="!player.active && !player.ban">                
                   <div class="item">{{ i+1 }}</div>
                   <div class="item">
                     <a routerLink="/obj-ranking/{{player.username}}">

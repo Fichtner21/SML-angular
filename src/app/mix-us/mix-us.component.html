@@ -86,7 +86,7 @@
             </div>
             <div class="btn-cont">
               <button mat-raised-button color="warn" class="hp" (click)="          
-            splitArrayIntoTwo(selectedUsers)">Mix teams! HP</button>
+            splitArrayIntoTwo(selectedUsers)" [disabled]="selectedUsers.length >= 11">Mix teams! HP</button>
               <div>HP - Higher precision, limit max 5on5.</div>
             </div>          
             <!-- <div class="btn-cont">

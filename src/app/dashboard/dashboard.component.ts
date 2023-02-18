@@ -45,29 +45,29 @@ export interface Employee {
   wars: string
 }
 
-// export const authCodeFlowConfig: AuthConfig = {
-//   // Url of the Identity Provider
-//   issuer: 'https://accounts.google.com',
+export const authCodeFlowConfig: AuthConfig = {
+  // Url of the Identity Provider
+  issuer: 'https://accounts.google.com',
 
-//   // strict discovery document disallows urls which not start with issuers url
-//   strictDiscoveryDocumentValidation: false,
+  // strict discovery document disallows urls which not start with issuers url
+  strictDiscoveryDocumentValidation: false,
 
-//   // URL of the SPA to redirect the user to after login
-//   // redirectUri: window.location.origin,
-//   redirectUri: window.location.origin + '/dashboard',
+  // URL of the SPA to redirect the user to after login
+  // redirectUri: window.location.origin,
+  redirectUri: window.location.origin + '/dashboard',
 
-//   // The SPA's id. The SPA is registerd with this id at the auth-server
-//   // clientId: 'server.code',
-//   clientId: '326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com',
+  // The SPA's id. The SPA is registerd with this id at the auth-server
+  // clientId: 'server.code',
+  clientId: '326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com',
   
-//   // set the scope for the permissions the client should request  
-//   scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',  
+  // set the scope for the permissions the client should request  
+  scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',  
   
-//   // maybe help with CORS?
-//   oidc: true,
+  // maybe help with CORS?
+  oidc: true,
 
-//   showDebugInformation: true  
-// }
+  showDebugInformation: true  
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -228,32 +228,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, public oAuthService: OAuthService, private formBuilder: FormBuilder,notifierService: NotifierService, private modalService: NgbModal) { 
 
-   
-    //confiure oauth2 service
-    // oAuthService.configure(authCodeFlowConfig);
-    // // manually configure a logout url, because googles discovery document does not provide it
-    // oAuthService.logoutUrl = "https://www.google.com/accounts/Logout";     
+  //  
+    // confiure oauth2 service
+    oAuthService.configure(authCodeFlowConfig);
+    // manually configure a logout url, because googles discovery document does not provide it
+    oAuthService.logoutUrl = "https://www.google.com/accounts/Logout";     
 
-    // // loading the discovery document from google, which contains all relevant URL for
-    // // the OAuth flow, e.g. login url
-    // oAuthService.loadDiscoveryDocument().then( () => {
-    //   // // This method just tries to parse the token(s) within the url when
-    //   // // the auth-server redirects the user back to the web-app
-    //   // // It doesn't send the user the the login page
-    //   oAuthService.tryLoginImplicitFlow().then( () => {
+    // loading the discovery document from google, which contains all relevant URL for
+    // the OAuth flow, e.g. login url
+    oAuthService.loadDiscoveryDocument().then( () => {
+      // // This method just tries to parse the token(s) within the url when
+      // // the auth-server redirects the user back to the web-app
+      // // It doesn't send the user the the login page
+      oAuthService.tryLoginImplicitFlow().then( () => {
 
-    //     // when not logged in, redirecvt to google for login
-    //     // else load user profile
-    //     if (!oAuthService.hasValidAccessToken()) {
-    //       oAuthService.initLoginFlow()
-    //     } else {
-    //       // oAuthService.loadUserProfile().then( (userProfile) => {
-    //       //   // this.userProfileSubject.next(userProfile as UserInfo)
-    //       // })
-    //     }
+        // when not logged in, redirecvt to google for login
+        // else load user profile
+        if (!oAuthService.hasValidAccessToken()) {
+          oAuthService.initLoginFlow()
+        } else {
+          // oAuthService.loadUserProfile().then( (userProfile) => {
+          //   // this.userProfileSubject.next(userProfile as UserInfo)
+          // })
+        }
 
-    //   })
-    // });
+      })
+    });
 
     // googleApi.userProfileSubject.subscribe( info => {
     //   console.log('info', info);
@@ -411,10 +411,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }  
 
   ngOnInit(): void { 
-    // this.oAuthService.configure(environment.authConfig);
-    // this.oAuthService.loadDiscoveryDocumentAndLogin();
+    this.oAuthService.configure(environment.authConfig);
+    this.oAuthService.loadDiscoveryDocumentAndLogin();
 
-    // this.oAuthService.setupAutomaticSilentRefresh();   
+    this.oAuthService.setupAutomaticSilentRefresh();   
  
     this.displayedColumns= ['nr','name','username','elo','wars','active', 'ban'];
    

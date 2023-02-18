@@ -9,12 +9,6 @@ import { map, startWith, switchMap, take, tap } from 'rxjs/operators';
 const SCRIPT_ID = 'AKfycbw1UM_u6MgkD_a9P2yHtUdhCkz5kxBX-BuVDCA8tXQ';
 const ENDPOINT = `https://script.googleapis.com/v1/scripts/${SCRIPT_ID}:run`;
 
-// this is SCRIPT_ID of deployment with API
-
-// const spreadsheetId = '1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo';
-// const sheetName = 'Add a Match';
-// const cellRange = 'A12';
-// const ENDPOINT_CELL = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}`
 
 @Injectable({
   providedIn: 'root'

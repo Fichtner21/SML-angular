@@ -229,6 +229,7 @@ export class MixUsComponent implements OnInit {
     } else {
       this.selectedUsers.splice(index, 1);
     }
+    // console.log('this.selectedUsers', this.selectedUsers)
   }
  
   // sum(numbers){
@@ -606,7 +607,7 @@ export class MixUsComponent implements OnInit {
 
   isValid(): boolean {
     return this.array1 && this.array1.length > 2 && this.array2 && this.array2.length > 2;
-  }
+  }  
 }
 
 

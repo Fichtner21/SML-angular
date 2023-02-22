@@ -123,7 +123,9 @@ export class PlayerViewComponent implements OnInit {
         let rankings: any[] = [];
         let resultPerPlayer: any[] = [];
         let s1wars: string;
+        let s1fpw: string;
         let active: string;
+        let place: string;
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);               
 
@@ -142,8 +144,7 @@ export class PlayerViewComponent implements OnInit {
         
         let win = 0;
         let lose = 0;
-        let draw = 0;
-        
+        let draw = 0;        
 
         foundPlayerArray.forEach(el => {
           const numPlayerTeam = Number(this.getKeyByValue(el, player).slice(1,2));         
@@ -188,69 +189,13 @@ export class PlayerViewComponent implements OnInit {
           }
         }
 
-        // console.log('count', count);
-
         let keys = Object.keys(count); 
       
         keys.sort(function(a, b) { return count[a] - count[b] });
 
         const sorttedCount = this.publicsortObjectbyValue(count);
         const sorttedCountArr = Object.entries(sorttedCount);
-        const countPlayers = this.get3TopItems(Object.entries(count));           
-       
-        // console.log('resultPerPlayer', resultPerPlayer);        
-
-        // this.resultCanvas = document.getElementById('playerResult');
-        // console.log('this.resultCanvas', this.resultCanvas);          
-        // this.ctxResult = this.resultCanvas.getContext('2d'); 
-        // console.log('this.ctxResult', this.ctxResult);
-        // new Chart(this.ctxResult, {
-        //   type: 'bar',
-        //   data: {
-        //     labels: ['Win', 'Lose', 'Draw'],
-        //     datasets: [{
-        //       label: 'aaa',
-        //       data: resultPerPlayer,
-        //       backgroundColor: ["rgba(11,156,49,0.6)", "rgba(255,0,0,0.6)", "rgba(239, 239, 240, 0.6)"],                  
-        //       borderWidth: 1
-        //     }]
-        //   },
-        //   options: {
-        //     legend: {
-        //       display: false
-        //     },
-        //     responsive: true,
-        //     scales: {             
-        //       xAxes: [
-        //         {
-        //           ticks: {
-        //             beginAtZero: false,
-        //             min: 1,
-        //           },
-        //           offset: true,
-        //           id: 'date-x-axis',
-        //           scaleLabel: {
-        //             display: false,
-        //             labelString: 'Date of match',
-        //           },                  
-        //         },
-        //       ],
-        //       yAxes: [
-        //         {
-        //           ticks: {
-        //             beginAtZero: true,
-        //           },
-        //           scaleLabel: {
-        //             display: false,
-        //             labelString: 'Frags per war',
-        //           },
-        //         },
-        //       ],
-        //     },
-            
-        //     // display:true
-        //   }, 
-        // });      
+        const countPlayers = this.get3TopItems(Object.entries(count)); 
 
         matches.forEach((el) => {
           if(Object.values(el).includes(player)){              
@@ -270,17 +215,18 @@ export class PlayerViewComponent implements OnInit {
           }
         });       
         
-        players.forEach((el) => {
-          if(el.username === player){
+        players.forEach((el) => {        
+          if (el.username === player) {
             playerName = el.playername;
             warCount = el.warcount;
             nationality = el.nationality;
             ranking = el.ranking;
             clanHistory = el.clanhistory;
             s1wars = el.s1wars;
-            active = el.active;
-          }            
-        });       
+            s1fpw = el.s1fpw;
+            place = el.place;
+          }
+        });    
        
         let playerCard;
         
@@ -308,28 +254,16 @@ export class PlayerViewComponent implements OnInit {
           mostOftenPlayed2: { c: sorttedCountArr[1], n: sorttedCountArr[1]},
           mostOftenPlayed3: { c: sorttedCountArr[2], n: sorttedCountArr[2]},
           s1wars: s1wars,
-          active: (active == 'FALSE') ? false : true
+          s1fpw: s1fpw,
+          active: (active == 'FALSE') ? false : true,
+          place: place
         }  
         // console.log('playerCard', playerCard);
         
         return playerCard;
       })
-    ) 
-
-    // const matchesArr = [];
-    // this.playerDetail$.pipe(
-    //   map((el) => (el.win.push(matchesArr))),
-    //   map((el) => (el.lose.push(matchesArr))),
-    //   map((el) => (el.draw.npush(matchesArr)))
-
-    // ).subscribe();
-
-    // this.showResult(matchesArr); 
+    )  
   } 
-
-  // isLoggedIn(): boolean {    
-  //   return this.playersApiService.isLoggedIn()
-  // }
 
   clickEvent(){
     this.status = !this.status;    
@@ -636,8 +570,8 @@ export class PlayerViewComponent implements OnInit {
     const activeANDinactive = combineLatest(actRanking, inRanking).pipe(
       map(([active, inactive]) => {
         let activeInactive: any;
-        console.log('active', active);
-        console.log('inactive', inactive);
+        // console.log('active', active);
+        // console.log('inactive', inactive);
       })
     );
 

@@ -10,10 +10,15 @@ import { ThemePalette } from '@angular/material/core';
 import { NotifierService } from 'angular-notifier';
 import { HideRowDirective } from '../hide-row.directive';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { HttpParams } from '@angular/common/http';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { faPaperPlane, faStamp } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsDownToPeople, faPaperPlane, faPersonCirclePlus, faStamp } from '@fortawesome/free-solid-svg-icons';
+import * as Discord from 'discord.js';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v9';
+import { getVoiceMembers, moveUsersToChannels } from './../../../src/';
+
 
 export interface UserData {
   nr: string;
@@ -41,6 +46,12 @@ export interface Task {
   subtasks?: Task[];
 }
 
+interface VoiceMember {
+  id: string;
+  username: string;
+  nickname: string;
+}
+
 @Component({
   selector: 'app-mix-us',
   templateUrl: './mix-us.component.html',
@@ -62,6 +73,7 @@ export class MixUsComponent implements OnInit {
   allSelected: boolean = false;
   sendIcon = faPaperPlane;
   stamp = faStamp;
+  arrowDown = faPersonCirclePlus;
   // dataSource: MatTableDataSource<any>;
   // dataSource = new MatTableDataSource<any>([]);
   selectedRows = [];
@@ -75,7 +87,7 @@ export class MixUsComponent implements OnInit {
   players: any;
   displayedColumns: string[] = ['select', 'nr', 'ranking', 'playername','flag'];
   
-    
+  
   task: Task = {
     name: 'Indeterminate',
     completed: false,
@@ -90,10 +102,33 @@ export class MixUsComponent implements OnInit {
   // displayedColumns: string[];
   // dataSource = new MatTableDataSource<PeriodicElement>(this.players$);
   selection = new SelectionModel<UserData>(true, []);
-
+  discordUsers: any[] = [];
  
+  public token = 'MTA3NzIyOTg4Njk3MzkzNTcwNw.G8qWP1.nc7-rGU3BotFxISS8JKT2Eh9ESp_HSS9ePp5VU';
+  public channelId = '851888778409672756';
+
+  private discordToken = 'MTA3NzIyOTg4Njk3MzkzNTcwNw.G8qWP1.nc7-rGU3BotFxISS8JKT2Eh9ESp_HSS9ePp5VU';
+  private baseUrl = 'http://localhost:3000';
+
+  users: any[];
 
   constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient) { 
+    // const client = new Client({
+    //   intents: ['Guilds', 'GuildMembers', 'GuildVoiceStates']
+    // });
+
+    // client.on('ready', async () => {
+    //   // const channelId = '1234567890'; // podaj ID kanału, dla którego chcesz pobrać listę użytkowników
+    //   // const channel = client.channels.cache.get(channelId) as VoiceChannel;
+    //   // const voiceMembers = await channel.members;
+    
+    //   // voiceMembers.forEach(member => {
+    //   //   this.users.push(member.displayName);
+    //   // });
+    // });
+
+    // client.login('MTA3NzMzNDUyNDE1NDg3NjAyNg.GLV3pj.RPAovzUTCcezSqvAhRDb3TNTWr6GEr6YzHcbMg'); // podaj swój token dostępowy do bota Discord
+
     this.players$ = this.googleApi.getPlayers('Players').pipe(
       map((response: any) => {             
         let batchRowValues = response.values;
@@ -229,7 +264,7 @@ export class MixUsComponent implements OnInit {
     } else {
       this.selectedUsers.splice(index, 1);
     }
-    // console.log('this.selectedUsers', this.selectedUsers)
+    console.log('this.selectedUsers', this.selectedUsers)
   }
  
   // sum(numbers){
@@ -247,6 +282,95 @@ export class MixUsComponent implements OnInit {
         this.selectedArr.push(selectedElement);
       });
     // });
+  }
+
+  getDiscordUsers() { 
+    this.http.get<VoiceMember[]>('http://localhost:3000/voice-members').subscribe(
+      (members) => {        
+        if(members.length === 0){
+          this.notifier.notify('warning', 'WANT TO PLAY is empty.');
+        } else {      
+          members.forEach((el: any) => {      
+            console.log('el', el);     
+            this.playerRowArray.forEach((player: any) => {
+              if ((el.username === player.username || el.username === player.playername || el.nickname === player.username || el.nickname === player.playername) &&
+                  !this.selectedUsers.some((u: any) => (u.username === player.username && u.playername === player.playername))                  
+              ) {
+                player.id = el.id; 
+                // player.nickname = el.nickname;// Dodajemy pole id z obiektu el do obiektu player
+                this.selectedUsers.push(player);                
+              }
+              
+            });
+          });
+          this.notifier.notify('success', 'Players from Discord Imported successful');
+          console.log('this SELECTED USERS:', this.selectedUsers)
+        }
+      },
+      (err) => {        
+        this.notifier.notify('error', 'Import Players from Discord failed.');
+      }
+    ); 
+  }
+
+  sendToVoiceChannels(){
+    const newArray1 = this.array1.map((obj: any) => {
+      return {
+        username: obj.username,
+        nickname: obj.nickname,
+        id: obj.id
+      };
+    });
+
+    console.log('111',newArray1)
+
+    const newArray2 = this.array2.map((obj: any) => {
+      return {
+        username: obj.username,
+        nickname: obj.nickname,
+        id: obj.id
+      };
+    });
+
+    console.log('222',newArray2)
+
+    const channel1Id = '851888705307803698';
+    const channel2Id = '851888741761155136';
+
+    const payload = {
+      users1: newArray1,
+      users2: newArray2,
+      channel1Id: channel1Id,
+      channel2Id: channel2Id,
+    };
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    console.log('PAYLOAD', JSON.stringify(payload))
+
+    this.http.post(`${this.baseUrl}/move-users-to-channels`, JSON.stringify(payload), httpOptions).subscribe(
+      (response) => {
+        console.log('Move users to channels success:', response);
+      },
+      (error) => {
+        console.error('Move users to channels error:', error);
+      }
+    );
+
+    // this.googleApi.moveUsersToChannels(newArray1, newArray2, '851888705307803698', '851888741761155136').subscribe(
+    //   (response) => {
+    //     console.log('Response:', response);
+    //     this.notifier.notify('warning', 'sendToVoiceChannels executing');
+    //   },
+    //   (error) => {
+    //     console.log('Error:', error);
+    //     this.notifier.notify('error', 'Error while sending users to voice channels.');
+    //   }
+    // );
   }
 
   // transferSelectedRows() {
@@ -415,12 +539,57 @@ export class MixUsComponent implements OnInit {
     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
     this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
-
-
    
     this.addArrayToUrl(firstArray, secondArray)
+    console.log('ARRAY 1:', this.array1);
+    console.log('ARRAY 2:', this.array2);
     return [firstArray, secondArray];
   }
+
+  // splitRanking2(array) {
+  //   //NO BLADY and ILLU same team
+  //   array.sort((a, b) => parseFloat(b.ranking.replace(',', '')) - parseFloat(a.ranking.replace(',', '')));
+  //   let firstArray = [];
+  //   let secondArray = [];
+  //   let firstArraySum = 0;
+  //   let secondArraySum = 0;
+  
+  //   for (let i = 0; i < array.length; i++) {
+  //     let currentRanking = parseFloat(array[i].ranking.replace(',', ''));
+  //     if (firstArraySum <= secondArraySum) {
+  //       if (array[i].username === "blady") {
+  //         secondArray.push(array[i]);
+  //         secondArraySum += currentRanking;
+  //       } else {
+  //         firstArray.push(array[i]);
+  //         firstArraySum += currentRanking;
+  //       }
+  //     } else {
+  //       if (array[i].username === "illusion") {
+  //         firstArray.push(array[i]);
+  //         firstArraySum += currentRanking;
+  //       } else {
+  //         secondArray.push(array[i]);
+  //         secondArraySum += currentRanking;
+  //       }
+  //     }
+  //   }
+  //   this.array1 = firstArray;
+  //   this.array2 = secondArray;
+
+  //   this.sumTeam1 = this.sumRanking(firstArray)
+  //   this.sumTeam2 = this.sumRanking(secondArray)
+    
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+  //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
+   
+  //   this.addArrayToUrl(firstArray, secondArray)
+  //   return [firstArray, secondArray];
+  // }
+  
 
   addArrayToUrl(a1, a2) {
     // let a1Usernames = a1.map(item => item.username);

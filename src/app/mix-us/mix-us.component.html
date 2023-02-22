@@ -121,14 +121,25 @@
             </div>
           </div> 
           <div class="restricted-btn">
-            <button mat-raised-button color="primary" class="lp" (click)="    
-            sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
-            <div>Click here to send squads for next war to discord.</div>
+            <div class="single-btn">
+              <button mat-raised-button color="primary" class="lp" (click)="    
+              sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
+              <div>Click here to send squads for next war to discord.</div>
+            </div>
+            <div class="single-btn">
+              <button mat-raised-button color="accent" class="lp" (click)="getDiscordUsers()">Get from Discord <fa-icon [icon]="arrowDown"></fa-icon></button>
+              <div>Click here to get players from WANT TO PLAY channel</div>
+            </div>            
+            <div class="single-btn">
+              <button mat-raised-button color="accent" class="lp" (click)="sendToVoiceChannels()">Send to Voice Channels <fa-icon [icon]="arrowDown"></fa-icon></button>
+              <div>Click here to send players to voice channels.</div>
+            </div>            
           </div>
           <ng-container *ngIf="isAuthenticated()">                      
             <div class="restricted-btn">
               <h1>Restricted Content</h1>
               <p>This content is only visible to authenticated users.</p>  
+              
               <button mat-raised-button color="primary" class="lp" (click)="    
               confirmTeams()">Confirm Teams <fa-icon [icon]="stamp"></fa-icon></button>
               <div>Click here to send balanced teams to database. Go to <a routerLink="/dashboard">Dashboard</a> to fill score after war.</div>

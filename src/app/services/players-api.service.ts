@@ -21,10 +21,26 @@ export class PlayersApiService {
   // options: any[] = [];
   input: any;
   index: any;
+  private apiUrl = 'https://discord.com/api/v9'; // Wersja API Discorda
 
-  constructor(private http: HttpClient, private readonly oAuthService: OAuthService) {  
-    
-      
+  private discordApiUrl = 'https://discord.com/api';
+  private discordToken = 'MTA3NzIyOTg4Njk3MzkzNTcwNw.GZhb6Z.N_Oq-kDAVTcni7LMdcZF_NMLYVWqFmlE_FqWd8';
+  private channelId = '851888778409672756';
+  private baseUrl = 'http://localhost:3000';
+
+  constructor(private http: HttpClient, private readonly oAuthService: OAuthService) {}
+
+  moveUsersToChannels(users1: any[], users2: any[], channel1Id: string, channel2Id: string): Observable<any> {
+    const url = `${this.baseUrl}/move-users-to-channels`;
+    const data = {
+      users1: users1,
+      users2: users2,
+      channel1Id: channel1Id,
+      channel2Id: channel2Id
+    };
+    console.log('data =>', data);
+    console.log('url =>', url);
+    return this.http.post<any>(url, data);
   }
 
   // isLoggedIn(): boolean {    
@@ -258,5 +274,40 @@ export class PlayersApiService {
     )
   } 
 
- 
+  getGuildMembers(guildId: string, token: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bot ${token}`,
+    });
+    return this.http.get(`${this.apiUrl}/guilds/${guildId}/members`, { headers });
+  }
+  // getPlayersFromDiscord(): Promise<any>{
+
+
+  //   // const headers = {
+  //   //   'Authorization': `Bearer ${this.discordToken}`
+  //   // };
+
+  //   // console.log('headers', headers)
+  //   // const url = `${this.discordApiUrl}/channels/${this.channelId}/members`;
+  //   // console.log('url', url)
+  
+  //   // return this.http.get<any>(url, { headers }).toPromise();
+  //   // const headers = {
+  //   //   'Authorization': `Bearer MTA3NzIyOTg4Njk3MzkzNTcwNw.GZhb6Z.N_Oq-kDAVTcni7LMdcZF_NMLYVWqFmlE_FqWd8`
+  //   // };
+  //   // const guildId = '716723661909786690';
+  //   // // const channelsUrl = `${this.discordApiUrl}/guilds/${guildId}/channels`;
+  //   // const channelsUrl = `https://discord.com/api/guilds/716723661909786690/widget.json`;
+    
+  
+  //   // return this.http.get<any[]>(channelsUrl, { headers }).toPromise()
+  //   //   .then((channels) => {
+  //   //     // const channel = channels.find(c => c.type === 4 && c.id === this.channelId);
+  //   //     // if (!channel) {
+  //   //     //   throw new Error(`Nie znaleziono kanału głosowego o ID ${this.channelId}`);
+  //   //     // }
+  //   //     const membersUrl = `${this.discordApiUrl}/v8/channels/851888778409672756/members`;
+  //   //     return this.http.get<any[]>(membersUrl, { headers }).toPromise();
+  //   //   });
+  // }
 }

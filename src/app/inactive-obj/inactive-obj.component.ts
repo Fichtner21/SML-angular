@@ -133,7 +133,7 @@ export class InactiveObjComponent implements OnInit {
     // } else if(this.activatedRoute.snapshot.queryParams['sortByFpW'] == 'ASC'){
     //   this.sortByFpWAsc(this.lastWarOfPlayerIn$);
     // } else {
-    //   this.router.navigate(['/obj-ranking'], { queryParams: {  } });
+    //   this.router.navigate(['/obj-inactive'], { queryParams: {  } });
     // }
 
     // ------------------------------
@@ -356,7 +356,7 @@ export class InactiveObjComponent implements OnInit {
   //SORTING
   public sortByWarsDesc(res:Observable<any>){      
     this.booleanVar = !this.booleanVar;   
-    this.router.navigate(['/obj-ranking'], { queryParams: {sortByWars: 'DESC' }}); 
+    this.router.navigate(['/obj-inactive'], { queryParams: {sortByWars: 'DESC' }}); 
     // console.log('this.booleanVar', this.booleanVar);
     return this.lastWarOfPlayerIn$ = res.pipe(
       map(
@@ -367,7 +367,7 @@ export class InactiveObjComponent implements OnInit {
 
   public sortByWarsAsc(res:Observable<any>){  
     this.booleanVar = !this.booleanVar;   
-    this.router.navigate(['/obj-ranking'], { queryParams: { sortByWars: 'ASC' } }); 
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByWars: 'ASC' } }); 
     // console.log('this.booleanVar', this.booleanVar); 
     return this.lastWarOfPlayerIn$ = res.pipe(
       map(
@@ -378,7 +378,7 @@ export class InactiveObjComponent implements OnInit {
 
   public sortByRankingDesc(res:Observable<any>){ 
     this.booleanVarRank = !this.booleanVarRank;  
-    this.router.navigate(['/obj-ranking'], { queryParams: { sortByRanking: 'DESC' } });    
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByRanking: 'DESC' } });    
     return this.lastWarOfPlayerIn$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(b.ranking) - parseFloat(a.ranking))
@@ -388,7 +388,7 @@ export class InactiveObjComponent implements OnInit {
 
   public sortByRankingAsc(res:Observable<any>){   
     this.booleanVarRank = !this.booleanVarRank;  
-    this.router.navigate(['/obj-ranking'], { queryParams: { sortByRanking: 'ASC' } });     
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByRanking: 'ASC' } });     
     return this.lastWarOfPlayerIn$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(a.ranking) - parseFloat(b.ranking))
@@ -398,7 +398,7 @@ export class InactiveObjComponent implements OnInit {
 
   public sortByFpWDesc(res:Observable<any>){ 
     this.booleanVarFpW = !this.booleanVarFpW;    
-    this.router.navigate(['/obj-ranking'], { queryParams: { sortByFpW: 'DESC' } }); 
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByFpW: 'DESC' } }); 
     return this.lastWarOfPlayerIn$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(b.fragsperwar) - parseFloat(a.fragsperwar))
@@ -408,7 +408,7 @@ export class InactiveObjComponent implements OnInit {
 
   public sortByFpWAsc(res:Observable<any>){ 
     this.booleanVarFpW = !this.booleanVarFpW;     
-    this.router.navigate(['/obj-ranking'], { queryParams: { sortByFpW: 'ASC' } }); 
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByFpW: 'ASC' } }); 
     return this.lastWarOfPlayerIn$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(a.fragsperwar) - parseFloat(b.fragsperwar))

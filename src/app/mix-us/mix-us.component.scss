@@ -1,5 +1,5 @@
 section {
-  padding-top: 80px;   
+  padding-top: 90px;   
   background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%);
   background-size: 4px 4px;
   min-height: 100%;
@@ -70,7 +70,8 @@ section {
   margin-bottom: 10px;
 
   @media screen and (max-width: 600px){
-    padding: 5px;
+    padding: 5px;    
+    border: 1px dashed #ffffc0;
   }
 
   .playername {
@@ -84,7 +85,7 @@ section {
   span {
     margin-right: 5px;
     font-size: 16px;
-    color: #ffffc0;
+    color: #ffffc0;    
     @media screen and (max-width: 600px){
       font-size: 12px;
     }
@@ -244,23 +245,24 @@ td img {
   }
 
   .mix-result {
-    padding-top: 65px;
+    padding-top: 85px;
     position: relative;   
     
     @media screen and (max-height: 1024px) {
       .mix-sticky.show {
-        right: 0;
+        right: 0;       
+        box-shadow: 0 0 10px #010141;
       }
     }
 
     .mix-sticky {
-      top: 145px;
+      top: 155px;
       bottom:0;
       position:fixed;
       overflow-y:scroll;
       overflow-x:hidden;
       max-width: 600px;
-      margin-bottom: 0 15px 20px 15px;
+      margin: 0 15px 20px 15px;
 
       p {
         @media screen and (max-width: 600px){
@@ -273,10 +275,11 @@ td img {
         top: 145px;
         right: -65%;
         width: 65%;
+        margin: 0;
         // height: 100%;
         transition: right 0.3s;
         z-index: 1;
-        background-image: linear-gradient(0deg, rgba(64, 65, 95, .7) 25%, rgba(47, 48, 96, .7) 25%, rgba(47, 48, 96, .7) 50%, rgba(64, 65, 95, .7) 50%, rgba(64, 65, 95, .7) 75%, rgba(47, 48, 96, .7) 75%, rgba(47, 48, 96, .7) 100%);
+        background-image: linear-gradient(0deg, rgba(64, 65, 95, .9) 25%, rgba(47, 48, 96, .9) 25%, rgba(47, 48, 96, .9) 50%, rgba(64, 65, 95, .9) 50%, rgba(64, 65, 95, .9) 75%, rgba(47, 48, 96, .9) 75%, rgba(47, 48, 96, .9) 100%);
         background-size: 4px 4px;        
       }
 
@@ -287,6 +290,18 @@ td img {
         background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
         background-size: 4px 4px;
         margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+
+        .single-btn {
+          padding: 5px;
+
+          button, div {
+            margin-bottom: 5px;
+          }
+        }
 
         a {
           text-decoration: underline;          
@@ -300,11 +315,6 @@ td img {
         }
       }      
     }
-
-   
-    
-      
-    
 
     .mix-sticky::-webkit-scrollbar {
       display: none;
@@ -392,6 +402,10 @@ td img {
       flex-wrap: wrap;
       margin-bottom: 10px;
 
+      @media screen and (max-width: 1024px){
+        padding-left: 10px;
+      }
+
       .selected {
         margin-right: 10px;
         margin-bottom: 5px;
@@ -403,6 +417,12 @@ td img {
         h2 {
           background-image: linear-gradient(0deg, rgba(64, 65, 95, .9) 25%, rgba(47, 48, 96, .9) 25%, rgba(47, 48, 96, .9) 50%, rgba(64, 65, 95, .9) 50%, rgba(64, 65, 95, .9) 75%, rgba(47, 48, 96, .9) 75%, rgba(47, 48, 96, .9) 100%);
           background-size: 4px 4px;
+        }
+
+        @media screen and (max-width: 1024px){
+          .player {
+            margin: 5px 10px;
+          }
         }
       }
     }

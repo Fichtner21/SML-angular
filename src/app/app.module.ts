@@ -142,9 +142,9 @@ const customNotifierOptions: NotifierOptions = {
   }, 
   AuthService,
   AuthGuard,
-  {
-    provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true
-  },
+  // {
+  //   provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true
+  // },
   {
     provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true
   },

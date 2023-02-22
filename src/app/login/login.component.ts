@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
       this.loginUserData.password == this.allowedPassword
     ) {
       // console.log('login success');
-      localStorage.setItem('token', 'secretToken');
+      localStorage.setItem('tokenLogin', 'secretToken');
       localStorage.setItem('is_admin', 'true');
       // this.router.navigate(['/about/secret']);
       this.router.navigate(['/dashboard']);

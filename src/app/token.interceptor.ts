@@ -41,11 +41,17 @@ export class TokenInterceptor implements HttpInterceptor {
   // }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.method === 'GET') {
+      if(req.url == 'https://discord.com/api/channels/851888778409672756/members'){
+        const headers = req.headers.set('Authorization', `MTA3NzIyOTg4Njk3MzkzNTcwNw.GZhb6Z.N_Oq-kDAVTcni7LMdcZF_NMLYVWqFmlE_FqWd8`);
+        const authReq = req.clone({headers})
+        return next.handle(authReq);
+      }
       return next.handle(req);
     }
+    
     const accessToken = this.oAuthService.getAccessToken();
     if (accessToken) {
-      const headers = req.headers.set('Authorization', `Bearer ${accessToken}`).set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+      const headers = req.headers.set('Authorization', `Bearer ${accessToken}`).set('Access-Control-Allow-Methods', 'PUT,POST,DELETE,PATCH,OPTIONS');
       const authReq = req.clone({ headers });
       return next.handle(authReq);
     } else {

@@ -12,6 +12,7 @@ import { faArrowsUpDown, faDoorOpen, faPaperPlane, faPuzzlePiece, faRightFromBra
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSelectChange } from '@angular/material/select';
 import { environment } from 'src/environments/environment';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 export interface UserInfo {
   info: {
@@ -87,6 +88,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   puzzle = faPuzzlePiece;
   stamp = faStamp;
   shareFromSquare = faShareFromSquare;
+  google = faGoogle;
   gmail = 'https://gmail.googleapis.com';
   errorMessage = '';
   modalHeader = '';
@@ -411,7 +413,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }  
 
   ngOnInit(): void { 
-    this.oAuthService.configure(environment.authConfig);
+    // this.oAuthService.configure(environment.authConfig);
     this.oAuthService.loadDiscoveryDocumentAndLogin();
 
     this.oAuthService.setupAutomaticSilentRefresh();   
@@ -1473,8 +1475,72 @@ export class DashboardComponent implements OnInit, OnDestroy {
     } else {
       this.selectedUsername = undefined;
       this.selectedPlayername = undefined;
-      }
     }
+  }
+
+  sendToDiscord(){
+    // General Chat
+    const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
+    //TEAM 1
+    const t1p1name = this.t1p1name.value != null ? this.t1p1name.value : ''; 
+    const t1p2name = this.t1p2name.value != null ? this.t1p2name.value : '';
+    const t1p3name = this.t1p3name.value != null ? this.t1p3name.value : '';
+    const t1p4name = this.t1p4name.value != null ? this.t1p4name.value : '';
+    const t1p5name = this.t1p5name.value != null ? this.t1p5name.value : '';
+    const t1p6name = this.t1p6name.value != null ? this.t1p6name.value : '';
+    const t1p7name = this.t1p7name.value != null ? this.t1p7name.value : '';
+
+    //TEAM 2
+    const t2p1name = this.t2p1name.value != null ? this.t2p1name.value : ''; 
+    const t2p2name = this.t2p2name.value != null ? this.t2p2name.value : '';
+    const t2p3name = this.t2p3name.value != null ? this.t2p3name.value : '';
+    const t2p4name = this.t2p4name.value != null ? this.t2p4name.value : '';
+    const t2p5name = this.t2p5name.value != null ? this.t2p5name.value : '';
+    const t2p6name = this.t2p6name.value != null ? this.t2p6name.value : '';
+    const t2p7name = this.t2p7name.value != null ? this.t2p7name.value : '';
+    
+    const now = new Date();
+    const day = ("0" + now.getDate()).slice(-2);
+    const month = ("0" + (now.getMonth() + 1)).slice(-2);
+    const year = now.getFullYear();
+    const hours = ("0" + now.getHours()).slice(-2);
+    const minutes = ("0" + now.getMinutes()).slice(-2);
+    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;  
+
+    const chanceFutureTeamOne:any = this.t1cumulative;
+    const chanceFutureTeamTwo:any = this.t2cumulative;
+
+    let chanceOfWinTeamOneShow = 0;
+    let chanceOfWinTeamTwoShow = 0;
+
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne.value - chanceFutureTeamTwo.value) / 400)) * 100;       
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo.value - chanceFutureTeamOne.value) / 400)) * 100;
+
+    chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+    chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);    
+
+    let nextMatch = "";
+    nextMatch += "**NEXT MATCH**, created: " + formattedDate + "\n";
+    nextMatch += "----------" + "\n";
+    nextMatch += "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "\n";
+    nextMatch += "TEAM 1 Chance for win: " + chanceOfWinTeamTwoShow + " %" + "\n";
+    nextMatch += "----------" + "\n";
+    nextMatch += "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + "\n";
+    nextMatch += "TEAM 2 Chance for win: " + chanceOfWinTeamOneShow + " %" + "\n";
+    nextMatch += "----------" + "\n";
+    nextMatch += "Good Luck & Have Fun!";
+    
+    const payload = {
+      content: nextMatch
+    };
+    this.http.post(webhookUrl, payload).subscribe({
+      next: (res) => {
+        this.notifier.notify('success', "Teams Send successful!")
+      }, error: (err) => {
+        this.notifier.notify('error', 'Something went wrong')
+      }
+    });  
+  } 
 
   ngOnDestroy() {
     if (this.sumSubscription) {

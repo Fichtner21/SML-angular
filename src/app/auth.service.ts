@@ -14,14 +14,14 @@ export class AuthService {
 
   loggedIn(){
     let hasToken = false;
-    if (localStorage.getItem('token') == 'secretToken'){
+    if (localStorage.getItem('tokenLogin') == 'secretToken'){
       hasToken = true;
     }
     return hasToken;
   }
 
   getToken(){
-    return localStorage.getItem('token');
+    return localStorage.getItem('tokenLogin');
   }
 
 }

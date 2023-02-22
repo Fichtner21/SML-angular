@@ -1,0 +1,46 @@
+<section>
+  <nav class="about__nav">  
+    <div class="container">
+      <a routerLink="/about/download" routerLinkActive="active">{{'about.menu_download' | translate }}</a>
+      <a routerLink="/about/log">Log</a>
+      <a routerLink="/about/maps">{{'about.maps' | translate }}</a>
+      <a routerLink="/about/wanted">{{ 'about.menu_wanted' | translate }}</a> 
+      <a routerLink="/about/config">Config</a>  
+      <a routerLink="/about/meeting">{{ 'about.meeting' | translate }}</a>
+      <a routerLink="/about/secret">{{ 'about.contact' | translate }}</a>
+      <a routerLink="/about/links">{{ 'about.links' | translate }}</a>
+      <a routerLink="/about/rules">{{ 'about.rules' | translate }}</a>
+    </div>   
+  </nav> 
+  <div class="container" *ngIf="rules$ | async as rules"> 
+    <div class="grid" *ngIf="rules.length > 0">     
+        <div class="match-rules rules">
+          <h2 *ngIf="rules.rule_match ? false : true">Match rules</h2>
+          <ng-container *ngFor="let rule of rules; let i = index;">                
+            <div *ngIf="rule.rule_match ? true : false">
+              <span *ngIf="rule.rule_match ? true : false">{{ i + 1}}. </span>
+              {{ rule.rule_match }}
+            </div>
+          </ng-container>   
+        </div>
+        <div class="admin-rules rules">
+          <h2 *ngIf="rules.rule_admin ? false : true">Admin rules</h2>
+          <ng-container *ngFor="let rule of rules; let i = index;">                
+            <div *ngIf="rule.rule_admin ? true : false">
+              <span *ngIf="rule.rule_admin ? true : false">{{ i + 1}}. </span>
+              {{ rule.rule_admin }}
+            </div>
+          </ng-container>     
+        </div>
+        <div class="general-rules rules">          
+          <h2 *ngIf="rules.rule_general ? false : true">General rules</h2>
+          <ng-container *ngFor="let rule of rules; let i = index;">                
+            <div *ngIf="rule.rule_general ? true : false">
+              <span *ngIf="rule.rule_general ? true : false">{{ i + 1}}. </span>
+              {{ rule.rule_general }}
+            </div>
+          </ng-container>              
+        </div>      
+    </div>
+  </div>
+</section>

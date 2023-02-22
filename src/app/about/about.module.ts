@@ -22,6 +22,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SlugTransformDirective } from './slug-transform.directive';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { RulesComponent } from './rules/rules.component';
 
 
 
@@ -35,7 +36,7 @@ export function createTranslateLoader(http: HttpClient){
     MapsComponent, 
     DownloadComponent, 
     LogComponent, 
-    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent
+    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent, RulesComponent
   ],
   imports: [
     CommonModule,      

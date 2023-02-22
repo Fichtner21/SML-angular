@@ -15,7 +15,7 @@
         <mat-card class="span1 menage logout">
           <button mat-raised-button color="primary" *ngIf="!oAuthService.hasValidAccessToken()" (click)="loginTest()"><span>Login</span> <fa-icon [icon]="doorOpen"></fa-icon></button>
          
-          <button mat-raised-button color="primary" *ngIf="oAuthService.hasValidAccessToken()" (click)="logoutTest()"><span>Logout</span> <fa-icon [icon]="rightFromBracket"></fa-icon></button> 
+          <button mat-raised-button color="primary" *ngIf="oAuthService.hasValidAccessToken()" (click)="logoutTest()"><span>Logout</span>from <fa-icon [icon]="google"></fa-icon></button> 
         </mat-card> 
        
         <mat-card class="team match span3">
@@ -399,7 +399,6 @@
               </div>
               <div class="step-info">Click here to confirm added players, if u add one more or remove, need to click once again.</div>               
             </mat-card-content> 
-
             <mat-card-content style="padding-top:10px;">
               <div class="step">
                 <div class="step-number">2</div>
@@ -408,6 +407,12 @@
               <div class="step-info">
                HP - Higher precision mix, up to <span>5v5</span>, if u want mix 6v6 or 7v7 go to <a routerLink="/mix">mix page</a> and use LP.
               </div>
+            </mat-card-content>
+            <mat-card-content style="padding-top:10px;">
+              <div class="step">
+                <div class="step-number"></div>
+                <button mat-raised-button color="primary" (click)="sendToDiscord()">Squads to Discord <fa-icon [icon]="paperPlaneTop"></fa-icon></button>
+              </div>  
             </mat-card-content>
             <mat-card-content>
               <div class="step">

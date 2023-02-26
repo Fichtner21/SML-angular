@@ -224,6 +224,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   selectedValues1: string[] = [];
   selectedValues2: string[] = [];
   sum = 0;
+  userProfile: any;
 
   firstFormValue: string;
   @Output() firstFormValueChange = new EventEmitter<string>();
@@ -247,11 +248,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // when not logged in, redirecvt to google for login
         // else load user profile
         if (!oAuthService.hasValidAccessToken()) {
-          oAuthService.initLoginFlow()
+          oAuthService.initLoginFlow()          
         } else {
+          // console.log(oAuthService.loadUserProfile())
           // oAuthService.loadUserProfile().then( (userProfile) => {
-          //   // this.userProfileSubject.next(userProfile as UserInfo)
+          //   this.userProfile.subscribe((data) => {
+          //     console.log('data', data)
+          //   })
+          //   // .next(userProfile as UserInfo)            
           // })
+          // this.oAuthService.loadUserProfile().subscribe((profile) => {
+          //   this.userProfile = profile;
+          // });
         }
 
       })

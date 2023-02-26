@@ -6,7 +6,7 @@ client.on('ready', async () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.login('MTA3NzMzNDUyNDE1NDg3NjAyNg.GLV3pj.RPAovzUTCcezSqvAhRDb3TNTWr6GEr6YzHcbMg');
+client.login('MTA3NzMzNDUyNDE1NDg3NjAyNg.GMbveC.gyHZTkaGHyWze1UF1qZZaoeMrGPYGOiCDWKnYc');
 
 const getVoiceMembers = async (channelId) => {
   const channel = client.channels.cache.get(channelId);
@@ -58,6 +58,5 @@ const moveUsersToChannels = async (users1, users2, channel1Id, channel2Id) => {
     await member.voice.setChannel(channel2);
   }
 };
-
 
 module.exports = { getVoiceMembers, moveUsersToChannels };

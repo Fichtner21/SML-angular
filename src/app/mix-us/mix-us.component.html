@@ -1,7 +1,10 @@
 <section>
   <div class="container">
     <div class="mix">
-      <button mat-raised-button (click)="toggleSticky()" class="sticky-btn">Show/Hide Teams</button>
+      <button mat-raised-button (click)="toggleSticky()" class="sticky-btn">        
+        <span *ngIf="!isStickyShown"><fa-icon [icon]="arrowLeftCircle"></fa-icon> Show Teams</span>
+        <span *ngIf="isStickyShown">Hide Teams <fa-icon [icon]="arrowRightCircle"></fa-icon> </span>
+      </button>
       <div class="mix-list">
         <!-- <div id="g_id_onload"
           data-client_id="326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com"
@@ -124,25 +127,24 @@
             <div class="single-btn">
               <button mat-raised-button color="primary" class="lp" (click)="    
               sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
-              <div>Click here to send squads for next war to discord.</div>
+              <div>Send squads for next war to discord.</div>
             </div>
             <div class="single-btn">
-              <button mat-raised-button color="accent" class="lp" (click)="getDiscordUsers()">Get from Discord <fa-icon [icon]="arrowDown"></fa-icon></button>
-              <div>Click here to get players from WANT TO PLAY channel</div>
+              <button mat-raised-button color="accent" class="lp" (click)="getDiscordUsers()" [disabled]="!isAuthenticated()">Get from Discord <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowDown"></fa-icon></button>
+              <div>Get players from WANT TO PLAY channel.</div>
             </div>            
             <div class="single-btn">
-              <button mat-raised-button color="accent" class="lp" (click)="sendToVoiceChannels()">Send to Voice Channels <fa-icon [icon]="arrowDown"></fa-icon></button>
-              <div>Click here to send players to voice channels.</div>
+              <button mat-raised-button color="accent" class="lp" (click)="sendToVoiceChannels()" [disabled]="!isAuthenticated()">Send to Voice Channels <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowUp"></fa-icon></button>
+              <div>Send players to TEAM 1 and TEAM 2 voice channels.</div>
             </div>            
           </div>
           <ng-container *ngIf="isAuthenticated()">                      
-            <div class="restricted-btn">
+            <div class="restricted-btn-bottom">
               <h1>Restricted Content</h1>
-              <p>This content is only visible to authenticated users.</p>  
-              
+              <p>This content is only visible to authenticated users.</p>
               <button mat-raised-button color="primary" class="lp" (click)="    
               confirmTeams()">Confirm Teams <fa-icon [icon]="stamp"></fa-icon></button>
-              <div>Click here to send balanced teams to database. Go to <a routerLink="/dashboard">Dashboard</a> to fill score after war.</div>
+              <div>Click here to send balanced teams to database. Go to <button routerLink="/dashboard" mat-raised-button color="warn">Dashboard <fa-icon [icon]="arrowRightCircle"></fa-icon></button> to fill score after war.</div>                          
             </div>            
           </ng-container>
           <ng-container *ngIf="!isAuthenticated()">

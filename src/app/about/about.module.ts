@@ -23,6 +23,7 @@ import { SlugTransformDirective } from './slug-transform.directive';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { RulesComponent } from './rules/rules.component';
+import { AboutNavComponent } from './about-nav/about-nav.component';
 
 
 
@@ -36,7 +37,7 @@ export function createTranslateLoader(http: HttpClient){
     MapsComponent, 
     DownloadComponent, 
     LogComponent, 
-    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent, RulesComponent
+    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent, RulesComponent, AboutNavComponent
   ],
   imports: [
     CommonModule,      

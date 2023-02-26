@@ -162,9 +162,11 @@ export class PlayersApiService {
       'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`
       // ,
       // 'Access-Control-Allow-Origin': 'https://mohsh.pl/, http://localhost:4500/',
-      // 'Access-Control-Allow-Headers' : 'Authorization, Content-Type',
+      // 'Access-Control-Allow-Headers' : Content-Type, application/json',
       // 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
     })
+    // .set('Access-Control-Allow-Headers', "Content-Type, application/json")
+    //.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   }
 
   runScriptFunction(functionName: string): Observable<any> {
@@ -204,20 +206,54 @@ export class PlayersApiService {
   }  
 
   updateCell(spreadsheetId: string, sheetName: string, cellRange: string, t1p1name: string, t1p2name: string, t1p3name: string, t1p4name: string, t1p5name: string, t1p6name: string, t1p7name: string){
+    const accessToken = this.oAuthService.getAccessToken();
     // const body = {
     //   "value": [[value]]
     // };
-    return this.http.put<any>(
-      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`,
-      {
-        "values":
-        [[t1p1name],[t1p2name], [t1p3name], [t1p4name], [t1p5name], [t1p6name], [t1p7name]]
-      },
-      // body,
-      { 
-        headers: this.authHeader()
-      }    
-    );
+    // const accessToken = this.oAuthService.getAccessToken();
+    // const httpOptions = {
+    //   headers: new HttpHeaders({
+    //     'Authorization': `Bearer ${accessToken}`,
+    //     'Content-Type': 'application/json'
+    //   })
+    // };
+
+    // const payload = {
+    //   "values": [
+    //     [t1p1name],[t1p2name], [t1p3name], [t1p4name], [t1p5name], [t1p6name], [t1p7name]
+    //   ]
+    // }
+
+    // return this.http.put<any>(
+    //   `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`,
+    //   // {
+    //   //   "values":
+    //   //   [[t1p1name],[t1p2name], [t1p3name], [t1p4name], [t1p5name], [t1p6name], [t1p7name]]
+    //   // },
+    //   payload,
+    //   httpOptions
+    //   // { 
+    //   //   headers: headers
+    //   // }    
+    // );
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      })
+    };
+    
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`;
+    
+    const data = {
+      "values": [
+        [t1p1name],[t1p2name], [t1p3name], [t1p4name], [t1p5name], [t1p6name], [t1p7name]
+      ]
+    };
+     return this.http.put<any>(
+      url, data, httpOptions
+    );    
+      
   }
 
   updateRoundsWon(spreadsheetId: string, sheetName: string, cellRange: string, roundsWon: string){

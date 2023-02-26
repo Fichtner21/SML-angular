@@ -51,7 +51,8 @@ export class TokenInterceptor implements HttpInterceptor {
     
     const accessToken = this.oAuthService.getAccessToken();
     if (accessToken) {
-      const headers = req.headers.set('Authorization', `Bearer ${accessToken}`).set('Access-Control-Allow-Methods', 'PUT,POST,DELETE,PATCH,OPTIONS');
+      const headers = req.headers.set('Authorization', `Bearer ${accessToken}`)
+      // .set('Access-Control-Allow-Methods', 'PUT,POST,DELETE,PATCH,OPTIONS');
       const authReq = req.clone({ headers });
       return next.handle(authReq);
     } else {

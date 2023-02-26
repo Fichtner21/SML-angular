@@ -13,11 +13,11 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { faArrowsDownToPeople, faPaperPlane, faPersonCirclePlus, faStamp } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleLeft, faArrowCircleRight, faArrowDown, faArrowsDownToPeople, faArrowUp, faPaperPlane, faPeopleGroup, faPersonCirclePlus, faStamp, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import * as Discord from 'discord.js';
 import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v9';
-import { getVoiceMembers, moveUsersToChannels } from './../../../src/';
+import { Routes } from 'discord-api-types/v10';
+
 
 
 export interface UserData {
@@ -73,7 +73,12 @@ export class MixUsComponent implements OnInit {
   allSelected: boolean = false;
   sendIcon = faPaperPlane;
   stamp = faStamp;
-  arrowDown = faPersonCirclePlus;
+  arrowDown = faArrowDown;
+  people = faUserGroup;
+  arrowUp = faArrowUp;
+  arrowRightCircle = faArrowCircleRight; 
+  arrowLeftCircle = faArrowCircleLeft; 
+
   // dataSource: MatTableDataSource<any>;
   // dataSource = new MatTableDataSource<any>([]);
   selectedRows = [];
@@ -264,7 +269,7 @@ export class MixUsComponent implements OnInit {
     } else {
       this.selectedUsers.splice(index, 1);
     }
-    console.log('this.selectedUsers', this.selectedUsers)
+    // console.log('this.selectedUsers', this.selectedUsers)
   }
  
   // sum(numbers){
@@ -285,26 +290,28 @@ export class MixUsComponent implements OnInit {
   }
 
   getDiscordUsers() { 
-    this.http.get<VoiceMember[]>('http://localhost:3000/voice-members').subscribe(
+    this.http.get<VoiceMember[]>('https://mohsh-ds.herokuapp.com/voice-members').subscribe(
       (members) => {        
         if(members.length === 0){
           this.notifier.notify('warning', 'WANT TO PLAY is empty.');
         } else {      
           members.forEach((el: any) => {      
-            console.log('el', el);     
+            // console.log('el', el);     
             this.playerRowArray.forEach((player: any) => {
               if ((el.username === player.username || el.username === player.playername || el.nickname === player.username || el.nickname === player.playername) &&
                   !this.selectedUsers.some((u: any) => (u.username === player.username && u.playername === player.playername))                  
               ) {
                 player.id = el.id; 
                 // player.nickname = el.nickname;// Dodajemy pole id z obiektu el do obiektu player
+               
+                this.notifier.notify('success', `${player.playername} added!.`);
                 this.selectedUsers.push(player);                
               }
               
             });
           });
-          this.notifier.notify('success', 'Players from Discord Imported successful');
-          console.log('this SELECTED USERS:', this.selectedUsers)
+          // this.notifier.notify('success', 'Players from Discord Imported successful');
+          // console.log('this SELECTED USERS:', this.selectedUsers)
         }
       },
       (err) => {        
@@ -322,7 +329,7 @@ export class MixUsComponent implements OnInit {
       };
     });
 
-    console.log('111',newArray1)
+    // console.log('111',newArray1)
 
     const newArray2 = this.array2.map((obj: any) => {
       return {
@@ -332,7 +339,7 @@ export class MixUsComponent implements OnInit {
       };
     });
 
-    console.log('222',newArray2)
+    // console.log('222',newArray2)
 
     const channel1Id = '851888705307803698';
     const channel2Id = '851888741761155136';
@@ -350,9 +357,9 @@ export class MixUsComponent implements OnInit {
       }),
     };
 
-    console.log('PAYLOAD', JSON.stringify(payload))
+    // console.log('PAYLOAD', JSON.stringify(payload))
 
-    this.http.post(`${this.baseUrl}/move-users-to-channels`, JSON.stringify(payload), httpOptions).subscribe(
+    this.http.post(`https://mohsh-ds.herokuapp.com/move-users-to-channels`, JSON.stringify(payload), httpOptions).subscribe(
       (response) => {
         console.log('Move users to channels success:', response);
       },
@@ -373,12 +380,7 @@ export class MixUsComponent implements OnInit {
     // );
   }
 
-  // transferSelectedRows() {
-  //   this.selectedRows = this.dataSource.data.filter(row => row.selected);
-  //   this.selectedRows.forEach(row => {
-  //     row.selected = false;
-  //   });
-  // }
+  // DISCORD.JS ===> REST APPROACH
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -541,10 +543,12 @@ export class MixUsComponent implements OnInit {
     this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
    
     this.addArrayToUrl(firstArray, secondArray)
-    console.log('ARRAY 1:', this.array1);
-    console.log('ARRAY 2:', this.array2);
+    // console.log('ARRAY 1:', this.array1);
+    // console.log('ARRAY 2:', this.array2);
     return [firstArray, secondArray];
   }
+
+
 
   // splitRanking2(array) {
   //   //NO BLADY and ILLU same team
@@ -613,14 +617,31 @@ export class MixUsComponent implements OnInit {
   }
 
   confirmTeams(){
+
+    // TEAM 1
+    let t1p1name = '';
+    let t1p2name = '';
+    let t1p3name = '';
     let t1p4name = '';
     let t1p5name = '';
     let t1p6name = '';
     let t1p7name = '';
-    const t1p1name = this.array1[0].username ? this.array1[0].username : '';
-    const t1p2name = this.array1[1].username ? this.array1[1].username : '';
-    const t1p3name = this.array1[2].username ? this.array1[2].username : '';
-    // const t1p4name = (this.array1[3].username != 'undefined') ? this.array1[3].username : '';
+    
+    if (this.array1[0]) {
+      t1p1name = this.array1[0].username ? this.array1[0].username : '';
+    } else {
+      t1p1name = '';
+    }
+    if (this.array1[1]) {
+      t1p2name = this.array1[1].username ? this.array1[1].username : '';
+    } else {
+      t1p2name = '';
+    }
+    if (this.array1[2]) {
+      t1p3name = this.array1[2].username ? this.array1[2].username : '';
+    } else {
+      t1p3name = '';
+    }
     if (this.array1[3]) {
       t1p4name = this.array1[3].username ? this.array1[3].username : '';
     } else {
@@ -641,16 +662,31 @@ export class MixUsComponent implements OnInit {
     } else {
       t1p7name = '';
     }
-    // const t1p5name = this.array1[4].username ? this.array1[4].username : '';
-    // const t1p6name = this.array1[5].username ? this.array1[5].username : '';
-    // const t1p7name = this.array1[6].username ? this.array1[6].username : '';
+   
+    //TEAM 2
+    let t2p1name = '';
+    let t2p2name = '';
+    let t2p3name = '';
     let t2p4name = '';
     let t2p5name = '';
     let t2p6name = '';
     let t2p7name = '';
-    const t2p1name = this.array2[0].username ? this.array2[0].username : '';
-    const t2p2name = this.array2[1].username ? this.array2[1].username : '';
-    const t2p3name = this.array2[2].username ? this.array2[2].username : '';
+   
+    if (this.array2[0]) {
+      t2p1name = this.array2[0].username ? this.array2[0].username : '';
+    } else {
+      t2p1name = '';
+    }
+    if (this.array2[1]) {
+      t2p2name = this.array2[1].username ? this.array2[1].username : '';
+    } else {
+      t2p2name = '';
+    }
+    if (this.array2[2]) {
+      t2p3name = this.array2[2].username ? this.array2[2].username : '';
+    } else {
+      t2p4name = '';
+    }
     if (this.array2[3]) {
       t2p4name = this.array2[3].username ? this.array2[3].username : '';
     } else {
@@ -671,10 +707,7 @@ export class MixUsComponent implements OnInit {
     } else {
       t2p7name = '';
     }
-    // const t2p4name = this.array2[3].username ? this.array2[3].username : '';
-    // const t2p5name = this.array2[4].username ? this.array2[4].username : '';
-    // const t2p6name = this.array2[5].username ? this.array2[5].username : '';
-    // const t2p7name = this.array2[6].username ? this.array2[6].username : '';
+    
 
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', t1p1name, t1p2name, t1p3name, t1p4name, t1p5name, t1p6name, t1p7name).subscribe({
       next: (res) => {

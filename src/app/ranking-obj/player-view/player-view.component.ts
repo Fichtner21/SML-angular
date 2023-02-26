@@ -369,10 +369,8 @@ export class PlayerViewComponent implements OnInit {
   } 
 
   public showResult(resultPerPlayer:any[]){
-    this.resultCanvas = document.getElementById('playerResult');
-    // console.log('this.resultCanvas', this.resultCanvas);          
-    this.ctxResult = this.resultCanvas.getContext('2d'); 
-    // console.log('this.ctxResult', this.ctxResult);
+    this.resultCanvas = document.getElementById('playerResult');            
+    this.ctxResult = this.resultCanvas.getContext('2d');   
     new Chart(this.ctxResult, {
       type: 'bar',
       data: {
@@ -416,7 +414,9 @@ export class PlayerViewComponent implements OnInit {
             },
           ],
         },
-        
+        plugins: {
+          
+        }
         // display:true
       }, 
     });  
@@ -464,30 +464,32 @@ export class PlayerViewComponent implements OnInit {
             tension: 0,
           },
         },
-        // scales: {
-        //   xAxes: [
-        //     {
-        //       scaleLabel: {
-        //         display: true,
-        //         labelString: '# War',
-        //       },
-        //     },
-        //   ],
-        //   yAxes: [
-        //     {
-        //       scaleLabel: {
-        //         display: true,
-        //         labelString: 'RANKING',
-        //       },
-        //     },
-        //   ],
-        // },        
+        annotation: {
+          drawTime: 'afterDatasetsDraw',
+          annotations: [
+            {
+              id: 'hline1',
+              type: 'line',
+              mode: 'horizontal',
+              scaleID: 'y-axis-0',
+              value: 1000,
+              borderColor: 'red',
+              borderDash: [10, 5],
+              label: {
+                backgroundColor: 'red',
+                content: '1000pc',
+                enabled: true,
+              },
+            },
+          ]
+        },       
         legend: {
           display: false
         },
         responsive: true,
         // display:true
-      }
+      } as ChartOptions,
+      plugins: [ChartAnnotation]
     });
   }  
 

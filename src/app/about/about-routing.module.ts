@@ -42,11 +42,11 @@ const routes: Routes = [
     path: 'meeting',
     component: MeetingComponent
   },
-  {
-    path: 'secret',
-    component: SecretComponent,
-    canActivate: [AuthGuard]
-  },
+  // {
+  //   path: 'secret',
+  //   component: SecretComponent,
+  //   canActivate: [AuthGuard]
+  // },
   {
     path: 'links',
     component: LinksComponent

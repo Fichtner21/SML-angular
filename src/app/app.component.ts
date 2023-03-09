@@ -63,9 +63,7 @@ export class AppComponent implements OnInit {
    
 
     this.numOfPlayers$ = this.playersApiService.getPlayers('NumPlayers').pipe(
-      map((response: any) => {   
-        // console.log('response', response);       
-        // console.log('response.values', response.values[0][1]);       
+      map((response: any) => {            
         return Number(response.values[0][2]);       
       })
     )

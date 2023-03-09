@@ -20,6 +20,7 @@ export class PlayerViewComponent implements OnInit {
   @Input('tabTitle') title: string;
   @Input() active = false;
   public player$:Observable<Players>;
+  numOfPlayers$: Observable<any>;
   public errorMessage: string;
   public playerView: any;
   public playerDetail$: Observable<any>;
@@ -43,6 +44,7 @@ export class PlayerViewComponent implements OnInit {
   // public resultPerPlayer = [];
   status: boolean = false;
   mostOftenPlayed = [];
+  currentRanking = [];
  
   constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef, private router: Router) {
     // console.log('activatedRoute PlayerView =>', this.activatedRoute);     
@@ -108,6 +110,12 @@ export class PlayerViewComponent implements OnInit {
         }       
       })
     ); 
+
+    this.numOfPlayers$ = this.playersApiService.getPlayers('NumPlayers').pipe(
+      map((response: any) => {            
+        return Number(response.values[0][2]);       
+      })
+    )
    
     this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$, this.playersTab$, this.inactiveTab$]).pipe(
       map(([player, matches, players, inactives]) => {
@@ -125,7 +133,7 @@ export class PlayerViewComponent implements OnInit {
         let s1wars: string;
         let s1fpw: string;
         let active: string;
-        let place: string;
+        let place: string;        
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);               
 
@@ -256,7 +264,7 @@ export class PlayerViewComponent implements OnInit {
           s1wars: s1wars,
           s1fpw: s1fpw,
           active: (active == 'FALSE') ? false : true,
-          place: place
+          place: place !== '' ? place : '-'
         }  
         // console.log('playerCard', playerCard);
         

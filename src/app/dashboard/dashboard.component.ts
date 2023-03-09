@@ -16,10 +16,22 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 export interface UserInfo {
   info: {
-    sub: string
+    at_hash: string,
+    aud: string,
+    azp: string,    
     email: string,
+    email_verified: boolean,
+    exp: number,
+    family_name: string,
+    given_name: string,
+    iat: number,
+    iss: string,
+    jti: string,
+    locale: string,
     name: string,
-    picture: string
+    nonce: string,
+    picture: string,
+    sub: string
   }
 }
 
@@ -250,6 +262,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (!oAuthService.hasValidAccessToken()) {
           oAuthService.initLoginFlow()          
         } else {
+          oAuthService.loadUserProfile().then((userProfile: UserInfo) => {
+            // console.log('USER PROFILES',userProfile);
+            // console.log('info:', userProfile.info.name);
+            // Do something with the user profile data, e.g. store it in a variable or display it on the page
+          }).catch((error) => {
+            console.error(error);
+            // Handle any errors that occur while loading the user profile
+          });
           // console.log(oAuthService.loadUserProfile())
           // oAuthService.loadUserProfile().then( (userProfile) => {
           //   this.userProfile.subscribe((data) => {

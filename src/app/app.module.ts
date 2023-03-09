@@ -45,6 +45,7 @@ import { MixUsComponent } from './mix-us/mix-us.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { HideRowDirective } from './hide-row.directive';
+import { MatRadioModule } from '@angular/material/radio';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -124,6 +125,7 @@ const customNotifierOptions: NotifierOptions = {
     MatTableModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatRadioModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),      

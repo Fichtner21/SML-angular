@@ -133,10 +133,21 @@
               <button mat-raised-button color="accent" class="lp" (click)="getDiscordUsers()" [disabled]="!isAuthenticated()">Get from Discord <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowDown"></fa-icon></button>
               <div>Get players from WANT TO PLAY channel.</div>
             </div>            
-            <div class="single-btn">
+            <!-- <div class="single-btn">
               <button mat-raised-button color="accent" class="lp" (click)="sendToVoiceChannels()" [disabled]="!isAuthenticated()">Send to Voice Channels <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowUp"></fa-icon></button>
               <div>Send players to TEAM 1 and TEAM 2 voice channels.</div>
-            </div>            
+            </div>             -->
+            <div class="single-btn">
+              <button mat-raised-button color="accent" class="lp" (click)="sendToVoiceChannels()" [disabled]="!isAuthenticated()">Send to Voice Channels <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowUp"></fa-icon></button>
+              <div>
+                Send players to 
+                <mat-radio-group [(ngModel)]="selectedChannels" [disabled]="!isAuthenticated()">
+                  <mat-radio-button *ngFor="let channels of availableChannels" [value]="channels">{{ channels }}</mat-radio-button>
+                </mat-radio-group>
+                voice channels.
+              </div>
+            </div>
+
           </div>
           <ng-container *ngIf="isAuthenticated()">                      
             <div class="restricted-btn-bottom">

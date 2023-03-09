@@ -20,21 +20,16 @@
               </ng-template> -->
 
             </div>
-            <div class="fpw" title="sort by Frags per War" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)">
+            <!-- <div class="fpw" title="sort by Frags per War" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)">
               FpW
-
-              <!-- <ng-container *ngIf="booleanVarFpW; then upFpW; else downFpW"></ng-container>
-              <ng-template #upFpW>
-                <fa-icon [icon]="arrowUp"></fa-icon>
-              </ng-template>
-              <ng-template #downFpW>
-                <fa-icon [icon]="arrowDown"></fa-icon>
-              </ng-template> -->
-
+            </div> -->
+            <div style="display: block;">              
+              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" title="Frags per War in Season #1: 01-01-2023 - 31-03-2023">S#1 FpW<span></span></div>
+              <div class="s1wars" *ngIf="isInfo" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)" title="sort by Frags per War">FpW total:</div>
             </div>
-            <div style="display:block;">
-              <div class="wars" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)" title="sort by Wars">{{ 'ranking.wars' | translate }} </div>
-              <div class="s1wars" *ngIf="isInfo" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)">sort by Season #1 wars: <span></span></div>
+            <div style="display:block;">              
+              <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" title="Wars in Season #1: 01-01-2023 - 31-03-2023">S#1 Wars<span></span></div>
+              <div class="s1wars" *ngIf="isInfo" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)" title="sort by Wars">{{ 'ranking.wars' | translate }} total:</div>
             </div> 
                 <!-- <ng-container *ngIf="booleanVar; then up; else down"></ng-container>
                 <ng-template #up>
@@ -63,12 +58,16 @@
                     <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
                   </div>
                   <div class="item">{{ player.ranking | number: '.2-2' }}</div>
-                  <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
+                  <!-- <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
                     {{ player.fragsperwar | number: '.2-2' }}              
+                  </div> -->
+                  <div class="item-block" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
+                    <div>{{ player.s1fpw }}</div>
+                    <div class="season-wars" *ngIf="isInfo">(Total: <span>{{ player.fragsperwar }}</span>)</div>
                   </div>
                   <div class="item-block">
-                    <div>{{ player.wars }}</div>
-                    <div class="season-wars" *ngIf="isInfo">(season #1: <span>{{ player.s1wars }}</span>)</div>
+                    <div>{{ player.s1wars }}</div>
+                    <div class="season-wars" *ngIf="isInfo">(Total: <span>{{ player.wars }}</span>)</div>
                   </div>
                   <div class="item new">{{ player.lastWarDate }}</div>
                   <div class="item name act">

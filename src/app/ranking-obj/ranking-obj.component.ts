@@ -25,6 +25,7 @@ export class RankingObjComponent implements OnInit {
   booleanVarRank = false;
   booleanVarFpW = false; 
   booleanVarS1Wars = false; 
+  booleanVarS1Fpw = false;
 
   public playersTest$: Observable<any>;
   public playersTest2$: Observable<any>;
@@ -125,6 +126,7 @@ export class RankingObjComponent implements OnInit {
               maxfragsperwar: name.fpwmax,
               minfragsperwar: name.fpwmin,
               s1wars: name.s1wars,
+              s1fpw: name.s1fpw,
               // activity: this.searchPlayerActivity(name.username, v2), 
               activity: name.last30days, 
               // lastyear: this.pastYearActivity(name.username, v2),
@@ -438,6 +440,25 @@ export class RankingObjComponent implements OnInit {
     return this.lastWarOfPlayer$ = res.pipe(
       map(
         res => res.sort((a:any,b:any) => parseFloat(a.s1wars) - parseFloat(b.s1wars))
+      )
+    )       
+  }
+  public sortByS1FpwDesc(res:Observable<any>){ 
+    this.booleanVarS1Fpw = !this.booleanVarS1Fpw;    
+    this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'DESC' } }); 
+    return this.lastWarOfPlayer$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(b.s1fpw) - parseFloat(a.s1fpw))
+      )
+    )       
+  }
+ 
+  public sortByS1FpwAsc(res:Observable<any>){ 
+    this.booleanVarS1Fpw = !this.booleanVarS1Fpw;     
+    this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'ASC' } }); 
+    return this.lastWarOfPlayer$ = res.pipe(
+      map(
+        res => res.sort((a:any,b:any) => parseFloat(a.s1fpw) - parseFloat(b.s1fpw))
       )
     )       
   }

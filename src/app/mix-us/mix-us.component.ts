@@ -18,8 +18,6 @@ import * as Discord from 'discord.js';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
 
-
-
 export interface UserData {
   nr: string;
   name: string;
@@ -91,7 +89,8 @@ export class MixUsComponent implements OnInit {
   // 
   players: any;
   displayedColumns: string[] = ['select', 'nr', 'ranking', 'playername','flag'];
-  
+  selectedChannels = 'Team 1 and Team 2';
+  availableChannels = ['Team 1 and Team 2', 'Team 3 and Team 4'];
   
   task: Task = {
     name: 'Indeterminate',
@@ -221,7 +220,7 @@ export class MixUsComponent implements OnInit {
       setTimeout(() => {
         this.array1 = params['a1'] ? JSON.parse(params['a1']) : [];
         this.array2 = params['a2'] ? JSON.parse(params['a2']) : [];
-        this.dataSource.data.forEach(item => {
+        this.dataSource.data?.forEach(item => {
           // console.log('item oninit', item)
           // check if the username of the item matches a username in array1
           let match1 = this.array1.find(arrayItem => arrayItem.username === item.username);
@@ -320,7 +319,52 @@ export class MixUsComponent implements OnInit {
     ); 
   }
 
-  sendToVoiceChannels(){
+  // sendToVoiceChannels(){
+  //   const newArray1 = this.array1.map((obj: any) => {
+  //     return {
+  //       username: obj.username,
+  //       nickname: obj.nickname,
+  //       id: obj.id
+  //     };
+  //   });
+
+  //   const newArray2 = this.array2.map((obj: any) => {
+  //     return {
+  //       username: obj.username,
+  //       nickname: obj.nickname,
+  //       id: obj.id
+  //     };
+  //   });    
+
+  //   const channel1Id = '851888705307803698';
+  //   const channel2Id = '851888741761155136';
+  //   const channel3Id = '1040385852716630016';
+  //   const channel4Id = '1040385893191659680';
+
+  //   const payload = {
+  //     users1: newArray1,
+  //     users2: newArray2,
+  //     channel1Id: channel1Id,
+  //     channel2Id: channel2Id,
+  //   };    
+
+  //   const httpOptions = {
+  //     headers: new HttpHeaders({
+  //       'Content-Type': 'application/json',
+  //     }),
+  //   };  
+
+  //   this.http.post(`https://mohsh-ds.herokuapp.com/move-users-to-channels`, JSON.stringify(payload), httpOptions).subscribe(
+  //     (response) => {
+  //       console.log('Move users to channels success:', response);
+  //     },
+  //     (error) => {
+  //       console.error('Move users to channels error:', error);
+  //     }
+  //   );   
+  // }  
+
+  sendToVoiceChannels() {
     const newArray1 = this.array1.map((obj: any) => {
       return {
         username: obj.username,
@@ -328,8 +372,6 @@ export class MixUsComponent implements OnInit {
         id: obj.id
       };
     });
-
-    // console.log('111',newArray1)
 
     const newArray2 = this.array2.map((obj: any) => {
       return {
@@ -339,10 +381,15 @@ export class MixUsComponent implements OnInit {
       };
     });
 
-    // console.log('222',newArray2)
+    let channel1Id, channel2Id;
 
-    const channel1Id = '851888705307803698';
-    const channel2Id = '851888741761155136';
+    if (this.selectedChannels === 'Team 1 and Team 2') {
+      channel1Id = '851888705307803698';
+      channel2Id = '851888741761155136';
+    } else {
+      channel1Id = '1040385852716630016';
+      channel2Id = '1040385893191659680';
+    }
 
     const payload = {
       users1: newArray1,
@@ -357,8 +404,6 @@ export class MixUsComponent implements OnInit {
       }),
     };
 
-    // console.log('PAYLOAD', JSON.stringify(payload))
-
     this.http.post(`https://mohsh-ds.herokuapp.com/move-users-to-channels`, JSON.stringify(payload), httpOptions).subscribe(
       (response) => {
         console.log('Move users to channels success:', response);
@@ -367,18 +412,7 @@ export class MixUsComponent implements OnInit {
         console.error('Move users to channels error:', error);
       }
     );
-
-    // this.googleApi.moveUsersToChannels(newArray1, newArray2, '851888705307803698', '851888741761155136').subscribe(
-    //   (response) => {
-    //     console.log('Response:', response);
-    //     this.notifier.notify('warning', 'sendToVoiceChannels executing');
-    //   },
-    //   (error) => {
-    //     console.log('Error:', error);
-    //     this.notifier.notify('error', 'Error while sending users to voice channels.');
-    //   }
-    // );
-  }
+  }  
 
   // DISCORD.JS ===> REST APPROACH
 

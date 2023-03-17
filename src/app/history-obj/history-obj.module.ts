@@ -12,6 +12,14 @@ import { HttpClient } from "@angular/common/http";
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule } from "@ngx-translate/core";
 import { SafePipe } from "./safe.pipe";
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+
 
 // export function createTranslateLoader(http: HttpClient){
 //   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -29,7 +37,14 @@ import { SafePipe } from "./safe.pipe";
         HistoryRoutingModule,
         NgxPaginationModule,
         NgHttpLoaderModule.forRoot(),
-        TranslateModule
+        TranslateModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatIconModule       
     ],
     exports: [
       CommonModule,

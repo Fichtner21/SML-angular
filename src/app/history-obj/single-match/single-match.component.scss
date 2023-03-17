@@ -4,7 +4,7 @@ section {
 }
 
 .container {
-  padding-top: 86px;
+  padding-top: 101px;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -233,6 +233,64 @@ section {
       background: linear-gradient(transparent, transparent 10%, #010141 100%);
       width: 100%;
       height: 100%;
+    }
+  }
+}
+
+.comments-match {
+  background-color: lighten(#40415f, 20%);
+  margin-bottom: 20px;
+  padding: 20px;
+
+  .row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;    
+
+    ::ng-deep .mat-form-field-flex {
+      background-color: lighten(#40415f, 40%);
+      padding: 5px;
+      border-radius: 5px;
+    }
+  }
+
+  .button {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .comments-container {    
+    margin-top: 10px;    
+
+    .comment {
+      display: grid;
+      grid-template-columns: 1fr 5fr;
+      border-radius: 10px;
+      margin-bottom: 5px;
+      border: 2px solid #010141;
+
+      .comment-info {
+        background-color: #40415f;
+        color: #ffffc8;
+        padding: 10px;
+        border-right: 2px solid #010141;
+
+        a {
+          margin-left: 5px;
+          color: #ffffc8; 
+        }
+      }
+
+      .comment-message {
+        padding: 10px;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        background-color: lighten(#40415f, 40%);
+
+        a {
+          color: #010141;
+        }
+      }
     }
   }
 }

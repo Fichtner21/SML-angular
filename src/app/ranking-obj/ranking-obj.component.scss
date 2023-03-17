@@ -212,7 +212,10 @@ a {
     padding: 5px 3px;
     position: relative;   
     font-size: 18px;
-    flex-direction: column;
+
+    @media screen and (max-width: 900px){
+      flex-direction: column;
+    }    
 
     @media screen and (max-width: 800px){
       font-size:14px;      
@@ -221,11 +224,13 @@ a {
     .season-wars {
       font-size: 12px;
       font-style: italic;
+      color: gray;
 
       span {
         font-weight: 700;
         text-decoration: underline;
-        font-size: 15px;                      
+        font-size: 15px;     
+        margin-left: 5px;                 
       }
     }
   }
@@ -557,9 +562,119 @@ a {
   font-size: 14px;
   font-weight: 400;
   transition: .3 all;
+  color: gray;
 
   &:hover {
     color: red;
     cursor: pointer;
+  }
+}
+
+.down-streak-pre {
+  position: relative; 
+
+  &:after {
+    position: absolute;  
+    left: -20px;
+    top: 10px;      
+    content: "";
+    background-image: url('/assets/images/downrate.gif');
+    width: 10px;
+    height: 5px;
+    z-index: 9;
+    @media screen and (max-width: 800px){
+      display: none;
+    }
+  }
+}
+
+.up-streak-pre {
+  position: relative; 
+
+  &:after {    
+    position: absolute;  
+    left: -20px;
+    top: 10px;      
+    content: "";
+    background-image: url("/assets/images/uprate.gif");    
+    width: 10px;    
+    height: 5px; 
+    z-index: 9; 
+    @media screen and (max-width: 800px){
+      display: none;
+    }  
+  }
+}
+
+.draw-streak-pre {
+  position: relative;
+ 
+  &:after {    
+    position: absolute;  
+    left: -20px;
+    top: 10px;      
+    content: "";  
+    background-color: #000;    
+    width: 10px;    
+    height: 4px;  
+    z-index: 9;
+    @media screen and (max-width: 800px){
+      display: none;
+    } 
+  
+  }
+}
+
+.down-streak-post {
+  position: relative;  
+
+  &:after {
+    position: absolute;  
+    right: -20px;
+    top: 7px;      
+    content: "";
+    background-image: url('/assets/images/downrate.gif');
+    width: 10px;
+    height: 5px;
+    z-index: 9;
+    @media screen and (max-width: 800px){
+      display: none;
+    }
+  }
+}
+
+.up-streak-post {
+  position: relative;    
+
+  &:after {    
+    position: absolute;  
+    right: -20px;
+    top: 7px;      
+    content: "";
+    background-image: url("/assets/images/uprate.gif");    
+    width: 10px;    
+    height: 5px; 
+    z-index: 9; 
+    @media screen and (max-width: 800px){
+      display: none;
+    } 
+  }
+}
+
+.draw-streak-post {  
+  position: relative;  
+  
+  &:after {    
+    position: absolute;  
+    right: -20px;
+    top: 7px;      
+    content: "";  
+    background-color: #000;    
+    width: 10px;    
+    height: 4px;  
+    z-index: 9;
+    @media screen and (max-width: 800px){
+      display: none;
+    }
   }
 }

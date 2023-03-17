@@ -1,15 +1,17 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Output, ViewChild, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Matches } from '../matches.model';
 import { FetchMatchesService } from '../fetch-matches.service';
 import { Observable, combineLatest, pipe } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { Spinkit } from 'ng-http-loader';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { SingleComment } from './single-comment.model';
 import { CommentsService } from './comments.service';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EventEmitter } from '@angular/core';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'app-single-match',
@@ -29,62 +31,60 @@ export class SingleMatchComponent implements OnInit {
   public matchVideo: string;
   public spinkit = Spinkit;
   public columnsGrid;
-  private singlePostCollection: AngularFirestoreCollection<SingleComment>;
-  singleComment$: Observable<SingleComment[]>;
-  allComments$: any;
-  // comment$: Observable<SingleComment | undefined>;
-  comment$: any;
-
-  comment: SingleComment = new SingleComment();
+ 
+  singleMatch$: Observable<Matches>;
+  comments$: any;
+  commentForm: FormGroup;
   submitted = false;
+  newComment: SingleComment = new SingleComment();
+
+  @Output() lengthEmitter = new EventEmitter<any>();
 
   constructor(
-    private activatedRoute: ActivatedRoute, private tabApiService: PlayersApiService, private fetchMatch: FetchMatchesService, private afs: AngularFirestore, private commentService: CommentsService,  ) {
-      this.singlePostCollection = afs.collection<SingleComment>('postComments');
-      // this.singleComment$ = this.singlePostCollection.valueChanges({idField: 'id'})
-      // console.log('this.singlePostCollection', this.singlePostCollection);
-    }
+    private activatedRoute: ActivatedRoute, 
+    private tabApiService: PlayersApiService, 
+    private fetchMatch: FetchMatchesService, 
+    private afs: AngularFirestore, 
+    private commentService: CommentsService,
+    private formBuilder: FormBuilder,
+    private _ngZone: NgZone,
+    private notifier: NotifierService) { 
+  }
 
   @ViewChild('iframe', { static: true }) iframe: ElementRef;
 
   ngOnInit(): void {
-   
-    // let content = '*{padding:0;margin:0;overflow:hidden}html,body{height:100%;position:relative, min-width:100%; display:flex; jusitify-conent:center;}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}img{min-width:100%}a{position:relative;display:block;}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}';
-    // let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
-    // doc.open();
-    // doc.write(content);
-    // doc.close();
+    // const matchID = this.activatedRoute.snapshot.params['idwar'];
+    // this.comments$ = this.commentService.getCommentsForMatch(matchID);    
+    const matchID = this.activatedRoute.snapshot.paramMap.get('idwar');
+    this.comments$ = this.commentService.getCommentsForMatch(matchID, '_').valueChanges();
+    this.comments$.subscribe(comments => {
+      const length = {
+        id: matchID,
+        comments: comments.length
+      }        
+      // console.log('length', length)
+      this.lengthEmitter.emit(length);
+    });
 
-    // console.log('getAll =>', this.commentService.getAll().valueChanges());
-    this.allComments$ = this.commentService.getAll().valueChanges();
-    // this.allComments$.pipe().subscribe((res) => console.log('res', res))
-    // this.allComments$.pipe(map(
-    //   (el:[]) => {
-    //     for(let single of el){
-    //       console.log('single', single.({idField, 'id'});
-    //     }
-    //   }
-    // )).subscribe();
-    //  this.allComments$.subscribe(pipe(
-    //   map((res: any) => {
-    //     res = this.commentService.getAll();
-    //     console.log('res', res)
-    //   })
-    //  ))
-    const matchID = this.activatedRoute.snapshot.params['idwar'];
-    // console.log('matchID', matchID);
-    // console.log('this.afs', this.afs.firestore);
-    this.comment$ = this.afs.collection<SingleComment>('spearhead-mix-league').doc(matchID).valueChanges();
-    // console.log('this.comment', this.comment$);
-    // console.log('ressss', this.afs.collection<SingleComment>('spearhead-mix-league').doc(matchID))
+    // this.commentForm = this.formBuilder.group({
+    //   name: ['', Validators.required],
+    //   email: [''],
+    //   message: ['', Validators.required],
+    //   postedAt: [Date.now()]
+    // });
 
+    this.commentForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      email: [''],
+      message: ['', Validators.required]
+    });
 
     this.match$ = this.activatedRoute.data.pipe(
       map(data => data.match)
     );
 
-    this.match$.pipe(
-      map(x => this.matchVideo = x.video)).subscribe();
+    this.match$.pipe(map(x => this.matchVideo = x?.video)).subscribe();
 
     this.idwar$ = this.activatedRoute.data.pipe(
       map((data) => {
@@ -145,10 +145,10 @@ export class SingleMatchComponent implements OnInit {
         // const singleMap = match.info;
         // console.log('match.info', match.info);
 
-        const csLewisQuote = match.info;        
+        const csLewisQuote = match?.info;        
 
         // console.log('regEx =>', csLewisQuote.match(match.info));
-        const findMap = csLewisQuote.match(match.info);
+        const findMap = csLewisQuote?.match(match?.info);
 
         const mapArray = [];
         if(findMap != null){
@@ -156,12 +156,12 @@ export class SingleMatchComponent implements OnInit {
             mapArray.push(el);
           });
         } else {
-          mapArray.push(match.info);
+          mapArray.push(match?.info);
         }       
 
-        const newMapArray = mapArray[0].split(', ');
+        const newMapArray = mapArray[0]?.split(', ');
 
-        newMapArray.forEach((el, i) => {
+        newMapArray?.forEach((el, i) => {
         if(el == 'The Hunt'){
             const newEl = 'TheHunt';
             this.neMap.push(newEl);
@@ -210,84 +210,84 @@ export class SingleMatchComponent implements OnInit {
 
         let matchRow;
           matchRow = {
-            timestamp: match.timestamp,
-            idwar: match.idwar,
-            t1roundswon: match.t1roundswon,
-            t2roundswon: match.t2roundswon,
-            video: 'https://www.youtube.com/embed/' + match.video + '/?autoplay=1',
-            videoImg: 'https://img.youtube.com/vi/' + match.video + '/hqdefault.jpg',
-            info: match.info,
+            timestamp: match?.timestamp,
+            idwar: match?.idwar,
+            t1roundswon: match?.t1roundswon,
+            t2roundswon: match?.t2roundswon,
+            video: 'https://www.youtube.com/embed/' + match?.video + '/?autoplay=1',
+            videoImg: 'https://img.youtube.com/vi/' + match?.video + '/hqdefault.jpg',
+            info: match?.info,
             columns: this.countColumns(this.neMap.length),
-            t1p1playername: this.addPlayerLink(match.t1p1name, players, inactive),
-            t1p1username: match.t1p1name,
-            t1p1preelo: match.t1p1preelo,
-            t1p1score: match.t1p1score,
-            t1p1postelo: match.t1p1postelo,
-            t1p2playername: this.addPlayerLink(match.t1p2name, players, inactive),
-            t1p2username: match.t1p2name,
-            t1p2preelo: match.t1p2preelo,
-            t1p2score: match.t1p2score,
-            t1p2postelo: match.t1p2postelo,
-            t1p3playername: this.addPlayerLink(match.t1p3name, players, inactive),
-            t1p3username: match.t1p3name,
-            t1p3preelo: match.t1p3preelo,
-            t1p3score: match.t1p3score,
-            t1p3postelo: match.t1p3postelo,
-            t1p4playername: this.addPlayerLink(match.t1p4name, players, inactive),
-            t1p4username: match.t1p4name,
-            t1p4preelo: match.t1p4preelo,
-            t1p4score: match.t1p4score,
-            t1p4postelo: match.t1p4postelo,
-            t1p5playername: this.addPlayerLink(match.t1p5name, players, inactive),
-            t1p5username: match.t1p5name,
-            t1p5preelo: match.t1p5preelo,
-            t1p5score: match.t1p5score,
-            t1p5postelo: match.t1p5postelo,
-            t1p6playername: this.addPlayerLink(match.t1p6name, players, inactive),
-            t1p6username: match.t1p6name,
-            t1p6preelo: match.t1p6preelo,
-            t1p6score: match.t1p6score,
-            t1p6postelo: match.t1p6postelo,
-            t1p7playername: this.addPlayerLink(match.t1p7name, players, inactive),
-            t1p7username: match.t1p7name,
-            t1p7preelo: match.t1p7preelo,
-            t1p7score: match.t1p7score,
-            t1p7postelo: match.t1p7postelo,
-            t2p1playername: this.addPlayerLink(match.t2p1name, players, inactive),
-            t2p1username: match.t2p1name,
-            t2p1preelo: match.t2p1preelo,
-            t2p1score: match.t2p1score,
-            t2p1postelo: match.t2p1postelo,
-            t2p2playername: this.addPlayerLink(match.t2p2name, players, inactive),
-            t2p2username: match.t2p2name,
-            t2p2preelo: match.t2p2preelo,
-            t2p2score: match.t2p2score,
-            t2p2postelo: match.t2p2postelo,
-            t2p3playername: this.addPlayerLink(match.t2p3name, players, inactive),
-            t2p3username: match.t2p3name,
-            t2p3preelo: match.t2p3preelo,
-            t2p3score: match.t2p3score,
-            t2p3postelo: match.t2p3postelo,
-            t2p4playername: this.addPlayerLink(match.t2p4name, players, inactive),
-            t2p4username: match.t2p4name,
-            t2p4preelo: match.t2p4preelo,
-            t2p4score: match.t2p4score,
-            t2p4postelo: match.t2p4postelo,
-            t2p5playername: this.addPlayerLink(match.t2p5name, players, inactive),
-            t2p5username: match.t2p5name,
-            t2p5preelo: match.t2p5preelo,
-            t2p5score: match.t2p5score,
-            t2p5postelo: match.t2p5postelo,
-            t2p6playername: this.addPlayerLink(match.t2p6name, players, inactive),
-            t2p6username: match.t2p6name,
-            t2p6preelo: match.t2p6preelo,
-            t2p6score: match.t2p6score,
-            t2p6postelo: match.t2p6postelo,
-            t2p7playername: this.addPlayerLink(match.t2p7name, players, inactive),
-            t2p7username: match.t2p7name,
-            t2p7preelo: match.t2p7preelo,
-            t2p7score: match.t2p7score,
-            t2p7postelo: match.t2p7postelo,
+            t1p1playername: this.addPlayerLink(match?.t1p1name, players, inactive),
+            t1p1username: match?.t1p1name,
+            t1p1preelo: match?.t1p1preelo,
+            t1p1score: match?.t1p1score,
+            t1p1postelo: match?.t1p1postelo,
+            t1p2playername: this.addPlayerLink(match?.t1p2name, players, inactive),
+            t1p2username: match?.t1p2name,
+            t1p2preelo: match?.t1p2preelo,
+            t1p2score: match?.t1p2score,
+            t1p2postelo: match?.t1p2postelo,
+            t1p3playername: this.addPlayerLink(match?.t1p3name, players, inactive),
+            t1p3username: match?.t1p3name,
+            t1p3preelo: match?.t1p3preelo,
+            t1p3score: match?.t1p3score,
+            t1p3postelo: match?.t1p3postelo,
+            t1p4playername: this.addPlayerLink(match?.t1p4name, players, inactive),
+            t1p4username: match?.t1p4name,
+            t1p4preelo: match?.t1p4preelo,
+            t1p4score: match?.t1p4score,
+            t1p4postelo: match?.t1p4postelo,
+            t1p5playername: this.addPlayerLink(match?.t1p5name, players, inactive),
+            t1p5username: match?.t1p5name,
+            t1p5preelo: match?.t1p5preelo,
+            t1p5score: match?.t1p5score,
+            t1p5postelo: match?.t1p5postelo,
+            t1p6playername: this.addPlayerLink(match?.t1p6name, players, inactive),
+            t1p6username: match?.t1p6name,
+            t1p6preelo: match?.t1p6preelo,
+            t1p6score: match?.t1p6score,
+            t1p6postelo: match?.t1p6postelo,
+            t1p7playername: this.addPlayerLink(match?.t1p7name, players, inactive),
+            t1p7username: match?.t1p7name,
+            t1p7preelo: match?.t1p7preelo,
+            t1p7score: match?.t1p7score,
+            t1p7postelo: match?.t1p7postelo,
+            t2p1playername: this.addPlayerLink(match?.t2p1name, players, inactive),
+            t2p1username: match?.t2p1name,
+            t2p1preelo: match?.t2p1preelo,
+            t2p1score: match?.t2p1score,
+            t2p1postelo: match?.t2p1postelo,
+            t2p2playername: this.addPlayerLink(match?.t2p2name, players, inactive),
+            t2p2username: match?.t2p2name,
+            t2p2preelo: match?.t2p2preelo,
+            t2p2score: match?.t2p2score,
+            t2p2postelo: match?.t2p2postelo,
+            t2p3playername: this.addPlayerLink(match?.t2p3name, players, inactive),
+            t2p3username: match?.t2p3name,
+            t2p3preelo: match?.t2p3preelo,
+            t2p3score: match?.t2p3score,
+            t2p3postelo: match?.t2p3postelo,
+            t2p4playername: this.addPlayerLink(match?.t2p4name, players, inactive),
+            t2p4username: match?.t2p4name,
+            t2p4preelo: match?.t2p4preelo,
+            t2p4score: match?.t2p4score,
+            t2p4postelo: match?.t2p4postelo,
+            t2p5playername: this.addPlayerLink(match?.t2p5name, players, inactive),
+            t2p5username: match?.t2p5name,
+            t2p5preelo: match?.t2p5preelo,
+            t2p5score: match?.t2p5score,
+            t2p5postelo: match?.t2p5postelo,
+            t2p6playername: this.addPlayerLink(match?.t2p6name, players, inactive),
+            t2p6username: match?.t2p6name,
+            t2p6preelo: match?.t2p6preelo,
+            t2p6score: match?.t2p6score,
+            t2p6postelo: match?.t2p6postelo,
+            t2p7playername: this.addPlayerLink(match?.t2p7name, players, inactive),
+            t2p7username: match?.t2p7name,
+            t2p7preelo: match?.t2p7preelo,
+            t2p7score: match?.t2p7score,
+            t2p7postelo: match?.t2p7postelo,
           }
           // console.log('matchRow', matchRow);
           // console.log('thisSingle', this.commentService.getSingleComment(match.idwar).valueChanges())
@@ -299,18 +299,50 @@ export class SingleMatchComponent implements OnInit {
 
   }
 
-  addComment(id:string): void {
-    this.commentService.create(this.comment).then(() => {
-      // console.log('this.comment', this.comment);
-      // console.log('Created new comment succesfully!');
-      this.submitted = true;
-    })
+
+  // onSubmit() {
+  //   // this.submitted = true;
+  //   // const matchID = this.activatedRoute.snapshot.params['idwar'];
+  //   // this.newComment.postedAt = Date.now();
+  //   // this.commentService.createComment(matchID, this.newComment);
+  //   // this.newComment = new SingleComment();  
+  // }
+  onSubmit() {
+    const matchID = this.activatedRoute.snapshot.params['idwar'];
+    if (this.commentForm.valid) {
+      const newComment: SingleComment = {
+        name: this.commentForm.value.name,
+        email: this.commentForm.value.email,
+        message: this.commentForm.value.message,
+        postedAt: null // the timestamp will be set by the createComment method in the service
+      };
+      this.commentService.createComment(matchID, newComment)
+        .then(() => {
+          // console.log('Comment added successfully!');
+          this.notifier.notify('success', `Comment added successfully!.`);
+          this.commentForm.reset();
+        })
+        .catch((error) => {
+          // console.log('Error adding comment: ', error);
+        });
+    }
+  }
+  
+
+  addComment() {
+    const matchID = this.activatedRoute.snapshot.paramMap.get('idwar');
+    this.commentService.createComment(matchID, this.commentForm.value);
+    console.log('value', this.commentForm.value)
+    this.commentForm.reset();
+    this.submitted = true;
   }
 
-  newComment(): void {
-    this.submitted = false;
-    this.comment = new SingleComment();
-  }
+  
+
+  // public newComment(): void {
+  //   this.submitted = false;
+  //   this.comment = new SingleComment();
+  // }
 
   public TheHunt = /The Hunt/;
   public V2 = /V2/;

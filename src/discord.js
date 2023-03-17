@@ -12,7 +12,7 @@ client.on('ready', async () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.login('MTA3NzMzNDUyNDE1NDg3NjAyNg.GSmXtk.eCh0z8XN6Lq9YUCWKznOr3NpxFoeHu6Bh_vE64');
+client.login('MTA3NzMzNDUyNDE1NDg3NjAyNg.G55S-W.Stp-4Djx1S2ofAQZ7Frm9RkIkWIPFcJ61r3M9A');
 
 const getVoiceMembers = async (channelId) => {
   const channel = client.channels.cache.get(channelId);

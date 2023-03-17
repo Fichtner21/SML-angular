@@ -62,12 +62,12 @@
                     {{ player.fragsperwar | number: '.2-2' }}              
                   </div> -->
                   <div class="item-block" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
-                    <div>{{ player.s1fpw }}</div>
-                    <div class="season-wars" *ngIf="isInfo">(Total: <span>{{ player.fragsperwar }}</span>)</div>
+                    <div title="Season FpW" [ngClass]="{'up-streak-pre': (player.s1fpw > player.fragsperwar), 'draw-streak-pre': (player.s1fpw == player.fragsperwar), 'down-streak-pre': (player.s1fpw < player.fragsperwar)}">{{ player.s1fpw }}</div>
+                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s1fpw < player.fragsperwar), 'draw-streak-post': (player.s1fpw == player.fragsperwar), 'down-streak-post': (player.s1fpw > player.fragsperwar)}"> <span title="Total FpW">({{ player.fragsperwar }})</span></div>
                   </div>
                   <div class="item-block">
-                    <div>{{ player.s1wars }}</div>
-                    <div class="season-wars" *ngIf="isInfo">(Total: <span>{{ player.wars }}</span>)</div>
+                    <div title="Season played wars" >{{ player.s1wars }}</div>
+                    <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars">({{ player.wars }})</span></div>
                   </div>
                   <div class="item new">{{ player.lastWarDate }}</div>
                   <div class="item name act">
@@ -84,7 +84,7 @@
           </div> 
           <div class="more-less">
             <form action="">
-              <label for="infoChange">{{ isInfo == true ? 'Hide season info' : 'Show season info' }}</label>
+              <label for="infoChange">{{ isInfo == true ? 'Hide total info' : 'Show total info' }}</label>
               <select class="info-select" name="infoChange" id="" (ngModelChange)="infoChange($event)" [(ngModel)]="infoCode">
                 <option value="" disabled selected>Choose a state</option>                           
                 <option class="language-select" *ngFor="let item of infos" [ngValue]='item.infoCode'>

@@ -18,6 +18,7 @@ import * as Discord from 'discord.js';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
 
+
 export interface UserData {
   nr: string;
   name: string;
@@ -90,7 +91,7 @@ export class MixUsComponent implements OnInit {
   players: any;
   displayedColumns: string[] = ['select', 'nr', 'ranking', 'playername','flag'];
   selectedChannels = 'Team 1 and Team 2';
-  availableChannels = ['Team 1 and Team 2', 'Team 3 and Team 4'];
+  availableChannels = ['Team 1 and Team 2', 'Team 3 and Team 4']; 
   
   task: Task = {
     name: 'Indeterminate',
@@ -116,7 +117,7 @@ export class MixUsComponent implements OnInit {
 
   users: any[];
 
-  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient) { 
+  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient, public oAuthService: OAuthService) { 
     // const client = new Client({
     //   intents: ['Guilds', 'GuildMembers', 'GuildVoiceStates']
     // });
@@ -210,6 +211,7 @@ export class MixUsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.route.queryParams.subscribe(params => {
       // this.array1 = params['a1'] ? JSON.parse(params['a1']).map(username => ({username})) : [];
       // this.array2 = params['a2'] ? JSON.parse(params['a2']).map(username => ({username})) : [];
@@ -843,7 +845,7 @@ export class MixUsComponent implements OnInit {
 
   isValid(): boolean {
     return this.array1 && this.array1.length > 2 && this.array2 && this.array2.length > 2;
-  }  
+  }   
 }
 
 

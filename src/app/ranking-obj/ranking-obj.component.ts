@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { parseFloat } from 'core-js/es/number';
 
 @Component({
   selector: 'app-ranking-obj',
@@ -125,15 +126,15 @@ export class RankingObjComponent implements OnInit {
               // minfragsperwar: Math.min(...fragsPerPlayerArray) ? Math.min(...fragsPerPlayerArray) : '0',
               maxfragsperwar: name.fpwmax,
               minfragsperwar: name.fpwmin,
-              s1wars: name.s1wars,
-              s1fpw: name.s1fpw,
+              s1wars: parseFloat(name.s1wars),
+              s1fpw: Math.round(name.s1fpw * 100) / 100,
               // activity: this.searchPlayerActivity(name.username, v2), 
               activity: name.last30days, 
               // lastyear: this.pastYearActivity(name.username, v2),
               lastyear: name.last365days,
               meeting: name.meeting,
               lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
-              fragsperwar: name.fpw,
+              fragsperwar: Math.round(name.fpw * 100) / 100,
               inactive: name.active == 'FALSE' ? false : true,
               ban: name.ban == 'TRUE' ? true : false            
             };

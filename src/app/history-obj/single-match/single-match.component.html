@@ -161,13 +161,12 @@
                   </style>
                   <a href={{match.video}}><img src='{{match.videoImg}}' alt='AltTagContent'><span>▶</span></a>"
                   loading="lazy"
-                  src="{{match.video | safe}}"
+                  src="sanitizer.bypassSecurityTrustResourceUrl(match.video)"
                   >
                 </iframe>               
               </div>
-
             </div>
-            <ng-container *ngIf="false">
+            <!-- <ng-container>
               <div class="comments-match" style="background-color: #ffffc8; padding: 20px;">
                 <form action="" id="comment-{{match.idwar}}">
                   <label for="message-{{match.idwar}}">Message</label>
@@ -187,7 +186,7 @@
                 </div>
               </div>
             </ng-container>
-            <!-- <ng-container *ngIf="allComments$ | async as comments">
+            <ng-container *ngIf="allComments$ | async as comments">
               <div *ngFor="let comment of comments" style="background:#fff;">
                 {{ comment | json }}
                 <div>{{ comment.name | json}}</div>
@@ -196,7 +195,80 @@
                 <div>{{ comment.message }}</div>
               </div>
             </ng-container> -->
+            <!-- <ng-container *ngIf="singleMatch$ | async as match"> -->
+              <!-- <div class="comments-match" style="background-color: #ffffc8; padding: 20px;">
+                <form [formGroup]="commentForm" (ngSubmit)="addComment()">
+                  <label for="message-{{match.idwar}}">Message</label>
+                  <textarea formControlName="message" id="message-{{match.idwar}}" cols="30" rows="10" required></textarea>    
 
+                  <label for="name">Name*</label>
+                  <input formControlName="name" type="text" name="name" id="name-{{match.idwar}}" required>
+                  <label for="email">Email</label>
+                  <input formControlName="email" type="email" name="email" id="email-{{match.idwar}}">
+                  <button class="btn btn-success" type="submit" [disabled]="commentForm.invalid">Submit</button>
+                </form>
+                <div *ngIf="submitted">
+                  <h4>You submitted successfully!</h4>
+                  <button class="btn btn-success" (click)="newComment">Add</button>
+                </div>
+                <div class="comments-container" id="comments-container-{{match.idwar}}" style="background: red">
+                  <div *ngFor="let comment of comments$ | async">
+                    <div class="comment">
+                      <p>{{ comment.message }}</p>
+                      <p><strong>By:</strong> {{ comment.name }}</p>
+                      <p><strong>Email:</strong> {{ comment.email }}</p>
+                      <p><strong>Posted at:</strong> {{  comment.postedAt | date: 'dd.MM.yyyy HH:mm'}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+              <div class="comments-match">
+                <form [formGroup]="commentForm" (ngSubmit)="addComment()">
+                  <div class="row">
+                    <mat-form-field>
+                      <mat-label>Message</mat-label>
+                      <textarea formControlName="message" matInput id="message-{{match.idwar}}" required></textarea>
+                    </mat-form-field>
+                
+                    <mat-form-field>
+                      <mat-label>Name</mat-label>
+                      <input formControlName="name" matInput type="text" name="name" id="name-{{match.idwar}}" required>
+                    </mat-form-field>
+                
+                    <mat-form-field>
+                      <mat-label>Email</mat-label>
+                      <input formControlName="email" matInput type="email" name="email" id="email-{{match.idwar}}">
+                    </mat-form-field>
+                  </div>                  
+                  <div class="button">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="commentForm.invalid">Submit</button>
+                  </div>                  
+                </form>
+              
+                <div *ngIf="submitted">
+                  <h4>You submitted successfully!</h4>                
+                </div>
+              
+                <div class="comments-container" id="comments-container-{{match.idwar}}">
+                  <div *ngFor="let comment of comments$ | async">
+                    <div class="comment">
+                      <div class="comment-info">
+                        <p>By:<strong> {{ comment.name }}</strong></p>
+                        <ng-container *ngIf="comment.email">
+                          <p>Email:<strong><a href="mailto:{{ comment.email }}">{{ comment.email }}</a></strong></p>
+                        </ng-container>
+                        <p>Posted at:<strong> {{  comment.postedAt | date: 'dd.MM.yyyy HH:mm'}}</strong></p>
+                      </div>
+                      <div class="comment-message">
+                        {{ comment.message }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <!-- </ng-container> -->
+            
+           
 
         </div>
 

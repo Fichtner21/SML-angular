@@ -10,7 +10,10 @@
                 <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>
                 <div *ngIf="match.video.length > 0">
                   <img src="../../assets/images/icons/video.svg" alt="" class="video-icon">
-                </div>         
+                </div> 
+                <!-- <app-single-match (commentsEmitter)="onChildComments($event)"></app-single-match> -->
+                                                  
+               <!-- <div>{{ match.comments }}</div> -->
               </div>
               <div class="match-row__team">
                 <div class="teamrounds">{{ match.t1roundswon }}</div>
@@ -166,6 +169,7 @@
     </ng-container>
   </div>
 </section> 
+
 <ng-http-loader 
     [backdrop]="false"
     [backgroundColor]="'#010141'"

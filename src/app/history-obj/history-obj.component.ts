@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { GoogleSheetsDbService } from 'ng-google-sheets-db';
 import { Matches, matchesAttributesMapping } from './matches.model';
 import { MatchesDetailsService } from './matches-details.service';
@@ -10,7 +10,15 @@ import { FetchMatchesService } from './fetch-matches.service';
 import { Spinkit } from 'ng-http-loader';
 import { PlayersApiService } from '../services/players-api.service';
 import { TranslateService } from '@ngx-translate/core';
+import { CommentsService } from './single-match/comments.service';
+import { SingleComment } from './single-match/single-comment.model';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 
+
+interface Length {
+  idwar: any,
+  comments: any
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,14 +37,21 @@ export class HistoryObjComponent implements OnInit {
   public playersTab$: Observable<any>;
   public matchesTab$: Observable<any>;  
   public inactiveTab$: Observable<any>;
+  public comments$: any;
 
   public historyObj$: any;
   chanceOfWinTeamOneShow: any;
   chanceOfWinTeamTwoShow: any; 
-  
-  constructor(private MatchDetail: MatchesDetailsService, private activatedRoute: ActivatedRoute, private router: Router, private httpClient: HttpClient, private fetchMatches: FetchMatchesService, private tabApiService: PlayersApiService, private translateService: TranslateService) { }
+  length: number = 0;
+  // comments: any;
  
-  ngOnInit(): void {
+ 
+  comments: Observable<any[]>;
+  
+  constructor(private MatchDetail: MatchesDetailsService, private activatedRoute: ActivatedRoute, private router: Router, private httpClient: HttpClient, private fetchMatches: FetchMatchesService, private tabApiService: PlayersApiService, private translateService: TranslateService, private commentsService: CommentsService, private db: AngularFireDatabase) { }
+ 
+   ngOnInit(): void {
+    
     this.matches$ = this.fetchMatches.fetchMatches();   
     
     this.playersTab$ = this.tabApiService.getPlayers('Players').pipe(
@@ -82,13 +97,18 @@ export class HistoryObjComponent implements OnInit {
         }        
         return inactivePlayers;
       }),
-    );
+    );    
 
     
-    this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$, this.inactiveTab$]).pipe(
+    // this.comments$.subscribe(data => {
+    //   console.log(data);
+    // });
+    
+    this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$, this.inactiveTab$ ]).pipe(
       map(([players, matches, inactive]) => {
         let matchRow;
         let matchRowArray: any[] = [];
+       
         for(let match of matches){ 
           const sumPreeloTeam1 = [
             (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) + 
@@ -108,8 +128,10 @@ export class HistoryObjComponent implements OnInit {
             (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) + 
             (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) + 
             (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0) 
-          ].reduce(this.addPreelo, 0);           
-        
+          ].reduce(this.addPreelo, 0); 
+
+          
+
           matchRow = {
             timestamp: match.timestamp,
             idwar: match.idwar,
@@ -191,18 +213,92 @@ export class HistoryObjComponent implements OnInit {
             t2p7preelo: match.t2p7preelo,
             t2p7score: match.t2p7score,
             t2p7postelo: match.t2p7postelo,
+            comments: 0
           }
+
+          matchRowArray.push(matchRow);          
           
-          matchRowArray.push(matchRow);
         }
-        // console.log('M =>', matchRowArray[1363]);
+        // console.log('M =>', matchRowArray[1924]);
+        // console.log('M 2=>', matchRowArray[1923]);
         return matchRowArray.reverse();
       }),
       // tap(x => console.log('xx', x))
-    )  
+    )     
+
     
-    
+     
   };  
+
+  ngAfterViewInit(){
+    // console.log('after view');
+    // this.updateKomentarze();
+  }
+
+  getCommentsForMatch(idwar: string): AngularFireList<SingleComment> {
+    return this.db.list(`postComments${idwar}/_`);
+  }
+
+  handleChildObject(obj: any) {
+    // kod obsługi obiektu z dziecka
+    this.historyObj$.pipe(
+      map((parentArray:any) => {
+        parentArray.forEach(parentObject => {
+          if (parentObject.idwar === obj.idwar) {
+            parentObject.comments += obj.comments;
+          }
+        });
+        return parentArray;
+      })
+    ).subscribe(updatedParentArray => {
+      // zaktualizowane dane w rodzicu
+    });
+  }
+
+  updateKomentarze() {
+    this.historyObj$.pipe(
+      map((matches:any) => {
+        return matches.map(match => {
+          this.getCommentsForMatch(match.idwar).valueChanges().subscribe(comments => {
+            if (comments) {
+              match.comments = comments.length;
+            }
+          });
+          return match;
+        });
+      })
+    ).subscribe(matches => {
+      // console.log(matches);      
+      // tu możesz dodać logikę do aktualizacji listy meczów i ich liczby komentarzy
+    });
+  }
+  
+  fn(id){
+    let aaa;
+    this.commentsService.getCommentsForMatch(id, '_').snapshotChanges().subscribe(result => result = aaa)
+    return aaa;
+  }
+
+  async someFunction(id:any): Promise<any> {
+    const comments = await this.commentsService.getCommentsForMatch(id, '_').valueChanges().toPromise();
+    return comments;
+  }
+ 
+  onChildComments(event: { id: string, comments: number }) {
+    this.historyObj$.forEach(matchRow => {
+      if (matchRow.idwar === event.id) {
+        matchRow.comments = event.comments;
+      }
+    });
+  }
+  
+  // handleLength(event: {idwar: string, comments: number}) {
+  //   this.historyObj$.forEach((el) => {
+  //     if(el.idwar == event.idwar){
+  //       return event.comments;
+  //     }
+  //   })    
+  // }
 
   public addPlayerLink(player:string, obj:any, obj2:any) {
     let convertedPlayer = '';    

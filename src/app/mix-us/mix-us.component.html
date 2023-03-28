@@ -81,15 +81,20 @@
           <h2 class="imp">IMPORTANT!</h2>
           <p>This tab is only used to draw a team based on ELO, when there is no admin, the draw is performed only on your computer. After the war, send the screens and results (rounds and frags) to the admin on discord. Still no one to enter the match? Draw and keep playing!</p>
           <div class="selectedTeams">
-            <h2 class="h2Select">Selected Players</h2>
+            <h2 class="h2Select">Selected Players / Mix Teams</h2>
             <div class="btn-cont">
-              <button mat-raised-button color="primary" class="lp" (click)="    
-              splitRanking2(selectedUsers)">Mix teams! LP</button>
+              <button mat-raised-button color="primary" class="lp lp-mix" [disabled]="selectedUsers.length < 6" (click)="    
+              splitRanking2(selectedUsers)">Mix LP <fa-icon [icon]="starEmpty"></fa-icon></button>
               <div>LP - Lower precision, no limit players.</div>
             </div>
             <div class="btn-cont">
+              <button mat-raised-button color="primary" class="lp lp-mix" [disabled]="selectedUsers.length < 6" (click)="    
+              splitNationalities(selectedUsers)">Mix NT <fa-icon [icon]="faFlag"></fa-icon></button>
+              <div>NT - by Nations, no limit players.</div>
+            </div>
+            <div class="btn-cont">
               <button mat-raised-button color="warn" class="hp" (click)="          
-            splitArrayIntoTwo(selectedUsers)" [disabled]="selectedUsers.length >= 11">Mix teams! HP</button>
+            splitArrayIntoTwo(selectedUsers)" [disabled]="selectedUsers.length < 6 || selectedUsers.length >= 11">Mix HP <fa-icon [icon]="starSolid"></fa-icon></button>
               <div>HP - Higher precision, limit max 5on5.</div>
             </div>          
             <!-- <div class="btn-cont">

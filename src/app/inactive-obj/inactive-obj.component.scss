@@ -23,14 +23,28 @@ section {
 
 .container {  
   margin: 0 auto;
-  display: flex;
-  justify-content: center;
+  // display: flex;
+  // justify-content: center;
   padding: 15px 0;
   font-size: 1rem;
+  max-width: 900px;
+
+  .banned {
+    border-top: 2px solid #ffffc0;
+
+
+    h2 {
+      color: #ffffc0;
+      padding: 5px 10px;
+      background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%);
+      background-size: 4px 4px;
+    }
+  }
 
   .cont {
     position: relative;
-    box-shadow: 0 20px 20px #010141;
+    box-shadow: 0 20px 20px #010141;    
+    margin-top: 15px;
 
     .more-less {
       padding: 10px 15px;

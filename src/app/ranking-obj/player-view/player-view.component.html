@@ -7,13 +7,14 @@
         <div class="status">
           <h2>Status:</h2>
           <div class="status-player">
-            <ng-container *ngIf="playerDetails.active; then active; else inactive">              
+            <ng-container *ngIf="playerDetails.active && !playerDetails.ban; then active; else inactive">              
             </ng-container>
             <ng-template #active>
               <div class="green">ACTIVE</div>
             </ng-template>
             <ng-template #inactive>
-              <div class="red">INACTIVE</div>
+              <div class="red" *ngIf="!playerDetails.ban">INACTIVE</div>
+              <div class="red" *ngIf="playerDetails.ban">BANNED</div>
             </ng-template>
             <!-- <div *ngIf="isLoggedIn()">
               <a routerLink="/dashboard/edit-player/{{playerDetails.username}}" class="edit-player">EDIT Player</a>              
@@ -27,6 +28,7 @@
             <div>{{ 'playerview.current_rank' | translate }} <span>{{playerDetails.ranking }}</span> </div>
             <div>{{ 'playerview.war_count' | translate }} <span>{{ playerDetails.warcount }}</span></div>
             <div>{{ 'playerview.clan_history' | translate }} <span>{{ playerDetails.clanhistory }}</span></div>
+            <div *ngIf="playerDetails.banDue">Ban info: <span>{{ playerDetails.banDue }}</span></div>
             <div class="won">{{ 'playerview.won' | translate }} <span>{{ playerDetails.win }} ({{ playerDetails.winPercentage | number: '1.0-2' }}%)</span></div>
             <div class="lost">{{ 'playerview.lost' | translate }} <span>{{ playerDetails.lose }} ({{ playerDetails.losePercentage | number: '1.0-2' }}%)</span></div>
             <div class="drawn">{{ 'playerview.drawn' | translate }} <span>{{ playerDetails.draw }} ({{ playerDetails.drawPercentage | number: '1.0-2'  }}%)</span></div>

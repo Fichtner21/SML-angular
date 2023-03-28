@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, forkJoin, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { GoogleSheetsDbService } from 'ng-google-sheets-db';
 import { Matches, matchesAttributesMapping } from './matches.model';
@@ -100,7 +100,9 @@ export class HistoryObjComponent implements OnInit {
     );    
 
     
-    // this.comments$.subscribe(data => {
+    // this.comments$ = this.commentsService.getCommentsForMatch2()
+    // .valueChanges()
+    // .subscribe(data => {
     //   console.log(data);
     // });
     
@@ -128,9 +130,18 @@ export class HistoryObjComponent implements OnInit {
             (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) + 
             (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) + 
             (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0) 
-          ].reduce(this.addPreelo, 0); 
+          ].reduce(this.addPreelo, 0);
 
-          
+          // const flag1 = matchRow.t1p1playername?.nationality;
+          // const flag2 = matchRow.t1p2playername?.nationality;
+          // const flag3 = matchRow.t1p3playername?.nationality;
+
+          // if (match.t1p1playername && match.t1p2playername && match.t1p3playername && 
+          //     flag1 === flag2 && flag2 === flag3) {
+          //   match.newField = flag1;
+          // } else {
+          //   match.newField = 'Different Value';
+          // }
 
           matchRow = {
             timestamp: match.timestamp,
@@ -213,21 +224,81 @@ export class HistoryObjComponent implements OnInit {
             t2p7preelo: match.t2p7preelo,
             t2p7score: match.t2p7score,
             t2p7postelo: match.t2p7postelo,
-            comments: 0
+            comments: this.commentsService.getCommentsForMatch(match.idwar, '_').snapshotChanges().subscribe(data => data.length)       
           }
 
-          matchRowArray.push(matchRow);          
+          const newObj = {
+            ...matchRow,
+          
+            flag: 
+            (matchRow.t1p1playername && matchRow.t1p2playername &&
+                    matchRow.t1p1playername.flag === matchRow.t1p2playername.flag &&
+                    matchRow.t1p2playername.flag)
+                  ? matchRow.t1p1playername.flag
+                  : ''
+          };
+          
+
+          matchRowArray.push(newObj);          
           
         }
-        // console.log('M =>', matchRowArray[1924]);
-        // console.log('M 2=>', matchRowArray[1923]);
+        console.log('M =>', matchRowArray[1965]);
+        console.log('M 2=>', matchRowArray[1923]);
         return matchRowArray.reverse();
       }),
       // tap(x => console.log('xx', x))
-    )     
+    )  
+
+    // this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$, this.inactiveTab$ ]).pipe(
+    //   map(([players, matches, inactive]) => {
+    //     let matchRow;
+    //     let matchRowArray: any[] = [];
+       
+    //     for(let match of matches){ 
+    //       matchRow = {
+    //         timestamp: match.timestamp,
+    //         idwar: match.idwar,
+    //         t1roundswon: match.t1roundswon,
+    //         t2roundswon: match.t2roundswon, 
+    //         video: match.video,
+    //         info: match.info,
+    //         t1p1playername: this.addPlayerLink(match.t1p1name, players, inactive),
+    //         t1p1username: match.t1p1name,
+    //         t1p1preelo: match.t1p1preelo,
+    //         t1p1score: match.t1p1score,
+    //         t1p1postelo: match.t1p1postelo,
+    //         t1p2playername: this.addPlayerLink(match.t1p2name, players, inactive),
+    //         t1p2username: match.t1p2name,
+    //         t1p2preelo: match.t1p2preelo,
+    //         t1p2score: match.t1p2score,
+    //         t1p2postelo: match.t1p2postelo,      
+    //         t2p1playername: this.addPlayerLink(match.t2p1name, players, inactive),
+    //         t2p1username: match.t2p1name,
+    //         t2p1preelo: match.t2p1preelo,
+    //         t2p1score: match.t2p1score,
+    //         t2p1postelo: match.t2p1postelo,
+    //         t2p2playername: this.addPlayerLink(match.t2p2name, players, inactive),
+    //         t2p2username: match.t2p2name,
+    //         t2p2preelo: match.t2p2preelo,
+    //         t2p2score: match.t2p2score,
+    //         t2p2postelo: match.t2p2postelo,      
+    //         comments:  0
+    //         // this.commentsService.getCommentsForMatch(match.idwar, '_').valueChanges().subscribe((data:any) => console.log(data))
+    //       }
+    //       this.comments$ = this.getCommentsForMatch(match.idwar).valueChanges();
+    //         this.comments$.subscribe((data:any) => {
+    //           return data.length;
+    //       });
+    //       matchRowArray.push(matchRow); 
+    //     }    
+    //     console.log('M =>', matchRowArray[1963]);
+    //     // console.log('M 2=>', matchRowArray[1923]);
+    //     return matchRowArray.reverse();
+    //   }),  
+    // )  
 
     
-     
+    
   };  
 
   ngAfterViewInit(){
@@ -235,8 +306,35 @@ export class HistoryObjComponent implements OnInit {
     // this.updateKomentarze();
   }
 
-  getCommentsForMatch(idwar: string): AngularFireList<SingleComment> {
-    return this.db.list(`postComments${idwar}/_`);
+  getCommentsForMatch(idwar: string): AngularFireList<SingleComment> {     
+    return this.db.list(`postComments${idwar}/_`)
+  }
+
+  getCommentsCountForMatch(idwar: string): AngularFireList<any> {
+    const commentsRef = this.db.list(`postComments${idwar}/_`);
+    console.log('commentsRef', commentsRef)
+    return commentsRef;
+    // return commentsRef.snapshotChanges().pipe(
+    //   map(changes => changes.length)
+    // );
+  }
+
+  updateComments(length: any) {
+    const matchId = length.id;
+    const commentsCount = length.comments;
+    console.log('MATCH ID:', matchId, ' comments: ', commentsCount)
+    return length.id;
+    // this.historyObj$ = this.historyObj$.pipe(
+    //   map((matchRowArray:any) => {
+    //     const updatedMatchRowArray = matchRowArray.map((matchRow) => {
+    //       if (matchRow.idwar === matchId) {
+    //         return { ...matchRow, comments: commentsCount };
+    //       }
+    //       return matchRow;
+    //     });
+    //     return updatedMatchRowArray;
+    //   })
+    // );
   }
 
   handleChildObject(obj: any) {
@@ -301,10 +399,13 @@ export class HistoryObjComponent implements OnInit {
   // }
 
   public addPlayerLink(player:string, obj:any, obj2:any) {
-    let convertedPlayer = '';    
+    let convertedPlayer = {};    
     obj.forEach((el:any) => {
       if (player === el.username) {
-        convertedPlayer = el.playername;
+        convertedPlayer = {
+          name: el.playername,
+          flag: el.nationality
+        };
       } else if (player === '') {
         // console.log('N/A player');
       } else {
@@ -313,7 +414,10 @@ export class HistoryObjComponent implements OnInit {
     });
     obj2.forEach((el:any) => {
       if (player === el.username) {
-        convertedPlayer = el.playername;
+        convertedPlayer = {
+          name: el.playername,
+          flag: el.nationality
+        };
       } else if (player === '') {
         // console.log('N/A player');
       } else {

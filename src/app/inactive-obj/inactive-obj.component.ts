@@ -110,7 +110,8 @@ export class InactiveObjComponent implements OnInit {
               lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
               fragsperwar: name.fpw,
               active: name.active == 'FALSE' ? false : true,
-              ban: name.ban == 'TRUE' ? true : false            
+              ban: name.ban == 'TRUE' ? true : false,
+              ban_expiriess: new Date( name.ban_expiriess).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' })          
             };
             playerRowArrayInactive.push(lastWarDateInactive);   
           }                

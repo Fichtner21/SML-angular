@@ -140,14 +140,20 @@
 
       @media screen and (max-width: 1024px){
        column-gap: 30px;
+       grid-template-columns: 1fr 1fr;
       }
 
       @media screen and (max-width: 768px){
         column-gap: 15px;
+        grid-template-columns: 1fr;
       }
 
       .stat-cont {
         text-align: right;
+
+        @media screen and (max-width: 768px){
+          text-align: left;
+        }
 
         div {
           color: darken(#ffffc8, 20%);
@@ -172,6 +178,10 @@
 
       .seasons {
        width: 480px;
+
+       @media screen and (max-width: 768px){
+        width: auto;
+      }
 
        .mat-tab-label {
         height: 48px;
@@ -287,6 +297,10 @@
     // position: absolute;
     width: 100%;
     display: flex;
+
+    @media screen and (max-width: 768px){
+      height: 200px;
+    }
   
     .ambilight {
       margin: 0 auto; // just to center the box

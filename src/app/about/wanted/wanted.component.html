@@ -22,5 +22,29 @@
         </div>
       </ng-container>
     </ng-container>
+
+    <ng-container *ngIf="isAuthenticated()"> 
+      <h2>Active Players:</h2>
+      <button (click)="moveRandomPlayer()">Move Random Player</button>
+      <div class="lists">
+        <div>
+          <ul>
+            <li *ngFor="let player of activePlayers">{{ player.playername }} <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'> wars: {{ player.s1wars }}</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Losers:</h2>
+          <ul>
+            <li *ngFor="let player of losers">{{ player?.playername }} <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'> wars: {{ player.s1wars }}</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Winners:</h2>
+          <ul>
+            <li>{{ winner?.playername || 'No winner yet' }} <img [src]='"assets/images/flags_svg/" + winner?.nationality + ".SVG"'></li>
+          </ul>
+        </div>    
+      </div>    
+    </ng-container>
   </div>
 </section>

@@ -239,7 +239,7 @@ td img {
     background-color: #ffffc0;
     font-weight: 700;
 
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 1025px) {
       display: none !important;
     }
   }
@@ -391,9 +391,12 @@ td img {
     }
 
     .selectedTeams {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 10px;
+      // display: flex;
+      // align-items: center;
+      // justify-content: space-between;
       color: #ffffc0;
       background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
       background-size: 4px 4px;
@@ -422,11 +425,7 @@ td img {
           font-weight: 700;
           letter-spacing: 2px;
           border: 2px solid #ffffc0;
-          background-color: #010141;
-  
-          // &:first-of-type {
-          //   margin-right: 5px;
-          // }
+          background-color: #010141;          
         }
 
         .hp {
@@ -435,11 +434,7 @@ td img {
           font-weight: 700;
           letter-spacing: 2px;
           border: 2px solid #ffffc0;
-          background-color: darken(red, 15%);
-  
-          // &:first-of-type {
-          //   margin-right: 5px;
-          // }
+          background-color: darken(red, 15%);         
         }
       }      
     }
@@ -481,5 +476,8 @@ td img {
 }
 
 .hp.mat-raised-button.mat-button-disabled {
+  opacity: .4;
+}
+.lp-mix.mat-raised-button.mat-button-disabled {
   opacity: .4;
 }

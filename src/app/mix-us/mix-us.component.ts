@@ -13,7 +13,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { faArrowCircleLeft, faArrowCircleRight, faArrowDown, faArrowsDownToPeople, faArrowUp, faPaperPlane, faPeopleGroup, faPersonCirclePlus, faStamp, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleLeft, faArrowCircleRight, faArrowDown, faArrowsDownToPeople, faArrowUp, faFlag, faPaperPlane, faPeopleGroup, faPersonCirclePlus, faStamp, faStar, faStarHalfStroke, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import * as Discord from 'discord.js';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
@@ -77,6 +77,10 @@ export class MixUsComponent implements OnInit {
   arrowUp = faArrowUp;
   arrowRightCircle = faArrowCircleRight; 
   arrowLeftCircle = faArrowCircleLeft; 
+  starSolid = faStar;
+  starEmpty = faStarHalfStroke;
+  faFlag = faFlag;
+  mixWay: any = localStorage.getItem('mixway') ? localStorage.getItem('mixway') : '';  
 
   // dataSource: MatTableDataSource<any>;
   // dataSource = new MatTableDataSource<any>([]);
@@ -470,6 +474,7 @@ export class MixUsComponent implements OnInit {
   }
 
   splitArrayIntoTwo(inputArray: User[]): [User[], User[]] {
+    localStorage.setItem('mixway', 'HP'); 
     this.notifier.notify('default', 'MIX TEAMS HP has been called');
     // Przekonwertuj pola ranking na wartości liczbowe
     inputArray.forEach(obj => parseFloat(obj.ranking.replace(/,/g, '')));
@@ -556,6 +561,8 @@ export class MixUsComponent implements OnInit {
     let firstArraySum = 0;
     let secondArraySum = 0;
     
+    localStorage.setItem('mixway', 'LP'); 
+    
     for (let i = 0; i < array.length; i++) {
       let currentRanking = parseFloat(array[i].ranking.replace(',', ''));
       if (firstArraySum <= secondArraySum) {
@@ -584,8 +591,108 @@ export class MixUsComponent implements OnInit {
     return [firstArray, secondArray];
   }
 
+  // splitNationalities(array) {
+  //   array.sort((a, b) => parseFloat(b.ranking.replace(',', '')) - parseFloat(a.ranking.replace(',', '')));
+  //   let firstArray = [];
+  //   let secondArray = [];
+  //   let firstArraySum = 0;
+  //   let secondArraySum = 0;
+  //   console.log('ARRAY', array)
+  
+  //   const nationalities = [...new Set(array.map(player => player.flag))];
+  //   if (nationalities.length > 1) {
+  //     // Split players based on nationality
+  //     for (let i = 0; i < array.length; i++) {
+  //       let currentRanking = parseFloat(array[i].ranking.replace(',', ''));
+  //       if (firstArraySum <= secondArraySum) {
+  //         if (array[i].flag === nationalities[0]) {
+  //           firstArray.push(array[i]);
+  //           firstArraySum += currentRanking;
+  //         } else {
+  //           secondArray.push(array[i]);
+  //           secondArraySum += currentRanking;
+  //         }
+  //       } else {
+  //         if (array[i].flag === nationalities[1]) {
+  //           secondArray.push(array[i]);
+  //           secondArraySum += currentRanking;
+  //         } else {
+  //           firstArray.push(array[i]);
+  //           firstArraySum += currentRanking;
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     // If all players have the same nationality, split based on ranking
+  //     for (let i = 0; i < array.length; i++) {
+  //       let currentRanking = parseFloat(array[i].ranking.replace(',', ''));
+  //       if (firstArraySum <= secondArraySum) {
+  //         firstArray.push(array[i]);
+  //         firstArraySum += currentRanking;
+  //       } else {
+  //         secondArray.push(array[i]);
+  //         secondArraySum += currentRanking;
+  //       }
+  //     }
+  //   }
+  
+  //   this.array1 = firstArray;
+  //   this.array2 = secondArray;
+  
+  //   this.sumTeam1 = this.sumRanking(firstArray)
+  //   this.sumTeam2 = this.sumRanking(secondArray)
+  
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+  //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
+  
+  //   this.addArrayToUrl(firstArray, secondArray)
+  //   // console.log('ARRAY 1:', this.array1);
+  //   // console.log('ARRAY 2:', this.array2);
+  //   return [firstArray, secondArray];
+  // }
 
-
+  splitNationalities(array) {
+    let flags = {};
+    let firstArray = [];
+    let secondArray = [];
+    localStorage.setItem('mixway', 'NT'); 
+  
+    // Liczymy ile obiektów posiada każdą wartość flagi
+    array.forEach(obj => {
+      if (!flags[obj.flag]) flags[obj.flag] = 0;
+      flags[obj.flag]++;
+    });
+  
+    // Dla każdej wartości flagi przypisujemy do jednej z dwóch tablic
+    Object.keys(flags).forEach(flag => {
+      let count = flags[flag];
+      let targetArray = firstArray.length <= secondArray.length ? firstArray : secondArray;
+      
+      for (let i = 0; i < count; i++) {
+        let obj = array.find(obj => obj.flag === flag);
+        targetArray.push(obj);
+        array.splice(array.indexOf(obj), 1);
+      }
+    });
+    this.array1 = firstArray;
+    this.array2 = secondArray;
+    // console.log('firstArray', firstArray)
+    // console.log('secondArray', secondArray)
+    this.sumTeam1 = this.sumRanking(firstArray)
+    this.sumTeam2 = this.sumRanking(secondArray)
+    
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+    this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+    this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+    this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
+   
+    this.addArrayToUrl(firstArray, secondArray)
+    return [firstArray, secondArray];
+  }
   // splitRanking2(array) {
   //   //NO BLADY and ILLU same team
   //   array.sort((a, b) => parseFloat(b.ranking.replace(',', '')) - parseFloat(a.ranking.replace(',', '')));
@@ -779,6 +886,8 @@ export class MixUsComponent implements OnInit {
     // Last War and Log
     // const webhookUrl = 'https://discord.com/api/webhooks/1075178845067563138/FpKf7iiu3dhI9NTxyS-VkMNcv4mdq2KORNhNUbkeZnfCgLtDaJSIFxi9Uz5YUTCDPqmX';
 
+    let mixWay = localStorage.getItem('mixway');
+    
     // General Chat
     const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
 
@@ -821,7 +930,7 @@ export class MixUsComponent implements OnInit {
     chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
     
     let nextMatch = "";
-    nextMatch += "**NEXT MATCH**, created: " + formattedDate + "\n";
+    nextMatch += "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "\n";
     nextMatch += "TEAM 1 Chance for win: " + chanceOfWinTeamTwoShow + " %" + "\n";
@@ -830,17 +939,17 @@ export class MixUsComponent implements OnInit {
     nextMatch += "TEAM 2 Chance for win: " + chanceOfWinTeamOneShow + " %" + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "Good Luck & Have Fun!";
-    // console.log('nextM', nextMatch);
+    console.log('nextM', nextMatch);
     const payload = {
       content: nextMatch
     };
-    this.http.post(webhookUrl, payload).subscribe({
-      next: (res) => {
-        this.notifier.notify('success', "Teams Send successful!")
-      }, error: (err) => {
-        this.notifier.notify('error', 'Something went wrong')
-      }
-    });    
+    // this.http.post(webhookUrl, payload).subscribe({
+    //   next: (res) => {
+    //     this.notifier.notify('success', "Teams Send successful!")
+    //   }, error: (err) => {
+    //     this.notifier.notify('error', 'Something went wrong')
+    //   }
+    // });    
   } 
 
   isValid(): boolean {

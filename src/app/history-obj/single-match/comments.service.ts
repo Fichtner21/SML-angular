@@ -52,9 +52,11 @@ export class CommentsService {
     return this.db.list(`postComments${matchId}/${underscore}`);
   }
 
-  getCommentsForMatch2(): AngularFireList<SingleComment> {
-    return this.db.list(`postComments`);
-  }
+  
+
+  // getCommentsForMatch2(): AngularFireList<SingleComment> {
+  //   return this.db.list(`postComments${m}`);
+  // }
 
   // getNumberOfCommentsForMatch(matchId: string, underscore: string): Observable<number> {
   //   return this.db.list(`postComments${matchId}/${underscore}`).snapshotChanges().map(changes => changes.length);

@@ -52,6 +52,7 @@
     "express-session": "^1.17.3",
     "gapi": "0.0.3",
     "gapi-client": "0.0.3",
+    "google-spreadsheet": "^3.3.0",
     "http-proxy-middleware": "^2.0.6",
     "lodash": "^4.17.21",
     "ng-google-sheets-db": "^2.0.0",

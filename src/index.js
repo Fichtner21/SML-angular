@@ -34,8 +34,7 @@ app.post('/move-users-to-channels', async (req, res) => {
   } catch (err) {    
     res.status(500).send(err.message);
     }
-  });
-
+});
 
 app.post('/test-post', (req, res) => {
   console.log(req.body);

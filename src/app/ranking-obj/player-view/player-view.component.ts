@@ -133,7 +133,9 @@ export class PlayerViewComponent implements OnInit {
         let s1wars: string;
         let s1fpw: string;
         let active: string;
-        let place: string;        
+        let place: string;  
+        let ban: string; 
+        let banDue: string;     
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);               
 
@@ -233,6 +235,8 @@ export class PlayerViewComponent implements OnInit {
             s1wars = el.s1wars;
             s1fpw = el.s1fpw;
             place = el.place;
+            ban = el.ban;
+            banDue = el.ban_due;
           }
         });    
        
@@ -264,7 +268,9 @@ export class PlayerViewComponent implements OnInit {
           s1wars: s1wars,
           s1fpw: s1fpw,
           active: (active == 'FALSE') ? false : true,
-          place: place !== '' ? place : '-'
+          ban: (ban == 'FALSE') ? false : true,
+          place: place !== '' ? place : '-',
+          banDue: banDue
         }  
         // console.log('playerCard', playerCard);
         

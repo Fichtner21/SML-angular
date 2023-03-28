@@ -39,6 +39,7 @@ export class SingleMatchComponent implements OnInit {
   newComment: SingleComment = new SingleComment();
 
   @Output() lengthEmitter = new EventEmitter<any>();
+  @Input() comments: SingleComment[];
 
   constructor(
     private activatedRoute: ActivatedRoute, 
@@ -67,6 +68,9 @@ export class SingleMatchComponent implements OnInit {
       this.lengthEmitter.emit(length);
     });
 
+   this.comments$.pipe(
+      map((comments:any) => comments.length)
+    );
     // this.commentForm = this.formBuilder.group({
     //   name: ['', Validators.required],
     //   email: [''],

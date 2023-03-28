@@ -91,6 +91,7 @@ section {
   &__team {
     background-color: #2f3060;
     padding: 15px;
+    position: relative;    
 
     &--player {
       display: grid;
@@ -207,4 +208,21 @@ a {
 
 .preelo_war {  
   font-style: italic;
+}
+
+
+
+.PT:after {
+  background-image: url("/assets/images/flags_svg/PT.SVG"); 
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  
+  .match-row__team--player {
+    background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
+    background-size: 4px 4px; 
+  }
 }

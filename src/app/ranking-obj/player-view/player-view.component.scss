@@ -291,10 +291,7 @@
   // }
 
   .player-flag {
-    overflow: hidden;
-    // border-top: 1px solid #000;
-    // border-bottom: 1px solid #000;
-    // position: absolute;
+    overflow: hidden; 
     width: 100%;
     display: flex;
 
@@ -303,9 +300,7 @@
     }
   
     .ambilight {
-      margin: 0 auto; // just to center the box
-      // width: 400px;
-      // height: 30px;
+      margin: 0 auto; // just to center the box    
       padding: 5px; // add some space for the light
       position: relative; // to keep the .light by the .image
       display: flex;

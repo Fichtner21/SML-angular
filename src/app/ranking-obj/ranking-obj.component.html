@@ -50,8 +50,29 @@
                     <a routerLink="/obj-ranking/{{player.username}}">
                     {{ player.playername }}
                     <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
-                      <span attr.data-title="{{player.strike}} in Last war."></span>
-                    </div>
+                      <span attr.data-title="{{player.strike}} in Last war.
+                                            
+                      "></span>
+                      <!-- <span *ngIf="player.s1wars_win != 'NaN'" attr.data-title="{{ player.s1wars_win }} place in wars S#1"></span>
+                      <span *ngIf="player.s1fpw_win != 'NaN'" attr.data-title="{{ player.s1fpw_win }} place in FpW S#1"></span>
+                      <span *ngIf="player.s1ranking_win != 'NaN'" attr.data-title="{{ player.s1ranking_win }} rank in S#1"></span> -->
+                    </div>                  
+                    <ng-container *ngIf="(player.s1wars_win === 1 || player.s1fpw_win === 1 || player.s1ranking_win === 1)">
+                      <fa-icon [icon]="number1" class="number number1"></fa-icon>
+                    </ng-container>
+                    <ng-container *ngIf="(player.s1wars_win !== 1 && player.s1fpw_win !== 1 && player.s1ranking_win !== 1) && (player.s1wars_win && player.s1fpw_win && player.s1ranking_win)">
+                      <fa-icon [icon]="number3" class="number number3"></fa-icon>
+                    </ng-container>
+                    <ng-container *ngIf="(player.s1wars_win === 2 || player.s1fpw_win === 2 || player.s1ranking_win === 2)">
+                      <fa-icon [icon]="number2" class="number number2"></fa-icon>
+                    </ng-container>
+                    <ng-container *ngIf="(player.s1wars_win === 3 || player.s1fpw_win === 3 || player.s1ranking_win === 3) && !(player.s1wars_win === 2 || player.s1fpw_win === 2 || player.s1ranking_win === 2)">
+                      <fa-icon [icon]="number3" class="number number3"></fa-icon>
+                    </ng-container>
+                  
+                    
+                    
+                    
                   </a>              
                   </div>
                   <div class="item">

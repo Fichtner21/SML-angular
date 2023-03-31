@@ -6,7 +6,7 @@ import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { fa1, fa2, fa3, faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { parseFloat } from 'core-js/es/number';
 
@@ -39,6 +39,9 @@ export class RankingObjComponent implements OnInit {
 
   arrowUp = faArrowUp;
   arrowDown = faArrowDown;
+  number1 = fa1;
+  number2 = fa2;
+  number3 = fa3;  
   
   constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute) {
     // localStorage.setItem('info', 'less');
@@ -128,6 +131,8 @@ export class RankingObjComponent implements OnInit {
               minfragsperwar: name.fpwmin,
               s1wars: parseFloat(name.s1wars),
               s1fpw: Math.round(name.s1fpw * 100) / 100,
+              s2wars: parseFloat(name.s2wars),
+              s2fpw: Math.round(name.s2fpw * 100) / 100,
               // activity: this.searchPlayerActivity(name.username, v2), 
               activity: name.last30days, 
               // lastyear: this.pastYearActivity(name.username, v2),
@@ -136,12 +141,15 @@ export class RankingObjComponent implements OnInit {
               lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
               fragsperwar: Math.round(name.fpw * 100) / 100,
               inactive: name.active == 'FALSE' ? false : true,
-              ban: name.ban == 'TRUE' ? true : false            
+              ban: name.ban == 'TRUE' ? true : false,
+              s1wars_win: parseInt(name.s1wars_win),
+              s1fpw_win: parseInt(name.s1fpw_win),
+              s1ranking_win: parseInt(name.s1ranking_win)      
             };
             playerRowArray.push(lastWarDate); 
           }                   
         }     
-        // console.log('playerRowArray', playerRowArray)
+        console.log('playerRowArray', playerRowArray)
         return playerRowArray;         
       })
     );

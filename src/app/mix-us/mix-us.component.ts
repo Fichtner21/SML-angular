@@ -943,13 +943,13 @@ export class MixUsComponent implements OnInit {
     const payload = {
       content: nextMatch
     };
-    // this.http.post(webhookUrl, payload).subscribe({
-    //   next: (res) => {
-    //     this.notifier.notify('success', "Teams Send successful!")
-    //   }, error: (err) => {
-    //     this.notifier.notify('error', 'Something went wrong')
-    //   }
-    // });    
+    this.http.post(webhookUrl, payload).subscribe({
+      next: (res) => {
+        this.notifier.notify('success', "Teams Send successful!")
+      }, error: (err) => {
+        this.notifier.notify('error', 'Something went wrong')
+      }
+    });    
   } 
 
   isValid(): boolean {

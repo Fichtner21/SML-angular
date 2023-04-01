@@ -24,6 +24,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { RulesComponent } from './rules/rules.component';
 import { AboutNavComponent } from './about-nav/about-nav.component';
+import { SeasonsComponent } from './seasons/seasons.component';
 
 
 
@@ -37,7 +38,7 @@ export function createTranslateLoader(http: HttpClient){
     MapsComponent, 
     DownloadComponent, 
     LogComponent, 
-    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent, RulesComponent, AboutNavComponent
+    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent, RulesComponent, AboutNavComponent, SeasonsComponent
   ],
   imports: [
     CommonModule,      

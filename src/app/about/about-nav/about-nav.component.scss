@@ -10,7 +10,9 @@
   .container {
     margin: 0 auto;
     padding: 0 15px;
-    max-width: 1300px; 
+    max-width: 1300px;
+    display: flex;
+    flex-wrap: wrap; 
 
     :nth-child(n){
       border-right: 2px solid #ffffc8;

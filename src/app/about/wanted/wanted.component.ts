@@ -76,17 +76,40 @@ export class WantedComponent implements OnInit {
     this.allPlayers$.subscribe(players => {
       this.activePlayers = players.filter(player => player.s1wars > 0);
       // const averageS1wars = this.activePlayers.reduce((sum, player) => sum + player.s1wars, 0) / this.activePlayers.length;
+      // console.log('this.activePlayers', this.activePlayers)
+
+      // for (const [nationality, count] of this.activePlayers.entries()) {
+      //   // console.log('nationality', nationality)
+      //   // console.log('count', count)
+      //   if(count.nationality == 'PL'){
+      //     console.log(count.nationality)
+      //   }
+      //   // if (count === 'PL') {
+      //   //   console.log(`Nationality ${nationality} wystąpił ${count} razy.`);
+      //   // }
+      // }
+
+      // check nations of players and length
+      const nationalityCounts = this.activePlayers.reduce((nationalityMap, player) => {
+        const nationality = player.nationality;
+        const count = nationalityMap.get(nationality) || 0;
+        nationalityMap.set(nationality, count + 1);
+        return nationalityMap;
+      }, new Map());
+      
+      // console.log(nationalityCounts);
+
       this.activePlayers = this.activePlayers.filter(player => player.ban != 'TRUE')
-      const notBannedPlayers = 
-      console.log('ACTIVE', this.activePlayers)
+      // const notBannedPlayers = 
+      // console.log('ACTIVE', this.activePlayers)
       // Calculate average s1wars
       const sumS1wars = this.activePlayers.reduce((acc, player) => acc + parseFloat(player.s1wars), 0);
-      console.log('sumS1wars', sumS1wars)
+      // console.log('sumS1wars', sumS1wars)
       const averageS1wars = sumS1wars / this.activePlayers.length;
-      console.log('avarageS1wars', averageS1wars)
+      // console.log('avarageS1wars', averageS1wars)
       // Filter out players with s1wars < averageS1wars
       const aboveAveragePlayers = this.activePlayers.filter(player => parseFloat(player.s1wars) > averageS1wars / 2);
-      console.log('aboveAveragePlayers', aboveAveragePlayers)
+      // console.log('aboveAveragePlayers', aboveAveragePlayers)
       // const shuffledPlayers = shuffle(aboveAveragePlayers);
       const shuffledPlayers = aboveAveragePlayers.sort((player1, player2) => parseFloat(player2.s1wars) - parseFloat(player1.s1wars));
 

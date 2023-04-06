@@ -204,6 +204,57 @@ a {
   background-color: #40415f;  
   transition: .4s all;
 
+  &:nth-child(-n+3){
+    .playername {
+      // letter-spacing: 3px;
+    }
+  }
+
+  &:first-child {
+    .playername {
+      color: #C9B037; 
+      // text-shadow:   
+      // 0 0 7px #C9B037,
+      // 0 0 10px #C9B037,
+      // 0 0 21px #fff,
+      // 0 0 42px #0fa,
+      // 0 0 82px #0fa,
+      // 0 0 92px #0fa,
+      // 0 0 102px #0fa,
+      // 0 0 151px #0fa;;
+    }
+  }
+
+  &:nth-child(2){
+    .playername {
+      color: #D7D7D7;
+      // text-shadow:   
+      // 0 0 7px #D7D7D7,
+      // 0 0 10px #D7D7D7,
+      // 0 0 21px #fff,
+      // 0 0 42px #D7D7D7,
+      // 0 0 82px #D7D7D7,
+      // 0 0 92px #D7D7D7,
+      // 0 0 102px #D7D7D7,
+      // 0 0 151px #D7D7D7;;
+    }
+  }
+
+  &:nth-child(3){
+    .playername {
+      color: #AD8A56;
+      // text-shadow:   
+      // 0 0 7px #AD8A56,
+      // 0 0 10px #AD8A56,
+      // 0 0 21px #fff,
+      // 0 0 42px #AD8A56,
+      // 0 0 82px #AD8A56,
+      // 0 0 92px #AD8A56,
+      // 0 0 102px #AD8A56,
+      // 0 0 151px #AD8A56;;
+    }
+  }
+
   &:hover {
     box-shadow: inset 0 0 10px #39533C;
   }
@@ -228,7 +279,7 @@ a {
 
       span {
         font-weight: 700;
-        text-decoration: underline;
+        // text-decoration: underline;
         font-size: 15px;     
         margin-left: 5px;                 
       }
@@ -239,6 +290,8 @@ a {
     padding: 5px 3px;
     position: relative;   
     font-size: 18px;
+
+    
 
     @media screen and (max-width: 800px){
       font-size:14px;
@@ -251,6 +304,7 @@ a {
 
     img {
       margin: 5px;
+      width: 22px;
       border: 1px solid #000;
     }    
       
@@ -485,68 +539,69 @@ a {
     background-color: #40415f;
   }
 
-  // :nth-child(1){
-  //   :nth-child(2) {
-  //     a div {
-  //       &:before {
-  //         position: absolute;
-  //         right: -13px;
-  //         top: -5px;
-  //         content: '';
-  //         background-image: url('/assets/images/ladder1.gif');          
-  //         width: 10px;
-  //         height: 13px;
-  //         z-index: 9;
-  //       }
+  :nth-child(1){
+    font-weight: 700;
+    :nth-child(2) {
+      a div {
+        &:before {
+          position: absolute;
+          right: -13px;
+          top: -5px;
+          content: '';
+          background-image: url('/assets/images/ladder1.gif');          
+          width: 10px;
+          height: 13px;
+          z-index: 9;
+        }
 
-  //       &:after {
-  //         right: -27px !important;
-  //       }
-  //     }
-  //   }
-  // }
+        &:after {
+          right: -27px !important;
+        }
+      }
+    }
+  }
 
-  // :nth-child(2){
-  //   :nth-child(2) {
-  //     a div {
-  //       &:before {
-  //         position: absolute;
-  //         right: -13px;
-  //         top: -5px;
-  //         content: '';
-  //         background-image: url('/assets/images/ladder2.gif');          
-  //         width: 10px;
-  //         height: 13px;
-  //         z-index: 9;
-  //       }
+  :nth-child(2){
+    :nth-child(2) {
+      a div {
+        &:before {
+          position: absolute;
+          right: -13px;
+          top: -5px;
+          content: '';
+          background-image: url('/assets/images/ladder2.gif');          
+          width: 10px;
+          height: 13px;
+          z-index: 9;
+        }
 
-  //       &:after {
-  //         right: -27px !important;
-  //       }
-  //     }
-  //   }
-  // }
+        &:after {
+          right: -27px !important;
+        }
+      }
+    }
+  }
 
-  // :nth-child(3){
-  //   :nth-child(2) {
-  //     a div {
-  //       &:before {
-  //         position: absolute;
-  //         right: -13px;
-  //         top: -5px;
-  //         content: '';
-  //         background-image: url('/assets/images/ladder3.gif');          
-  //         width: 10px;
-  //         height: 13px;
-  //         z-index: 9;
-  //       }
+  :nth-child(3){
+    :nth-child(2) {
+      a div {
+        &:before {
+          position: absolute;
+          right: -13px;
+          top: -5px;
+          content: '';
+          background-image: url('/assets/images/ladder3.gif');          
+          width: 10px;
+          height: 13px;
+          z-index: 9;
+        }
 
-  //       &:after {
-  //         right: -27px !important;
-  //       }
-  //     }
-  //   }
-  // } 
+        &:after {
+          right: -27px !important;
+        }
+      }
+    }
+  } 
 
   a {
     display: flex;
@@ -708,5 +763,29 @@ a {
     @media screen and (max-width: 800px){
       display: none;
     }
+  }
+}
+
+.big-name {       
+  // bottom: 5%;
+  // position: absolute;
+  // left: 50%;
+  // transform: translate(-50%, 0);
+  // right: 5%;
+  margin: 0 auto;
+  font-size: 200px;
+//     writing-mode: tb-rl;
+//     transform: rotate(
+// 180deg);
+  background-color: black;
+  color: transparent;
+  text-shadow: 0px 10px 30px #ffffc0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-align: center;
+  opacity: .3;
+
+  @media screen and (max-width: 700px){
+    font-size: 50px;
   }
 }

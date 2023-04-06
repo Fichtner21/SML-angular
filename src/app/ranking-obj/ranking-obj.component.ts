@@ -149,7 +149,7 @@ export class RankingObjComponent implements OnInit {
             playerRowArray.push(lastWarDate); 
           }                   
         }     
-        console.log('playerRowArray', playerRowArray)
+        // console.log('playerRowArray', playerRowArray)
         return playerRowArray;         
       })
     );
@@ -438,7 +438,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'DESC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s1wars) - parseFloat(a.s1wars))
+        res => res.sort((a:any,b:any) => parseFloat(b.s2wars) - parseFloat(a.s2wars))
       )
     )       
   }
@@ -448,7 +448,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'ASC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s1wars) - parseFloat(b.s1wars))
+        res => res.sort((a:any,b:any) => parseFloat(a.s2wars) - parseFloat(b.s2wars))
       )
     )       
   }
@@ -457,7 +457,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'DESC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s1fpw) - parseFloat(a.s1fpw))
+        res => res.sort((a:any,b:any) => parseFloat(b.s2fpw) - parseFloat(a.s2fpw))
       )
     )       
   }
@@ -467,7 +467,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'ASC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s1fpw) - parseFloat(b.s1fpw))
+        res => res.sort((a:any,b:any) => parseFloat(a.s2fpw) - parseFloat(b.s2fpw))
       )
     )       
   }

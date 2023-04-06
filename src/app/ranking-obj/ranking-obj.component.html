@@ -24,11 +24,11 @@
               FpW
             </div> -->
             <div style="display: block;">              
-              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" title="Frags per War in Season #1: 01-01-2023 - 31-03-2023">S#1 FpW<span></span></div>
+              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" title="sort by Frags per War in Season #2: 01-04-2023 - 30-06-2023">s2 FpW<span></span></div>
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)" title="sort by Frags per War">FpW total:</div>
             </div>
             <div style="display:block;">              
-              <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" title="Wars in Season #1: 01-01-2023 - 31-03-2023">S#1 Wars<span></span></div>
+              <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" title="sort by Wars in Season #2: 01-04-2023 - 30-06-2023">s2 Wars<span></span></div>
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)" title="sort by Wars">{{ 'ranking.wars' | translate }} total:</div>
             </div> 
                 <!-- <ng-container *ngIf="booleanVar; then up; else down"></ng-container>
@@ -47,7 +47,13 @@
                 <div class="character-card" [ngClass]="{'cyan': player.meeting == 1 }" *ngIf="player.inactive && !player.ban">                
                   <div class="item">{{ i+1 }}</div>
                   <div class="item">
-                    <a routerLink="/obj-ranking/{{player.username}}">
+                    <a routerLink="/obj-ranking/{{player.username}}" class=" playername" [title]="player.username === 'evoltnz'
+                    ? 'Winner S#1'
+                    : player.username === 'tricky'
+                        ? 'Second in S#1'
+                        : player.username === 'zielony'
+                            ? 'Third in S#1'
+                            : ''">
                     {{ player.playername }}
                     <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
                       <span attr.data-title="{{player.strike}} in Last war.
@@ -66,11 +72,13 @@
                     <ng-container *ngIf="(player.s1wars_win === 2 || player.s1fpw_win === 2 || player.s1ranking_win === 2)">
                       <fa-icon [icon]="number2" class="number number2"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="(player.s1wars_win === 3 || player.s1fpw_win === 3 || player.s1ranking_win === 3) && !(player.s1wars_win === 2 || player.s1fpw_win === 2 || player.s1ranking_win === 2)">
+                    <ng-container *ngIf="(player.s1wars_win === 3 || player.s1fpw_win === 3 || player.s1ranking_win === 3) && !(player.s1wars_win === 2 || player.s1fpw_win === 2 || player.s1ranking_win === 2) && !(player.s1wars_win === 1 || player.s1fpw_win === 1 || player.s1ranking_win === 1)">
                       <fa-icon [icon]="number3" class="number number3"></fa-icon>
                     </ng-container>
-                  
-                    
+                    <!-- <ng-container *ngIf="player.username === 'zielony'">
+                      <fa-icon [icon]="number3" class="number number3"></fa-icon>
+                    </ng-container>
+                     -->
                     
                     
                   </a>              
@@ -79,19 +87,27 @@
                     <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
                   </div>
                   <div class="item">{{ player.ranking | number: '.2-2' }}</div>
-                  <!-- <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
-                    {{ player.fragsperwar | number: '.2-2' }}              
-                  </div> -->
+                 
                   <div class="item-block" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
+                    <div title="Season FpW" *ngIf="!isInfo">{{ player.s2fpw }}</div>
+                    <div title="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s2fpw > player.fragsperwar), 'draw-streak-pre': (player.s2fpw == player.fragsperwar), 'down-streak-pre': (player.s2fpw < player.fragsperwar)}">{{ player.s2fpw }}</div>
+
+                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s2fpw < player.fragsperwar), 'draw-streak-post': (player.s2fpw == player.fragsperwar), 'down-streak-post': (player.s2fpw > player.fragsperwar)}"> <span title="Total FpW">{{ player.fragsperwar }}</span></div>
+                  </div>
+                  <!-- <div class="item-block" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
                     <div title="Season FpW" *ngIf="!isInfo">{{ player.s1fpw }}</div>
                     <div title="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s1fpw > player.fragsperwar), 'draw-streak-pre': (player.s1fpw == player.fragsperwar), 'down-streak-pre': (player.s1fpw < player.fragsperwar)}">{{ player.s1fpw }}</div>
 
                     <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s1fpw < player.fragsperwar), 'draw-streak-post': (player.s1fpw == player.fragsperwar), 'down-streak-post': (player.s1fpw > player.fragsperwar)}"> <span title="Total FpW">({{ player.fragsperwar }})</span></div>
-                  </div>
+                  </div> -->
                   <div class="item-block">
+                    <div title="Season played wars" >{{ player.s2wars }}</div>
+                    <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars">{{ player.wars }}</span></div>
+                  </div>
+                  <!-- <div class="item-block">
                     <div title="Season played wars" >{{ player.s1wars }}</div>
                     <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars">({{ player.wars }})</span></div>
-                  </div>
+                  </div> -->
                   <div class="item new">{{ player.lastWarDate }}</div>
                   <div class="item name act">
                     <div class="act-month" [ngClass]="{
@@ -194,6 +210,9 @@
           </div> 
           <div>wars in last year.</div>                   
         </div>
+      </div>
+      <div class="container">
+        <div class="big-name">Season #2</div> 
       </div>
     </section>
   </ng-container>

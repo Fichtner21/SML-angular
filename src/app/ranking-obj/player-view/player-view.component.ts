@@ -8,6 +8,7 @@ import { PlayersApiService } from 'src/app/services/players-api.service';
 import { Chart, ChartConfiguration, ChartDataSets, ChartOptions } from 'chart.js';
 import {ThemePalette} from '@angular/material/core';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -46,7 +47,7 @@ export class PlayerViewComponent implements OnInit {
   mostOftenPlayed = [];
   currentRanking = [];
  
-  constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef, private router: Router) {
+  constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef, private router: Router, private datePipe: DatePipe) {
     // console.log('activatedRoute PlayerView =>', this.activatedRoute);     
    }
 
@@ -128,6 +129,7 @@ export class PlayerViewComponent implements OnInit {
         let clanHistory: string;
         let frags: any[] = [];
         let listwars: any[] = [];
+        let listwars2season: any[] = [];
         let rankings: any[] = [];
         let resultPerPlayer: any[] = [];
         let s1wars: string;
@@ -135,7 +137,10 @@ export class PlayerViewComponent implements OnInit {
         let active: string;
         let place: string;  
         let ban: string; 
-        let banDue: string;     
+        let banDue: string;   
+        let s1wars_win: number;
+        let s1fpw_win: number;
+        let s1ranking_win: number; 
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);               
 
@@ -218,7 +223,10 @@ export class PlayerViewComponent implements OnInit {
                 rankHistory = Number(destructObjPlayers1[index + 3]);
               }
             });
+           
             listwars.push(Number(el.idwar));
+           
+            
             rankings.push(Math.round(rankHistory * 100) / 100);
             playerArray.push([el.idwar, el.timestamp, fragPerWar]);           
             timestampArray.push(new Date(el.timestamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }));            
@@ -237,6 +245,9 @@ export class PlayerViewComponent implements OnInit {
             place = el.place;
             ban = el.ban;
             banDue = el.ban_due;
+            s1wars_win = parseInt(el.s1wars_win),
+            s1fpw_win = parseInt(el.s1fpw_win),
+            s1ranking_win = parseInt(el.s1ranking_win) 
           }
         });    
        
@@ -270,7 +281,10 @@ export class PlayerViewComponent implements OnInit {
           active: (active == 'FALSE') ? false : true,
           ban: (ban == 'FALSE') ? false : true,
           place: place !== '' ? place : '-',
-          banDue: banDue
+          banDue: banDue,
+          s1wars_win: s1wars_win,
+          s1fpw_win: s1fpw_win,
+          s1ranking_win: s1ranking_win
         }  
         // console.log('playerCard', playerCard);
         
@@ -278,6 +292,16 @@ export class PlayerViewComponent implements OnInit {
       })
     )  
   } 
+
+  filterObjects(list) {
+    const startDate = new Date('2023-04-01T00:00:00');
+    const endDate = new Date('2023-06-30T23:59:00');
+
+    return list.filter(obj => {
+      const timestampDate = new Date(obj.timestamp);
+      return timestampDate >= startDate && timestampDate <= endDate;
+    });
+  }
 
   clickEvent(){
     this.status = !this.status;    

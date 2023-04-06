@@ -654,11 +654,59 @@ export class MixUsComponent implements OnInit {
   //   return [firstArray, secondArray];
   // }
 
+  // splitNationalities(array) {
+  //   let flags = {};
+  //   let firstArray = [];
+  //   let secondArray = [];
+  //   localStorage.setItem('mixway', 'NT'); 
+  
+  //   // Liczymy ile obiektów posiada każdą wartość flagi
+  //   array.forEach(obj => {
+  //     if (!flags[obj.flag]) flags[obj.flag] = 0;
+  //     flags[obj.flag]++;
+  //   });
+  
+  //   // Dla każdej wartości flagi przypisujemy do jednej z dwóch tablic
+  //   Object.keys(flags).forEach(flag => {
+  //     let count = flags[flag];
+  //     let targetArray = firstArray.length <= secondArray.length ? firstArray : secondArray;
+      
+  //     for (let i = 0; i < count; i++) {
+  //       let obj = array.find(obj => obj.flag === flag);
+  //       targetArray.push(obj);
+  //       array.splice(array.indexOf(obj), 1);
+  //     }
+  //   });
+  //   this.array1 = firstArray;
+  //   this.array2 = secondArray;
+  //   // console.log('firstArray', firstArray)
+  //   // console.log('secondArray', secondArray)
+  //   this.sumTeam1 = this.sumRanking(firstArray)
+  //   this.sumTeam2 = this.sumRanking(secondArray)
+    
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+  //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
+   
+  //   this.addArrayToUrl(firstArray, secondArray)
+  //   return [firstArray, secondArray];
+  // }
+
   splitNationalities(array) {
     let flags = {};
     let firstArray = [];
     let secondArray = [];
     localStorage.setItem('mixway', 'NT'); 
+  
+    // Check if the length of the input array is even
+    let isEven = array.length % 2 === 0;
+    if (!isEven) {
+      // If it is not even, add a dummy object to the array
+      let dummy = { flag: 'DUMMY_FLAG' };
+      array.push(dummy);
+    }
   
     // Liczymy ile obiektów posiada każdą wartość flagi
     array.forEach(obj => {
@@ -670,29 +718,42 @@ export class MixUsComponent implements OnInit {
     Object.keys(flags).forEach(flag => {
       let count = flags[flag];
       let targetArray = firstArray.length <= secondArray.length ? firstArray : secondArray;
-      
+  
       for (let i = 0; i < count; i++) {
         let obj = array.find(obj => obj.flag === flag);
         targetArray.push(obj);
         array.splice(array.indexOf(obj), 1);
       }
     });
+  
+    // Check if the lengths of the output arrays are different
+    if (!isEven && firstArray.length !== secondArray.length) {
+      // If they are different and we added a dummy object, remove it from the longer array and add it to the input array
+      let longerArray = firstArray.length > secondArray.length ? firstArray : secondArray;
+      let dummyIndex = longerArray.findIndex(obj => obj.flag === 'DUMMY_FLAG');
+      let dummy = longerArray[dummyIndex];
+      longerArray.splice(dummyIndex, 1);
+      array.splice(array.indexOf(dummy), 1);
+    }
+  
     this.array1 = firstArray;
     this.array2 = secondArray;
     // console.log('firstArray', firstArray)
     // console.log('secondArray', secondArray)
     this.sumTeam1 = this.sumRanking(firstArray)
     this.sumTeam2 = this.sumRanking(secondArray)
-    
+  
     const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
     const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
     this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
-   
+  
     this.addArrayToUrl(firstArray, secondArray)
     return [firstArray, secondArray];
   }
+  
+
   // splitRanking2(array) {
   //   //NO BLADY and ILLU same team
   //   array.sort((a, b) => parseFloat(b.ranking.replace(',', '')) - parseFloat(a.ranking.replace(',', '')));

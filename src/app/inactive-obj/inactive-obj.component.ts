@@ -37,8 +37,8 @@ export class InactiveObjComponent implements OnInit {
     { 'infoCode': 'more', 'infoName': 'More' },      
   ];
 
-  currentInfo: any = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';  
-  infoCode = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';
+  currentInfo: any = localStorage.getItem('info2') ? localStorage.getItem('info2') : 'more';  
+  infoCode = localStorage.getItem('info2') ? localStorage.getItem('info2') : 'more';
 
   constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute){}
 
@@ -102,6 +102,7 @@ export class InactiveObjComponent implements OnInit {
               maxfragsperwar: name.fpwmax,
               minfragsperwar: name.fpwmin,
               s1wars: name.s1wars,
+              s2wars: name.s2wars,
               // activity: this.searchPlayerActivity(name.username, v2), 
               activity: name.last30days, 
               // lastyear: this.pastYearActivity(name.username, v2),
@@ -342,11 +343,11 @@ export class InactiveObjComponent implements OnInit {
 
   infoChange($event){
     this.currentInfo = $event;
-    localStorage.setItem('info', this.currentInfo);
+    localStorage.setItem('info2', this.currentInfo);
   }
 
   get isInfo(){
-    let is_info = localStorage.getItem('info');
+    let is_info = localStorage.getItem('info2');
     if(is_info === 'more'){
       return true;
     }else{

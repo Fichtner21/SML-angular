@@ -227,23 +227,99 @@ export class HistoryObjComponent implements OnInit {
             comments: this.commentsService.getCommentsForMatch(match.idwar, '_').snapshotChanges().subscribe(data => data.length)       
           }
 
+          // const newObj = {
+          //   ...matchRow,
+          
+          //   flag: 
+          //   (matchRow.t1p1playername && matchRow.t1p2playername &&
+          //           matchRow.t1p1playername.flag === matchRow.t1p2playername.flag &&
+          //           matchRow.t1p2playername.flag)
+          //         ? matchRow.t1p1playername.flag
+          //         : ''
+          // };
+          // let newObj = {
+          //   ...matchRow,
+          //   flag: ''
+          // };
+          
+          // const playersT1Flag = [];
+          
+          // for (let i = 1; i <= 7; i++) {
+          //   const playerName = matchRow[`t1p${i}playername`];
+          //   if (playerName) {
+          //     console.log('playerName', playerName)
+          //     playersT1Flag.push(playerName);
+          //   }
+          // }
+          
+          // if (players.length > 0) {
+          //   const firstPlayerFlag = playersT1Flag[0].flag;
+          //   console.log('firstPlayerFlag', firstPlayerFlag)
+          //   const allPlayersHaveSameFlag = playersT1Flag.every(player => player.flag === firstPlayerFlag);
+
+          //   console.log('allPlayersHaveSameFlag', allPlayersHaveSameFlag)
+            
+          //   if (allPlayersHaveSameFlag) {
+          //     newObj.flag = firstPlayerFlag;
+          //   }
+          // }
           const newObj = {
             ...matchRow,
-          
-            flag: 
-            (matchRow.t1p1playername && matchRow.t1p2playername &&
-                    matchRow.t1p1playername.flag === matchRow.t1p2playername.flag &&
-                    matchRow.t1p2playername.flag)
-                  ? matchRow.t1p1playername.flag
-                  : ''
+            flag: '',
+            flag2: ''
           };
           
+          let firstPlayerFlag = '';
+          let firstPlayerFlag2 = '';
+
+          for (let i = 1; i <= 7; i++) {
+            const playerName = matchRow[`t1p${i}playername`];
+            
+            if (playerName) {
+              const playerFlag = playerName.flag;
+              
+              if (!firstPlayerFlag) {
+                firstPlayerFlag = playerFlag;
+              } else if (playerFlag && playerFlag !== firstPlayerFlag) {
+                // Gracze mają różne flagi, więc nie ustawiamy flagi w newObj.
+                firstPlayerFlag = '';
+                break;
+              }
+            }
+          }
+
+          for (let i = 1; i <= 7; i++) {
+            const playerName = matchRow[`t2p${i}playername`];
+            
+            if (playerName) {
+              const playerFlag = playerName.flag;
+              
+              if (!firstPlayerFlag2) {
+                firstPlayerFlag2 = playerFlag;
+              } else if (playerFlag && playerFlag !== firstPlayerFlag2) {
+                // Gracze mają różne flagi, więc nie ustawiamy flagi w newObj.
+                firstPlayerFlag2 = '';
+                break;
+              }
+            }
+          }
+
+          if (firstPlayerFlag) {
+            // Ustawiamy flagę w newObj tylko wtedy, gdy wszyscy niepuste gracze mają tę samą flagę.
+            newObj.flag = firstPlayerFlag;
+          }          
+          if (firstPlayerFlag2) {
+            // Ustawiamy flagę w newObj tylko wtedy, gdy wszyscy niepuste gracze mają tę samą flagę.
+            newObj.flag2 = firstPlayerFlag2;
+          }          
 
           matchRowArray.push(newObj);          
           
         }
-        console.log('M =>', matchRowArray[1965]);
-        console.log('M 2=>', matchRowArray[1923]);
+        // console.log('M =>', matchRowArray[2001]);
+        // console.log('M 2 =>', matchRowArray[2002]);
+        
+        // console.log('M 2=>', matchRowArray[1923]);
         return matchRowArray.reverse();
       }),
       // tap(x => console.log('xx', x))

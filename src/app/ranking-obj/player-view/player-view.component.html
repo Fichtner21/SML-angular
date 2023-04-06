@@ -68,22 +68,23 @@
                 </my-tab>
               </my-tabs> -->
               <mat-tab-group animationDuration="0ms">
+                <mat-tab label="Season #2"> 
+                  <h2>01.04.2023 - 30.06.2023</h2>                  
+                </mat-tab>    
                 <mat-tab label="Season #1">
                   <h2>01.01.2023 - 31.03.2023</h2>  
                   <h3>Achievements:</h3>
                   <ul>
-                    <li>-</li>
+                    <li>{{ playerDetails.s1ranking_win }} rank in Season 1!</li>
+                    <li>{{ playerDetails.s1fpw_win }} Avarage Frags per War in Season 1!</li>
+                    <li>{{ playerDetails.s1wars_win }} played Wars in Season 1!</li>
                   </ul>
                   <h3>Statistics:</h3>
                   <div class="stat-units">Played wars: <span>{{ playerDetails.s1wars }}</span></div>          
                   <div class="stat-units" title="Avarage frags per war">Avg. frags per war: <span> {{ playerDetails.s1fpw }}</span></div>          
                   <div class="stat-units" title="Avarage frags per war">Current ranking: <span> {{ playerDetails.place }} / {{ numOfPlayers$ | async }}</span></div>          
-                </mat-tab>
-                <mat-tab label="Season #2"> 
-                  <h2>01.04.2023 - 30.06.2023</h2>                  
-                </mat-tab>              
-              </mat-tab-group>   
-
+                </mat-tab>                          
+              </mat-tab-group>
             </ng-container>                
           </div> 
         </div>

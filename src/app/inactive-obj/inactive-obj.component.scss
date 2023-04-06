@@ -226,19 +226,25 @@ a {
     padding: 5px 3px;
     position: relative;   
     font-size: 18px;
-    flex-direction: column;
+    // flex-direction: column;
+    display: flex;
 
     @media screen and (max-width: 800px){
       font-size:14px;      
     }
 
+    .total {
+      margin-right: 5px;
+    }
+
     .season-wars {
       font-size: 12px;
       font-style: italic;
+      color: gray;
 
       span {
         font-weight: 700;
-        text-decoration: underline;
+        // text-decoration: underline;
         font-size: 15px;                      
       }
     }

@@ -65,9 +65,14 @@
                   <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
                     {{ player.fragsperwar | number: '.2-2' }}              
                   </div>
-                  <div class="item-block">
+                  <!-- <div class="item-block">
                     <div>{{ player.wars }}</div>
                     <div class="season-wars" *ngIf="isInfo">(season #1: <span>{{ player.s1wars }}</span>)</div>
+                  </div> -->
+                  <div class="item-block">
+                    <div title="Season played wars" ><span class="total">{{ player.wars }}</span></div>
+                    <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars in Season 1" class="total">s1: {{ player.s1wars }}</span></div>
+                    <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars in Season 2">s2: {{ player.s2wars }}</span></div>
                   </div>
                   <div class="item new">{{ player.lastWarDate }}</div>
                   <div class="item name act">                    
@@ -89,7 +94,16 @@
                 </option>
               </select>
             </form>
-          </div>        
+          </div> 
+          <!-- <mat-form-field class="more-less">
+            <mat-label>{{ isInfo == true ? 'Hide season info' : 'Show season info' }}</mat-label>
+            <mat-select name="infoChange" [(ngModel)]="infoCode" (selectionChange)="infoChange($event)">
+              <mat-option disabled selected>Choose a state</mat-option>
+              <mat-option class="language-select" *ngFor="let item of infos" [value]='item.infoCode'>
+                {{ item.infoName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>        -->
         </div>  
         <div class="cont banned">
           <h2>Shame List</h2>
@@ -155,8 +169,9 @@
                     {{ player.fragsperwar | number: '.2-2' }}              
                   </div>
                   <div class="item-block">
-                    <div>{{ player.wars }}</div>
-                    <div class="season-wars" *ngIf="isInfo">(season #1: <span>{{ player.s1wars }}</span>)</div>
+                    <div title="Season played wars" ><span class="total">{{ player.wars }}</span></div>
+                    <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars in Season 1" class="total">s1: {{ player.s1wars }}</span></div>
+                    <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars in Season 2">s2: {{ player.s2wars }}</span></div>
                   </div>
                   <div class="item new">{{ player.lastWarDate }}</div>
                   <div class="item name act">                    

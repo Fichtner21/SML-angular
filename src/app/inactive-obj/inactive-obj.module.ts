@@ -11,6 +11,9 @@ import { InactiveViewResolve } from './inactive-view/resolver/inactive-view.reso
 import { SortByOrderPipe } from '../sort-by-order.pipe';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+
 
 @NgModule({
   declarations: [
@@ -25,6 +28,8 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule,
     InactiveObjRoutingModule,
     FormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
     NgHttpLoaderModule.forRoot(),
   ],
   providers: [

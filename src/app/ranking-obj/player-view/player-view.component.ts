@@ -245,9 +245,9 @@ export class PlayerViewComponent implements OnInit {
             place = el.place;
             ban = el.ban;
             banDue = el.ban_due;
-            s1wars_win = parseInt(el.s1wars_win),
-            s1fpw_win = parseInt(el.s1fpw_win),
-            s1ranking_win = parseInt(el.s1ranking_win) 
+            s1wars_win = el.s1wars_win,
+            s1fpw_win = el.s1fpw_win,
+            s1ranking_win = el.s1ranking_win 
           }
         });    
        
@@ -282,11 +282,11 @@ export class PlayerViewComponent implements OnInit {
           ban: (ban == 'FALSE') ? false : true,
           place: place !== '' ? place : '-',
           banDue: banDue,
-          s1wars_win: s1wars_win,
-          s1fpw_win: s1fpw_win,
-          s1ranking_win: s1ranking_win
+          s1wars_win: s1wars_win ? s1wars_win : '',
+          s1fpw_win: s1fpw_win ? s1fpw : '',
+          s1ranking_win: s1ranking_win ? s1ranking_win : ''
         }  
-        // console.log('playerCard', playerCard);
+        console.log('playerCard', playerCard);
         
         return playerCard;
       })

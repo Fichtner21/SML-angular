@@ -74,15 +74,26 @@
                 <mat-tab label="Season #1">
                   <h2>01.01.2023 - 31.03.2023</h2>  
                   <h3>Achievements:</h3>
-                  <ul>
-                    <li>{{ playerDetails.s1ranking_win }} rank in Season 1!</li>
-                    <li>{{ playerDetails.s1fpw_win }} Avarage Frags per War in Season 1!</li>
-                    <li>{{ playerDetails.s1wars_win }} played Wars in Season 1!</li>
+                  <ul class="achievements">
+                    <!-- <ng-container *ngIf="playerDetails.s1ranking_win !== ''; then; topR; else downR"></ng-container>
+                    <ng-template #topR> -->
+                      <!-- <li>{{ playerDetails.s1ranking_win }} rank in Season 1.</li> -->
+                      <li><span>Rank:</span> {{ playerDetails.s1ranking_win !== '' ? playerDetails.s1ranking_win : ' Out of top ten rank' }} in Season 1.</li>
+                      <li><span>Avarage frags per War:</span>{{ playerDetails.s1fpw_win !== '' ? playerDetails.s1fpw_win : ' Out of top ten Avg. FpW' }} in Season 1.</li>
+                      <li><span>Played Wars:</span>{{ playerDetails.s1wars_win !== '' ? playerDetails.s1wars_win : ' Out of top ten Played Wars' }} in Season 1.</li>
+
+                    <!-- </ng-template>
+                    <ng-template #downR>
+                      <li>Lower RANKING than the top ten rank in Season 1.</li>
+                    </ng-template> -->
+                    
+                    <!-- <li>{{ playerDetails.s1fpw_win }} Avarage Frags per War in Season 1!</li>
+                    <li>{{ playerDetails.s1wars_win }} played Wars in Season 1!</li> -->
                   </ul>
                   <h3>Statistics:</h3>
                   <div class="stat-units">Played wars: <span>{{ playerDetails.s1wars }}</span></div>          
                   <div class="stat-units" title="Avarage frags per war">Avg. frags per war: <span> {{ playerDetails.s1fpw }}</span></div>          
-                  <div class="stat-units" title="Avarage frags per war">Current ranking: <span> {{ playerDetails.place }} / {{ numOfPlayers$ | async }}</span></div>          
+                  <!-- <div class="stat-units" title="Avarage frags per war">Current ranking: <span> {{ playerDetails.place }} / {{ numOfPlayers$ | async }}</span></div>           -->
                 </mat-tab>                          
               </mat-tab-group>
             </ng-container>                

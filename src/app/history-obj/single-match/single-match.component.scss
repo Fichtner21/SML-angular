@@ -247,6 +247,11 @@ section {
     grid-template-columns: 2fr 1fr 1fr;
     gap: 20px;    
 
+    @media screen and (max-width: 900px){
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
     ::ng-deep .mat-form-field-flex {
       background-color: lighten(#40415f, 40%);
       padding: 5px;

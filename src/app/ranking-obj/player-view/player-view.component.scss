@@ -403,3 +403,13 @@ canvas {
 .mat-ink-bar {
   background-color: #ffffc0 !important;
 }
+
+.achievements {
+  li {
+    font-weight: 400;
+    span {
+      font-weight: 700;
+      text-decoration: underline;
+    }
+  }
+}

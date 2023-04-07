@@ -16,7 +16,7 @@
                 <!-- <div>{{ getCommentsForMatch(match.idwar) | json }}</div> -->
                <!-- <div>{{ match.comments }}</div> -->
               </div>
-              <div class="match-row__team" [class]="match.flag ? match.flag : ''" style="background-image: url(/assets/images/flags_svg/{{match.flag}}.SVG); background-size: 20% 20%; background-repeat: no-repeat;">
+              <div class="match-row__team" [class]="match.flag ? match.flag : ''" [style.background-image]="match.flag ? 'url(/assets/images/flags_svg/' + match.flag + '.SVG)' : ''" [style.background-size]="match.flag ? '20% 20%' : ''" [style.background-repeat]="match.flag ? 'no-repeat' : ''">
                 <div class="teamrounds">{{ match.t1roundswon }}</div>
                 <div class="teaminfo">
                   <div>preELO</div>
@@ -89,7 +89,8 @@
                   </div>                   
                 </div>                                -->
               </div>
-              <div class="match-row__team" [class]="match.flag2 ? match.flag2 : ''" style="background-image: url(/assets/images/flags_svg/{{match.flag2}}.SVG); background-size: 20% 20%; background-repeat: no-repeat; background-position-x: right;">
+              <div class="match-row__team" [class]="match.flag2 ? match.flag2 : ''" [style.background-image]="match.flag2 ? 'url(/assets/images/flags_svg/' + match.flag2 + '.SVG)' : ''" [style.background-size]="match.flag2 ? '20% 20%' : ''" [style.background-repeat]="match.flag2 ? 'no-repeat' : ''">
+
                 <div class="teamrounds">{{ match.t2roundswon }}</div>
                 <div class="teaminfo">
                   <div>preELO</div>

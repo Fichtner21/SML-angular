@@ -40,6 +40,7 @@ export class AppComponent implements OnInit {
   currentLanguage: any = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';  
   languageCode = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';
   monthPlaying: any;  
+  isMenuOpen = false;
 
   constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router, private oAuthService: OAuthService) {
     translateService.setDefaultLang(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');    
@@ -104,7 +105,12 @@ export class AppComponent implements OnInit {
   } 
 
   public toggleMenu(){ 
-    document.getElementById('nav').classList.toggle('block_class');    
+    // document.getElementById('nav').classList.toggle('block_class');    
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  public closeMenu() {
+    this.isMenuOpen = false;
   }
 
   get isAdmin(){

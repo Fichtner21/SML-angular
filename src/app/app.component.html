@@ -11,16 +11,16 @@
       </svg>
     </div>
   </div>    
-  <div class="nav" id="nav">
+  <div class="nav" id="nav" [ngClass]="{'block_class': isMenuOpen}">
     <div class="menu">
-      <a routerLink="" routerLinkActive="active">{{ 'nav.home' | translate }}</a>
-      <a routerLink="obj-ranking" routerLinkActive="active">Ranking OBJ</a>
-      <a routerLink="obj-matches" routerLinkActive="active">{{ 'nav.matches_obj' | translate }}</a>
-      <a routerLink="obj-inactive" routerLinkActive="active">{{ 'nav.inactive_obj' | translate }}</a>
-      <a routerLink="about" routerLinkActive="active">{{ 'nav.about' | translate }}</a>
-      <a routerLink="cup" routerLinkActive="active">Cup</a>
+      <a routerLink="" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.home' | translate }}</a>
+      <a routerLink="obj-ranking" routerLinkActive="active" (click)="closeMenu()">Ranking OBJ</a>
+      <a routerLink="obj-matches" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.matches_obj' | translate }}</a>
+      <a routerLink="obj-inactive" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.inactive_obj' | translate }}</a>
+      <a routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</a>
+      <a routerLink="cup" routerLinkActive="active" (click)="closeMenu()">Cup</a>
       
-      <a routerLink="mix" routerLinkActive="mix" class="mix">Mix</a>
+      <a routerLink="mix" routerLinkActive="mix" class="mix" (click)="closeMenu()">Mix</a>
       <form action="">
         <label for="langChange">{{ 'nav.choose' | translate }}</label>
         <select class="language-select" name="langChange" (ngModelChange)="languageChange($event)" [(ngModel)]="languageCode">          

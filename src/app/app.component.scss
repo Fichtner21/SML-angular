@@ -56,10 +56,15 @@ nav {
   }  
 
   .block_class {
+    // display: grid !important;
+    // grid-template-columns: 1fr 1fr;
+    // // max-height: 100%;
+    // // opacity: 1;
     display: grid !important;
     grid-template-columns: 1fr 1fr;
-    // max-height: 100%;
-    // opacity: 1;
+    max-height: 100%;
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
   }
 
   .nav {

@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { CommentsService } from './single-match/comments.service';
 import { SingleComment } from './single-match/single-comment.model';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { mergeMap } from 'rxjs/operators';
 
 
 interface Length {
@@ -130,18 +131,7 @@ export class HistoryObjComponent implements OnInit {
             (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) + 
             (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) + 
             (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0) 
-          ].reduce(this.addPreelo, 0);
-
-          // const flag1 = matchRow.t1p1playername?.nationality;
-          // const flag2 = matchRow.t1p2playername?.nationality;
-          // const flag3 = matchRow.t1p3playername?.nationality;
-
-          // if (match.t1p1playername && match.t1p2playername && match.t1p3playername && 
-          //     flag1 === flag2 && flag2 === flag3) {
-          //   match.newField = flag1;
-          // } else {
-          //   match.newField = 'Different Value';
-          // }
+          ].reduce(this.addPreelo, 0);       
 
           matchRow = {
             timestamp: match.timestamp,
@@ -226,43 +216,7 @@ export class HistoryObjComponent implements OnInit {
             t2p7postelo: match.t2p7postelo,
             comments: this.commentsService.getCommentsForMatch(match.idwar, '_').snapshotChanges().subscribe(data => data.length)       
           }
-
-          // const newObj = {
-          //   ...matchRow,
-          
-          //   flag: 
-          //   (matchRow.t1p1playername && matchRow.t1p2playername &&
-          //           matchRow.t1p1playername.flag === matchRow.t1p2playername.flag &&
-          //           matchRow.t1p2playername.flag)
-          //         ? matchRow.t1p1playername.flag
-          //         : ''
-          // };
-          // let newObj = {
-          //   ...matchRow,
-          //   flag: ''
-          // };
-          
-          // const playersT1Flag = [];
-          
-          // for (let i = 1; i <= 7; i++) {
-          //   const playerName = matchRow[`t1p${i}playername`];
-          //   if (playerName) {
-          //     console.log('playerName', playerName)
-          //     playersT1Flag.push(playerName);
-          //   }
-          // }
-          
-          // if (players.length > 0) {
-          //   const firstPlayerFlag = playersT1Flag[0].flag;
-          //   console.log('firstPlayerFlag', firstPlayerFlag)
-          //   const allPlayersHaveSameFlag = playersT1Flag.every(player => player.flag === firstPlayerFlag);
-
-          //   console.log('allPlayersHaveSameFlag', allPlayersHaveSameFlag)
-            
-          //   if (allPlayersHaveSameFlag) {
-          //     newObj.flag = firstPlayerFlag;
-          //   }
-          // }
+        
           const newObj = {
             ...matchRow,
             flag: '',
@@ -311,7 +265,9 @@ export class HistoryObjComponent implements OnInit {
           if (firstPlayerFlag2) {
             // Ustawiamy flagę w newObj tylko wtedy, gdy wszyscy niepuste gracze mają tę samą flagę.
             newObj.flag2 = firstPlayerFlag2;
-          }          
+          }   
+          
+        
 
           matchRowArray.push(newObj);          
           
@@ -324,6 +280,8 @@ export class HistoryObjComponent implements OnInit {
       }),
       // tap(x => console.log('xx', x))
     )  
+
+    
 
     // this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$, this.inactiveTab$ ]).pipe(
     //   map(([players, matches, inactive]) => {
@@ -382,8 +340,12 @@ export class HistoryObjComponent implements OnInit {
     // this.updateKomentarze();
   }
 
-  getCommentsForMatch(idwar: string): AngularFireList<SingleComment> {     
-    return this.db.list(`postComments${idwar}/_`)
+  // getCommentsForMatch(idwar: string): AngularFireList<SingleComment> {     
+  //   return this.db.list(`postComments${idwar}/_`)
+  // }
+
+  getCommentsForMatch(idwar: string): AngularFireList<SingleComment[]> {     
+    return this.db.list<SingleComment[]>(`postComments${idwar}/_`)
   }
 
   getCommentsCountForMatch(idwar: string): AngularFireList<any> {

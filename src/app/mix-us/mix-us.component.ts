@@ -694,66 +694,262 @@ export class MixUsComponent implements OnInit {
   //   return [firstArray, secondArray];
   // }
 
-  splitNationalities(array) {
-    let flags = {};
-    let firstArray = [];
-    let secondArray = [];
-    localStorage.setItem('mixway', 'NT'); 
+  // 
   
-    // Check if the length of the input array is even
-    let isEven = array.length % 2 === 0;
-    if (!isEven) {
-      // If it is not even, add a dummy object to the array
-      let dummy = { flag: 'DUMMY_FLAG' };
-      array.push(dummy);
-    }
   
-    // Liczymy ile obiektów posiada każdą wartość flagi
-    array.forEach(obj => {
-      if (!flags[obj.flag]) flags[obj.flag] = 0;
-      flags[obj.flag]++;
-    });
+  // splitNationalities(inputArray) {
+  //   if (inputArray.length % 2 !== 0) {
+  //     console.error("Błąd: Tablica musi mieć parzystą liczbę obiektów.");
+  //     return;
+  //   }
   
-    // Dla każdej wartości flagi przypisujemy do jednej z dwóch tablic
-    Object.keys(flags).forEach(flag => {
-      let count = flags[flag];
-      let targetArray = firstArray.length <= secondArray.length ? firstArray : secondArray;
+  //   // Podział tablicy wejściowej na dwie równe części
+  //   const half = inputArray.length / 2;
+  //   const firstHalf = inputArray.slice(0, half);
+  //   const secondHalf = inputArray.slice(half);
   
-      for (let i = 0; i < count; i++) {
-        let obj = array.find(obj => obj.flag === flag);
-        targetArray.push(obj);
-        array.splice(array.indexOf(obj), 1);
+  //   // Pogrupowanie obiektów według wartości pola flag
+  //   const groups = this.groupObjectsByFlag(inputArray);
+  
+  //   // Podział grup obiektów na dwie równe części
+  //   const groupKeys = Object.keys(groups);
+  //   const halfOfGroups = groupKeys.length / 2;
+  //   const firstGroups = groupKeys.slice(0, halfOfGroups);
+  //   const secondGroups = groupKeys.slice(halfOfGroups);
+  
+  //   // Łączenie grup obiektów w tablice wynikowe
+  //   const firstArray = this.combineGroupsIntoArray(firstGroups, groups);
+  //   const secondArray = this.combineGroupsIntoArray(secondGroups, groups);
+  
+  //   this.array1 = firstArray;
+  //   this.array2 = secondArray;
+  //   // console.log('firstArray', firstArray)
+  //   // console.log('secondArray', secondArray)
+  //   this.sumTeam1 = this.sumRanking(firstArray)
+  //   this.sumTeam2 = this.sumRanking(secondArray)
+    
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+  //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
+   
+  //   this.addArrayToUrl(firstArray, secondArray)
+  //   return [firstArray, secondArray];
+  // }
+  
+  groupObjectsByFlag(objects) {
+    const groups = {};
+  
+    objects.forEach(obj => {
+      const flag = obj.flag;
+      if (groups[flag]) {
+        groups[flag].push(obj);
+      } else {
+        groups[flag] = [obj];
       }
     });
   
-    // Check if the lengths of the output arrays are different
-    if (!isEven && firstArray.length !== secondArray.length) {
-      // If they are different and we added a dummy object, remove it from the longer array and add it to the input array
-      let longerArray = firstArray.length > secondArray.length ? firstArray : secondArray;
-      let dummyIndex = longerArray.findIndex(obj => obj.flag === 'DUMMY_FLAG');
-      let dummy = longerArray[dummyIndex];
-      longerArray.splice(dummyIndex, 1);
-      array.splice(array.indexOf(dummy), 1);
+    return groups;
+  }
+  
+  combineGroupsIntoArray(groupKeys, groups) {
+    const result = [];
+  
+    groupKeys.forEach(key => {
+      const objects = groups[key];
+      if (objects.length > result.length / 2) {
+        result.push(...objects);
+      } else {
+        const remainingSpace = Math.floor((result.length / 2) - objects.length);
+        const randomIndex = Math.floor(Math.random() * remainingSpace);
+        result.splice(randomIndex, 0, ...objects);
+      }
+    });
+  
+    return result;
+  }
+  
+  // 
+
+  splitNationalities(inputArray) {
+    if (inputArray.length % 2 !== 0) {
+      // console.error("Błąd: Tablica musi mieć parzystą liczbę obiektów.");
+      this.notifier.notify('error', 'Players must be even')
+      return;
+    }
+  
+    const groups = this.groupObjectsByFlag(inputArray);
+    const groupKeys = Object.keys(groups);
+  
+    const halfLength = Math.floor(inputArray.length / 2);
+    const firstArray = [];
+    const secondArray = [];
+  
+    let i = 0;
+    while (i < groupKeys.length) {
+      const flag = groupKeys[i];
+      const objects = groups[flag];
+  
+      let j = 0;
+      while (j < objects.length) {
+        if (firstArray.length < halfLength) {
+          firstArray.push(objects[j]);
+        } else {
+          secondArray.push(objects[j]);
+        }
+        j++;
+      }
+      i++;
     }
   
     this.array1 = firstArray;
     this.array2 = secondArray;
-    // console.log('firstArray', firstArray)
-    // console.log('secondArray', secondArray)
-    this.sumTeam1 = this.sumRanking(firstArray)
-    this.sumTeam2 = this.sumRanking(secondArray)
+    this.sumTeam1 = this.sumRanking(firstArray);
+    this.sumTeam2 = this.sumRanking(secondArray);
   
-    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
-    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-    this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+    this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
     this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
   
-    this.addArrayToUrl(firstArray, secondArray)
+    this.addArrayToUrl(firstArray, secondArray);
     return [firstArray, secondArray];
   }
   
 
+  // splitNationalities(array) {
+  //   let flags = {};
+  //   let firstArray = [];
+  //   let secondArray = [];
+  //   localStorage.setItem('mixway', 'NT'); 
+  
+  //   // Check if the length of the input array is even
+  //   let isEven = array.length % 2 === 0;
+  //   if (!isEven) {
+  //     // If it is not even, add a dummy object to the array
+  //     let dummy = { flag: 'DUMMY_FLAG' };
+  //     array.push(dummy);
+  //   }
+  
+  //   // Liczymy ile obiektów posiada każdą wartość flagi
+  //   array.forEach(obj => {
+  //     if (!flags[obj.flag]) flags[obj.flag] = 0;
+  //     flags[obj.flag]++;
+  //   });
+  
+  //   // Dla każdej wartości flagi przypisujemy do jednej z dwóch tablic
+  //   Object.keys(flags).forEach(flag => {
+  //     let count = flags[flag];
+  //     let targetArray = firstArray.length <= secondArray.length ? firstArray : secondArray;
+  
+  //     for (let i = 0; i < count; i++) {
+  //       let obj = array.find(obj => obj.flag === flag);
+  //       targetArray.push(obj);
+  //       array.splice(array.indexOf(obj), 1);
+  //     }
+  //   });
+  
+  //   // Check if the lengths of the output arrays are different
+  //   if (!isEven && firstArray.length !== secondArray.length) {
+  //     // If they are different and we added a dummy object, remove it from the longer array and add it to the input array
+  //     let longerArray = firstArray.length > secondArray.length ? firstArray : secondArray;
+  //     let dummyIndex = longerArray.findIndex(obj => obj.flag === 'DUMMY_FLAG');
+  //     let dummy = longerArray[dummyIndex];
+  //     longerArray.splice(dummyIndex, 1);
+  //     array.splice(array.indexOf(dummy), 1);
+  //   }
+  
+  //   this.array1 = firstArray;
+  //   this.array2 = secondArray;
+  //   // console.log('firstArray', firstArray)
+  //   // console.log('secondArray', secondArray)
+  //   this.sumTeam1 = this.sumRanking(firstArray)
+  //   this.sumTeam2 = this.sumRanking(secondArray)
+  
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+  //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
+  
+  //   this.addArrayToUrl(firstArray, secondArray)
+  //   return [firstArray, secondArray];
+  // }
+ 
+  // TO JEST PRAWIE OK - OBSŁUGA BŁĘDU
+  // splitNationalities(array) {
+  //   let flags = {};
+  //   let firstArray = [];
+  //   let secondArray = [];
+  //   localStorage.setItem('mixway', 'NT'); 
+  
+  //   // Check if the length of the input array is even
+  //   let isEven = array.length % 2 === 0;
+  //   if (!isEven) {
+  //     // If it is not even, add a dummy object to the array
+  //     let dummy = { flag: 'DUMMY_FLAG' };
+  //     array.push(dummy);
+  //   }
+  
+  //   // Liczymy ile obiektów posiada każdą wartość flagi
+  //   array.forEach(obj => {
+  //     if (!flags[obj.flag]) flags[obj.flag] = 0;
+  //     flags[obj.flag]++;
+  //   });
+  
+  //   // Check if any flag value appears in more than half of the objects
+  //   let invalidFlag = Object.keys(flags).find(flag => flags[flag] > array.length / 2);
+  //   if (invalidFlag) {
+  //     throw new Error(`More than half of the objects have the same flag value (${invalidFlag})`);
+  //   }
+  //   // Dla każdej wartości flagi przypisujemy do jednej z dwóch tablic
+  //   Object.keys(flags).forEach(flag => {
+  //     let count = flags[flag];
+  //     let targetArray = firstArray.length <= secondArray.length ? firstArray : secondArray;
+  
+  //     for (let i = 0; i < count; i++) {
+  //       let obj = array.find(obj => obj.flag === flag);
+  //       targetArray.push(obj);
+  //       array.splice(array.indexOf(obj), 1);
+  //     }
+  //   });
+  
+  //   // Check if the lengths of the output arrays are different
+  //   if (!isEven && firstArray.length !== secondArray.length) {
+  //     // If they are different and we added a dummy object, remove it from the longer array and add it to the input array
+  //     let longerArray = firstArray.length > secondArray.length ? firstArray : secondArray;
+  //     let dummyIndex = longerArray.findIndex(obj => obj.flag === 'DUMMY_FLAG');
+  //     let dummy = longerArray[dummyIndex];
+  //     longerArray.splice(dummyIndex, 1);
+  //     array.splice(array.indexOf(dummy), 1);
+  //   }
+  
+  //   this.array1 = firstArray;
+  //   this.array2 = secondArray;
+  //   console.log('firstArray', firstArray)
+  //   console.log('secondArray', secondArray)
+  //   this.sumTeam1 = this.sumRanking(firstArray)
+  //   this.sumTeam2 = this.sumRanking(secondArray)
+  
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+  //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
+  
+  //   this.addArrayToUrl(firstArray, secondArray)
+  //   this.addArrayToUrl(firstArray, secondArray)
+  //   return [firstArray, secondArray];
+  // }
+
+ 
+  
+  
+  
+
+  
   // splitRanking2(array) {
   //   //NO BLADY and ILLU same team
   //   array.sort((a, b) => parseFloat(b.ranking.replace(',', '')) - parseFloat(a.ranking.replace(',', '')));

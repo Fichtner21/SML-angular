@@ -65,7 +65,7 @@ export class MixUsComponent implements OnInit {
   sum1: any[];
   sum2: any[];
   sumTeam1: any;
-  sumTeam2: any; 
+  sumTeam2: any;
   chanceOfWinTeamOneShow: any;
   chanceOfWinTeamTwoShow: any;
   isStickyShown = false;
@@ -75,12 +75,12 @@ export class MixUsComponent implements OnInit {
   arrowDown = faArrowDown;
   people = faUserGroup;
   arrowUp = faArrowUp;
-  arrowRightCircle = faArrowCircleRight; 
-  arrowLeftCircle = faArrowCircleLeft; 
+  arrowRightCircle = faArrowCircleRight;
+  arrowLeftCircle = faArrowCircleLeft;
   starSolid = faStar;
   starEmpty = faStarHalfStroke;
   faFlag = faFlag;
-  mixWay: any = localStorage.getItem('mixway') ? localStorage.getItem('mixway') : '';  
+  mixWay: any = localStorage.getItem('mixway') ? localStorage.getItem('mixway') : '';
 
   // dataSource: MatTableDataSource<any>;
   // dataSource = new MatTableDataSource<any>([]);
@@ -91,12 +91,12 @@ export class MixUsComponent implements OnInit {
   public selectedArr: any[] = [];
   options: any[] = [];
   a = [{ranking: "1"}, {ranking: "3"}, {ranking: "5"}, {ranking: "7"}];
-  // 
+  //
   players: any;
   displayedColumns: string[] = ['select', 'nr', 'ranking', 'playername','flag'];
   selectedChannels = 'Team 1 and Team 2';
-  availableChannels = ['Team 1 and Team 2', 'Team 3 and Team 4']; 
-  
+  availableChannels = ['Team 1 and Team 2', 'Team 3 and Team 4'];
+
   task: Task = {
     name: 'Indeterminate',
     completed: false,
@@ -112,7 +112,7 @@ export class MixUsComponent implements OnInit {
   // dataSource = new MatTableDataSource<PeriodicElement>(this.players$);
   selection = new SelectionModel<UserData>(true, []);
   discordUsers: any[] = [];
- 
+
   public token = 'MTA3NzIyOTg4Njk3MzkzNTcwNw.G8qWP1.nc7-rGU3BotFxISS8JKT2Eh9ESp_HSS9ePp5VU';
   public channelId = '851888778409672756';
 
@@ -121,7 +121,7 @@ export class MixUsComponent implements OnInit {
 
   users: any[];
 
-  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient, public oAuthService: OAuthService) { 
+  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient, public oAuthService: OAuthService) {
     // const client = new Client({
     //   intents: ['Guilds', 'GuildMembers', 'GuildVoiceStates']
     // });
@@ -130,7 +130,7 @@ export class MixUsComponent implements OnInit {
     //   // const channelId = '1234567890'; // podaj ID kanału, dla którego chcesz pobrać listę użytkowników
     //   // const channel = client.channels.cache.get(channelId) as VoiceChannel;
     //   // const voiceMembers = await channel.members;
-    
+
     //   // voiceMembers.forEach(member => {
     //   //   this.users.push(member.displayName);
     //   // });
@@ -139,29 +139,29 @@ export class MixUsComponent implements OnInit {
     // client.login('MTA3NzMzNDUyNDE1NDg3NjAyNg.GLV3pj.RPAovzUTCcezSqvAhRDb3TNTWr6GEr6YzHcbMg'); // podaj swój token dostępowy do bota Discord
 
     this.players$ = this.googleApi.getPlayers('Players').pipe(
-      map((response: any) => {             
+      map((response: any) => {
         let batchRowValues = response.values;
-        // console.log('player 1', batchRowValues[1])        
+        // console.log('player 1', batchRowValues[1])
         let players: any[] = [];
         for(let i = 1; i < batchRowValues.length; i++){
           const rowObject: object = {};
           for(let j = 0; j < batchRowValues[i].length; j++){
             rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
           }
-          
+
           players.push(rowObject);
-        }     
-     
-        return players;       
+        }
+
+        return players;
       }),
-    ); 
+    );
     this.listPlayers$ = this.players$;
-   
+
     this.listPlayers$.subscribe(data => {
-      
+
       // console.log('data =>', data)
       for(let [index, value] of data.entries()){
-        
+
         const obj = {
           // nr: Number(index) + 1,
           nr: (index + 1).toString(),
@@ -188,7 +188,7 @@ export class MixUsComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       // this.array1 = params['a1'] ? JSON.parse(params['a1']).map(username => ({username})) : [];
       // this.array2 = params['a2'] ? JSON.parse(params['a2']).map(username => ({username})) : [];
-      
+
 
       // setTimeout(() => {
       //   this.array1 = params['a1'] ? JSON.parse(params['a1']) : [];
@@ -210,12 +210,12 @@ export class MixUsComponent implements OnInit {
       //     }
       //   });
       // }, 2000)
-      
+
     });
   }
 
   ngOnInit(): void {
-    
+
     this.route.queryParams.subscribe(params => {
       // this.array1 = params['a1'] ? JSON.parse(params['a1']).map(username => ({username})) : [];
       // this.array2 = params['a2'] ? JSON.parse(params['a2']).map(username => ({username})) : [];
@@ -237,7 +237,7 @@ export class MixUsComponent implements OnInit {
             this.selectedUsers.push(item)
             item.checkbox1 = true;
           }
-      
+
           // check if the username of the item matches a username in array2
           let match2 = this.array2.find(arrayItem => arrayItem.username === item.username);
           // if there is a match, set the checkbox value to true
@@ -249,11 +249,11 @@ export class MixUsComponent implements OnInit {
           }
         });
       }, 1000)
-      
+
     });
-   
+
     const arr = this.playerRowArray;
-      
+
     // this.dataSource = new MatTableDataSource(arr);
 
     // this.form = this.formBuilder.group({
@@ -262,7 +262,7 @@ export class MixUsComponent implements OnInit {
 
     // this.displayedColumns = ['select','nr', 'username'];
 
-    
+
     // this.dataSource = new MatTableDataSource(players)
     // console.log('this.dataSource', this.dataSource)
     // console.log('this.playerRowArray', arr)
@@ -276,7 +276,7 @@ export class MixUsComponent implements OnInit {
     }
     // console.log('this.selectedUsers', this.selectedUsers)
   }
- 
+
   // sum(numbers){
   //   let sum = 0;
   //   numbers.forEach(element => {
@@ -294,35 +294,35 @@ export class MixUsComponent implements OnInit {
     // });
   }
 
-  getDiscordUsers() { 
+  getDiscordUsers() {
     this.http.get<VoiceMember[]>('https://mohsh-ds.herokuapp.com/voice-members').subscribe(
-      (members) => {        
+      (members) => {
         if(members.length === 0){
           this.notifier.notify('warning', 'WANT TO PLAY is empty.');
-        } else {      
-          members.forEach((el: any) => {      
-            // console.log('el', el);     
+        } else {
+          members.forEach((el: any) => {
+            // console.log('el', el);
             this.playerRowArray.forEach((player: any) => {
               if ((el.username === player.username || el.username === player.playername || el.nickname === player.username || el.nickname === player.playername) &&
-                  !this.selectedUsers.some((u: any) => (u.username === player.username && u.playername === player.playername))                  
+                  !this.selectedUsers.some((u: any) => (u.username === player.username && u.playername === player.playername))
               ) {
-                player.id = el.id; 
+                player.id = el.id;
                 // player.nickname = el.nickname;// Dodajemy pole id z obiektu el do obiektu player
-               
+
                 this.notifier.notify('success', `${player.playername} added!.`);
-                this.selectedUsers.push(player);                
+                this.selectedUsers.push(player);
               }
-              
+
             });
           });
           // this.notifier.notify('success', 'Players from Discord Imported successful');
           // console.log('this SELECTED USERS:', this.selectedUsers)
         }
       },
-      (err) => {        
+      (err) => {
         this.notifier.notify('error', 'Import Players from Discord failed.');
       }
-    ); 
+    );
   }
 
   // sendToVoiceChannels(){
@@ -340,7 +340,7 @@ export class MixUsComponent implements OnInit {
   //       nickname: obj.nickname,
   //       id: obj.id
   //     };
-  //   });    
+  //   });
 
   //   const channel1Id = '851888705307803698';
   //   const channel2Id = '851888741761155136';
@@ -352,13 +352,13 @@ export class MixUsComponent implements OnInit {
   //     users2: newArray2,
   //     channel1Id: channel1Id,
   //     channel2Id: channel2Id,
-  //   };    
+  //   };
 
   //   const httpOptions = {
   //     headers: new HttpHeaders({
   //       'Content-Type': 'application/json',
   //     }),
-  //   };  
+  //   };
 
   //   this.http.post(`https://mohsh-ds.herokuapp.com/move-users-to-channels`, JSON.stringify(payload), httpOptions).subscribe(
   //     (response) => {
@@ -367,8 +367,8 @@ export class MixUsComponent implements OnInit {
   //     (error) => {
   //       console.error('Move users to channels error:', error);
   //     }
-  //   );   
-  // }  
+  //   );
+  // }
 
   sendToVoiceChannels() {
     const newArray1 = this.array1.map((obj: any) => {
@@ -418,7 +418,7 @@ export class MixUsComponent implements OnInit {
         console.error('Move users to channels error:', error);
       }
     );
-  }  
+  }
 
   // DISCORD.JS ===> REST APPROACH
 
@@ -440,18 +440,18 @@ export class MixUsComponent implements OnInit {
         array2.push(objects[i]);
       }
     }
- 
+
     this.array1 = array1;
     this.array2 = array2;
 
     this.sumTeam1 = this.sumRanking(array1)
-    this.sumTeam2 = this.sumRanking(array2) 
+    this.sumTeam2 = this.sumRanking(array2)
     this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
     return [array1, array2];
   }
 
   public sumRanking(array: any[]):number {
-    let sum = 0;  
+    let sum = 0;
     array.forEach((el) => {
       sum += parseFloat(el.ranking.replace(/,/g, ''));
     })
@@ -474,7 +474,7 @@ export class MixUsComponent implements OnInit {
   }
 
   splitArrayIntoTwo(inputArray: User[]): [User[], User[]] {
-    localStorage.setItem('mixway', 'HP'); 
+    localStorage.setItem('mixway', 'HP');
     this.notifier.notify('default', 'MIX TEAMS HP has been called');
     // Przekonwertuj pola ranking na wartości liczbowe
     inputArray.forEach(obj => parseFloat(obj.ranking.replace(/,/g, '')));
@@ -501,10 +501,10 @@ export class MixUsComponent implements OnInit {
 
           this.sumTeam1 = this.sumRanking(array1)
           this.sumTeam2 = this.sumRanking(array2)
-          const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;        
+          const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
           const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
           this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-          this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+          this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
         }
       }
     });
@@ -525,18 +525,18 @@ export class MixUsComponent implements OnInit {
       }
       return null;
     }
-  
+
     const currentObject = objects[startIndex];
     const resultWithFirstArray = this.splitRanking(objects, startIndex + 1, [...firstArray, currentObject], secondArray, halfSum);
     if (resultWithFirstArray !== null) {
       return resultWithFirstArray;
     }
-  
+
     const resultWithSecondArray = this.splitRanking(objects, startIndex + 1, firstArray, [...secondArray, currentObject], halfSum);
     if (resultWithSecondArray !== null) {
       return resultWithSecondArray;
-    }   
-  
+    }
+
     return null;
   }
 
@@ -548,21 +548,21 @@ export class MixUsComponent implements OnInit {
 
     if (result !== null) {
       this.array1 = result[0];
-      this.array2 = result[1];      
+      this.array2 = result[1];
     }
 
     return result;
   }
-  
+
   splitRanking2(array) {
     array.sort((a, b) => parseFloat(b.ranking.replace(',', '')) - parseFloat(a.ranking.replace(',', '')));
     let firstArray = [];
     let secondArray = [];
     let firstArraySum = 0;
     let secondArraySum = 0;
-    
-    localStorage.setItem('mixway', 'LP'); 
-    
+
+    localStorage.setItem('mixway', 'LP');
+
     for (let i = 0; i < array.length; i++) {
       let currentRanking = parseFloat(array[i].ranking.replace(',', ''));
       if (firstArraySum <= secondArraySum) {
@@ -578,13 +578,13 @@ export class MixUsComponent implements OnInit {
 
     this.sumTeam1 = this.sumRanking(firstArray)
     this.sumTeam2 = this.sumRanking(secondArray)
-    
-    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
-    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-    this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+    this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
     this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
-   
+
     this.addArrayToUrl(firstArray, secondArray)
     // console.log('ARRAY 1:', this.array1);
     // console.log('ARRAY 2:', this.array2);
@@ -598,7 +598,7 @@ export class MixUsComponent implements OnInit {
   //   let firstArraySum = 0;
   //   let secondArraySum = 0;
   //   console.log('ARRAY', array)
-  
+
   //   const nationalities = [...new Set(array.map(player => player.flag))];
   //   if (nationalities.length > 1) {
   //     // Split players based on nationality
@@ -635,19 +635,19 @@ export class MixUsComponent implements OnInit {
   //       }
   //     }
   //   }
-  
+
   //   this.array1 = firstArray;
   //   this.array2 = secondArray;
-  
+
   //   this.sumTeam1 = this.sumRanking(firstArray)
   //   this.sumTeam2 = this.sumRanking(secondArray)
-  
-  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
-  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
   //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
   //   this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
-  
+
   //   this.addArrayToUrl(firstArray, secondArray)
   //   // console.log('ARRAY 1:', this.array1);
   //   // console.log('ARRAY 2:', this.array2);
@@ -658,19 +658,19 @@ export class MixUsComponent implements OnInit {
   //   let flags = {};
   //   let firstArray = [];
   //   let secondArray = [];
-  //   localStorage.setItem('mixway', 'NT'); 
-  
+  //   localStorage.setItem('mixway', 'NT');
+
   //   // Liczymy ile obiektów posiada każdą wartość flagi
   //   array.forEach(obj => {
   //     if (!flags[obj.flag]) flags[obj.flag] = 0;
   //     flags[obj.flag]++;
   //   });
-  
+
   //   // Dla każdej wartości flagi przypisujemy do jednej z dwóch tablic
   //   Object.keys(flags).forEach(flag => {
   //     let count = flags[flag];
   //     let targetArray = firstArray.length <= secondArray.length ? firstArray : secondArray;
-      
+
   //     for (let i = 0; i < count; i++) {
   //       let obj = array.find(obj => obj.flag === flag);
   //       targetArray.push(obj);
@@ -683,64 +683,64 @@ export class MixUsComponent implements OnInit {
   //   // console.log('secondArray', secondArray)
   //   this.sumTeam1 = this.sumRanking(firstArray)
   //   this.sumTeam2 = this.sumRanking(secondArray)
-    
-  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
-  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
   //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
   //   this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
-   
+
   //   this.addArrayToUrl(firstArray, secondArray)
   //   return [firstArray, secondArray];
   // }
 
-  // 
-  
-  
+  //
+
+
   // splitNationalities(inputArray) {
   //   if (inputArray.length % 2 !== 0) {
   //     console.error("Błąd: Tablica musi mieć parzystą liczbę obiektów.");
   //     return;
   //   }
-  
+
   //   // Podział tablicy wejściowej na dwie równe części
   //   const half = inputArray.length / 2;
   //   const firstHalf = inputArray.slice(0, half);
   //   const secondHalf = inputArray.slice(half);
-  
+
   //   // Pogrupowanie obiektów według wartości pola flag
   //   const groups = this.groupObjectsByFlag(inputArray);
-  
+
   //   // Podział grup obiektów na dwie równe części
   //   const groupKeys = Object.keys(groups);
   //   const halfOfGroups = groupKeys.length / 2;
   //   const firstGroups = groupKeys.slice(0, halfOfGroups);
   //   const secondGroups = groupKeys.slice(halfOfGroups);
-  
+
   //   // Łączenie grup obiektów w tablice wynikowe
   //   const firstArray = this.combineGroupsIntoArray(firstGroups, groups);
   //   const secondArray = this.combineGroupsIntoArray(secondGroups, groups);
-  
+
   //   this.array1 = firstArray;
   //   this.array2 = secondArray;
   //   // console.log('firstArray', firstArray)
   //   // console.log('secondArray', secondArray)
   //   this.sumTeam1 = this.sumRanking(firstArray)
   //   this.sumTeam2 = this.sumRanking(secondArray)
-    
-  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
-  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
   //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
   //   this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
-   
+
   //   this.addArrayToUrl(firstArray, secondArray)
   //   return [firstArray, secondArray];
   // }
-  
+
   groupObjectsByFlag(objects) {
     const groups = {};
-  
+
     objects.forEach(obj => {
       const flag = obj.flag;
       if (groups[flag]) {
@@ -749,13 +749,13 @@ export class MixUsComponent implements OnInit {
         groups[flag] = [obj];
       }
     });
-  
+
     return groups;
   }
-  
+
   combineGroupsIntoArray(groupKeys, groups) {
     const result = [];
-  
+
     groupKeys.forEach(key => {
       const objects = groups[key];
       if (objects.length > result.length / 2) {
@@ -766,11 +766,11 @@ export class MixUsComponent implements OnInit {
         result.splice(randomIndex, 0, ...objects);
       }
     });
-  
+
     return result;
   }
-  
-  // 
+
+  //
 
   splitNationalities(inputArray) {
     if (inputArray.length % 2 !== 0) {
@@ -778,19 +778,20 @@ export class MixUsComponent implements OnInit {
       this.notifier.notify('error', 'Players must be even')
       return;
     }
-  
+    localStorage.setItem('mixway', 'NT');
+
     const groups = this.groupObjectsByFlag(inputArray);
     const groupKeys = Object.keys(groups);
-  
+
     const halfLength = Math.floor(inputArray.length / 2);
     const firstArray = [];
     const secondArray = [];
-  
+
     let i = 0;
     while (i < groupKeys.length) {
       const flag = groupKeys[i];
       const objects = groups[flag];
-  
+
       let j = 0;
       while (j < objects.length) {
         if (firstArray.length < halfLength) {
@@ -802,29 +803,29 @@ export class MixUsComponent implements OnInit {
       }
       i++;
     }
-  
+
     this.array1 = firstArray;
     this.array2 = secondArray;
     this.sumTeam1 = this.sumRanking(firstArray);
     this.sumTeam2 = this.sumRanking(secondArray);
-  
+
     const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
     const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
     this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
-  
+
     this.addArrayToUrl(firstArray, secondArray);
     return [firstArray, secondArray];
   }
-  
+
 
   // splitNationalities(array) {
   //   let flags = {};
   //   let firstArray = [];
   //   let secondArray = [];
-  //   localStorage.setItem('mixway', 'NT'); 
-  
+  //   localStorage.setItem('mixway', 'NT');
+
   //   // Check if the length of the input array is even
   //   let isEven = array.length % 2 === 0;
   //   if (!isEven) {
@@ -832,25 +833,25 @@ export class MixUsComponent implements OnInit {
   //     let dummy = { flag: 'DUMMY_FLAG' };
   //     array.push(dummy);
   //   }
-  
+
   //   // Liczymy ile obiektów posiada każdą wartość flagi
   //   array.forEach(obj => {
   //     if (!flags[obj.flag]) flags[obj.flag] = 0;
   //     flags[obj.flag]++;
   //   });
-  
+
   //   // Dla każdej wartości flagi przypisujemy do jednej z dwóch tablic
   //   Object.keys(flags).forEach(flag => {
   //     let count = flags[flag];
   //     let targetArray = firstArray.length <= secondArray.length ? firstArray : secondArray;
-  
+
   //     for (let i = 0; i < count; i++) {
   //       let obj = array.find(obj => obj.flag === flag);
   //       targetArray.push(obj);
   //       array.splice(array.indexOf(obj), 1);
   //     }
   //   });
-  
+
   //   // Check if the lengths of the output arrays are different
   //   if (!isEven && firstArray.length !== secondArray.length) {
   //     // If they are different and we added a dummy object, remove it from the longer array and add it to the input array
@@ -860,31 +861,31 @@ export class MixUsComponent implements OnInit {
   //     longerArray.splice(dummyIndex, 1);
   //     array.splice(array.indexOf(dummy), 1);
   //   }
-  
+
   //   this.array1 = firstArray;
   //   this.array2 = secondArray;
   //   // console.log('firstArray', firstArray)
   //   // console.log('secondArray', secondArray)
   //   this.sumTeam1 = this.sumRanking(firstArray)
   //   this.sumTeam2 = this.sumRanking(secondArray)
-  
-  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
-  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
   //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
   //   this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
-  
+
   //   this.addArrayToUrl(firstArray, secondArray)
   //   return [firstArray, secondArray];
   // }
- 
+
   // TO JEST PRAWIE OK - OBSŁUGA BŁĘDU
   // splitNationalities(array) {
   //   let flags = {};
   //   let firstArray = [];
   //   let secondArray = [];
-  //   localStorage.setItem('mixway', 'NT'); 
-  
+  //   localStorage.setItem('mixway', 'NT');
+
   //   // Check if the length of the input array is even
   //   let isEven = array.length % 2 === 0;
   //   if (!isEven) {
@@ -892,13 +893,13 @@ export class MixUsComponent implements OnInit {
   //     let dummy = { flag: 'DUMMY_FLAG' };
   //     array.push(dummy);
   //   }
-  
+
   //   // Liczymy ile obiektów posiada każdą wartość flagi
   //   array.forEach(obj => {
   //     if (!flags[obj.flag]) flags[obj.flag] = 0;
   //     flags[obj.flag]++;
   //   });
-  
+
   //   // Check if any flag value appears in more than half of the objects
   //   let invalidFlag = Object.keys(flags).find(flag => flags[flag] > array.length / 2);
   //   if (invalidFlag) {
@@ -908,14 +909,14 @@ export class MixUsComponent implements OnInit {
   //   Object.keys(flags).forEach(flag => {
   //     let count = flags[flag];
   //     let targetArray = firstArray.length <= secondArray.length ? firstArray : secondArray;
-  
+
   //     for (let i = 0; i < count; i++) {
   //       let obj = array.find(obj => obj.flag === flag);
   //       targetArray.push(obj);
   //       array.splice(array.indexOf(obj), 1);
   //     }
   //   });
-  
+
   //   // Check if the lengths of the output arrays are different
   //   if (!isEven && firstArray.length !== secondArray.length) {
   //     // If they are different and we added a dummy object, remove it from the longer array and add it to the input array
@@ -925,31 +926,31 @@ export class MixUsComponent implements OnInit {
   //     longerArray.splice(dummyIndex, 1);
   //     array.splice(array.indexOf(dummy), 1);
   //   }
-  
+
   //   this.array1 = firstArray;
   //   this.array2 = secondArray;
   //   console.log('firstArray', firstArray)
   //   console.log('secondArray', secondArray)
   //   this.sumTeam1 = this.sumRanking(firstArray)
   //   this.sumTeam2 = this.sumRanking(secondArray)
-  
-  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
-  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
   //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
   //   this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
-  
+
   //   this.addArrayToUrl(firstArray, secondArray)
   //   this.addArrayToUrl(firstArray, secondArray)
   //   return [firstArray, secondArray];
   // }
 
- 
-  
-  
-  
 
-  
+
+
+
+
+
   // splitRanking2(array) {
   //   //NO BLADY and ILLU same team
   //   array.sort((a, b) => parseFloat(b.ranking.replace(',', '')) - parseFloat(a.ranking.replace(',', '')));
@@ -957,7 +958,7 @@ export class MixUsComponent implements OnInit {
   //   let secondArray = [];
   //   let firstArraySum = 0;
   //   let secondArraySum = 0;
-  
+
   //   for (let i = 0; i < array.length; i++) {
   //     let currentRanking = parseFloat(array[i].ranking.replace(',', ''));
   //     if (firstArraySum <= secondArraySum) {
@@ -983,17 +984,17 @@ export class MixUsComponent implements OnInit {
 
   //   this.sumTeam1 = this.sumRanking(firstArray)
   //   this.sumTeam2 = this.sumRanking(secondArray)
-    
-  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100; 
-  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100; 
+
+  //   const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
+  //   const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
   //   this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2); 
+  //   this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
   //   this.notifier.notify('success', 'MIX TEAMS LP has finished executing');
-   
+
   //   this.addArrayToUrl(firstArray, secondArray)
   //   return [firstArray, secondArray];
   // }
-  
+
 
   addArrayToUrl(a1, a2) {
     // let a1Usernames = a1.map(item => item.username);
@@ -1026,7 +1027,7 @@ export class MixUsComponent implements OnInit {
     let t1p5name = '';
     let t1p6name = '';
     let t1p7name = '';
-    
+
     if (this.array1[0]) {
       t1p1name = this.array1[0].username ? this.array1[0].username : '';
     } else {
@@ -1062,7 +1063,7 @@ export class MixUsComponent implements OnInit {
     } else {
       t1p7name = '';
     }
-   
+
     //TEAM 2
     let t2p1name = '';
     let t2p2name = '';
@@ -1071,7 +1072,7 @@ export class MixUsComponent implements OnInit {
     let t2p5name = '';
     let t2p6name = '';
     let t2p7name = '';
-   
+
     if (this.array2[0]) {
       t2p1name = this.array2[0].username ? this.array2[0].username : '';
     } else {
@@ -1107,21 +1108,21 @@ export class MixUsComponent implements OnInit {
     } else {
       t2p7name = '';
     }
-    
+
 
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', t1p1name, t1p2name, t1p3name, t1p4name, t1p5name, t1p6name, t1p7name).subscribe({
       next: (res) => {
-        if(res.done = true){    
-          this.notifier.notify('success', 'Team 1 successful added.');          
+        if(res.done = true){
+          this.notifier.notify('success', 'Team 1 successful added.');
         }
       }
     })
 
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', t2p1name, t2p2name, t2p3name, t2p4name, t2p5name, t2p6name, t2p7name).subscribe({
       next: (res) => {
-        if(res.done = true){    
-          this.notifier.notify('success', 'Team 2 successful added.');          
-        }        
+        if(res.done = true){
+          this.notifier.notify('success', 'Team 2 successful added.');
+        }
       }, error: (err) => {
         console.log('err', err);
       }
@@ -1144,13 +1145,13 @@ export class MixUsComponent implements OnInit {
     // const webhookUrl = 'https://discord.com/api/webhooks/1075178845067563138/FpKf7iiu3dhI9NTxyS-VkMNcv4mdq2KORNhNUbkeZnfCgLtDaJSIFxi9Uz5YUTCDPqmX';
 
     let mixWay = localStorage.getItem('mixway');
-    
+
     // General Chat
     const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
 
     const arr1 = this.array1;
     const arr2 = this.array2;
-   
+
     const t1p1name = (arr1.length > 0 && arr1[0] && arr1[0].playername) ? arr1[0].playername : '';
     const t1p2name = (arr1.length > 1 && arr1[1] && arr1[1].playername) ? arr1[1].playername : '';
     const t1p3name = (arr1.length > 2 && arr1[2] && arr1[2].playername) ? arr1[2].playername : '';
@@ -1172,20 +1173,20 @@ export class MixUsComponent implements OnInit {
     const year = now.getFullYear();
     const hours = ("0" + now.getHours()).slice(-2);
     const minutes = ("0" + now.getMinutes()).slice(-2);
-    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;    
+    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
 
     const chanceFutureTeamOne = this.sumRanking(arr1)
-    const chanceFutureTeamTwo = this.sumRanking(arr2)    
+    const chanceFutureTeamTwo = this.sumRanking(arr2)
 
     let chanceOfWinTeamOneShow = 0;
     let chanceOfWinTeamTwoShow = 0;
 
-    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne - chanceFutureTeamTwo) / 400)) * 100;       
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne - chanceFutureTeamTwo) / 400)) * 100;
     const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;
 
     chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
-    
+
     let nextMatch = "";
     nextMatch += "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + "\n";
     nextMatch += "----------" + "\n";
@@ -1206,12 +1207,12 @@ export class MixUsComponent implements OnInit {
       }, error: (err) => {
         this.notifier.notify('error', 'Something went wrong')
       }
-    });    
-  } 
+    });
+  }
 
   isValid(): boolean {
     return this.array1 && this.array1.length > 2 && this.array2 && this.array2.length > 2;
-  }   
+  }
 }
 
 

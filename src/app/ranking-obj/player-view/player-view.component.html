@@ -2,22 +2,23 @@
 
 <ng-container *ngIf="playerDetail$ | async as playerDetails;">
   <section [ngClass]="{ 'active': playerDetails.active == true, 'inactive': playerDetails.active == false }">
-    <div class="container">      
+    <div class="container">
       <div class="details">
         <div class="status">
           <h2>Status:</h2>
           <div class="status-player">
-            <ng-container *ngIf="playerDetails.active && !playerDetails.ban; then active; else inactive">              
+            <ng-container *ngIf="playerDetails.active && !playerDetails.ban; then active; else inactive">
             </ng-container>
             <ng-template #active>
               <div class="green">ACTIVE</div>
+              <div class="red" *ngIf="!playerDetails.active">INACTIVE</div>
             </ng-template>
             <ng-template #inactive>
               <div class="red" *ngIf="!playerDetails.ban">INACTIVE</div>
               <div class="red" *ngIf="playerDetails.ban">BANNED</div>
             </ng-template>
             <!-- <div *ngIf="isLoggedIn()">
-              <a routerLink="/dashboard/edit-player/{{playerDetails.username}}" class="edit-player">EDIT Player</a>              
+              <a routerLink="/dashboard/edit-player/{{playerDetails.username}}" class="edit-player">EDIT Player</a>
             </div> -->
           </div>
         </div>
@@ -33,12 +34,12 @@
             <div class="lost">{{ 'playerview.lost' | translate }} <span>{{ playerDetails.lose }} ({{ playerDetails.losePercentage | number: '1.0-2' }}%)</span></div>
             <div class="drawn">{{ 'playerview.drawn' | translate }} <span>{{ playerDetails.draw }} ({{ playerDetails.drawPercentage | number: '1.0-2'  }}%)</span></div>
             <div class="playedWith danger">
-              Most played with:            
-              <div *ngFor="let player of playerDetails.mostOftenPlayed; let i = index;" class="playerWith">                
+              Most played with:
+              <div *ngFor="let player of playerDetails.mostOftenPlayed; let i = index;" class="playerWith">
                 <span>{{ i+1 }}. <a href="/obj-ranking/{{ player[0] }}">{{ player[0] }}</a>, {{ player[1] }} times.
                 </span>
               </div>
-               
+
             </div>
             <button (click)="clickEvent()" class="more"
                [ngClass]="status ? 'show' : 'hide'">Show/hide more</button>
@@ -47,14 +48,14 @@
             <div class="ambilight">
               <!-- <img [src]='"assets/images/flags/" + playerDetails.nationality + ".gif"' class="image-flag"> -->
               <img [src]='"assets/images/flags_svg/" + playerDetails.nationality + ".SVG"' class="image-light">
-            </div>            
+            </div>
           </div>
-         
+
             <!-- <button (click)="showResult(playerDetails.resultPerPlayer)">Load rankings...</button> -->
-          <div *ngIf="playerDetail$ | async as playerDetails">  
-            <button (click)="showResult(playerDetails.resultPerPlayer)">Load Results (Won, Lost, Drawn)...</button>         
+          <div *ngIf="playerDetail$ | async as playerDetails">
+            <button (click)="showResult(playerDetails.resultPerPlayer)">Load Results (Won, Lost, Drawn)...</button>
             <canvas id="playerResult" width="400" height="400">
-              
+
             </canvas>
           </div>
           <div class="seasons">
@@ -68,11 +69,11 @@
                 </my-tab>
               </my-tabs> -->
               <mat-tab-group animationDuration="0ms">
-                <mat-tab label="Season #2"> 
-                  <h2>01.04.2023 - 30.06.2023</h2>                  
-                </mat-tab>    
+                <mat-tab label="Season #2">
+                  <h2>01.04.2023 - 30.06.2023</h2>
+                </mat-tab>
                 <mat-tab label="Season #1">
-                  <h2>01.01.2023 - 31.03.2023</h2>  
+                  <h2>01.01.2023 - 31.03.2023</h2>
                   <h3>Achievements:</h3>
                   <ul class="achievements">
                     <!-- <ng-container *ngIf="playerDetails.s1ranking_win !== ''; then; topR; else downR"></ng-container>
@@ -86,18 +87,18 @@
                     <ng-template #downR>
                       <li>Lower RANKING than the top ten rank in Season 1.</li>
                     </ng-template> -->
-                    
+
                     <!-- <li>{{ playerDetails.s1fpw_win }} Avarage Frags per War in Season 1!</li>
                     <li>{{ playerDetails.s1wars_win }} played Wars in Season 1!</li> -->
                   </ul>
                   <h3>Statistics:</h3>
-                  <div class="stat-units">Played wars: <span>{{ playerDetails.s1wars }}</span></div>          
-                  <div class="stat-units" title="Avarage frags per war">Avg. frags per war: <span> {{ playerDetails.s1fpw }}</span></div>          
+                  <div class="stat-units">Played wars: <span>{{ playerDetails.s1wars }}</span></div>
+                  <div class="stat-units" title="Avarage frags per war">Avg. frags per war: <span> {{ playerDetails.s1fpw }}</span></div>
                   <!-- <div class="stat-units" title="Avarage frags per war">Current ranking: <span> {{ playerDetails.place }} / {{ numOfPlayers$ | async }}</span></div>           -->
-                </mat-tab>                          
+                </mat-tab>
               </mat-tab-group>
-            </ng-container>                
-          </div> 
+            </ng-container>
+          </div>
         </div>
         <div class="wars-cont">
           <h3>{{ 'playerview.wars_id' | translate }}</h3>
@@ -106,7 +107,7 @@
           </div>
         </div>
         <div>
-                  
+
           <!-- <button (click)="showHorizontalScrolling(playerDetails.frags, playerDetails.listwars)">Horizontal</button>
           <div class="chartWrapper" >
             <div class="chartAreaWrapper">
@@ -126,16 +127,27 @@
           <div class="chart-info">
             <h3 class="chart-info__title">{{ 'playerview.rank_chart' | translate }}</h3>
             <button (click)="showRanking(playerDetails.rankings, playerDetails.listwars)">Load rankings...</button>
-          </div>         
+          </div>
           <canvas id="rankChart" width="1320" height="400" style="overflow-x: scroll;">{{ chartRank }}</canvas>
+        </div>
+        <div>
+          <div class="chart-info">
+            <h3 class="chart-info__title">Player rankings chart season 2:</h3>
+            <button (click)="showRankingSeason2(playerDetails.listwars2)">Load season rankings...</button>
+          </div>
+          <canvas id="rank2Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
         </div>
         <div class="chart-info">
           <h3 class="chart-info__title">{{ 'playerview.frags_chart' | translate }}</h3>
           <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">Load frags...</button>
         </div>
-        
-        <canvas id="myChart" width="1320" height="400" style="overflow-x: scroll;"></canvas>  
-       
+        <canvas id="myChart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
+        <div class="chart-info">
+          <h3 class="chart-info__title">Player frags chart season 2:</h3>
+          <button (click)="showFrags2(playerDetails.listwars2)">Load season frags...</button>
+        </div>
+        <canvas id="myChart2" width="1320" height="400" style="overflow-x: scroll;"></canvas>
+
       </div>
       <div class="big-name">{{playerDetails.playername}}</div>
     </div>
@@ -144,5 +156,5 @@
 </ng-container>
 
 
-<ng-http-loader>    
+<ng-http-loader>
 </ng-http-loader>

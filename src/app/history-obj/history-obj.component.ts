@@ -45,7 +45,8 @@ export class HistoryObjComponent implements OnInit {
   chanceOfWinTeamTwoShow: any; 
   length: number = 0;
   // comments: any;
- 
+  public warsAndComments$: any; 
+  public newArray: any[] = []; 
  
   comments: Observable<any[]>;
   
@@ -80,7 +81,8 @@ export class HistoryObjComponent implements OnInit {
             rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
           }
           historyMatches.push(rowObject);
-        }        
+        }       
+        
         return historyMatches;
       }),
     );
@@ -98,19 +100,34 @@ export class HistoryObjComponent implements OnInit {
         }        
         return inactivePlayers;
       }),
-    );    
+    );     
+   
+    
+    // this.matchesTab$.subscribe(historyMatches => {
+    //   let newArray: any[] = [];
+    //   historyMatches.forEach((el:any) => {
+    //     let newObject = {
+    //       comments: 0,
+    //       id: el.idwar
+    //     }
+    //     newArray.push(newObject);
+    //   })
+    //   newArray.forEach((matchRow: any) => {
+    //     this.commentsService.getCommentsForMatch(matchRow.id, '_').snapshotChanges().subscribe(data => {    
+    //        const commentCount = data.length;    
+    //        matchRow.comments = commentCount;
+    //      });
+    //   });
+    //   this.warsAndComments$ = newArray; 
+    //   // console.log(this.warsAndComments$)
+    // });
 
     
-    // this.comments$ = this.commentsService.getCommentsForMatch2()
-    // .valueChanges()
-    // .subscribe(data => {
-    //   console.log(data);
-    // });
     
-    this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$, this.inactiveTab$ ]).pipe(
+    this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$, this.inactiveTab$]).pipe(
       map(([players, matches, inactive]) => {
         let matchRow;
-        let matchRowArray: any[] = [];
+        let matchRowArray: any[] = []; 
        
         for(let match of matches){ 
           const sumPreeloTeam1 = [
@@ -214,9 +231,18 @@ export class HistoryObjComponent implements OnInit {
             t2p7preelo: match.t2p7preelo,
             t2p7score: match.t2p7score,
             t2p7postelo: match.t2p7postelo,
-            comments: this.commentsService.getCommentsForMatch(match.idwar, '_').snapshotChanges().subscribe(data => data.length)       
+            comments: 0      
+            // comments: this.commentsService.getCommentsForMatch(match.idwar, '_').snapshotChanges().subscribe(data => data.length)       
           }
         
+          // if (Array.isArray(warsAndComments)) {
+          //   const warsAndCommentsMatch = warsAndComments.find(war => war.id === match.idwar);
+          //   if (warsAndCommentsMatch) {
+          //     matchRow.comments = warsAndCommentsMatch.comments;
+          //   }
+          // }
+         
+          
           const newObj = {
             ...matchRow,
             flag: '',
@@ -266,70 +292,150 @@ export class HistoryObjComponent implements OnInit {
             // Ustawiamy flagę w newObj tylko wtedy, gdy wszyscy niepuste gracze mają tę samą flagę.
             newObj.flag2 = firstPlayerFlag2;
           }   
-          
-        
-
-          matchRowArray.push(newObj);          
+          matchRowArray.push(newObj);         
           
         }
-        // console.log('M =>', matchRowArray[2001]);
-        // console.log('M 2 =>', matchRowArray[2002]);
+        // console.log('M =>', this.matchRowArray[2001]);
+        // console.log('M 2 =>', this.matchRowArray[2002]);
         
-        // console.log('M 2=>', matchRowArray[1923]);
+        // console.log('M 2=>', matchRowArray[2062]);
         return matchRowArray.reverse();
       }),
       // tap(x => console.log('xx', x))
-    )  
+    )      
 
-    
-
-    // this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$, this.inactiveTab$ ]).pipe(
-    //   map(([players, matches, inactive]) => {
+    // this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$, this.inactiveTab$]).pipe(
+    //   map(([players, matches, inactive]): unknown => {
     //     let matchRow;
-    //     let matchRowArray: any[] = [];
-       
-    //     for(let match of matches){ 
+    //     let matchRowArray: any[] = []; 
+    //     for (let match of matches) {
+    //       const sumPreeloTeam1 = [
+    //                 (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) + 
+    //                 (Number(match.t1p2preelo) ? Number(match.t1p2preelo) : 0) + 
+    //                 (Number(match.t1p3preelo) ? Number(match.t1p3preelo) : 0) + 
+    //                 (Number(match.t1p4preelo) ? Number(match.t1p4preelo) : 0) + 
+    //                 (Number(match.t1p5preelo) ? Number(match.t1p5preelo) : 0) + 
+    //                 (Number(match.t1p6preelo) ? Number(match.t1p6preelo) : 0) + 
+    //                 (Number(match.t1p7preelo) ? Number(match.t1p7preelo) : 0) 
+    //               ].reduce(this.addPreelo, 0);     
+        
+    //               const sumPreeloTeam2 = [
+    //                 (Number(match.t2p1preelo) ? Number(match.t2p1preelo) : 0) + 
+    //                 (Number(match.t2p2preelo) ? Number(match.t2p2preelo) : 0) + 
+    //                 (Number(match.t2p3preelo) ? Number(match.t2p3preelo) : 0) + 
+    //                 (Number(match.t2p4preelo) ? Number(match.t2p4preelo) : 0) + 
+    //                 (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) + 
+    //                 (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) + 
+    //                 (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0) 
+    //               ].reduce(this.addPreelo, 0);   
     //       matchRow = {
-    //         timestamp: match.timestamp,
-    //         idwar: match.idwar,
-    //         t1roundswon: match.t1roundswon,
-    //         t2roundswon: match.t2roundswon, 
-    //         video: match.video,
-    //         info: match.info,
-    //         t1p1playername: this.addPlayerLink(match.t1p1name, players, inactive),
-    //         t1p1username: match.t1p1name,
-    //         t1p1preelo: match.t1p1preelo,
-    //         t1p1score: match.t1p1score,
-    //         t1p1postelo: match.t1p1postelo,
-    //         t1p2playername: this.addPlayerLink(match.t1p2name, players, inactive),
-    //         t1p2username: match.t1p2name,
-    //         t1p2preelo: match.t1p2preelo,
-    //         t1p2score: match.t1p2score,
-    //         t1p2postelo: match.t1p2postelo,      
-    //         t2p1playername: this.addPlayerLink(match.t2p1name, players, inactive),
-    //         t2p1username: match.t2p1name,
-    //         t2p1preelo: match.t2p1preelo,
-    //         t2p1score: match.t2p1score,
-    //         t2p1postelo: match.t2p1postelo,
-    //         t2p2playername: this.addPlayerLink(match.t2p2name, players, inactive),
-    //         t2p2username: match.t2p2name,
-    //         t2p2preelo: match.t2p2preelo,
-    //         t2p2score: match.t2p2score,
-    //         t2p2postelo: match.t2p2postelo,      
-    //         comments:  0
-    //         // this.commentsService.getCommentsForMatch(match.idwar, '_').valueChanges().subscribe((data:any) => console.log(data))
-    //       }
-    //       this.comments$ = this.getCommentsForMatch(match.idwar).valueChanges();
-    //         this.comments$.subscribe((data:any) => {
-    //           return data.length;
-    //       });
-    //       matchRowArray.push(matchRow); 
-    //     }    
-    //     console.log('M =>', matchRowArray[1963]);
-    //     // console.log('M 2=>', matchRowArray[1923]);
+    //                 timestamp: match.timestamp,
+    //                 idwar: match.idwar,
+    //                 t1roundswon: match.t1roundswon,
+    //                 t2roundswon: match.t2roundswon, 
+    //                 video: match.video,
+    //                 info: match.info,
+    //                 t1preelo: sumPreeloTeam1,
+    //                 t2preelo: sumPreeloTeam2,
+    //                 t1chance: Number(this.calculateChance(sumPreeloTeam1,sumPreeloTeam2)[0].toFixed(2)),
+    //                 t2chance: Number(this.calculateChance(sumPreeloTeam1,sumPreeloTeam2)[1].toFixed(2)),
+    //                 t1p1playername: this.addPlayerLink(match.t1p1name, players, inactive),
+    //                 t1p1username: match.t1p1name,
+    //                 t1p1preelo: match.t1p1preelo,
+    //                 t1p1score: match.t1p1score,
+    //                 t1p1postelo: match.t1p1postelo,
+    //                 t1p2playername: this.addPlayerLink(match.t1p2name, players, inactive),
+    //                 t1p2username: match.t1p2name,
+    //                 t1p2preelo: match.t1p2preelo,
+    //                 t1p2score: match.t1p2score,
+    //                 t1p2postelo: match.t1p2postelo,
+    //                 t1p3playername: this.addPlayerLink(match.t1p3name, players, inactive),
+    //                 t1p3username: match.t1p3name,
+    //                 t1p3preelo: match.t1p3preelo,
+    //                 t1p3score: match.t1p3score,
+    //                 t1p3postelo: match.t1p3postelo,
+    //                 t1p4playername: this.addPlayerLink(match.t1p4name, players, inactive),
+    //                 t1p4username: match.t1p4name,
+    //                 t1p4preelo: match.t1p4preelo,
+    //                 t1p4score: match.t1p4score,
+    //                 t1p4postelo: match.t1p4postelo,
+    //                 t1p5playername: this.addPlayerLink(match.t1p5name, players, inactive),
+    //                 t1p5username: match.t1p5name,
+    //                 t1p5preelo: match.t1p5preelo,
+    //                 t1p5score: match.t1p5score,
+    //                 t1p5postelo: match.t1p5postelo,
+    //                 t1p6playername: this.addPlayerLink(match.t1p6name, players, inactive),
+    //                 t1p6username: match.t1p6name,
+    //                 t1p6preelo: match.t1p6preelo,
+    //                 t1p6score: match.t1p6score,
+    //                 t1p6postelo: match.t1p6postelo,
+    //                 t1p7playername: this.addPlayerLink(match.t1p7name, players, inactive),
+    //                 t1p7username: match.t1p7name,
+    //                 t1p7preelo: match.t1p7preelo,
+    //                 t1p7score: match.t1p7score,
+    //                 t1p7postelo: match.t1p7postelo,
+    //                 t2p1playername: this.addPlayerLink(match.t2p1name, players, inactive),
+    //                 t2p1username: match.t2p1name,
+    //                 t2p1preelo: match.t2p1preelo,
+    //                 t2p1score: match.t2p1score,
+    //                 t2p1postelo: match.t2p1postelo,
+    //                 t2p2playername: this.addPlayerLink(match.t2p2name, players, inactive),
+    //                 t2p2username: match.t2p2name,
+    //                 t2p2preelo: match.t2p2preelo,
+    //                 t2p2score: match.t2p2score,
+    //                 t2p2postelo: match.t2p2postelo,
+    //                 t2p3playername: this.addPlayerLink(match.t2p3name, players, inactive),
+    //                 t2p3username: match.t2p3name,
+    //                 t2p3preelo: match.t2p3preelo,
+    //                 t2p3score: match.t2p3score,
+    //                 t2p3postelo: match.t2p3postelo,
+    //                 t2p4playername: this.addPlayerLink(match.t2p4name, players, inactive),
+    //                 t2p4username: match.t2p4name,
+    //                 t2p4preelo: match.t2p4preelo,
+    //                 t2p4score: match.t2p4score,
+    //                 t2p4postelo: match.t2p4postelo,
+    //                 t2p5playername: this.addPlayerLink(match.t2p5name, players, inactive),
+    //                 t2p5username: match.t2p5name,
+    //                 t2p5preelo: match.t2p5preelo,
+    //                 t2p5score: match.t2p5score,
+    //                 t2p5postelo: match.t2p5postelo,
+    //                 t2p6playername: this.addPlayerLink(match.t2p6name, players, inactive),
+    //                 t2p6username: match.t2p6name,
+    //                 t2p6preelo: match.t2p6preelo,
+    //                 t2p6score: match.t2p6score,
+    //                 t2p6postelo: match.t2p6postelo,
+    //                 t2p7playername: this.addPlayerLink(match.t2p7name, players, inactive),
+    //                 t2p7username: match.t2p7name,
+    //                 t2p7preelo: match.t2p7preelo,
+    //                 t2p7score: match.t2p7score,
+    //                 t2p7postelo: match.t2p7postelo,
+    //                 comments: 0      
+    //                 // comments: this.commentsService.getCommentsForMatch(match.idwar, '_').snapshotChanges().subscribe(data => data.length)       
+    //               }
+    
+    //               const a = this.commentsService.getCommentsForMatch(match.idwar, '_').snapshotChanges().toPromise().then(data => {
+    //                 const commentCount = data ? data.length : 0;
+    //                 matchRow.comments = {
+    //                   id: match.idwar,
+    //                   comments: commentCount
+    //                 };        
+    //               });
+    
+    //       const newObj = {
+    //         ...matchRow,
+    //         flag: '',
+    //         flag2: '',
+    //         b: a
+    //       };
+    
+    //       matchRowArray.push(newObj);
+    //     }
+    //     console.log('matchRow', matchRowArray[2062])
     //     return matchRowArray.reverse();
-    //   }),  
-    // )  
+    //   })
+    // );
+    
+    
 
     
     

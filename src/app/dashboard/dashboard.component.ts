@@ -238,6 +238,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   sum = 0;
   userProfile: any;
 
+  what: string;
+  message: string;
+  name: string;
+
+
   firstFormValue: string;
   @Output() firstFormValueChange = new EventEmitter<string>();
 
@@ -837,6 +842,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       })      
     })   
+  }
+
+  // onSubmitDiscord() {
+  //   const data = { what: this.what, message: this.message, name: this.name };
+  //   this.http.post('http://localhost:5000/send-message-to-discord', data)
+  //     .subscribe(res => {
+  //       console.log('data', data)
+  //       console.log('res', res);
+  //       alert('Form submitted successfully!');
+  //     }, err => {
+  //       console.error(err);
+  //       alert('An error occurred while submitting the form.');
+  //     });
+  // }
+
+  sendMessageToDiscord() {
+    this.http.post('http://localhost:5000/send-message-to-discord2', { message: this.message })
+      .subscribe(
+        response => console.log('Wiadomość została wysłana na Discorda'),
+        error => console.error('Wystąpił błąd podczas wysyłania wiadomości', error)
+      );
   }
 
   applyEmpFilter(ob:MatSelectChange,empfilter:EmpFilter) {

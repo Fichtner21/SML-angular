@@ -14,7 +14,7 @@
                 <!-- <app-single-match (commentsEmitter)="onChildComments($event)"></app-single-match> -->
                 <!-- <app-single-match [comments]="comments$ | async" (lengthEmitter)="updateComments($event)"></app-single-match>                 -->
                 <!-- <div>{{ getCommentsForMatch(match.idwar) | json }}</div> -->
-               <!-- <div>{{ match.comments }}</div> -->
+               <!-- <div style="padding:10px; border:3px solid red;">{{ match.comments }}</div> -->
               </div>
               <div class="match-row__team" [class]="match.flag ? match.flag : ''" [style.background-image]="match.flag ? 'url(/assets/images/flags_svg/' + match.flag + '.SVG)' : ''" [style.background-size]="match.flag ? '20% 20%' : ''" [style.background-repeat]="match.flag ? 'no-repeat' : ''">
                 <div class="teamrounds">{{ match.t1roundswon }}</div>

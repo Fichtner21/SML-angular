@@ -17,7 +17,7 @@ export class RulesComponent implements OnInit {
     this.rules$ = this.googleApi.getPlayers('Rules').pipe(
       map((response: any) => {        
         let batchRowValuesHistory = response.values;
-        console.log('batchRowValuesHistory', batchRowValuesHistory)
+        // console.log('batchRowValuesHistory', batchRowValuesHistory)
         let rules: any[] = [];
         for(let i = 1; i < batchRowValuesHistory.length; i++){
           const rowObject: any = [];
@@ -27,7 +27,7 @@ export class RulesComponent implements OnInit {
           // console.log('rowObject', rowObject);
           rules.push(rowObject);
         }        
-        console.log('rules', rules)
+        // console.log('rules', rules)
         return rules;
       }),
     )

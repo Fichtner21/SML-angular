@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
-import { combineLatest, forkJoin, Observable } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { GoogleSheetsDbService } from 'ng-google-sheets-db';
 import { Matches, matchesAttributesMapping } from './matches.model';
@@ -101,7 +101,6 @@ export class HistoryObjComponent implements OnInit {
         return inactivePlayers;
       }),
     );     
-   
     
     // this.matchesTab$.subscribe(historyMatches => {
     //   let newArray: any[] = [];
@@ -119,10 +118,8 @@ export class HistoryObjComponent implements OnInit {
     //      });
     //   });
     //   this.warsAndComments$ = newArray; 
-    //   // console.log(this.warsAndComments$)
+    //   console.log(this.warsAndComments$)
     // });
-
-    
     
     this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$, this.inactiveTab$]).pipe(
       map(([players, matches, inactive]) => {
@@ -299,8 +296,10 @@ export class HistoryObjComponent implements OnInit {
         // console.log('M 2 =>', this.matchRowArray[2002]);
         
         // console.log('M 2=>', matchRowArray[2062]);
+        // console.log('M =>', matchRowArray);
         return matchRowArray.reverse();
       }),
+      
       // tap(x => console.log('xx', x))
     )      
 
@@ -434,10 +433,6 @@ export class HistoryObjComponent implements OnInit {
     //     return matchRowArray.reverse();
     //   })
     // );
-    
-    
-
-    
     
   };  
 

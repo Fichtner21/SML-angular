@@ -144,12 +144,13 @@ export class RankingObjComponent implements OnInit {
               ban: name.ban == 'TRUE' ? true : false,
               s1wars_win: parseInt(name.s1wars_win),
               s1fpw_win: parseInt(name.s1fpw_win),
-              s1ranking_win: parseInt(name.s1ranking_win)      
+              s1ranking_win: parseInt(name.s1ranking_win),
+              streak: name.streak      
             };
             playerRowArray.push(lastWarDate); 
           }                   
         }     
-        // console.log('playerRowArray', playerRowArray)
+        // console.log('playerRowArray', playerRowArray[0])
         return playerRowArray;         
       })
     );
@@ -470,5 +471,30 @@ export class RankingObjComponent implements OnInit {
         res => res.sort((a:any,b:any) => parseFloat(a.s2fpw) - parseFloat(b.s2fpw))
       )
     )       
+  }
+
+  getActivityColor(activity: number): string {
+    if(activity == 0){
+      return '#003200';
+    } else if (activity >= 0 && activity <= 5) {
+      return '#050'; 
+    } else if (activity >= 6 && activity <= 10) {
+      return '#00a100'; 
+    } else if (activity >= 11 && activity <= 20) {
+      return '#8aff1a'; 
+    } else if (activity >= 21 && activity <= 40) {
+      return '#ffff00'; 
+    } else if (activity >= 41 && activity <= 60) {
+      return 'orange'; 
+    } else if (activity >= 61 && activity <= 90) {
+      return 'red'; 
+    } else {
+      return '#003200'; 
+    }
+  }
+
+  getActivityGradient(activity: number): string {
+    const color = this.getActivityColor(activity);
+    return `linear-gradient(to top, ${color} ${activity}%, gray ${activity}%)`;
   }
 }

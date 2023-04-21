@@ -204,6 +204,21 @@ a {
   background-color: #40415f;  
   transition: .4s all;
 
+  .playername-cont {
+    display: flex;
+    flex-direction: column;
+
+    .streak-small {
+      color: lightgray;
+      font-size: 12px;
+      font-style: italic;
+
+      span {
+        color: gray;
+      }
+    }
+  }
+
   &:nth-child(-n+3){
     .playername {
       // letter-spacing: 3px;
@@ -466,6 +481,12 @@ a {
   .name-blur {
     filter: blur(5px);
   }
+}
+
+.act-month {
+  width: 21px;
+  height: 21px;
+  margin: 2px;  
 }
 
 .green0 {

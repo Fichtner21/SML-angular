@@ -226,28 +226,31 @@ export class MixUsComponent implements OnInit {
       setTimeout(() => {
         this.array1 = params['a1'] ? JSON.parse(params['a1']) : [];
         this.array2 = params['a2'] ? JSON.parse(params['a2']) : [];
-        this.dataSource.data?.forEach(item => {
-          // console.log('item oninit', item)
-          // check if the username of the item matches a username in array1
-          let match1 = this.array1.find(arrayItem => arrayItem.username === item.username);
-          // if there is a match, set the checkbox value to true
-          if (match1) {
-            // console.log('item1', item)
-            // this.selectedUsers = [];
-            this.selectedUsers.push(item)
-            item.checkbox1 = true;
-          }
 
-          // check if the username of the item matches a username in array2
-          let match2 = this.array2.find(arrayItem => arrayItem.username === item.username);
-          // if there is a match, set the checkbox value to true
-          if (match2) {
-            // console.log('item2', item)
-            // this.selectedUsers = [];
-            this.selectedUsers.push(item)
-            item.checkbox2 = true;
-          }
-        });
+        if (this.dataSource) {
+          this.dataSource.data?.forEach(item => {
+            // console.log('item oninit', item)
+            // check if the username of the item matches a username in array1
+            let match1 = this.array1.find(arrayItem => arrayItem.username === item.username);
+            // if there is a match, set the checkbox value to true
+            if (match1) {
+              // console.log('item1', item)
+              // this.selectedUsers = [];
+              this.selectedUsers.push(item)
+              item.checkbox1 = true;
+            }
+
+            // check if the username of the item matches a username in array2
+            let match2 = this.array2.find(arrayItem => arrayItem.username === item.username);
+            // if there is a match, set the checkbox value to true
+            if (match2) {
+              // console.log('item2', item)
+              // this.selectedUsers = [];
+              this.selectedUsers.push(item)
+              item.checkbox2 = true;
+            }
+          });
+        }
       }, 1000)
 
     });
@@ -1152,6 +1155,14 @@ export class MixUsComponent implements OnInit {
     const arr1 = this.array1;
     const arr2 = this.array2;
 
+    const selectRandomPlayer = (arr: {playername: string}[]): string => {
+      const randomIndex = Math.floor(Math.random() * arr.length);
+      return arr[randomIndex].playername;
+    };
+
+    console.log('arr1', arr1)
+    console.log('arr2', arr2)
+
     const t1p1name = (arr1.length > 0 && arr1[0] && arr1[0].playername) ? arr1[0].playername : '';
     const t1p2name = (arr1.length > 1 && arr1[1] && arr1[1].playername) ? arr1[1].playername : '';
     const t1p3name = (arr1.length > 2 && arr1[2] && arr1[2].playername) ? arr1[2].playername : '';
@@ -1166,6 +1177,36 @@ export class MixUsComponent implements OnInit {
     const t2p5name = (arr2.length > 0 && arr2[4] && arr2[4].playername) ? arr2[4].playername : '';
     const t2p6name = (arr2.length > 0 && arr2[5] && arr2[5].playername) ? arr2[5].playername : '';
     const t2p7name = (arr2.length > 0 && arr2[6] && arr2[6].playername) ? arr2[6].playername : '';
+
+    const funnyOneLiners: string[] = 
+    ["He is the sniper on the grassy knoll!", 
+    "He didn't choose the camp life, the camp life chose him.", 
+    "Headshot! Sorry, wrong game...", 
+    "He's not camping, He's just waiting for your s'mores to cook.", 
+    "If you can't beat 'em, cheat 'em!", 
+    "Official? I m coming for You!",
+    "I'm not lost, I'm just exploring the enemy spawn point.", 
+    "This isn't camping, it's strategic resting.", 
+    "If at first you don't succeed, call for an airstrike.", 
+    "I'm not a hacker, I'm just really good at guessing your spot.", 
+    "I'm not a camper, I'm a wildlife photographer."];
+
+
+    const admin = `ADMIN: ${selectRandomPlayer([...arr1, ...arr2])}`;
+
+    const arr = [...arr1, ...arr2]; // łączymy obie tablice w jedną
+    let highestRanking = -Infinity; // zaczynamy od bardzo niskiej wartości
+    let highestRankingPlayer = '';
+    
+    for (const player of arr) {
+      const ranking = parseInt(player.ranking); // konwertujemy ranking na liczbę
+    
+      if (ranking > highestRanking) {
+        highestRanking = ranking;
+        highestRankingPlayer = player.playername;
+      }
+    }
+    
 
     const now = new Date();
     const day = ("0" + now.getDate()).slice(-2);
@@ -1196,18 +1237,20 @@ export class MixUsComponent implements OnInit {
     nextMatch += "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + "\n";
     nextMatch += "TEAM 2 Chance for win: " + chanceOfWinTeamOneShow + " %" + "\n";
     nextMatch += "----------" + "\n";
+    nextMatch += "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}` + "\n";
+    nextMatch += "----------" + "\n";
     nextMatch += "Good Luck & Have Fun!";
     console.log('nextM', nextMatch);
-    const payload = {
-      content: nextMatch
-    };
-    this.http.post(webhookUrl, payload).subscribe({
-      next: (res) => {
-        this.notifier.notify('success', "Teams Send successful!")
-      }, error: (err) => {
-        this.notifier.notify('error', 'Something went wrong')
-      }
-    });
+    // const payload = {
+    //   content: nextMatch
+    // };
+    // this.http.post(webhookUrl, payload).subscribe({
+    //   next: (res) => {
+    //     this.notifier.notify('success', "Teams Send successful!")
+    //   }, error: (err) => {
+    //     this.notifier.notify('error', 'Something went wrong')
+    //   }
+    // });
   }
 
   isValid(): boolean {

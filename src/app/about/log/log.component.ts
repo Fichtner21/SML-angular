@@ -124,6 +124,4 @@ export class LogComponent implements OnInit {
   
     return results;
   }
-  
-  
 }

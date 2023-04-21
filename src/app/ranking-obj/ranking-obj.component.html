@@ -46,7 +46,7 @@
               <!-- <ng-container *ngIf="player.ban"> -->
                 <div class="character-card" [ngClass]="{'cyan': player.meeting == 1 }" *ngIf="player.inactive && !player.ban">                
                   <div class="item">{{ i+1 }}</div>
-                  <div class="item">
+                  <div class="item playername-cont">
                     <a routerLink="/obj-ranking/{{player.username}}" class=" playername" [title]="player.username === 'evoltnz'
                     ? 'Winner S#1'
                     : player.username === 'tricky'
@@ -80,8 +80,11 @@
                     </ng-container>
                      -->
                     
-                    
-                  </a>              
+                     
+                  </a>   
+                  <div *ngIf="i === 0 && player.streak" class="streak-small" title="1st place since">
+                    <span>since:</span> {{ player.streak }}
+                  </div>           
                   </div>
                   <div class="item">
                     <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
@@ -110,10 +113,8 @@
                   </div> -->
                   <div class="item new">{{ player.lastWarDate }}</div>
                   <div class="item name act">
-                    <div class="act-month" [ngClass]="{
-                      'green0': player.activity == 0, 
-                      'green1_5': (player.activity > 0 && player.activity <= 5), 'green6_10': (player.activity > 5 && player.activity <= 10), 'green11_20': (player.activity > 10 && player.activity <= 20), 'green21_40': (player.activity > 20 && player.activity <= 40), 'green41_70': (player.activity > 40 && player.activity <= 60), 'green71': (player.activity > 60 && player.activity <= 89), 'moh': (player.activity > 89) }" title="{{ player.activity }} wars in last month. {{ player.activity > 89 ? 'Medal of Honor' : '' }}"></div>
-                    <div class="act-year" [ngClass]="{
+                    <div class="act-month" [attr.data-activity]="player.activity" [style.background]="getActivityGradient(player.activity)" title="{{ player.activity }} wars in last month."></div>
+                    <div class="act-year" [attr.data-activity]="player.lastyear" [ngClass]="{
                       'green0': player.lastyear == 0, 
                       'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 30 && player.lastyear <= 90), 'green11_20': (player.lastyear > 90 && player.lastyear <= 150), 'green21_40': (player.lastyear > 150 && player.lastyear <= 250), 'green41_70': (player.lastyear > 250 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>
                   </div>              

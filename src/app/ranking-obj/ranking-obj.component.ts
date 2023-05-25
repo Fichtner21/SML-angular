@@ -32,6 +32,18 @@ export class RankingObjComponent implements OnInit {
   public playersTest2$: Observable<any>;
   public historyMatches$: Observable<any>;
 
+  minValue = 100;
+  maxValue = 2000;
+  brownMinValue = 100;
+  brownMaxValue = 499;
+  silverMinValue = 500;
+  silverMaxValue = 999;
+  goldMinValue = 1000;
+  goldMaxValue = 1500;
+  startingPercentage = 25;
+
+  topThreePlayers: any[]
+
   @Output() ranking:EventEmitter<any> = new EventEmitter();
 
   currentInfo: any = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';  
@@ -85,57 +97,28 @@ export class RankingObjComponent implements OnInit {
     );
 
     this.lastWarOfPlayer$ = combineLatest([this.playersTest$, this.historyMatches$]).pipe(
-      map(([v1, v2]) => {
-        
+      map(([v1, v2]) => {        
         let lastWarDate: any;
         let playerRowArray: any[] = [];
-        for( let name of v1){          
-          // const foundPlayerArray = this.filterUsername(name.username, v2);         
-
-          // Frags
-          // const fragsPerPlayerArray:any[] = [];
-          
-          // foundPlayerArray.forEach((el) => {            
-          //   const destructObjPlayers1 = Object.values(el);
-          //   destructObjPlayers1.forEach((item:any[], i) => {
-          //     if(item.includes(name.username) ){
-          //       fragsPerPlayerArray.push(Number(destructObjPlayers1[i + 2] ? Number(destructObjPlayers1[i + 2]) : 0));
-          //     }
-          //   })
-          // }) 
-          
-          // let fragsToDisplay:any;
-          // if (Array.isArray(fragsPerPlayerArray) && fragsPerPlayerArray.length > 0) {
-          //   fragsToDisplay = fragsPerPlayerArray.reduce((a, b) => a + b);
-          // } else {
-          //   fragsToDisplay = '0';
-          // }                 
+        for( let name of v1){ 
           if(name.active == 'FALSE'){
             continue;
           } else {
-            lastWarDate = {
-              // lastWarDate:this.findPlayerLastWar(name.username, v2),
+            lastWarDate = {             
               username:name.username,
               playername:name.playername,
               cup:this.addTitleCup(name.cup1on1edition1),
-              ranking:parseFloat(name.ranking.replace(/,/g,'')),
-              // ranking: name.ranking,
+              ranking:parseFloat(name.ranking.replace(/,/g,'')),             
               wars:name.warcount,
-              flag:name.nationality,          
-              // strike: this.smallStrike2(name.username, v2),
-              strike: name.lastwarpc,
-              // fragsperwar: (fragsToDisplay / name.warcount).toFixed(2) != 'NaN' ? (fragsToDisplay / name.warcount).toFixed(2) : '0',
-              // maxfragsperwar: Math.max(...fragsPerPlayerArray) ? Math.max(...fragsPerPlayerArray) : '0',
-              // minfragsperwar: Math.min(...fragsPerPlayerArray) ? Math.min(...fragsPerPlayerArray) : '0',
+              flag:name.nationality, 
+              strike: name.lastwarpc,              
               maxfragsperwar: name.fpwmax,
               minfragsperwar: name.fpwmin,
               s1wars: parseFloat(name.s1wars),
               s1fpw: Math.round(name.s1fpw * 100) / 100,
               s2wars: parseFloat(name.s2wars),
-              s2fpw: Math.round(name.s2fpw * 100) / 100,
-              // activity: this.searchPlayerActivity(name.username, v2), 
-              activity: name.last30days, 
-              // lastyear: this.pastYearActivity(name.username, v2),
+              s2fpw: Math.round(name.s2fpw * 100) / 100,               
+              activity: name.last30days,              
               lastyear: name.last365days,
               meeting: name.meeting,
               lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
@@ -151,6 +134,9 @@ export class RankingObjComponent implements OnInit {
           }                   
         }     
         // console.log('playerRowArray', playerRowArray[0])
+        // this.topThreePlayers = playerRowArray
+        // .sort((a, b) => b.wars - a.wars) // Sortowanie graczy według wartości "wars" (malejąco)
+        // .slice(0, 3); // Pobranie trzech graczy z najwyższymi wartościami "wars"
         return playerRowArray;         
       })
     );
@@ -474,27 +460,83 @@ export class RankingObjComponent implements OnInit {
   }
 
   getActivityColor(activity: number): string {
-    if(activity == 0){
+    if (activity == 0) {
       return '#003200';
-    } else if (activity >= 0 && activity <= 5) {
-      return '#050'; 
+    } else if (activity >= 1 && activity <= 5) {
+      return '#050';
     } else if (activity >= 6 && activity <= 10) {
-      return '#00a100'; 
+      return '#00a100';
     } else if (activity >= 11 && activity <= 20) {
-      return '#8aff1a'; 
+      return '#8aff1a';
     } else if (activity >= 21 && activity <= 40) {
-      return '#ffff00'; 
+      return '#ffff00';
     } else if (activity >= 41 && activity <= 60) {
-      return 'orange'; 
+      return 'orange';
     } else if (activity >= 61 && activity <= 90) {
-      return 'red'; 
+      return 'red';
     } else {
-      return '#003200'; 
+      return '#003200';
+    }
+  }
+  
+  getActivityGradient(activity: number): string {
+    let percentage = 0;
+    if (activity >= 1 && activity <= 5) {
+      percentage = ((activity - 1) / 5) * 100;
+    } else if (activity >= 6 && activity <= 10) {
+      percentage = ((activity - 6) / 5) * 100;
+    } else if (activity >= 11 && activity <= 20) {
+      percentage = ((activity - 11) / 10) * 100;
+    } else if (activity >= 21 && activity <= 40) {
+      percentage = ((activity - 21) / 20) * 100;
+    } else if (activity >= 41 && activity <= 60) {
+      percentage = ((activity - 41) / 20) * 100;
+    } else if (activity >= 61 && activity <= 90) {
+      percentage = ((activity - 61) / 30) * 100;
+    } else if (activity > 90) {
+      percentage = 100;
+    }
+    const color = this.getActivityColor(activity);
+    return `linear-gradient(to top, ${color} ${percentage}%, gray ${percentage}%)`;
+  }
+  
+  // getPercentage(value: number): number {
+  //   if (value >= this.brownMinValue && value <= this.brownMaxValue) {
+  //     return ((value - this.brownMinValue) / (this.brownMaxValue - this.brownMinValue)) * 100;
+  //   } else if (value >= this.silverMinValue && value <= this.silverMaxValue) {
+  //     return ((value - this.silverMinValue) / (this.silverMaxValue - this.silverMinValue)) * 100;
+  //   } else if (value >= this.goldMinValue && value <= this.goldMaxValue) {
+  //     return ((value - this.goldMinValue) / (this.goldMaxValue - this.goldMinValue)) * 100;
+  //   } else {
+  //     return 0;
+  //   }
+  // }
+
+  getPercentage(value: number): number {
+    if (value >= this.brownMinValue && value <= this.brownMaxValue) {
+      const range = this.brownMaxValue - this.brownMinValue;
+      const adjustedValue = value - this.brownMinValue;
+      return this.startingPercentage + (adjustedValue / range) * (100 - this.startingPercentage);
+    } else if (value >= this.silverMinValue && value <= this.silverMaxValue) {
+      const range = this.silverMaxValue - this.silverMinValue;
+      const adjustedValue = value - this.silverMinValue;
+      return this.startingPercentage + (adjustedValue / range) * (100 - this.startingPercentage);
+    } else if (value >= this.goldMinValue && value <= this.goldMaxValue) {
+      const range = this.goldMaxValue - this.goldMinValue;
+      const adjustedValue = value - this.goldMinValue;
+      return this.startingPercentage + (adjustedValue / range) * (100 - this.startingPercentage);
+    } else {
+      return this.startingPercentage;
     }
   }
 
-  getActivityGradient(activity: number): string {
-    const color = this.getActivityColor(activity);
-    return `linear-gradient(to top, ${color} ${activity}%, gray ${activity}%)`;
+  getBarColor(value: number): string {
+    if (value >= this.goldMinValue && value <= this.goldMaxValue) {
+      return 'gold';
+    } else if (value >= this.silverMinValue && value <= this.silverMaxValue) {
+      return 'silver';
+    } else if (value >= this.brownMinValue && value <= this.brownMaxValue) {
+      return 'brown';
+    }
   }
 }

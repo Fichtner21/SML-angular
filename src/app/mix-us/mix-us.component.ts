@@ -461,61 +461,154 @@ export class MixUsComponent implements OnInit {
     return sum;
   }
 
-  permutate(array: User[], currentPermutation: User[]): User[][] {
-    if (array.length === 0) {
-      return [currentPermutation];
-    }
+  // permutate(array: User[], currentPermutation: User[]): User[][] {
+  //   if (array.length === 0) {
+  //     return [currentPermutation];
+  //   }
 
-    let allPermutations: User[][] = [];
-    for (let i = 0; i < array.length; i++) {
-      let newArray = [...array.slice(0, i), ...array.slice(i + 1)];
-      let newPermutation = [...currentPermutation, array[i]];
-      allPermutations = [...allPermutations, ...this.permutate(newArray, newPermutation)];
-    }
+  //   let allPermutations: User[][] = [];
+  //   for (let i = 0; i < array.length; i++) {
+  //     let newArray = [...array.slice(0, i), ...array.slice(i + 1)];
+  //     let newPermutation = [...currentPermutation, array[i]];
+  //     allPermutations = [...allPermutations, ...this.permutate(newArray, newPermutation)];
+  //   }
 
-    return allPermutations;
+  //   return allPermutations;
+  // }
+
+  // splitArrayIntoTwo(inputArray: User[]): [User[], User[]] {
+  //   localStorage.setItem('mixway', 'HP');
+  //   this.notifier.notify('default', 'MIX TEAMS HP has been called');
+  //   // Przekonwertuj pola ranking na wartości liczbowe
+  //   inputArray.forEach(obj => parseFloat(obj.ranking.replace(/,/g, '')));
+
+  //   // Wygeneruj wszystkie możliwe permutacje tablicy
+  //   let allPermutations = this.permutate(inputArray, []);
+
+  //   // Znajdź permutację, której dwie części mają najmniejszą różnicę w sumie rankingów
+  //   let bestSplit: [User[], User[]] = [[], []];
+  //   let bestDifference = Number.MAX_VALUE;
+  //   allPermutations.forEach(permutation => {
+  //     // this.notifier.notify('info', 'Performing operations...');
+  //     for (let i = 0; i < permutation.length; i++) {
+  //       let array1 = permutation.slice(0, i);
+  //       let array2 = permutation.slice(i);
+  //       let array1Sum = array1.reduce((sum, obj) => sum + parseFloat(obj.ranking.replace(/,/g, '')), 2);
+  //       let array2Sum = array2.reduce((sum, obj) => sum + parseFloat(obj.ranking.replace(/,/g, '')), 2);
+  //       let difference = Math.abs(array1Sum - array2Sum);
+  //       if (difference < bestDifference) {
+  //         bestDifference = difference;
+  //         bestSplit = [array1, array2];
+  //         this.array1 = array1;
+  //         this.array2 = array2;
+
+  //         this.sumTeam1 = this.sumRanking(array1)
+  //         this.sumTeam2 = this.sumRanking(array2)
+  //         const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
+  //         const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
+  //         this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+  //         this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
+  //       }
+  //     }
+  //   });   
+  //   // console.log('THIS.ARRAY 1', this.array1)
+  //   // console.log('THIS.ARRAY 2', this.array2)     
+  //   this.addArrayToUrl(this.array1, this.array2)
+  //   this.notifier.notify('success', 'MIX TEAMS HP has finished executing');
+  //   return bestSplit;
+  // }
+
+  permutate(array: User[]): User[][] {
+    let stack = [...array.map(el => [el])];
+    let result: User[][] = [];
+  
+    while (stack.length > 0) {
+      let permutation = stack.pop()!;
+      if (permutation.length === array.length) {
+        result.push(permutation);
+        continue;
+      }
+      let remaining = array.filter(el => !permutation.includes(el));
+      for (let i = 0; i < remaining.length; i++) {
+        stack.push([...permutation, remaining[i]]);
+      }
+    }
+  
+    return result;
   }
 
   splitArrayIntoTwo(inputArray: User[]): [User[], User[]] {
     localStorage.setItem('mixway', 'HP');
     this.notifier.notify('default', 'MIX TEAMS HP has been called');
+  
     // Przekonwertuj pola ranking na wartości liczbowe
     inputArray.forEach(obj => parseFloat(obj.ranking.replace(/,/g, '')));
-
-    // Wygeneruj wszystkie możliwe permutacje tablicy
-    let allPermutations = this.permutate(inputArray, []);
-
-    // Znajdź permutację, której dwie części mają najmniejszą różnicę w sumie rankingów
+  
+    let array1: User[] = [];
+    let array2: User[] = [];
+  
+    const sumRanking = (arr: User[]) =>
+      arr.reduce((sum, obj) => sum + parseFloat(obj.ranking.replace(/,/g, '')), 0);
+  
+    // Wybierz startowy podział
     let bestSplit: [User[], User[]] = [[], []];
     let bestDifference = Number.MAX_VALUE;
-    allPermutations.forEach(permutation => {
-      // this.notifier.notify('info', 'Performing operations...');
-      for (let i = 0; i < permutation.length; i++) {
-        let array1 = permutation.slice(0, i);
-        let array2 = permutation.slice(i);
-        let array1Sum = array1.reduce((sum, obj) => sum + parseFloat(obj.ranking.replace(/,/g, '')), 2);
-        let array2Sum = array2.reduce((sum, obj) => sum + parseFloat(obj.ranking.replace(/,/g, '')), 2);
-        let difference = Math.abs(array1Sum - array2Sum);
-        if (difference < bestDifference) {
-          bestDifference = difference;
-          bestSplit = [array1, array2];
-          this.array1 = array1;
-          this.array2 = array2;
-
-          this.sumTeam1 = this.sumRanking(array1)
-          this.sumTeam2 = this.sumRanking(array2)
-          const chanceOfWinTeamOne = 1 / (1 + 10 ** ((this.sumTeam1 - this.sumTeam2) / 400)) * 100;
-          const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((this.sumTeam2 - this.sumTeam1) / 400)) * 100;
-          this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-          this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
+    let currentDifference = 0;
+    for (let i = 1; i < inputArray.length; i++) {
+      array1 = inputArray.slice(0, i);
+      array2 = inputArray.slice(i);
+      const sum1 = sumRanking(array1);
+      const sum2 = sumRanking(array2);
+      currentDifference = Math.abs(sum1 - sum2);
+      if (currentDifference < bestDifference) {
+        bestSplit = [array1, array2];
+        bestDifference = currentDifference;
+      }
+    }
+  
+    // Iteracyjnie poprawiaj podział tablicy dopóki jest możliwe polepszenie
+    let improved = true;
+    while (improved) {
+      improved = false;
+  
+      for (let i = 0; i < bestSplit[0].length; i++) {
+        for (let j = 0; j < bestSplit[1].length; j++) {
+          const newSplit: [User[], User[]] = [
+            [...bestSplit[0].slice(0, i), bestSplit[1][j], ...bestSplit[0].slice(i + 1)],
+            [...bestSplit[1].slice(0, j), bestSplit[0][i], ...bestSplit[1].slice(j + 1)]
+          ];
+          const difference = Math.abs(sumRanking(newSplit[0]) - sumRanking(newSplit[1]));
+          if (difference < bestDifference) {
+            bestSplit = newSplit;
+            bestDifference = difference;
+            improved = true;
+          }
         }
       }
-    });
-    // console.log('bestSplit', bestSplit)
-    this.addArrayToUrl(this.array1, this.array2)
+    }
+  
+    // Oblicz szanse na zwycięstwo dla każdej drużyny
+    const sumTeam1 = sumRanking(bestSplit[0]);
+    const sumTeam2 = sumRanking(bestSplit[1]);
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((sumTeam1 - sumTeam2) / 400)) * 100;
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((sumTeam2 - sumTeam1) / 400)) * 100;
+  
+    // Przypisz wyniki do zmiennych klasy
+    this.array1 = bestSplit[0];
+    this.array2 = bestSplit[1];
+    this.sumTeam1 = sumTeam1;
+    this.sumTeam2 = sumTeam2;
+    this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+    this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
+    // console.log('THIS.ARRAY 1', this.array1)
+    // console.log('THIS.ARRAY 2', this.array2)   
+    // Dodaj tablice do URL
+    this.addArrayToUrl(this.array1, this.array2);
+  
     this.notifier.notify('success', 'MIX TEAMS HP has finished executing');
     return bestSplit;
-  }
+  }  
+  
 
   splitRanking(objects: User[], startIndex: number, firstArray: User[], secondArray: User[], halfSum: number): [User[], User[]] | null {
     if (startIndex >= objects.length) {
@@ -1240,17 +1333,17 @@ export class MixUsComponent implements OnInit {
     nextMatch += "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}` + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "Good Luck & Have Fun!";
-    console.log('nextM', nextMatch);
-    // const payload = {
-    //   content: nextMatch
-    // };
-    // this.http.post(webhookUrl, payload).subscribe({
-    //   next: (res) => {
-    //     this.notifier.notify('success', "Teams Send successful!")
-    //   }, error: (err) => {
-    //     this.notifier.notify('error', 'Something went wrong')
-    //   }
-    // });
+    // console.log('nextM', nextMatch);
+    const payload = {
+      content: nextMatch
+    };
+    this.http.post(webhookUrl, payload).subscribe({
+      next: (res) => {
+        this.notifier.notify('success', "Teams Send successful!")
+      }, error: (err) => {
+        this.notifier.notify('error', 'Something went wrong')
+      }
+    });
   }
 
   isValid(): boolean {

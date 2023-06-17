@@ -44,7 +44,7 @@
           <div class="players-list">
             <ng-container *ngFor="let player of lastWarOfPlayers; let i = index;">
               <!-- <ng-container *ngIf="player.ban"> -->
-                <div class="character-card" [ngClass]="{'goldie': i == 0, 'silverie': i == 1, 'brownie': i == 2 }" *ngIf="player.inactive && !player.ban">                
+                <div class="character-card" [ngClass]="{'goldie': i == 0, 'silverie': i == 1, 'brownie': i == 2 }" *ngIf="player.inactive && !player.ban" (dataEvent)="handleData($event)">                
                   <div class="item">{{ i+1 }}</div>
                   <div class="item playername-cont" [ngClass]="{'over1000': (player.wars > 1000)}">
                     <div class="wars-bar" *ngIf="isInfo" title="Exp. rank" [style.width.%]="getPercentage(player.wars)" [ngClass]="getBarColor(player.wars)"></div>
@@ -213,12 +213,12 @@
           </div> 
           <div>wars in last year.</div>                   
         </div>
-        <div class="legend" *ngIf="isInfo">
+        <!-- <div class="legend" *ngIf="isInfo">
           <h3>Expirience ranking</h3>          
           <div class="name">100 - 499 <div class="brown bar-legend"></div></div>
           <div class="name">500 - 999 <div class="silver bar-legend"></div></div>
           <div class="name">+1000 <div class="gold bar-legend"></div></div>
-        </div>
+        </div> -->
       </div>
       <div class="container">
         <div class="big-name">Season #2</div> 

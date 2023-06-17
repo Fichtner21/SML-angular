@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewEncapsulation   } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation   } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { tap, take, map } from 'rxjs/operators';
 import { RankObjService } from '../rank-obj.service';
@@ -20,6 +20,7 @@ import { DatePipe } from '@angular/common';
 export class PlayerViewComponent implements OnInit {
   @Input('tabTitle') title: string;
   @Input() active = false;
+  @Output() dataEvent = new EventEmitter<number>();
   public player$:Observable<Players>;
   numOfPlayers$: Observable<any>;
   public errorMessage: string;
@@ -167,7 +168,7 @@ export class PlayerViewComponent implements OnInit {
           const numPlayerTeam = Number(this.getKeyByValue(el, player).slice(1,2));
           const numPlayerTeamPosition = Number(this.getKeyByValue(el, player).slice(3,4));
 
-          const playerPosition = el[`t${numPlayerTeam}p${numPlayerTeamPosition}name`];
+          // const playerPosition = el[`t${numPlayerTeam}p${numPlayerTeamPosition}name`];
 
           for(let i = 1; i < 8; i++){
             const restOfTeam = el[`t${numPlayerTeam}p${(i == numPlayerTeamPosition) ? 'continue' : i}name`];
@@ -191,6 +192,7 @@ export class PlayerViewComponent implements OnInit {
         });
 
         resultPerPlayer.push(win, lose, draw);
+        this.dataEvent.emit((win/(win + lose + draw)*100));
 
         // console.log('mostOftenPlayed', mostOftenPlayed.filter(n => n));
         const mostOftenPlayedFilter = this.mostOftenPlayed.filter(n => n);
@@ -235,8 +237,6 @@ export class PlayerViewComponent implements OnInit {
             timestampArray.push(new Date(el.timestamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }));
           }
         });
-
-
 
         players.forEach((el) => {
           if (el.username === player) {

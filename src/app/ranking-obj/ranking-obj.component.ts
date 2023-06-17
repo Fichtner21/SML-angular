@@ -16,6 +16,7 @@ import { parseFloat } from 'core-js/es/number';
   styleUrls: ['./ranking-obj.component.scss']
 })
 export class RankingObjComponent implements OnInit {
+  receivedData: number;
   public spinkit = Spinkit;
   players$: Observable<Players[]>;
   nat: string;
@@ -97,7 +98,7 @@ export class RankingObjComponent implements OnInit {
     );
 
     this.lastWarOfPlayer$ = combineLatest([this.playersTest$, this.historyMatches$]).pipe(
-      map(([v1, v2]) => {        
+      map(([v1, v2, ]) => {        
         let lastWarDate: any;
         let playerRowArray: any[] = [];
         for( let name of v1){ 
@@ -128,12 +129,13 @@ export class RankingObjComponent implements OnInit {
               s1wars_win: parseInt(name.s1wars_win),
               s1fpw_win: parseInt(name.s1fpw_win),
               s1ranking_win: parseInt(name.s1ranking_win),
-              streak: name.streak      
+              streak: name.streak,
+              winPercentage: this.handleData(this.receivedData)      
             };
             playerRowArray.push(lastWarDate); 
           }                   
         }     
-        // console.log('playerRowArray', playerRowArray[0])
+        console.log('playerRowArray', playerRowArray[0])
         // this.topThreePlayers = playerRowArray
         // .sort((a, b) => b.wars - a.wars) // Sortowanie graczy według wartości "wars" (malejąco)
         // .slice(0, 3); // Pobranie trzech graczy z najwyższymi wartościami "wars"
@@ -538,5 +540,9 @@ export class RankingObjComponent implements OnInit {
     } else if (value >= this.brownMinValue && value <= this.brownMaxValue) {
       return 'brown';
     }
+  }
+
+  handleData(data: number) {
+    this.receivedData = data;
   }
 }

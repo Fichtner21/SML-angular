@@ -207,6 +207,14 @@ a {
   background-color: #40415f;  
   transition: .4s all;
 
+  // @media screen and (min-width: 1024px){
+  //   &:hover {
+  //     box-shadow: 0 0 30px #010141;
+  //     transform: scale(1.1) translateX(20px);
+  //     z-index: 10;
+  //   }
+  // } 
+
   .playername-cont {
     display: flex;
     flex-direction: column;
@@ -880,55 +888,55 @@ a {
 //   }
 // }
 
-.brown {
-  // background-color: #AD8A56;
-  background: linear-gradient(45deg, #AD8A56, #AD8A56 calc(100% - 10px), transparent calc(100% - 10px), transparent);
-  z-index: 2;
+// .brown {
+//   // background-color: #AD8A56;
+//   background: linear-gradient(45deg, #AD8A56, #AD8A56 calc(100% - 10px), transparent calc(100% - 10px), transparent);
+//   z-index: 2;
 
-  &:after {
-    position: absolute;
-    content: 'BRONZE';
-    left: 0;
-    bottom: -3px;
-    font-size: 12px;
-    font-weight: 700;
-    color:#010141;
-    font-style: italic;
-  }
-}
+//   &:after {
+//     position: absolute;
+//     content: 'BRONZE';
+//     left: 0;
+//     bottom: -3px;
+//     font-size: 12px;
+//     font-weight: 700;
+//     color:#010141;
+//     font-style: italic;
+//   }
+// }
 
-.silver {
-  // background-color: #d7d7d7;
-  background: linear-gradient(45deg, #d7d7d7, #d7d7d7 calc(100% - 10px), transparent calc(100% - 10px), transparent);
-  z-index: 2;
-  &:after {
-    position: absolute;
-    content: 'SILVER';
-    left: 0;
-    bottom: -3px;
-    font-size: 12px;
-    font-weight: 700;
-    color:#010141;
-    font-style: italic;
-  }
-}
+// .silver {
+//   // background-color: #d7d7d7;
+//   background: linear-gradient(45deg, #d7d7d7, #d7d7d7 calc(100% - 10px), transparent calc(100% - 10px), transparent);
+//   z-index: 2;
+//   &:after {
+//     position: absolute;
+//     content: 'SILVER';
+//     left: 0;
+//     bottom: -3px;
+//     font-size: 12px;
+//     font-weight: 700;
+//     color:#010141;
+//     font-style: italic;
+//   }
+// }
 
-.gold {
-  // background-color: #C9B037;
-  background: linear-gradient(45deg, #C9B037, #C9B037 calc(100% - 10px), transparent calc(100% - 10px), transparent);
-  z-index: 2;
-  position: relative;
-  &:after {
-    position: absolute;
-    content: 'GOLD';
-    left: 0;
-    bottom: -3px;
-    font-size: 12px;
-    font-weight: 700;
-    color:#010141;
-    font-style: italic;
-  }
-}
+// .gold {
+//   // background-color: #C9B037;
+//   background: linear-gradient(45deg, #C9B037, #C9B037 calc(100% - 10px), transparent calc(100% - 10px), transparent);
+//   z-index: 2;
+//   position: relative;
+//   &:after {
+//     position: absolute;
+//     content: 'GOLD';
+//     left: 0;
+//     bottom: -3px;
+//     font-size: 12px;
+//     font-weight: 700;
+//     color:#010141;
+//     font-style: italic;
+//   }
+// }
 
 .bar-legend {
   width: 40px;
@@ -971,7 +979,7 @@ a {
     transition: height 0.3s;
   }
   &:hover::before {
-    height: 100%;
+    height: 10%;
   }
 }
 .silverie {  

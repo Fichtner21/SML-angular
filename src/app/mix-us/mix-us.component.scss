@@ -338,6 +338,26 @@ td img {
         grid-template-columns: 1fr 1fr 1fr;
         gap: 10px;
 
+       
+
+        .col-span-3 {
+          grid-column: span 3;
+
+          ::ng-deep .mat-form-field-flex{
+            background-color: #ffd740;
+            border-radius: 5px;
+            padding: 3px 10px;
+          }
+        }
+
+        .without-mb {
+          margin-bottom: 0;
+
+          strong {
+            font-style: italic;
+          }
+        }
+
         @media screen and (max-width: 950px){
           grid-template-columns: 1fr;
         }
@@ -485,3 +505,8 @@ td img {
 .lp-mix.mat-raised-button.mat-button-disabled {
   opacity: .4;
 }
+
+::ng-deep .mat-icon {
+  font-size: 2rem; /* Zwiększ rozmiar ikon do dwukrotności */
+}
+

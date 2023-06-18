@@ -46,6 +46,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { HideRowDirective } from './hide-row.directive';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatIconModule } from '@angular/material/icon';
+
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -126,6 +128,7 @@ const customNotifierOptions: NotifierOptions = {
     MatSelectModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatIconModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),      

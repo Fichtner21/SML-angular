@@ -81,7 +81,8 @@ export class MixUsComponent implements OnInit {
   starEmpty = faStarHalfStroke;
   faFlag = faFlag;
   mixWay: any = localStorage.getItem('mixway') ? localStorage.getItem('mixway') : '';
-
+  selectedOption: string = "Teams-decide";
+  customSize: number = 50;
   // dataSource: MatTableDataSource<any>;
   // dataSource = new MatTableDataSource<any>([]);
   selectedRows = [];
@@ -1248,6 +1249,40 @@ export class MixUsComponent implements OnInit {
     const arr1 = this.array1;
     const arr2 = this.array2;
 
+    let maps: string[] = [];
+
+    const stock = ['The Hunt', 'V2', 'The Bridge'];
+    const customMp = ['VSUK Abbey', 'Stlo', 'Renan', 'The Church Final'];
+    const customLp = ['V2 Shelter', 'Navarone', 'Dessau1946', 'The Bridge OMG', 'The Lost Town', 'Stlo4', 'THe Village', 'Harbor']
+
+    if (this.selectedOption === 'Random') {
+      // Wybierz losowe mapy ze zbiorów stock, customMp i customLp
+      const availableMaps = stock.concat(customMp, customLp);
+      maps = this.getRandomElementsFromArray(availableMaps, 2);
+    } else if (this.selectedOption === 'TwoStockMaps') {
+      // Wybierz dwie mapy ze zbioru stock
+      maps = this.getRandomElementsFromArray(stock, 2);
+    } else if (this.selectedOption === 'TwoCustomMapsMp') {
+      // Wybierz dwie mapy ze zbioru customMp
+      maps = this.getRandomElementsFromArray(customMp, 2);
+    } else if (this.selectedOption === 'TwoCustomMapsLp'){
+      // Wybierz dwie mapy ze zbioru customLp
+      maps = this.getRandomElementsFromArray(customLp, 2);
+    } else if (this.selectedOption === 'OneStockOneCustomMp') {
+      // Wybierz jedną mapę ze zbioru stock i jedną mapę ze zbioru customMp
+      const stockMap = this.getRandomElementsFromArray(stock, 1);
+      const customMap = this.getRandomElementsFromArray(customMp, 1);
+      maps = stockMap.concat(customMap);
+    } else if (this.selectedOption === 'OneStockOneCustomLp') {
+      // Wybierz jedną mapę ze zbioru stock i jedną mapę ze zbioru customLp
+      const stockMap = this.getRandomElementsFromArray(stock, 1);
+      const customMap = this.getRandomElementsFromArray(customLp, 1);
+      maps = stockMap.concat(customMap);
+    } else if (this.selectedOption === 'Teams-decide') {
+      // Dodaj informację o Teams decide do nextMatch
+      maps = ['Teams decide'];
+    }
+
     const selectRandomPlayer = (arr: {playername: string}[]): string => {
       const randomIndex = Math.floor(Math.random() * arr.length);
       return arr[randomIndex].playername;
@@ -1298,8 +1333,7 @@ export class MixUsComponent implements OnInit {
         highestRanking = ranking;
         highestRankingPlayer = player.playername;
       }
-    }
-    
+    }    
 
     const now = new Date();
     const day = ("0" + now.getDate()).slice(-2);
@@ -1324,6 +1358,8 @@ export class MixUsComponent implements OnInit {
     let nextMatch = "";
     nextMatch += "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + "\n";
     nextMatch += "----------" + "\n";
+    nextMatch += 'MAPS: ' + maps.join(', ') + '\n';
+    nextMatch += "----------" + "\n";
     nextMatch += "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "\n";
     nextMatch += "TEAM 1 Chance for win: " + chanceOfWinTeamTwoShow + " %" + "\n";
     nextMatch += "----------" + "\n";
@@ -1333,9 +1369,9 @@ export class MixUsComponent implements OnInit {
     nextMatch += "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}` + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "Good Luck & Have Fun!";
-    // console.log('nextM', nextMatch);
+    console.log('nextM', nextMatch);
     const payload = {
-      content: nextMatch
+      // content: nextMatch
     };
     this.http.post(webhookUrl, payload).subscribe({
       next: (res) => {
@@ -1348,6 +1384,30 @@ export class MixUsComponent implements OnInit {
 
   isValid(): boolean {
     return this.array1 && this.array1.length > 2 && this.array2 && this.array2.length > 2;
+  }
+
+  getRandomElement(array: any[]): any {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
+  }
+
+   shuffleArray(array) {
+    const newArray = [...array]; // Tworzymy nową kopię tablicy
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1)); // Losowo wybieramy indeks do zamiany
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]]; // Zamieniamy elementy miejscami
+    }
+    return newArray;
+  }
+
+  getRandomElementsFromArray(array: any[], count: number): any[] {
+    if (count >= array.length) {
+      return array.slice();
+    }
+    
+    const shuffledArray = array.slice().sort(() => 0.5 - Math.random());
+    
+    return shuffledArray.slice(0, count);
   }
 }
 

@@ -129,11 +129,41 @@
             </div>
           </div> 
           <div class="restricted-btn">
-            <div class="single-btn">
+            <!-- <div class="single-btn">
               <button mat-raised-button color="primary" class="lp" (click)="    
               sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
               <div>Send squads for next war to discord.</div>
+            </div> -->
+            <mat-form-field class="col-span-3">
+              <mat-label>MAPS:</mat-label>
+              <mat-select [(ngModel)]="selectedOption" name="selectedOption">
+                <mat-option value="Random" color="primary">Random</mat-option>
+                <mat-option value="TwoStockMaps">
+                  Two Stock Maps
+                  <mat-icon class="mat-icon" aria-hidden="true" [ngStyle]="{ 'font-size': customSize + 'px' }">
+                    <img src="/assets/images/maps/TheHunt_text.jpg" alt="The Hunt" width="24" height="24">
+                  </mat-icon>
+                  <mat-icon class="mat-icon" aria-hidden="true">
+                    <img src="/assets/images/maps/v2_text.jpg" alt="V2" width="24" height="24">
+                  </mat-icon>
+                  <mat-icon class="mat-icon" aria-hidden="true">
+                    <img src="/assets/images/maps/bridge_text.jpg" alt="The Bridge" width="24" height="24">
+                  </mat-icon>                 
+                </mat-option>
+                <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
+                <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
+                <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
+                <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>
+                <mat-option value="Teams-decide">Teams decide</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="single-btn">
+             
+              <button mat-raised-button color="primary" class="lp" (click)="sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
+              <div>Send squads for next war to discord.</div>
+               
             </div>
+                       
             <div class="single-btn">
               <button mat-raised-button color="accent" class="lp" (click)="getDiscordUsers()" [disabled]="!isAuthenticated()">Get from Discord <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowDown"></fa-icon></button>
               <div>Get players from WANT TO PLAY channel.</div>
@@ -152,7 +182,14 @@
                 voice channels.
               </div>
             </div>
-
+            
+            <p class="col-span-3 without-mb">Bucket stock: 
+              <img src="/assets/images/maps/TheHunt_text.jpg" alt="The Hunt Map">
+              <img src="/assets/images/maps/v2_text.jpg" alt="V2 Map">
+              <img src="/assets/images/maps/bridge_text.jpg" alt="The Bridge Map">
+            <p class="col-span-3 without-mb">Bucket customMp (MP - more popular): <strong>VSUK Abbey, Stlo, Renan, The Church Final</strong></p>
+            <p class="col-span-3 without-mb">Bucket customLp (LP - less popular): <strong>V2 Shelter, Navarone, Dessau1946, The Bridge OMG, The Lost Town, Stlo4, THe Village, Harbor</strong></p>
+            
           </div>
           <ng-container *ngIf="isAuthenticated()">                      
             <div class="restricted-btn-bottom">

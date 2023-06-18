@@ -78,8 +78,20 @@
       </div>
       <div class="mix-result">        
         <div class="mix-sticky" [ngClass]="{ 'show': isStickyShown }">
-          <h2 class="imp">IMPORTANT!</h2>
-          <p>This tab is only used to draw a team based on ELO, when there is no admin, the draw is performed only on your computer. After the war, send the screens and results (rounds and frags) to the admin on discord. Still no one to enter the match? Draw and keep playing!</p>
+          <h2 class="imp">
+            <img src="/assets/images/checkbox_example.png" alt="The Bridge" width="24" height="24">
+            <div>Mark players on the left and make MIX!</div>
+          </h2>
+          <div class="instructions">
+            <h3>Follow this steps to make MIX.</h3>
+            <ol>
+              <li>Add minimum <strong>6 players.</strong></li>
+              <li>Click on <strong>MIX by Nations (NT)</strong> or <strong>High Precision (HP).</strong></li>
+              <li>Select Maps.</li>
+              <li>Send Teams to Discord.</li>
+              <li><strong>PLAY!</strong> - After war send screens to <img src="/assets/images/m_and_s.png" alt=""> channel on Discord.</li>
+            </ol>
+          </div>         
           <div class="selectedTeams">
             <h2 class="h2Select">Selected Players / Mix Teams</h2>
             <!-- <div class="btn-cont">
@@ -136,7 +148,7 @@
             </div> -->
             <mat-form-field class="col-span-3">
               <mat-label>MAPS:</mat-label>
-              <mat-select [(ngModel)]="selectedOption" name="selectedOption">
+              <mat-select [(ngModel)]="selectedOption" name="selectedOption" [disabled]="!isValid()">
                 <mat-option value="Random" color="primary">Random</mat-option>
                 <mat-option value="TwoStockMaps">
                   Two Stock Maps
@@ -160,8 +172,8 @@
             <div class="single-btn">
              
               <button mat-raised-button color="primary" class="lp" (click)="sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
-              <div>Send squads for next war to discord.</div>
-               
+              <div>See squads on</div>
+               <img src="/assets/images/g_chat.png" alt="">
             </div>
                        
             <div class="single-btn">

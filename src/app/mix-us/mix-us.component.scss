@@ -356,24 +356,29 @@ td img {
         color: #ffffc0;
         background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
         background-size: 4px 4px;
-        margin-bottom: 20px;
-        // display: flex;
-        // justify-content: space-between;
-        // align-items: center;
-        // flex-wrap: wrap;
+        margin-bottom: 20px;       
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 10px;
        
+        // ::ng-deep .mat-form-field-flex{
+        //   background-color: #ffd740;
+        //   border-radius: 5px;
+        //   padding: 3px 10px;
+        // }
+
+        ::ng-deep .mat-select-min-line {
+          color: #ffffc0;
+        }
 
         .col-span-3 {
           grid-column: span 3;
 
-          ::ng-deep .mat-form-field-flex{
-            background-color: #ffd740;
-            border-radius: 5px;
-            padding: 3px 10px;
+          @media screen and (max-width: 768px){
+            grid-column: span 1;
           }
+
+          
         }
 
         .without-mb {

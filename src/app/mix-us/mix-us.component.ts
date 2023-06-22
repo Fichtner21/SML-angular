@@ -81,7 +81,44 @@ export class MixUsComponent implements OnInit {
   starEmpty = faStarHalfStroke;
   faFlag = faFlag;
   mixWay: any = localStorage.getItem('mixway') ? localStorage.getItem('mixway') : '';
-  selectedOption: string = "Teams-decide";
+  selectedOption: string = "Teams-decide";  
+  selectedMaps: string[] = [];
+  maps = [
+    { name: 'The Hunt', probability: 0.2 },
+    { name: 'V2', probability: 0.2 },
+    { name: 'The Bridge', probability: 0.2 },
+    { name: 'Renan', probability: 0.1 },
+    { name: 'Stlo', probability: 0.1 },
+    { name: 'Navarone', probability: 0.1 },
+    { name: 'Dessau', probability: 0.1 },
+    { name: 'Harbor', probability: 0.1 },
+    { name: 'VSUK Abbey', probability: 0.1 },
+    { name: 'The Church Final', probability: 0.05 },
+    { name: 'V2 Shelter', probability: 0.05 },
+    { name: 'The Bridge OMG', probability: 0.05 },
+    { name: 'Stlo4', probability: 0.05 },
+    { name: 'The Lost Town', probability: 0.05 },
+    { name: 'The Village', probability: 0.05 },
+    { name: 'Holland', probability: 0.05 }
+  ];
+  mapProbabilities = {
+    'The Hunt': 20,
+    'V2': 20,
+    'The Bridge': 20,
+    'VSUK Abbey': 10,
+    'Stlo': 10,
+    'Renan': 10,
+    'The Church Final': 10,
+    'V2 Shelter': 5,
+    'Navarone': 5,
+    'Dessau1946': 5,
+    'The Bridge OMG': 5,
+    'The Lost Town': 5,
+    'Stlo4': 5,
+    'The Village': 5,
+    'Harbor': 5,
+    'Holland': 5,
+  };
   customSize: number = 50;
   // dataSource: MatTableDataSource<any>;
   // dataSource = new MatTableDataSource<any>([]);
@@ -301,6 +338,7 @@ export class MixUsComponent implements OnInit {
   getDiscordUsers() {
     this.http.get<VoiceMember[]>('https://mohsh-ds.herokuapp.com/voice-members').subscribe(
       (members) => {
+        console.log('members', members)
         if(members.length === 0){
           this.notifier.notify('warning', 'WANT TO PLAY is empty.');
         } else {
@@ -384,6 +422,7 @@ export class MixUsComponent implements OnInit {
     });
 
     const newArray2 = this.array2.map((obj: any) => {
+      console.log('obj',obj)
       return {
         username: obj.username,
         nickname: obj.nickname,
@@ -419,6 +458,7 @@ export class MixUsComponent implements OnInit {
         console.log('Move users to channels success:', response);
       },
       (error) => {
+        console.log('PAYLOAD', payload)
         console.error('Move users to channels error:', error);
       }
     );
@@ -1253,34 +1293,57 @@ export class MixUsComponent implements OnInit {
 
     const stock = ['The Hunt', 'V2', 'The Bridge'];
     const customMp = ['VSUK Abbey', 'Stlo', 'Renan', 'The Church Final'];
-    const customLp = ['V2 Shelter', 'Navarone', 'Dessau1946', 'The Bridge OMG', 'The Lost Town', 'Stlo4', 'THe Village', 'Harbor']
-
+    const customLp = ['V2 Shelter', 'Navarone', 'Dessau1946', 'The Bridge OMG', 'The Lost Town', 'Stlo4', 'THe Village', 'Harbor', 'Holland']
+    
     if (this.selectedOption === 'Random') {
       // Wybierz losowe mapy ze zbiorów stock, customMp i customLp
-      const availableMaps = stock.concat(customMp, customLp);
-      maps = this.getRandomElementsFromArray(availableMaps, 2);
+      // const availableMaps = stock.concat(customMp, customLp);
+      // maps = this.getExtraRandomMaps(availableMaps, 2, this.mapProbabilities);
+      let availableMaps: string[] = [];
+      
+      if (this.selectedUsers.length === 6) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor'];
+      } else if (this.selectedUsers.length >= 8) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'Navarone', 'The Church Final'];
+      } else if (this.selectedUsers.length >= 10) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
+      }
+      
+      maps = this.getExtraRandomMaps(availableMaps, 2, this.mapProbabilities);
     } else if (this.selectedOption === 'TwoStockMaps') {
       // Wybierz dwie mapy ze zbioru stock
-      maps = this.getRandomElementsFromArray(stock, 2);
+      maps = this.getExtraRandomMaps(stock, 2, this.mapProbabilities);
     } else if (this.selectedOption === 'TwoCustomMapsMp') {
       // Wybierz dwie mapy ze zbioru customMp
-      maps = this.getRandomElementsFromArray(customMp, 2);
-    } else if (this.selectedOption === 'TwoCustomMapsLp'){
+      maps = this.getExtraRandomMaps(customMp, 2, this.mapProbabilities);
+    } else if (this.selectedOption === 'TwoCustomMapsLp') {
       // Wybierz dwie mapy ze zbioru customLp
-      maps = this.getRandomElementsFromArray(customLp, 2);
+      maps = this.getExtraRandomMaps(customLp, 2, this.mapProbabilities);
     } else if (this.selectedOption === 'OneStockOneCustomMp') {
       // Wybierz jedną mapę ze zbioru stock i jedną mapę ze zbioru customMp
-      const stockMap = this.getRandomElementsFromArray(stock, 1);
-      const customMap = this.getRandomElementsFromArray(customMp, 1);
-      maps = stockMap.concat(customMap);
+      const stockMap = this.getRandomElementFromArray(stock);
+      const customMap = this.getRandomElementFromArray(customMp);
+      maps = [stockMap, customMap];
     } else if (this.selectedOption === 'OneStockOneCustomLp') {
       // Wybierz jedną mapę ze zbioru stock i jedną mapę ze zbioru customLp
-      const stockMap = this.getRandomElementsFromArray(stock, 1);
-      const customMap = this.getRandomElementsFromArray(customLp, 1);
-      maps = stockMap.concat(customMap);
+      const stockMap = this.getRandomElementFromArray(stock);
+      const customMap = this.getRandomElementFromArray(customLp);
+      maps = [stockMap, customMap];
     } else if (this.selectedOption === 'Teams-decide') {
       // Dodaj informację o Teams decide do nextMatch
       maps = ['Teams decide'];
+    } else if (this.selectedOption === 'extraRandom') {
+      let availableMaps: string[] = [];
+      
+      if (this.selectedUsers.length === 6) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor'];
+      } else if (this.selectedUsers.length >= 8) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'Navarone', 'The Church Final'];
+      } else if (this.selectedUsers.length >= 10) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
+      }
+      
+      maps = this.getExtraRandomMaps(availableMaps, 2, this.mapProbabilities);
     }
 
     const selectRandomPlayer = (arr: {playername: string}[]): string => {
@@ -1288,8 +1351,8 @@ export class MixUsComponent implements OnInit {
       return arr[randomIndex].playername;
     };
 
-    console.log('arr1', arr1)
-    console.log('arr2', arr2)
+    // console.log('arr1', arr1)
+    // console.log('arr2', arr2)
 
     const t1p1name = (arr1.length > 0 && arr1[0] && arr1[0].playername) ? arr1[0].playername : '';
     const t1p2name = (arr1.length > 1 && arr1[1] && arr1[1].playername) ? arr1[1].playername : '';
@@ -1307,9 +1370,9 @@ export class MixUsComponent implements OnInit {
     const t2p7name = (arr2.length > 0 && arr2[6] && arr2[6].playername) ? arr2[6].playername : '';
 
     const funnyOneLiners: string[] = 
-    ["He is the sniper on the grassy knoll!", 
+    ["Stop crying lady!", 
     "He didn't choose the camp life, the camp life chose him.", 
-    "Headshot! Sorry, wrong game...", 
+    "A bit drunk, but still better then You!", 
     "He's not camping, He's just waiting for your s'mores to cook.", 
     "If you can't beat 'em, cheat 'em!", 
     "Official? I m coming for You!",
@@ -1317,7 +1380,7 @@ export class MixUsComponent implements OnInit {
     "This isn't camping, it's strategic resting.", 
     "If at first you don't succeed, call for an airstrike.", 
     "I'm not a hacker, I'm just really good at guessing your spot.", 
-    "I'm not a camper, I'm a wildlife photographer."];
+    "Volute? We don't need this. Pure game <3."];
 
 
     const admin = `ADMIN: ${selectRandomPlayer([...arr1, ...arr2])}`;
@@ -1358,7 +1421,7 @@ export class MixUsComponent implements OnInit {
     let nextMatch = "";
     nextMatch += "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + "\n";
     nextMatch += "----------" + "\n";
-    nextMatch += 'MAPS: ' + maps.join(', ') + '\n';
+    nextMatch += 'MAPS: ' + maps.join(', ') + ' (' + this.selectedOption + ')' + '\n';
     nextMatch += "----------" + "\n";
     nextMatch += "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "\n";
     nextMatch += "TEAM 1 Chance for win: " + chanceOfWinTeamTwoShow + " %" + "\n";
@@ -1369,9 +1432,9 @@ export class MixUsComponent implements OnInit {
     nextMatch += "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}` + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "Good Luck & Have Fun!";
-    console.log('nextM', nextMatch);
+    // console.log('nextM', nextMatch);
     const payload = {
-      // content: nextMatch
+      content: nextMatch
     };
     this.http.post(webhookUrl, payload).subscribe({
       next: (res) => {
@@ -1409,6 +1472,139 @@ export class MixUsComponent implements OnInit {
     
     return shuffledArray.slice(0, count);
   }
+
+  // getRandomMaps() {
+  //   if (this.selectedOption === 'extraRandom' && this.selectedUsers.length >= 8) {
+  //     this.selectedMaps = this.getExtraRandomMaps();
+  //   } else {
+  //     this.selectedMaps = this.getDefaultRandomMaps();
+  //   }
+  // }
+
+  getRandomMaps() {
+    if (this.selectedOption === 'extraRandom' && this.selectedUsers.length >= 8) {
+      const mapArray = Object.keys(this.mapProbabilities);
+      const count = 2;
+      const probabilities = this.mapProbabilities;
+      this.selectedMaps = this.getExtraRandomMaps(mapArray, count, probabilities);
+    } else {
+      this.selectedMaps = this.getDefaultRandomMaps();
+    }
+  }
+
+  getDefaultRandomMaps() {
+    const totalProbability = this.maps.reduce((sum, map) => sum + map.probability, 0);
+    const randomNumber = Math.random() * totalProbability;
+
+    let accumulatedProbability = 0;
+
+    const selectedMaps: string[] = [];
+
+    for (const map of this.maps) {
+      accumulatedProbability += map.probability;
+      if (randomNumber <= accumulatedProbability) {
+        selectedMaps.push(map.name);
+        if (selectedMaps.length === 2) {
+          break;
+        }
+      }
+    }
+
+    return selectedMaps;
+  }
+
+  // getExtraRandomMaps() {
+  //   const extraRandomMaps = [
+  //     { name: 'The Church Final', probability: 0.1 },
+  //     { name: 'V2 Shelter', probability: 0.05 },
+  //     { name: 'The Bridge OMG', probability: 0.05 },
+  //     { name: 'Stlo4', probability: 0.05 }
+  //   ];
+
+  //   const totalProbability = extraRandomMaps.reduce((sum, map) => sum + map.probability, 0);
+  //   const randomNumber = Math.random() * totalProbability;
+
+  //   let accumulatedProbability = 0;
+
+  //   const selectedMaps: string[] = [];
+
+  //   for (const map of extraRandomMaps) {
+  //     accumulatedProbability += map.probability;
+  //     if (randomNumber <= accumulatedProbability) {
+  //       selectedMaps.push(map.name);
+  //       if (selectedMaps.length === 2) {
+  //         break;
+  //       }
+  //     }
+  //   }
+
+  //   return selectedMaps;
+  // }
+  getExtraRandomMaps(mapArray: string[], count: number, probabilities: {[key: string]: number}): string[] {
+    const selectedMaps: string[] = [];
+    const availableMaps: string[] = [];
+  
+    // Wybierz mapy, których prawdopodobieństwo jest większe od 0
+    for (const map of mapArray) {
+      if (probabilities[map] > 0) {
+        availableMaps.push(map);
+      }
+    }
+  
+    // Wylosuj mapy z uwzględnieniem prawdopodobieństwa
+    for (let i = 0; i < count; i++) {
+      const randomIndex = Math.floor(Math.random() * availableMaps.length);
+      const selectedMap = availableMaps[randomIndex];
+      selectedMaps.push(selectedMap);
+  
+      // Zmniejsz prawdopodobieństwo wybranych map do zera, aby nie były wybierane ponownie
+      probabilities[selectedMap] = 0;
+  
+      // Usuń wybraną mapę z dostępnych map
+      availableMaps.splice(randomIndex, 1);
+    }
+  
+    return selectedMaps;
+  }
+  
+
+// Metoda do losowania dwóch map z prawdopodobieństwem
+getRandomElementsWithProbability(array: string[], count: number, probabilityMap: Record<string, number>): string[] {
+  const weightedArray: string[] = [];
+  Object.entries(probabilityMap).forEach(([map, probability]) => {
+    for (let i = 0; i < probability; i++) {
+      weightedArray.push(map);
+    }
+  });
+
+  const shuffledArray = this.shuffleArray(weightedArray);
+  return shuffledArray.slice(0, count);
+}
+
+// Metoda do losowania unikalnych elementów z prawdopodobieństwem
+getUniqueRandomElementsWithProbability(probabilityMap: Record<string, number>, count: number): string[] {
+  const weightedArray: string[] = [];
+  Object.entries(probabilityMap).forEach(([map, probability]) => {
+    for (let i = 0; i < probability; i++) {
+      weightedArray.push(map);
+    }
+  });
+
+  const uniqueMaps: string[] = [];
+  while (uniqueMaps.length < count) {
+    const randomMap = this.getRandomElementFromArray(weightedArray);
+    if (!uniqueMaps.includes(randomMap)) {
+      uniqueMaps.push(randomMap);
+    }
+  }
+
+  return uniqueMaps;
+}
+
+getRandomElementFromArray(array: any[]): any {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}
 }
 
 

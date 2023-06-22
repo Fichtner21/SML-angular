@@ -135,7 +135,7 @@ export class RankingObjComponent implements OnInit {
             playerRowArray.push(lastWarDate); 
           }                   
         }     
-        console.log('playerRowArray', playerRowArray[0])
+        // console.log('playerRowArray', playerRowArray[0])
         // this.topThreePlayers = playerRowArray
         // .sort((a, b) => b.wars - a.wars) // Sortowanie graczy według wartości "wars" (malejąco)
         // .slice(0, 3); // Pobranie trzech graczy z najwyższymi wartościami "wars"

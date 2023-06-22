@@ -93,7 +93,7 @@
             </ol>
           </div>         
           <div class="selectedTeams">
-            <h2 class="h2Select">Selected Players / Mix Teams</h2>
+            <h2 class="h2Select">Selected Players</h2>
             <!-- <div class="btn-cont">
               <button mat-raised-button color="primary" class="lp lp-mix" [disabled]="selectedUsers.length < 6" (click)="    
               splitRanking2(selectedUsers)">Mix LP <fa-icon [icon]="starEmpty"></fa-icon></button>
@@ -146,33 +146,47 @@
               sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
               <div>Send squads for next war to discord.</div>
             </div> -->
-            <mat-form-field class="col-span-3">
+            <!-- <mat-form-field class="col-span-3">
               <mat-label>MAPS:</mat-label>
               <mat-select [(ngModel)]="selectedOption" name="selectedOption" [disabled]="!isValid()">
                 <mat-option value="Random" color="primary">Random</mat-option>
+                <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
+                <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
+                <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>
+                <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
                 <mat-option value="TwoStockMaps">
                   Two Stock Maps
                   <mat-icon class="mat-icon" aria-hidden="true" [ngStyle]="{ 'font-size': customSize + 'px' }">
-                    <img src="/assets/images/maps/TheHunt_text.jpg" alt="The Hunt" width="24" height="24">
+                    <img src="/assets/images/maps/TheHunt_text.jpg" alt="The Hunt" width="50" height="24">
                   </mat-icon>
                   <mat-icon class="mat-icon" aria-hidden="true">
-                    <img src="/assets/images/maps/v2_text.jpg" alt="V2" width="24" height="24">
+                    <img src="/assets/images/maps/v2_text.jpg" alt="V2" width="50" height="24">
                   </mat-icon>
                   <mat-icon class="mat-icon" aria-hidden="true">
-                    <img src="/assets/images/maps/bridge_text.jpg" alt="The Bridge" width="24" height="24">
+                    <img src="/assets/images/maps/bridge_text.jpg" alt="The Bridge" width="50" height="24">
                   </mat-icon>                 
                 </mat-option>
+                <mat-option value="Teams-decide">Teams decide</mat-option>
+              </mat-select>
+            </mat-form-field> -->
+            <mat-form-field appearance="outline" class="mat-select-container">
+              <mat-label>MAPS</mat-label>
+              <mat-select [(ngModel)]="selectedOption" class="mat-select">
+                <mat-option value="Random">Random</mat-option>
+                <mat-option value="TwoStockMaps">Two Stock Maps</mat-option>
                 <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
                 <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
                 <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
                 <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>
                 <mat-option value="Teams-decide">Teams decide</mat-option>
+                <mat-option value="extraRandom">Extra Random</mat-option>
               </mat-select>
             </mat-form-field>
+            
             <div class="single-btn">
              
               <button mat-raised-button color="primary" class="lp" (click)="sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
-              <div>See squads on</div>
+              <div>See squads on Discord</div>
                <img src="/assets/images/g_chat.png" alt="">
             </div>
                        

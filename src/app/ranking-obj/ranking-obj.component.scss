@@ -218,7 +218,7 @@ a {
   .playername-cont {
     display: flex;
     flex-direction: column;
-    z-index: 3;
+    // z-index: 3;
 
     .streak-small {
       color: lightgray;
@@ -358,7 +358,7 @@ a {
     padding: 5px 3px;
     position: relative;   
     font-size: 18px;
-    z-index: 3;
+    // z-index: 3;
     
 
     @media screen and (max-width: 800px){
@@ -390,7 +390,7 @@ a {
         background-image: url('/assets/images/downrate.gif');
         width: 10px;
         height: 5px;
-        z-index: 9;
+        z-index: 9999999;
       }
 
       [data-title]:hover:before {

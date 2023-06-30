@@ -119,6 +119,8 @@ export class RankingObjComponent implements OnInit {
               s1fpw: Math.round(name.s1fpw * 100) / 100,
               s2wars: parseFloat(name.s2wars),
               s2fpw: Math.round(name.s2fpw * 100) / 100,               
+              s3wars: parseFloat(name.s3wars),
+              s3fpw: Math.round(name.s3fpw * 100) / 100,               
               activity: name.last30days,              
               lastyear: name.last365days,
               meeting: name.meeting,
@@ -427,7 +429,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'DESC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s2wars) - parseFloat(a.s2wars))
+        res => res.sort((a:any,b:any) => parseFloat(b.s3wars) - parseFloat(a.s3wars))
       )
     )       
   }
@@ -437,7 +439,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'ASC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s2wars) - parseFloat(b.s2wars))
+        res => res.sort((a:any,b:any) => parseFloat(a.s3wars) - parseFloat(b.s3wars))
       )
     )       
   }
@@ -446,7 +448,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'DESC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s2fpw) - parseFloat(a.s2fpw))
+        res => res.sort((a:any,b:any) => parseFloat(b.s3fpw) - parseFloat(a.s3fpw))
       )
     )       
   }
@@ -456,7 +458,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'ASC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s2fpw) - parseFloat(b.s2fpw))
+        res => res.sort((a:any,b:any) => parseFloat(a.s3fpw) - parseFloat(b.s3fpw))
       )
     )       
   }

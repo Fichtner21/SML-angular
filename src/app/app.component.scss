@@ -1,3 +1,9 @@
+.home nav {
+  &::after {
+    display: none;
+  }
+}
+
 nav {
   // background-color: #ffffc8;
 //   background-image: linear-gradient(
@@ -13,6 +19,15 @@ nav {
   width: 100%;
   color: #ffffc8;  
   border-bottom: 1px solid gray;
+
+  &::after {
+    content: 'Season #3';
+    font-size: 24px;
+    position: absolute;
+    top: 90px;
+    right: 30px;
+    color:rgba(255, 255, 0, .5);    
+  }
 
   @media screen and (max-width: 768px){
     padding: 10px;

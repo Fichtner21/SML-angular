@@ -41,12 +41,28 @@ background-size: 4px 4px;
     max-width: 1300px;
 
     .desc {
-      display: flex;
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      column-gap: 30px;
 
       .desc-details {        
 
         img {
           width: 30px;
+          margin: 0 3px;
+        }
+
+        a {
+          color:#ffffc0;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        ol li img {
+          width: 20px;
         }
       }      
     }

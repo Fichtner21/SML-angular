@@ -547,3 +547,10 @@ td img {
   font-size: 2rem; /* Zwiększ rozmiar ikon do dwukrotności */
 }
 
+::ng-deep mat-label {
+  color: #ffffc0;
+}
+
+::ng-deep mat-select {
+  border-color: 2px solid #ffffc0 !important;
+}

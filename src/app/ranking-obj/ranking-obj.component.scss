@@ -358,8 +358,7 @@ a {
     padding: 5px 3px;
     position: relative;   
     font-size: 18px;
-    // z-index: 3;
-    
+    z-index: 3;    
 
     @media screen and (max-width: 800px){
       font-size:14px;

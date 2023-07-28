@@ -131,6 +131,7 @@ export class RankingObjComponent implements OnInit {
               s1wars_win: parseInt(name.s1wars_win),
               s1fpw_win: parseInt(name.s1fpw_win),
               s1ranking_win: parseInt(name.s1ranking_win),
+              s2ranking_win: parseInt(name.s2ranking_win),
               streak: name.streak,
               winPercentage: this.handleData(this.receivedData)      
             };

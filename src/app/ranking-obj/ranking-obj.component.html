@@ -49,12 +49,12 @@
                   <div class="item playername-cont" [ngClass]="{'over1000': (player.wars > 1000)}">
                     <div class="wars-bar" *ngIf="isInfo" title="Exp. rank" [style.width.%]="getPercentage(player.wars)" [ngClass]="getBarColor(player.wars)"></div>
                     <div class="wars-bar" *ngIf="!isInfo"></div>
-                    <a routerLink="/obj-ranking/{{player.username}}" class=" playername" [title]="player.username === 'evoltnz'
-                    ? 'Winner S#1'
-                    : player.username === 'tricky'
-                        ? 'Second in S#1'
-                        : player.username === 'zielony'
-                            ? 'Third in S#1'
+                    <a routerLink="/obj-ranking/{{player.username}}" class=" playername" [title]="player.username === 'zazuuuu'
+                    ? 'Winner S#2'
+                    : player.username === 'josh'
+                        ? 'Second in S#2'
+                        : player.username === 'magz'
+                            ? 'Third in S#2'
                             : ''">
                     {{ player.playername }}
                     <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
@@ -64,25 +64,37 @@
                       <!-- <span *ngIf="player.s1wars_win != 'NaN'" attr.data-title="{{ player.s1wars_win }} place in wars S#1"></span>
                       <span *ngIf="player.s1fpw_win != 'NaN'" attr.data-title="{{ player.s1fpw_win }} place in FpW S#1"></span>
                       <span *ngIf="player.s1ranking_win != 'NaN'" attr.data-title="{{ player.s1ranking_win }} rank in S#1"></span> -->
-                    </div>                  
-                    <ng-container *ngIf="(player.s1wars_win === 1 || player.s1fpw_win === 1 || player.s1ranking_win === 1)">
+                    </div>    
+
+                    <!--  -->
+                    <ng-container *ngIf="player.s2ranking_win === 1">                      
                       <fa-icon [icon]="number1" class="number number1"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="(player.s1wars_win !== 1 && player.s1fpw_win !== 1 && player.s1ranking_win !== 1) && (player.s1wars_win && player.s1fpw_win && player.s1ranking_win)">
-                      <fa-icon [icon]="number3" class="number number3"></fa-icon>
-                    </ng-container>
-                    <ng-container *ngIf="(player.s1wars_win === 2 || player.s1fpw_win === 2 || player.s1ranking_win === 2)">
+                    <ng-container *ngIf="player.s2ranking_win === 2">                      
                       <fa-icon [icon]="number2" class="number number2"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="(player.s1wars_win === 3 || player.s1fpw_win === 3 || player.s1ranking_win === 3) && !(player.s1wars_win === 2 || player.s1fpw_win === 2 || player.s1ranking_win === 2) && !(player.s1wars_win === 1 || player.s1fpw_win === 1 || player.s1ranking_win === 1)">
+                    <ng-container *ngIf="player.s2ranking_win === 3">                      
+                      <fa-icon [icon]="number2" class="number number2"></fa-icon>
+                    </ng-container>
+
+                    <!-- <ng-container *ngIf="(player.s2wars_win === 1 || player.s2fpw_win === 1 || player.s2ranking_win === 1)">
+                      <fa-icon [icon]="number1" class="number number1"></fa-icon>
+                    </ng-container>
+                    <ng-container *ngIf="(player.s2wars_win !== 1 && player.s2fpw_win !== 1 && player.s2ranking_win !== 1) && (player.s2wars_win && player.s2fpw_win && player.s2ranking_win)">
                       <fa-icon [icon]="number3" class="number number3"></fa-icon>
                     </ng-container>
+                    <ng-container *ngIf="(player.s2wars_win === 2 || player.s2fpw_win === 2 || player.s2ranking_win === 2)">
+                      <fa-icon [icon]="number2" class="number number2"></fa-icon>
+                    </ng-container>
+                    <ng-container *ngIf="(player.s2wars_win === 3 || player.s2fpw_win === 3 || player.s2ranking_win === 3) && !(player.s2wars_win === 2 || player.s2fpw_win === 2 || player.s2ranking_win === 2) && !(player.s2wars_win === 1 || player.s2fpw_win === 1 || player.s2ranking_win === 1)">
+                      <fa-icon [icon]="number3" class="number number3"></fa-icon>
+                    </ng-container> -->
+                    <!--  -->
+
                     <!-- <ng-container *ngIf="player.username === 'zielony'">
                       <fa-icon [icon]="number3" class="number number3"></fa-icon>
                     </ng-container>
-                     -->
-                    
-                     
+                     -->                     
                   </a>   
                   <div *ngIf="i === 0 && player.streak" class="streak-small" title="1st place since">
                     <span>since:</span> {{ player.streak }}

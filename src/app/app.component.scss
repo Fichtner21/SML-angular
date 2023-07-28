@@ -18,16 +18,7 @@ nav {
   top: 0;
   width: 100%;
   color: #ffffc8;  
-  border-bottom: 1px solid gray;
-
-  &::after {
-    content: 'Season #3';
-    font-size: 24px;
-    position: absolute;
-    top: 90px;
-    right: 30px;
-    color:rgba(255, 255, 0, .5);    
-  }
+  border-bottom: 1px solid gray; 
 
   @media screen and (max-width: 768px){
     padding: 10px;
@@ -107,6 +98,14 @@ nav {
     }
 
     form {
+      display: flex;
+
+      .season {
+        margin-left: 10px;
+        font-weight: 700;
+        text-shadow: #ffffc8 1px 0 10px;
+      }
+
       label {
         margin-right: 5px;
       }

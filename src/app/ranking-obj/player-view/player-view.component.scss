@@ -293,43 +293,50 @@
   .player-flag {
     overflow: hidden; 
     width: 100%;
-    display: flex;
+    // display: flex;
 
     @media screen and (max-width: 768px){
       height: 200px;
     }
   
     .ambilight {
-      margin: 0 auto; // just to center the box    
-      padding: 5px; // add some space for the light
-      position: relative; // to keep the .light by the .image
-      display: flex;
-      justify-content: flex-end;
-      min-height: 100%;
-      min-width: 100%;
+      // margin: 0 auto; // just to center the box    
+      // padding: 5px; // add some space for the light
+      // position: relative; // to keep the .light by the .image
+      // display: flex;
+      // justify-content: flex-end;
+      // min-height: 100%;
+      // min-width: 100%;
+
+      .country-name {
+        padding-top: 15px;
+        text-align: center;
+        font-size: 30px;
+      }
   
       .image-flag {
-        max-width: 100%;
-        height: auto;
-        display: flex;
-        align-items: flex-end;  
-        // padding-right: 10px;
-        z-index: 1;
+        // max-width: 100%;
+        // height: auto;
+        // display: flex;
+        // align-items: flex-end;  
+        // // padding-right: 10px;
+        // z-index: 1;
       }
   
       .image-light {
         opacity: 0.75; // change for best results
-        // filter: blur(5px); // change for bigger/smaller shine
-        // fill the box with light:
-        // width: 100%;
-        max-height: 200px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        // z-index: -1; // keep the .light under the .image
-        z-index: 0; // keep the .light under the .image
-        margin: 0 auto;
-        right: 0;
+        // // filter: blur(5px); // change for bigger/smaller shine
+        // // fill the box with light:
+        // // width: 100%;
+        // max-height: 200px;
+        // position: absolute;
+        // top: 0;
+        // left: 0;
+        // // z-index: -1; // keep the .light under the .image
+        // z-index: 0; // keep the .light under the .image
+        // margin: 0 auto;
+        // right: 0;
+        max-width: 300px;
       }
     }
   }
@@ -410,6 +417,89 @@ canvas {
     span {
       font-weight: 700;
       text-decoration: underline;
+      display: inline-block;
     }
+  }
+}
+
+.chart-info button {
+  background-color: #40415f;
+  color: #ffffc0;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 700;
+  font-family: 'Rajdhani';
+  height: 40px;
+  border: 1px solid #ffffc0;
+  margin: 5px 0;
+  transition: all .3s;
+
+  span {
+    font-size: 24px;
+    background-color: #ffffc0;
+    color: #2f3060;
+    border-radius: 50%;
+    display: inline-block;
+    padding: 2px;
+    border: 1px solid #40415f;
+    width: 30px;
+    height: 30px;
+  }
+
+  &:hover {
+    background-color: #2f3060;
+  }
+
+  &:before {
+    content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      background-color: #ffffc0;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: pulse 1s infinite;
+      box-shadow: 
+        0 0 5px #ffffc0,
+        -10px -10px 5px #ffffc0,
+        10px -10px 5px #ffffc0,
+        -10px 10px 5px #ffffc0,
+        10px 10px 5px #ffffc0;
+        position: relative;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+    box-shadow: 
+          0 0 5px #ffffc0,
+          -10px -10px 5px #ffffc0,
+          10px -10px 5px #ffffc0,
+          -10px 10px 5px #ffffc0,
+          10px 10px 5px #ffffc0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.3;
+    box-shadow: 
+          0 0 10px #ffffc0,
+          -20px -20px 10px #ffffc0,
+          20px -20px 10px #ffffc0,
+          -20px 20px 10px #ffffc0,
+          20px 20px 10px #ffffc0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+    box-shadow: 
+          0 0 5px #ffffc0,
+          -10px -10px 5px #ffffc0,
+          10px -10px 5px #ffffc0,
+          -10px 10px 5px #ffffc0,
+          10px 10px 5px #ffffc0;
   }
 }

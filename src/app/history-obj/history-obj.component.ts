@@ -50,9 +50,11 @@ export class HistoryObjComponent implements OnInit {
  
   comments: Observable<any[]>;
   
+  
   constructor(private MatchDetail: MatchesDetailsService, private activatedRoute: ActivatedRoute, private router: Router, private httpClient: HttpClient, private fetchMatches: FetchMatchesService, private tabApiService: PlayersApiService, private translateService: TranslateService, private commentsService: CommentsService, private db: AngularFireDatabase) { }
  
    ngOnInit(): void {
+    
     
     this.matches$ = this.fetchMatches.fetchMatches();   
     
@@ -86,6 +88,37 @@ export class HistoryObjComponent implements OnInit {
         return historyMatches;
       }),
     );
+
+    // this.matchesTab$ = this.tabApiService.getPlayers('Match+History').pipe(
+    //   map((response: any) => {        
+    //     let batchRowValuesHistory = response.values;
+    //     let historyMatches: any[] = [];
+    //     for(let i = 1; i < batchRowValuesHistory.length; i++){
+    //       const rowObject: object = {};
+    //       for(let j = 0; j < batchRowValuesHistory[i].length; j++){
+    //         rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
+    //       }
+    //       historyMatches.push(rowObject);
+    //     } 
+    
+    //     // Przekształć timestamp na format daty
+    //     historyMatches.forEach((match) => {
+    //       match['timestamp'] = new Date(match['timestamp']);
+    //     });
+        
+    //     return historyMatches;
+    //   }),
+    //   // Opcjonalnie, jeśli potrzebujesz sortowania meczów wg daty
+    //   map((historyMatches: any[]) => historyMatches.sort((a, b) => a['timestamp'] - b['timestamp'])),
+    // );
+
+    // // Przyjmujemy, że selectedDate to data wybrana przez użytkownika w formacie "MM/DD/YYYY HH:mm:ss".
+    // const selectedDate = new Date('7/31/2021 14:29:13');
+
+    // // W tej funkcji filtrujemy mecze, które mają datę wcześniejszą lub równą selectedDate
+    // this.matchesTab$ = this.matchesTab$.pipe(
+    //   map((historyMatches: any[]) => historyMatches.filter(match => match['timestamp'] <= selectedDate))
+    // );
 
     this.inactiveTab$ = this.tabApiService.getPlayers('Inactive').pipe(
       map((response: any) => {        
@@ -238,6 +271,14 @@ export class HistoryObjComponent implements OnInit {
           //     matchRow.comments = warsAndCommentsMatch.comments;
           //   }
           // }
+
+          
+           
+            // const matchToUpdate = matchRow.find(match => match.id === length.idwar);
+            // if (matchToUpdate) {
+            //   matchToUpdate.comments = length;
+            // }
+         
          
           
           const newObj = {
@@ -657,6 +698,16 @@ export class HistoryObjComponent implements OnInit {
 
   public randomNumber(min, max) { 
     return (Math.random() * (max - min) + min).toFixed(2);
-}
+  }
+
+  updateCommentsLength(length: { id: string, comments: number }) {
+    // Aktualizacja historii na podstawie emitowanego zdarzenia
+    this.historyObj$.subscribe(history => {
+      const matchToUpdate = history.find(match => match.id === length.id);
+      if (matchToUpdate) {
+        matchToUpdate.comments = length.comments;
+      }
+    });
+  }
  
 }

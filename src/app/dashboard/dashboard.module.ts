@@ -18,6 +18,9 @@ import { TokenInterceptor } from '../token.interceptor';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 
 @NgModule({
   declarations: [  
@@ -39,7 +42,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatButtonModule,
     MatCheckboxModule,
     MatFormFieldModule,
-    FontAwesomeModule     
+    FontAwesomeModule,
+    MatDatepickerModule,
+    MatNativeDateModule 
    ],
   exports: [
     CommonModule,

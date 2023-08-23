@@ -64,12 +64,12 @@ export class SingleMatchComponent implements OnInit {
         id: matchID,
         comments: comments.length
       }        
-      // console.log('length', length)
+      console.log('length', length)
       this.lengthEmitter.emit(length);
     });
 
    this.comments$.pipe(
-      map((comments:any) => comments.length)
+      map((comments:any) => console.log(comments.length))
     );
     // this.commentForm = this.formBuilder.group({
     //   name: ['', Validators.required],

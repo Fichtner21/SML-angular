@@ -48,7 +48,11 @@
             <div class="ambilight">
               <!-- <img [src]='"assets/images/flags/" + playerDetails.nationality + ".gif"' class="image-flag"> -->
               <img [src]='"assets/images/flags_svg/" + playerDetails.nationality + ".SVG"' class="image-light">
+              <div class="country-name">
+                {{getCountryName(playerDetails.nationality)}}
+              </div>
             </div>
+            
           </div>
 
             <!-- <button (click)="showResult(playerDetails.resultPerPlayer)">Load rankings...</button> -->
@@ -69,12 +73,21 @@
                 </my-tab>
               </my-tabs> -->
               <mat-tab-group animationDuration="0ms">
+                <mat-tab label="Season #3">
+                  <h2>01.07.2023 - 30.09.2023</h2>
+                  <div>In progress...</div>
+                </mat-tab>
                 <mat-tab label="Season #2">
                   <h2>01.04.2023 - 30.06.2023</h2>
+                  <h3>Summary</h3>
+                  <ul class="achievments">
+                    <li><span>Rank:</span> {{playerDetails.s2ranking_win}} / {{season2players}}</li>
+                    <li><span>Wars:</span> {{playerDetails.s2wars_win}} / {{season2wars}}</li>
+                  </ul>
                 </mat-tab>
                 <mat-tab label="Season #1">
                   <h2>01.01.2023 - 31.03.2023</h2>
-                  <h3>Achievements:</h3>
+                  <h3>Summary:</h3>
                   <ul class="achievements">
                     <!-- <ng-container *ngIf="playerDetails.s1ranking_win !== ''; then; topR; else downR"></ng-container>
                     <ng-template #topR> -->
@@ -124,29 +137,41 @@
         </div>
         <canvas id="canva"></canvas>
         <div>
-          <div class="chart-info">
-            <h3 class="chart-info__title">{{ 'playerview.rank_chart' | translate }}</h3>
-            <button (click)="showRanking(playerDetails.rankings, playerDetails.listwars)">Load rankings...</button>
-          </div>
-          <canvas id="rankChart" width="1320" height="400" style="overflow-x: scroll;">{{ chartRank }}</canvas>
+          <div class="chart-info">                      
+            <button (click)="showRanking(playerDetails.rankings, playerDetails.listwars)">{{ 'playerview.rank_chart' | translate }} TOTAL</button>
+            <canvas id="rankChart" width="1320" height="400" style="overflow-x: scroll;">{{ chartRank }}</canvas>
+          </div>          
         </div>
         <div>
-          <div class="chart-info">
-            <h3 class="chart-info__title">Player rankings chart season 2:</h3>
-            <button (click)="showRankingSeason2(playerDetails.listwars2)">Load season rankings...</button>
+          <div class="chart-info">            
+            <button (click)="showRankingSeason1(playerDetails.listwars1)">Load season <span>1</span>rankings</button>            
+          </div>
+          <canvas id="rank1Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
+        </div>
+        <div>          
+          <div class="chart-info">            
+            <button (click)="showRankingSeason2(playerDetails.listwars2)">Load season <span>2</span> rankings</button>
           </div>
           <canvas id="rank2Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
         </div>
-        <div class="chart-info">
-          <h3 class="chart-info__title">{{ 'playerview.frags_chart' | translate }}</h3>
-          <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">Load frags...</button>
+        <div>
+          <div class="chart-info">            
+            <button (click)="showRankingSeason3(playerDetails.listwars3)">Load season <span>3</span>rankings</button>            
+          </div>
+          <canvas id="rank3Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
+        </div>
+        <div class="chart-info">          
+          <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">{{ 'playerview.frags_chart' | translate }} TOTAL</button>
         </div>
         <canvas id="myChart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
-        <div class="chart-info">
-          <h3 class="chart-info__title">Player frags chart season 2:</h3>
-          <button (click)="showFrags2(playerDetails.listwars2)">Load season frags...</button>
+        <div class="chart-info">          
+          <button (click)="showFrags2(playerDetails.listwars2)">Load season <span>2</span> frags</button>
         </div>
         <canvas id="myChart2" width="1320" height="400" style="overflow-x: scroll;"></canvas>
+        <div class="chart-info">          
+          <button (click)="showFrags3(playerDetails.listwars3)">Load season <span>3</span> frags</button>
+        </div>
+        <canvas id="myChart3" width="1320" height="400" style="overflow-x: scroll;"></canvas>
 
       </div>
       <div class="big-name">{{playerDetails.playername}}</div>

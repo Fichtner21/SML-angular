@@ -3,13 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { tap, take, map } from 'rxjs/operators';
 import { RankObjService } from '../rank-obj.service';
 import { Players } from '../ranking.model';
-import { combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 import { Chart, ChartConfiguration, ChartDataSets, ChartOptions } from 'chart.js';
 import {ThemePalette} from '@angular/material/core';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
 import { DatePipe } from '@angular/common';
 
+interface CountryCodeMap {
+  [code: string]: string;
+}
 
 @Component({
   selector: 'app-player-view',
@@ -38,6 +41,8 @@ export class PlayerViewComponent implements OnInit {
   chartRank: any;
   chartRank2: any;
   public chartFrags: any;
+  season2players = 55;
+  season2wars = 333;
 
   resultCanvas: any;
   ctxResult: any;
@@ -49,7 +54,71 @@ export class PlayerViewComponent implements OnInit {
   mostOftenPlayed = [];
   currentRanking = [];
 
-  constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef, private router: Router, private datePipe: DatePipe) {
+  @Input() playerDetail: any;
+  @Input() expanded: boolean;
+  
+  public countryCodeMap: CountryCodeMap = {
+    'AF': 'Afghanistan',    
+    'DZ': 'Algeria',    
+    'AL': 'Albania',
+    'AD': 'Andorra',
+    'AM': 'Armenia',
+    'AT': 'Austria',
+    'AZ': 'Azerbaijan',
+    'BY': 'Belarus',
+    'BE': 'Belgium',
+    'BA': 'Bosnia and Herzegovina',
+    'BG': 'Bulgaria',
+    'HR': 'Croatia',
+    'CY': 'Cyprus',
+    'CZ': 'Czech Republic',
+    'DK': 'Denmark',
+    'EE': 'Estonia',
+    'FI': 'Finland',
+    'FR': 'France',
+    'GE': 'Georgia',
+    'DE': 'Germany',
+    'GR': 'Greece',
+    'HU': 'Hungary',
+    'IS': 'Iceland',
+    'IE': 'Ireland',
+    'IT': 'Italy',
+    'KZ': 'Kazakhstan',
+    'XK': 'Kosovo',
+    'LV': 'Latvia',
+    'LI': 'Liechtenstein',
+    'LT': 'Lithuania',
+    'LU': 'Luxembourg',
+    'MK': 'North Macedonia',
+    'MT': 'Malta',
+    'MD': 'Moldova',
+    'MC': 'Monaco',
+    'ME': 'Montenegro',
+    'NL': 'Netherlands',
+    'NO': 'Norway',
+    'PL': 'Poland',
+    'PT': 'Portugal',
+    'RO': 'Romania',
+    'RU': 'Russia',
+    'SM': 'San Marino',
+    'RS': 'Serbia',
+    'SK': 'Slovakia',
+    'SI': 'Slovenia',
+    'ES': 'Spain',
+    'SE': 'Sweden',
+    'CH': 'Switzerland',
+    'UA': 'Ukraine',
+    'UK': 'United Kingdom',
+    'PS': 'Palestine',
+    'EG': 'Egypt',
+    'US': 'United States',
+    'CA': 'Canada',
+    'MON': 'Gay Paradise',
+    'ENG': 'England'
+  };
+  
+
+  constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef, private router: Router, private datePipe: DatePipe, private rankObjService: RankObjService) {
     // console.log('activatedRoute PlayerView =>', this.activatedRoute);
    }
 
@@ -131,7 +200,9 @@ export class PlayerViewComponent implements OnInit {
         let clanHistory: string;
         let frags: any[] = [];
         let listwars: any[] = [];
+        let listwars1: any[] = [];
         let listwars2: any[] = [];
+        let listwars3: any[] = [];
         let rankings: any[] = [];
         let rankings2: any[] = [];
         let resultPerPlayer: any[] = [];
@@ -144,6 +215,9 @@ export class PlayerViewComponent implements OnInit {
         let s1wars_win: number;
         let s1fpw_win: number;
         let s1ranking_win: number;
+        let s2wars_win: number;
+        let s2fpw_win: number;
+        let s2ranking_win: number;
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);
 
@@ -230,7 +304,11 @@ export class PlayerViewComponent implements OnInit {
 
             listwars.push(Number(el.idwar));
 
+            listwars1.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
+
             listwars2.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
+
+            listwars3.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
 
             rankings.push(Math.round(rankHistory * 100) / 100);
             playerArray.push([el.idwar, el.timestamp, fragPerWar]);
@@ -253,6 +331,9 @@ export class PlayerViewComponent implements OnInit {
             s1wars_win = el.s1wars_win,
             s1fpw_win = el.s1fpw_win,
             s1ranking_win = el.s1ranking_win,
+            s2wars_win = el.s2wars_win,
+            s2fpw_win = el.s2fpw_win,
+            s2ranking_win = el.s2ranking_win,
             active = el.active
           }
         });
@@ -271,7 +352,9 @@ export class PlayerViewComponent implements OnInit {
           debut: timestampArray[0],
           listwars: listwars,
           rankings: rankings,
+          listwars1: this.filterObjects1(listwars1),
           listwars2: this.filterObjects(listwars2),
+          listwars3: this.filterObjects3(listwars3),
           win: win,
           lose: lose,
           draw: draw,
@@ -291,18 +374,41 @@ export class PlayerViewComponent implements OnInit {
           banDue: banDue,
           s1wars_win: s1wars_win ? s1wars_win : '',
           s1fpw_win: s1fpw_win ? s1fpw : '',
-          s1ranking_win: s1ranking_win ? s1ranking_win : ''
+          s1ranking_win: s1ranking_win ? s1ranking_win : '',
+          s2wars_win: s2wars_win ? s2wars_win : '',
+          s2fpw_win: s2fpw_win ? s2fpw_win : '',
+          s2ranking_win: s2ranking_win ? s2ranking_win : ''
         }
         // console.log('playerCard', playerCard);
 
         // return playerCard;
       }),
     )
+  }  
+  
+  onPlayerClick() {
+    this.rankObjService.setPlayerDetail(this.playerDetail);
   }
 
+  filterObjects1(list) {
+    const startDate = new Date('1/1/2023 0:00:00');
+    const endDate = new Date('4/30/2023 23:59');
+    return list.filter(item => {
+      const timestamp = new Date(item.timestamp);
+      return timestamp > startDate && timestamp < endDate;
+    });
+  }
   filterObjects(list) {
     const startDate = new Date('4/1/2023 0:00:00');
     const endDate = new Date('6/30/2023 23:59');
+    return list.filter(item => {
+      const timestamp = new Date(item.timestamp);
+      return timestamp > startDate && timestamp < endDate;
+    });
+  }
+  filterObjects3(list) {
+    const startDate = new Date('7/1/2023 0:00:00');
+    const endDate = new Date('9/30/2023 23:59');
     return list.filter(item => {
       const timestamp = new Date(item.timestamp);
       return timestamp > startDate && timestamp < endDate;
@@ -414,6 +520,89 @@ export class PlayerViewComponent implements OnInit {
 
   public showFrags2(listwars:any[]){
     this.canvas = document.getElementById('myChart2');
+    this.ctx = this.canvas.getContext('2d');
+    const labels = listwars.map(obj => obj.idwar);
+    const frags = listwars.map(obj => obj.frags);
+    const rankings = listwars.map(obj => obj.ranking);
+    const timestamp = listwars.map(obj => obj.timestamp);
+    let myChart = new Chart(this.ctx, {
+      type: 'bar',
+      data: {
+          labels: labels.map(i => 'War #' + i),
+          datasets: [{
+              label: 'Frags in war',
+              data: frags,
+              backgroundColor: frags.map(function(frag, i){
+                if(frags[i] == Math.max.apply(null, frags)){
+                  return 'rgba(11,156,49,0.6)';
+                }
+                if(frags[i] == Math.min.apply(null, frags)){
+                  return 'rgba(255,0,0,0.6)';
+                }
+                return "rgba(199, 199, 199, 0.6)";
+              }),
+              borderWidth: 1
+          }]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        responsive: true,
+        scales: {
+          xAxes: [
+            {
+              ticks: {
+                beginAtZero: false,
+                min: 1,
+              },
+              offset: true,
+              id: 'date-x-axis',
+              scaleLabel: {
+                display: false,
+                labelString: 'Date of match',
+              },
+            },
+          ],
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: false,
+                labelString: 'Frags per war',
+              },
+            },
+          ],
+        },
+        annotation: {
+          drawTime: 'afterDatasetsDraw',
+          annotations: [
+            {
+              id: 'hline1',
+              type: 'line',
+              mode: 'horizontal',
+              scaleID: 'y-axis-0',
+              value: this.avarageWarsPerMonth(frags),
+              borderColor: 'red',
+              borderDash: [10, 5],
+              label: {
+                backgroundColor: 'red',
+                content: 'Avg. ' + this.avarageWarsPerMonth(frags).toFixed(2) + ' frags per war.',
+                enabled: true,
+              },
+            },
+          ]
+        },
+        // display:true
+      } as ChartOptions,
+      plugins: [ChartAnnotation]
+    });
+  }
+
+  public showFrags3(listwars:any[]){
+    this.canvas = document.getElementById('myChart3');
     this.ctx = this.canvas.getContext('2d');
     const labels = listwars.map(obj => obj.idwar);
     const frags = listwars.map(obj => obj.frags);
@@ -620,8 +809,159 @@ export class PlayerViewComponent implements OnInit {
     });
   }
 
+  public showRankingSeason1(listwars:any[]){
+    this.canvasRank = document.getElementById('rank1Chart');
+    this.ctxRank = this.canvasRank.getContext('2d');
+    const labels = listwars.map(obj => obj.idwar);
+    const frags = listwars.map(obj => obj.frags);
+    const rankings = listwars.map(obj => obj.ranking);
+    const timestamp = listwars.map(obj => obj.timestamp);
+    let myChart = new Chart(this.ctxRank, {
+      type: 'line',
+      data: {
+          labels: labels.map(i => '#' + i),
+          datasets: [{
+              label: 'Ranking',
+              borderColor: '#ffffc0',
+              lineTension: 0,
+              order: 1,
+              data: rankings,
+              backgroundColor: rankings.map(function(rank, i){
+                if(rankings[i] == Math.max.apply(null, rankings)){
+                  return 'rgba(11,156,49,0.6)';
+                }
+                if(rankings[i] == Math.min.apply(null, rankings)){
+                  return 'rgba(255,0,0,0.6)';
+                }
+                // return "rgba(199, 199, 199, 0.1)";
+              }),
+              borderWidth: 1
+          }]
+      },
+      options: {
+        onClick: function(c,i) {
+          let e:any;
+          e = i[0];
+          console.log(e._index)
+          var x_value = this.data.labels[e._index];
+          var y_value = this.data.datasets[0].data[e._index];
+          const toWarLink = x_value.substring(1);
+          window.open(`/obj-matches/${toWarLink}`);
+          console.log(toWarLink);
+          console.log(y_value);
+        },
+        elements: {
+          line: {
+            tension: 0,
+          },
+        },
+        annotation: {
+          drawTime: 'afterDatasetsDraw',
+          annotations: [
+            {
+              id: 'hline1',
+              type: 'line',
+              mode: 'horizontal',
+              scaleID: 'y-axis-0',
+              value: 1000,
+              borderColor: 'red',
+              borderDash: [10, 5],
+              label: {
+                backgroundColor: 'red',
+                content: '1000pc',
+                enabled: true,
+              },
+            },
+          ]
+        },
+        legend: {
+          display: false
+        },
+        responsive: true,
+
+        // display:true
+      } as ChartOptions,
+      plugins: [ChartAnnotation]
+    });
+  }
+
   public showRankingSeason2(listwars:any[]){
     this.canvasRank = document.getElementById('rank2Chart');
+    this.ctxRank = this.canvasRank.getContext('2d');
+    const labels = listwars.map(obj => obj.idwar);
+    const frags = listwars.map(obj => obj.frags);
+    const rankings = listwars.map(obj => obj.ranking);
+    const timestamp = listwars.map(obj => obj.timestamp);
+    let myChart = new Chart(this.ctxRank, {
+      type: 'line',
+      data: {
+          labels: labels.map(i => '#' + i),
+          datasets: [{
+              label: 'Ranking',
+              borderColor: '#ffffc0',
+              lineTension: 0,
+              order: 1,
+              data: rankings,
+              backgroundColor: rankings.map(function(rank, i){
+                if(rankings[i] == Math.max.apply(null, rankings)){
+                  return 'rgba(11,156,49,0.6)';
+                }
+                if(rankings[i] == Math.min.apply(null, rankings)){
+                  return 'rgba(255,0,0,0.6)';
+                }
+                // return "rgba(199, 199, 199, 0.1)";
+              }),
+              borderWidth: 1
+          }]
+      },
+      options: {
+        onClick: function(c,i) {
+          let e:any;
+          e = i[0];
+          console.log(e._index)
+          var x_value = this.data.labels[e._index];
+          var y_value = this.data.datasets[0].data[e._index];
+          const toWarLink = x_value.substring(1);
+          window.open(`/obj-matches/${toWarLink}`);
+          console.log(toWarLink);
+          console.log(y_value);
+        },
+        elements: {
+          line: {
+            tension: 0,
+          },
+        },
+        annotation: {
+          drawTime: 'afterDatasetsDraw',
+          annotations: [
+            {
+              id: 'hline1',
+              type: 'line',
+              mode: 'horizontal',
+              scaleID: 'y-axis-0',
+              value: 1000,
+              borderColor: 'red',
+              borderDash: [10, 5],
+              label: {
+                backgroundColor: 'red',
+                content: '1000pc',
+                enabled: true,
+              },
+            },
+          ]
+        },
+        legend: {
+          display: false
+        },
+        responsive: true,
+
+        // display:true
+      } as ChartOptions,
+      plugins: [ChartAnnotation]
+    });
+  }
+  public showRankingSeason3(listwars:any[]){
+    this.canvasRank = document.getElementById('rank3Chart');
     this.ctxRank = this.canvasRank.getContext('2d');
     const labels = listwars.map(obj => obj.idwar);
     const frags = listwars.map(obj => obj.frags);
@@ -843,5 +1183,9 @@ export class PlayerViewComponent implements OnInit {
 //     options: options
 //   })
 // }
+
+  public getCountryName(countryCode: string): string | undefined {
+    return this.countryCodeMap[countryCode] || 'Unknown Country';
+  }
 }
 

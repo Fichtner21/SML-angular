@@ -554,3 +554,14 @@ td img {
 ::ng-deep mat-select {
   border-color: 2px solid #ffffc0 !important;
 }
+
+.only-maps {
+  border: 1px solid gray; 
+  padding: 5px; 
+  border-radius: 5px; 
+  grid-column: span 2;
+
+  @media screen and (max-width: 800px){
+    grid-column: span 1;
+  }
+}

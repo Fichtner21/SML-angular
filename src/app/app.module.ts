@@ -47,6 +47,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { HideRowDirective } from './hide-row.directive';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 
@@ -129,6 +130,7 @@ const customNotifierOptions: NotifierOptions = {
     MatCheckboxModule,
     MatRadioModule,
     MatIconModule,
+    MatDatepickerModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),      

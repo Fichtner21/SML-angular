@@ -1,5 +1,5 @@
 import { combineLatest, from, Observable, of, Subject } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Sheet } from '../models/sheet.model';
 import { environment } from 'src/environments/environment';
@@ -27,6 +27,9 @@ export class PlayersApiService {
   private discordToken = 'MTA3NzIyOTg4Njk3MzkzNTcwNw.GZhb6Z.N_Oq-kDAVTcni7LMdcZF_NMLYVWqFmlE_FqWd8';
   private channelId = '851888778409672756';
   private baseUrl = 'http://localhost:3000';
+
+  private apiKey = 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU';
+  private spreadsheetId = '1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo';
 
   constructor(private http: HttpClient, private readonly oAuthService: OAuthService) {}
 
@@ -346,4 +349,31 @@ export class PlayersApiService {
   //   //     return this.http.get<any[]>(membersUrl, { headers }).toPromise();
   //   //   });
   // }
+  getSheetDataWithHistoryByDate(selectedDate: string) {
+    // Tworzymy obiekt parametrów z odpowiednimi właściwościami
+    const params = new HttpParams()
+      .set('ranges', 'A:Z')
+      .set('includeGridData', 'true')
+      .set('fields', 'sheets.properties,sheets.data.rowData.values(effectiveValue,effectiveFormat)')
+      .set('dateTimeRenderOption', 'FORMATTED_STRING')
+      .set('valueRenderOption', 'FORMATTED_VALUE');
+
+    // Tworzymy pełny URL z dodanymi parametrami
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${this.spreadsheetId}`;
+
+    // Wysyłamy żądanie HTTP GET do Google Sheets API z odpowiednimi parametrami
+    return this.http.get(url, { params }).toPromise().then((response: any) => {
+      // Przetwarzamy otrzymane dane i wyciągamy odpowiednie arkusze z historią zmian dla wybranej daty
+      const sheetsWithHistory = response.sheets.filter((sheet: any) => {
+        return this.hasDateInHistory(sheet, selectedDate);
+      });
+
+      return sheetsWithHistory;
+    });
+  }
+  private hasDateInHistory(sheet: any, selectedDate: string): boolean {
+    // Arkusz z historią zmian ma dane o zmianach w polu "effectiveFormat", które zawiera datę
+    const changes = sheet.data[0].rowData?.map((row: any) => row.values?.[0]?.effectiveFormat?.numberFormat?.pattern);
+    return changes?.some((change: any) => change.includes(selectedDate)) || false;
+  }
 }

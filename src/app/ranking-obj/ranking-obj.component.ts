@@ -6,14 +6,16 @@ import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { fa1, fa2, fa3, faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { fa1, fa2, fa3, faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { parseFloat } from 'core-js/es/number';
+import { RankObjService } from './rank-obj.service';
+
 
 @Component({
   selector: 'app-ranking-obj',
   templateUrl: './ranking-obj.component.html',
-  styleUrls: ['./ranking-obj.component.scss']
+  styleUrls: ['./ranking-obj.component.scss']  
 })
 export class RankingObjComponent implements OnInit {
   receivedData: number;
@@ -44,6 +46,7 @@ export class RankingObjComponent implements OnInit {
   startingPercentage = 25;
 
   topThreePlayers: any[]
+  // expandedPlayerIndexes: number[] = [];
 
   @Output() ranking:EventEmitter<any> = new EventEmitter();
 
@@ -52,11 +55,14 @@ export class RankingObjComponent implements OnInit {
 
   arrowUp = faArrowUp;
   arrowDown = faArrowDown;
+  arrowMinus = faMinus;
   number1 = fa1;
   number2 = fa2;
   number3 = fa3;  
+
+  // playerDetail: any;  
   
-  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute, private rankObjService: RankObjService) {
     // localStorage.setItem('info', 'less');
    } 
 
@@ -66,6 +72,7 @@ export class RankingObjComponent implements OnInit {
   ] 
 
   ngOnInit(): void {     
+   
 
     this.playersTest$ = this.playersApiService.getPlayers('Players').pipe(
       map((response: any) => {             
@@ -96,6 +103,36 @@ export class RankingObjComponent implements OnInit {
         return historyMatches;
       }),
     );
+
+    // this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
+    //   map((response: any) => {        
+    //     let batchRowValuesHistory = response.values;
+    //     let historyMatches: any[] = [];
+    //     for(let i = 1; i < batchRowValuesHistory.length; i++){
+    //       const rowObject: object = {};
+    //       for(let j = 0; j < batchRowValuesHistory[i].length; j++){
+    //         rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
+    //       }
+    //       historyMatches.push(rowObject);
+    //     } 
+    
+    //     // Przekształć timestamp na format daty
+    //     historyMatches.forEach((match) => {
+    //       match['timestamp'] = new Date(match['timestamp']);
+    //     });
+        
+    //     return historyMatches;
+    //   }),
+    //   // Opcjonalnie, jeśli potrzebujesz sortowania meczów wg daty
+    //   map((historyMatches: any[]) => historyMatches.sort((a, b) => a['timestamp'] - b['timestamp'])),
+    // );
+    
+    // const selectedDate = new Date('1/31/2021 14:29:13');
+
+    // // W tej funkcji filtrujemy mecze, które mają datę wcześniejszą lub równą selectedDate
+    // this.historyMatches$ = this.historyMatches$.pipe(
+    //   map((historyMatches: any[]) => historyMatches.filter(match => match['timestamp'] <= selectedDate))
+    // );
 
     this.lastWarOfPlayer$ = combineLatest([this.playersTest$, this.historyMatches$]).pipe(
       map(([v1, v2, ]) => {        
@@ -164,6 +201,17 @@ export class RankingObjComponent implements OnInit {
 
     this.ranking.emit(this.lastWarOfPlayer$);
   } 
+
+  // getPlayerDetailsForPlayer(username: string) {
+  //   this.rankObjService.getPlayerDetail().subscribe(playerDetail => {
+  //     this.playerDetail = playerDetail;
+      
+  //     // Sprawdź, czy username się zgadza
+  //     if (this.playerDetail.username === username) {
+  //       console.log('Player Detail:', this.playerDetail);
+  //     }
+  //   });
+  // }
   
   infoChange($event){
     this.currentInfo = $event;
@@ -548,4 +596,16 @@ export class RankingObjComponent implements OnInit {
   handleData(data: number) {
     this.receivedData = data;
   }
+
+  showPlayerData(player: any) {
+    console.log("Player Data:", player);
+  }
+
+  // toggleExpansion(index: number) {
+  //   if (this.expandedPlayerIndexes.includes(index)) {
+  //     this.expandedPlayerIndexes = this.expandedPlayerIndexes.filter(i => i !== index);
+  //   } else {
+  //     this.expandedPlayerIndexes.push(index);
+  //   }
+  // }
 }

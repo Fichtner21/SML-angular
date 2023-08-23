@@ -11,6 +11,7 @@ import { Players, playerAttributesMapping } from './ranking.model';
 export class RankObjService {
   private playersSubject = new BehaviorSubject<Players[]>([]);
   public players$: Observable<Players[]> = this.playersSubject.asObservable();
+  private playerDetailSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   constructor(private _http: HttpClient, private GoogleSheetsDbService: GoogleSheetsDbService) { }
 
@@ -29,4 +30,12 @@ export class RankObjService {
       })
     )
   }   
+
+  setPlayerDetail(playerDetail: any) {
+    this.playerDetailSubject.next(playerDetail);
+  }
+  
+  getPlayerDetail(): Observable<any> {
+    return this.playerDetailSubject.asObservable();
+  }
 }

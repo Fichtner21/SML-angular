@@ -1,5 +1,6 @@
 <section>
   <div class="container">
+    <!-- <app-single-match (lengthEmitter)="updateCommentsLength($event)"></app-single-match> -->
     <ng-container *ngIf="historyObj$ | async as historyObj">
       <ng-container *ngIf="historyObj.length > 0">
         <div>
@@ -11,6 +12,7 @@
                 <div *ngIf="match.video.length > 0">
                   <img src="../../assets/images/icons/video.svg" alt="" class="video-icon">
                 </div> 
+                <p>Comments: {{ match.comments || 0 }}</p>
                 <!-- <app-single-match (commentsEmitter)="onChildComments($event)"></app-single-match> -->
                 <!-- <app-single-match [comments]="comments$ | async" (lengthEmitter)="updateComments($event)"></app-single-match>                 -->
                 <!-- <div>{{ getCommentsForMatch(match.idwar) | json }}</div> -->

@@ -82,6 +82,7 @@ export class MixUsComponent implements OnInit {
   faFlag = faFlag;
   mixWay: any = localStorage.getItem('mixway') ? localStorage.getItem('mixway') : '';
   selectedOption: string = "Teams-decide";  
+  selectedOption2: string = "";  
   selectedMaps: string[] = [];
   maps = [
     { name: 'The Hunt', probability: 0.2 },
@@ -1306,7 +1307,7 @@ export class MixUsComponent implements OnInit {
       } else if (this.selectedUsers.length >= 8) {
         availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'Navarone', 'The Church Final'];
       } else if (this.selectedUsers.length >= 10) {
-        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Renan', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
       }
       
       maps = this.getExtraRandomMaps(availableMaps, 2, this.mapProbabilities);
@@ -1340,7 +1341,7 @@ export class MixUsComponent implements OnInit {
       } else if (this.selectedUsers.length >= 8) {
         availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'Navarone', 'The Church Final'];
       } else if (this.selectedUsers.length >= 10) {
-        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Renan', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
       }
       
       maps = this.getExtraRandomMaps(availableMaps, 2, this.mapProbabilities);
@@ -1378,7 +1379,7 @@ export class MixUsComponent implements OnInit {
     "Official? I m coming for You!",
     "I'm not lost, I'm just exploring the enemy spawn point.", 
     "This isn't camping, it's strategic resting.", 
-    "If at first you don't succeed, call for an airstrike.", 
+    "I'm not a cheater, I just wanted to know if you can see through walls.", 
     "I'm not a hacker, I'm just really good at guessing your spot.", 
     "Volute? We don't need this. Pure game <3."];
 
@@ -1431,10 +1432,151 @@ export class MixUsComponent implements OnInit {
     nextMatch += "----------" + "\n";
     nextMatch += "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}` + "\n";
     nextMatch += "----------" + "\n";
+    // if(this.selectedOption !== 'Teams-decide'){    
+    //   for (const mapName in this.mapProbabilities) {
+    //     const probability = this.mapProbabilities[mapName];
+    //     nextMatch += `${mapName} ${probability}%`;
+        
+    //     // If it's not the last item, add a comma and space
+    //     if (mapName !== Object.keys(this.mapProbabilities).slice(-1)[0]) {
+    //         nextMatch += ', ';
+    //     }
+    //   }
+    //   nextMatch += "\n";
+    //   nextMatch += "----------" + "\n";
+    // }    
     nextMatch += "Good Luck & Have Fun!";
-    // console.log('nextM', nextMatch);
+    console.log('nextM', nextMatch);
     const payload = {
       content: nextMatch
+    };
+    this.http.post(webhookUrl, payload).subscribe({
+      next: (res) => {
+        this.notifier.notify('success', "Teams Send successful!")
+      }, error: (err) => {
+        this.notifier.notify('error', 'Something went wrong')
+      }
+    });
+  }
+
+  sendToDiscord2() {
+    // Last War and Log
+    // const webhookUrl = 'https://discord.com/api/webhooks/1075178845067563138/FpKf7iiu3dhI9NTxyS-VkMNcv4mdq2KORNhNUbkeZnfCgLtDaJSIFxi9Uz5YUTCDPqmX';
+
+    let mixWay = localStorage.getItem('mixway');
+
+    // General Chat
+    const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
+
+    const arr1 = this.array1;
+    const arr2 = this.array2;
+
+    let maps: string[] = [];
+
+    const stock = ['The Hunt', 'V2', 'The Bridge'];
+    const customMp = ['VSUK Abbey', 'Stlo', 'Renan', 'The Church Final'];
+    const customLp = ['V2 Shelter', 'Navarone', 'Dessau1946', 'The Bridge OMG', 'The Lost Town', 'Stlo4', 'THe Village', 'Harbor', 'Holland']
+    
+    if (this.selectedOption2=== 'Random') {
+      // Wybierz losowe mapy ze zbiorów stock, customMp i customLp
+      // const availableMaps = stock.concat(customMp, customLp);
+      // maps = this.getExtraRandomMaps(availableMaps, 2, this.mapProbabilities);
+      let availableMaps: string[] = [];
+      
+      if (this.selectedUsers.length === 6) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor'];
+      } else if (this.selectedUsers.length >= 8) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'Navarone', 'The Church Final'];
+      } else if (this.selectedUsers.length >= 10) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Renan', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
+      }
+      
+      maps = this.getExtraRandomMaps(availableMaps, 2, this.mapProbabilities);
+    } else if (this.selectedOption2 === 'TwoStockMaps') {
+      // Wybierz dwie mapy ze zbioru stock
+      maps = this.getExtraRandomMaps(stock, 2, this.mapProbabilities);
+    } else if (this.selectedOption2 === 'TwoCustomMapsMp') {
+      // Wybierz dwie mapy ze zbioru customMp
+      maps = this.getExtraRandomMaps(customMp, 2, this.mapProbabilities);
+    } else if (this.selectedOption2 === 'TwoCustomMapsLp') {
+      // Wybierz dwie mapy ze zbioru customLp
+      maps = this.getExtraRandomMaps(customLp, 2, this.mapProbabilities);
+    } else if (this.selectedOption2 === 'OneStockOneCustomMp') {
+      // Wybierz jedną mapę ze zbioru stock i jedną mapę ze zbioru customMp
+      const stockMap = this.getRandomElementFromArray(stock);
+      const customMap = this.getRandomElementFromArray(customMp);
+      maps = [stockMap, customMap];
+    } else if (this.selectedOption2 === 'OneStockOneCustomLp') {
+      // Wybierz jedną mapę ze zbioru stock i jedną mapę ze zbioru customLp
+      const stockMap = this.getRandomElementFromArray(stock);
+      const customMap = this.getRandomElementFromArray(customLp);
+      maps = [stockMap, customMap];
+    } else if (this.selectedOption2 === 'Teams-decide') {
+      // Dodaj informację o Teams decide do nextMatch
+      maps = ['Teams decide'];
+    } else if (this.selectedOption2 === 'extraRandom') {
+      let availableMaps: string[] = [];
+      
+      if (this.selectedUsers.length === 6) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor'];
+      } else if (this.selectedUsers.length >= 8) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'Navarone', 'The Church Final'];
+      } else if (this.selectedUsers.length >= 10) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Renan', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
+      }
+      
+      maps = this.getExtraRandomMaps(availableMaps, 2, this.mapProbabilities);
+    }
+
+    const selectRandomPlayer = (arr: {playername: string}[]): string => {
+      const randomIndex = Math.floor(Math.random() * arr.length);
+      return arr[randomIndex].playername;
+    }; 
+
+    const admin = `ADMIN: ${selectRandomPlayer([...arr1, ...arr2])}`;
+
+    const arr = [...arr1, ...arr2]; // łączymy obie tablice w jedną
+    let highestRanking = -Infinity; // zaczynamy od bardzo niskiej wartości
+    let highestRankingPlayer = '';
+    
+    for (const player of arr) {
+      const ranking = parseInt(player.ranking); // konwertujemy ranking na liczbę
+    
+      if (ranking > highestRanking) {
+        highestRanking = ranking;
+        highestRankingPlayer = player.playername;
+      }
+    }    
+
+    const now = new Date();
+    const day = ("0" + now.getDate()).slice(-2);
+    const month = ("0" + (now.getMonth() + 1)).slice(-2);
+    const year = now.getFullYear();
+    const hours = ("0" + now.getHours()).slice(-2);
+    const minutes = ("0" + now.getMinutes()).slice(-2);
+    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
+
+    const chanceFutureTeamOne = this.sumRanking(arr1)
+    const chanceFutureTeamTwo = this.sumRanking(arr2)
+
+    let chanceOfWinTeamOneShow = 0;
+    let chanceOfWinTeamTwoShow = 0;
+
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne - chanceFutureTeamTwo) / 400)) * 100;
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;
+
+    chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+    chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
+
+    let nextMatch = "";
+    nextMatch += "**MAPS for next MATCH**, created: " + formattedDate + "\n";
+    nextMatch += "----------" + "\n";
+    nextMatch += 'MAPS: ' + maps.join(', ') + ' (' + this.selectedOption2 + ')' + '\n';
+    nextMatch += "----------" + "\n";   
+    nextMatch += "Good Luck & Have Fun!";
+    console.log('nextM', nextMatch);
+    const payload = {
+      // content: nextMatch
     };
     this.http.post(webhookUrl, payload).subscribe({
       next: (res) => {

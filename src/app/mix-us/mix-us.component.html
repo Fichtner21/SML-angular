@@ -208,13 +208,32 @@
                 voice channels.
               </div>
             </div>
+            <!-- <div class="only-maps">
+              <h3>Draw only maps</h3>
+              <mat-form-field appearance="outline" class="mat-select-container">
+                <mat-label>MAPS</mat-label>
+                <mat-select [(ngModel)]="selectedOption2" class="mat-select">
+                  <mat-option value="Random">Random</mat-option>
+                  <mat-option value="TwoStockMaps">Two Stock Maps</mat-option>
+                  <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
+                  <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
+                  <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
+                  <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>               
+                   <mat-option value="extraRandom">Extra Random</mat-option> 
+                </mat-select>             
+              </mat-form-field>
+              <div class="single-btn">             
+                <button mat-raised-button color="primary" class="lp" (click)="sendToDiscord2()" [disabled]="!isValid()">Send Maps to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>                               
+              </div>             
+            </div> -->
+           
             
             <p class="col-span-3 without-mb">Bucket stock: 
               <img src="/assets/images/maps/TheHunt_text.jpg" alt="The Hunt Map">
               <img src="/assets/images/maps/v2_text.jpg" alt="V2 Map">
               <img src="/assets/images/maps/bridge_text.jpg" alt="The Bridge Map">
             <p class="col-span-3 without-mb">Bucket customMp (MP - more popular): <strong>VSUK Abbey, Stlo, Renan, The Church Final</strong></p>
-            <p class="col-span-3 without-mb">Bucket customLp (LP - less popular): <strong>V2 Shelter, Navarone, Dessau1946, The Bridge OMG, The Lost Town, Stlo4, THe Village, Harbor</strong></p>
+            <p class="col-span-3 without-mb">Bucket customLp (LP - less popular): <strong>V2 Shelter, Navarone, Dessau1946, The Bridge OMG, The Lost Town, Stlo4, The Village, Harbor, Holland</strong></p>
             
           </div>
           <ng-container *ngIf="isAuthenticated()">                      

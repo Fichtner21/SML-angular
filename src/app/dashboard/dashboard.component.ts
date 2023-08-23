@@ -13,6 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSelectChange } from '@angular/material/select';
 import { environment } from 'src/environments/environment';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 export interface UserInfo {
   info: {
@@ -242,6 +243,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   message: string;
   name: string;
 
+  selectedDate: string = ''; // Wybrana data jako string w formacie 'MM/DD/YYYY'
+  sheetsWithHistory: any[] = [];
 
   firstFormValue: string;
   @Output() firstFormValueChange = new EventEmitter<string>();
@@ -1594,7 +1597,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.notifier.notify('error', 'Something went wrong')
       }
     });  
-  } 
+  }   
 
   ngOnDestroy() {
     if (this.sumSubscription) {

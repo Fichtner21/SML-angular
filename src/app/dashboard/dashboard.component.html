@@ -619,20 +619,95 @@
             </div>
           </ng-container>
         </mat-card>  
-        <mat-card class="span7">
+        <mat-card class="span7 send-message">
           <form (ngSubmit)="sendMessageToDiscord()">
             <div class="form-group">
-              <label for="message">Message:</label>
-              <input type="text" class="form-control" id="message" [(ngModel)]="message" name="message" required>
+              <mat-label>Message</mat-label>
+              <input matInput class="form-control" id="message" [(ngModel)]="message" name="message" required>
             </div>
-            <button type="submit" class="btn btn-primary">Send message</button>
+            <button mat-raised-button color="primary" class="btn btn-primary">Send message</button>
           </form>
-          
-          
-          
         </mat-card>
       </div>
       <div class="ranking span2">
+        <mat-card style="margin-bottom: 20px;">
+          <h3>Draw only maps</h3>
+          <div class="maps">
+            <div>
+              <mat-form-field appearance="outline" class="mat-select-container">
+                <mat-label>MAPS</mat-label>
+                <mat-select [(ngModel)]="selectedOption2" class="mat-select">
+                  <mat-option value="Random">Random</mat-option>
+                  <mat-option value="TwoStockMaps">Two Stock Maps</mat-option>
+                  <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
+                  <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
+                  <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
+                  <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>              
+                </mat-select>
+              </mat-form-field>
+    
+              <mat-form-field appearance="outline" class="mat-select-container">
+                <mat-label>Players</mat-label>
+                <mat-select [(ngModel)]="playerCount" class="mat-select" style="width: 50px">
+                  <mat-option value="6">6</mat-option>
+                  <mat-option value="8">8</mat-option>
+                  <mat-option value="10">10+</mat-option>
+                </mat-select>
+              </mat-form-field>
+    
+              <div class="single-btn">
+                <button mat-raised-button color="primary" class="lp" (click)="sendToDiscord2()">
+                  Send Maps to Discord
+                </button>
+              </div> 
+            </div>
+            <div class="list">
+              <ul>
+                <li><strong>Stock</strong>: <span class="stock">The Hunt</span>, <span class="stock">V2</span>, <span class="stock">The Bridge</span></li>
+                <li><strong>Custom MP</strong>: <span class="custom-mp">VSUK Abbey</span>, <span class="custom-mp">Stlo</span>, <span class="custom-mp">Renan</span>,<span class="custom-mp">The Church Final</span></li>
+                <li><strong>Custom LP</strong>: <span class="custom-lp">V2 Shelter</span>, <span class="custom-lp">Navarone</span>, <span class="custom-lp">Dessau1946</span>, <span class="custom-lp">The Bridge OMG</span>, <span class="custom-lp">The Lost Town</span>, <span class="custom-lp">Stlo4</span>, <span class="custom-lp">The Village</span>, <span class="custom-lp">Harbor</span>, <span class="custom-lp">Holland</span></li>
+              </ul>
+              <hr>
+            </div>
+          </div>
+          <div>
+            <div>
+              <div class="list">
+                <strong>3 on 3:</strong> <span class="stock"> The Hunt</span>, <span class="stock">V2</span>, <span class="stock">The Bridge</span>, <span class="custom-mp">Stlo</span>, <span class="custom-mp">Renan</span>, <span class="custom-lp">Dessau1946</span>, <span class="custom-lp">Harbor</span>
+              </div>
+              <div class="list">
+                <strong>4 on 4:</strong> <span class="stock"> The Hunt</span>, <span class="stock">V2</span>, <span class="stock">The Bridge</span>, <span class="custom-mp">Stlo</span>, <span class="custom-mp">Renan</span>,  <span class="custom-mp">VSUK Abbey</span>, <span class="custom-mp">The Church Final</span>, <span class="custom-lp">Dessau1946</span>, <span class="custom-lp">Harbor</span>, <span class="custom-lp">Navarone</span>
+              </div>
+              <div class="list">
+                <strong>5 on 5+:</strong><span class="stock"> The Hunt</span>, <span class="stock">V2</span>, <span class="stock">The Bridge</span>, <span class="custom-mp">Renan</span>, <span class="custom-mp">VSUK Abbey</span>, <span class="custom-mp">The Church Final</span>, <span class="custom-lp">Stlo4</span>, <span class="custom-lp">V2 Shelter</span>, <span class="custom-lp">Holland</span>, <span class="custom-lp">The Bridge OMG</span>, <span class="custom-lp">The Village</span>
+              </div>
+            </div>
+            <hr>
+            <div>
+              <h4>Probilities</h4>
+              'The Hunt': 20,
+              'V2': 20,
+              'The Bridge': 20,
+              'VSUK Abbey': 10,
+              'Stlo': 10,
+              'Renan': 10,
+              'The Church Final': 10,
+              'V2 Shelter': 5,
+              'Navarone': 5,
+              'Dessau1946': 5,
+              'The Bridge OMG': 5,
+              'The Lost Town': 5,
+              'Stlo4': 5,
+              'The Village': 5,
+              'Harbor': 5,
+              'Holland': 5,
+            </div>
+          </div>
+          <div *ngIf="nextMatch">
+            <h4>Drawn maps:</h4>
+            <pre>{{ nextMatch }}</pre>
+          </div>
+        </mat-card>
         <ng-container *ngIf="players$ | async as players">
           <ng-container *ngIf="players.length > 0">
             <mat-card>
@@ -660,7 +735,7 @@
               </table>
             </mat-card> 
           </ng-container>
-        </ng-container>            
+        </ng-container>        
       </div>
     </div>
 

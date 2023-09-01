@@ -36,6 +36,7 @@ export class HomeComponent implements OnInit {
   public playersTest$: Observable<any>;
   public teamSelections$: Observable<any>; 
   public addAmatch$: Observable<any>;
+  display: boolean = true;
 
   constructor(private playersApiService: PlayersApiService) {
     
@@ -91,7 +92,7 @@ export class HomeComponent implements OnInit {
             t2preelo: name.ELO2 != '#N/A' ? name.ELO2 : '',            
           };
           
-          selectedArray.push(selected);          
+          selectedArray.push(selected);                        
         }
 
         const chanceFutureTeamOne = parseInt(selectedArray[selectedArray.length -1].t1preelo.replace(/,/g,''), 10);           

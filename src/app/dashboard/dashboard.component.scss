@@ -704,3 +704,37 @@ button {
 h3, h2 {
   color: #40415f;
 }
+
+.maps {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 20px; 
+}
+
+.list {
+  span {
+    font-weight: 600;
+  }
+
+  .stock {
+    color: lime;
+  }
+
+  .custom-mp {
+    color: yellow;
+  }
+
+  .custom-lp {
+    color: darkred;
+  }
+
+  strong {
+    font-size: 18px;
+    text-decoration: underline;
+  }
+}
+
+.send-message {
+  background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%);
+  background-size: 4px 4px;
+}

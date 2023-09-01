@@ -63,15 +63,7 @@
             </canvas>
           </div>
           <div class="seasons">
-            <ng-container *ngIf="playerDetail$ | async as playerDetails;">
-              <!-- <my-tabs>
-                <my-tab [tabTitle]="'Tab 1'">
-                  Tab 1 content
-                </my-tab>
-                <my-tab tabTitle="Tab 2">
-                  Tab 2 content
-                </my-tab>
-              </my-tabs> -->
+            <ng-container *ngIf="playerDetail$ | async as playerDetails;">          
               <mat-tab-group animationDuration="0ms">
                 <mat-tab label="Season #3">
                   <h2>01.07.2023 - 30.09.2023</h2>

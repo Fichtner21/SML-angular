@@ -169,13 +169,19 @@ export class RankingObjComponent implements OnInit {
               s1fpw_win: parseInt(name.s1fpw_win),
               s1ranking_win: parseInt(name.s1ranking_win),
               s2ranking_win: parseInt(name.s2ranking_win),
-              streak: name.streak,
-              winPercentage: this.handleData(this.receivedData)      
+              // streak: name.streak,
+              winPercentage: this.handleData(this.receivedData),
+              streak: this.calculateStreak(name.username, v2)      
             };
             playerRowArray.push(lastWarDate); 
           }                   
         }     
-        // console.log('playerRowArray', playerRowArray[0])
+        console.log('playerRowArray', playerRowArray[0])
+        console.log('playerRowArray', playerRowArray[1])
+        console.log('playerRowArray', playerRowArray[2])
+        console.log('V2', v2[v2.length - 4])
+        console.log('V2', v2[v2.length - 5])
+        // console.log('V2', v2[v2.length - 3])
         // this.topThreePlayers = playerRowArray
         // .sort((a, b) => b.wars - a.wars) // Sortowanie graczy według wartości "wars" (malejąco)
         // .slice(0, 3); // Pobranie trzech graczy z najwyższymi wartościami "wars"
@@ -608,4 +614,52 @@ export class RankingObjComponent implements OnInit {
   //     this.expandedPlayerIndexes.push(index);
   //   }
   // }
+
+  calculateStreak(username: string, historyMatches: any[]): number {
+    let currentStreak = 0;
+    let currentTeam = ''; // 't1' or 't2'
+  
+    for (let i = 0; i < historyMatches.length; i++) {
+      const match = historyMatches[i];
+      let foundInTeam = '';
+  
+      for (let teamIndex = 1; teamIndex <= 2; teamIndex++) {
+        for (let playerIndex = 1; playerIndex <= 7; playerIndex++) {
+          const playerNameKey = `t${teamIndex}p${playerIndex}name`;
+  
+          if (match[playerNameKey] === username) {
+            foundInTeam = `t${teamIndex}`;
+            break;
+          }
+        }
+  
+        if (foundInTeam) {
+          break;
+        }
+      }
+  
+      if (foundInTeam) {
+        const teamKey = foundInTeam;
+        const roundsWonByTeam = parseInt(match[`${teamKey}roundswon`]);
+        const roundsWonByOpponent = parseInt(match[`${teamKey === 't1' ? 't2' : 't1'}roundswon`]);
+  
+        if (currentTeam !== teamKey) {
+          currentStreak = roundsWonByTeam > roundsWonByOpponent ? 1 : -1;
+          currentTeam = teamKey;
+        } else {
+          if (roundsWonByTeam > roundsWonByOpponent) {
+            currentStreak++;
+          } else {
+            currentStreak--;
+          }
+        }
+        // Continue searching for more matches to determine the streak
+      }
+    }
+  
+    return currentStreak;
+  }
+  
+  
+  
 }

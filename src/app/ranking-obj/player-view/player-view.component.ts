@@ -9,6 +9,7 @@ import { Chart, ChartConfiguration, ChartDataSets, ChartOptions } from 'chart.js
 import {ThemePalette} from '@angular/material/core';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
 import { DatePipe } from '@angular/common';
+import { clearScreenDown } from 'readline';
 
 interface CountryCodeMap {
   [code: string]: string;
@@ -21,9 +22,9 @@ interface CountryCodeMap {
   encapsulation: ViewEncapsulation.None
 })
 export class PlayerViewComponent implements OnInit {
-  @Input('tabTitle') title: string;
-  @Input() active = false;
-  @Output() dataEvent = new EventEmitter<number>();
+  // @Input('tabTitle') title: string;
+  // @Input() active = false;
+  // @Output() dataEvent = new EventEmitter<number>();
   public player$:Observable<Players>;
   numOfPlayers$: Observable<any>;
   public errorMessage: string;
@@ -43,7 +44,7 @@ export class PlayerViewComponent implements OnInit {
   public chartFrags: any;
   season2players = 55;
   season2wars = 333;
-
+  aaa = [];
   resultCanvas: any;
   ctxResult: any;
 
@@ -54,8 +55,8 @@ export class PlayerViewComponent implements OnInit {
   mostOftenPlayed = [];
   currentRanking = [];
 
-  @Input() playerDetail: any;
-  @Input() expanded: boolean;
+  // @Input() playerDetail: any;
+  // @Input() expanded: boolean;
   
   public countryCodeMap: CountryCodeMap = {
     'AF': 'Afghanistan',    
@@ -115,8 +116,7 @@ export class PlayerViewComponent implements OnInit {
     'CA': 'Canada',
     'MON': 'Gay Paradise',
     'ENG': 'England'
-  };
-  
+  };  
 
   constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef, private router: Router, private datePipe: DatePipe, private rankObjService: RankObjService) {
     // console.log('activatedRoute PlayerView =>', this.activatedRoute);
@@ -266,11 +266,117 @@ export class PlayerViewComponent implements OnInit {
         });
 
         resultPerPlayer.push(win, lose, draw);
-        this.dataEvent.emit((win/(win + lose + draw)*100));
+        // this.dataEvent.emit((win/(win + lose + draw)*100));
 
-        // console.log('mostOftenPlayed', mostOftenPlayed.filter(n => n));
-        const mostOftenPlayedFilter = this.mostOftenPlayed.filter(n => n);
-        // console.log('mostOftenPlayedFilter', mostOftenPlayedFilter);
+        // let streak = 0;  // Inicjalizuj zmienną do śledzenia serii
+        // let currentResult = '';  // Inicjalizuj bieżący wynik (wygrana, przegrana, remis)
+        // let previousResult = '';  // Inicjalizuj zmienną do śledzenia poprzedniego wyniku
+        
+        // let numPlayerTeam;  // Inicjalizuj zmienną numPlayerTeam
+
+        //  console.log('FOUND WARS', foundPlayerArray)
+        // // Iterate backward through the list of matches to find the current streak
+        // for (let i = foundPlayerArray.length - 1; i >= 0; i--) {
+        //   numPlayerTeam = Number(this.getKeyByValue(foundPlayerArray[i], player).slice(1, 2));        
+          
+        //   // const numOpponentTeam = (numPlayerTeam === 1) ? 2 : 1;
+        //   // const numPlayerTeamWon = Number(foundPlayerArray[i][`t${numPlayerTeam}roundswon`]);
+        //   // const numOpponentTeamWon = Number(foundPlayerArray[i][`t${numOpponentTeam}roundswon`]);
+
+        //           // Odczytaj wynik drużyny, do której należy gracz
+        //   const playerTeamRoundswon = Number(foundPlayerArray[i][`t${numPlayerTeam}roundswon`]);
+
+        //   // Odczytaj wynik przeciwnej drużyny
+        //   const numOpponentTeam = (numPlayerTeam === 1) ? 2 : 1;
+        //   const opponentTeamRoundswon = Number(foundPlayerArray[i][`t${numOpponentTeam}roundswon`]);
+          
+        //   let aaa = [];
+        //   aaa.push({'playerTeam': playerTeamRoundswon, 'opponentTeam': opponentTeamRoundswon})
+        //   console.log('AAA =>', aaa)
+
+
+        //   if (playerTeamRoundswon > opponentTeamRoundswon) {
+        //     currentResult = 'win';
+        //   } else if (playerTeamRoundswon < opponentTeamRoundswon) {
+        //     currentResult = 'lose';
+        //   } else {
+        //     currentResult = 'draw';
+        //   }
+
+        //   // If the current result is the same as the previous one, increase the streak; otherwise, reset it
+        //   if (currentResult === previousResult) {
+        //     streak++;
+        //   } else {
+        //     streak = 1;
+        //     previousResult = currentResult;
+        //   }
+        // }
+
+        let streak = { streakName: '', streakCount: 0 };  // Inicjalizuj zmienną serii jako obiekt
+        let currentResult = '';  // Inicjalizuj bieżący wynik (wygrana, przegrana, remis)
+        let previousResult = '';  // Inicjalizuj zmienną do śledzenia poprzedniego wyniku
+        let stopCounting = false;  // Inicjalizuj zmienną do kontrolowania, czy należy przestać liczyć serię
+
+        let numPlayerTeam;  // Inicjalizuj zmienną numPlayerTeam
+        let firstMatchResult = ''; // Inicjalizuj zmienną do przechowania wyniku pierwszego meczu gracza
+        let secondMatchResult = ''; // Inicjalizuj zmienną do przechowania wyniku drugiego meczu gracza
+        let thirdMatchResult = ''; // Inicjalizuj zmienną do przechowania wyniku trzeciego meczu gracza
+
+        const lastFiveMatches = foundPlayerArray;
+        // Iteruj od końca listy meczów, aby znaleźć bieżącą serię
+        for (let i = 0; i < lastFiveMatches.length; i++) {
+          numPlayerTeam = Number(this.getKeyByValue(lastFiveMatches[i], player).slice(1, 2));
+        
+          // Odczytaj wynik drużyny, do której należy gracz
+          const playerTeamRoundswon = Number(lastFiveMatches[i][`t${numPlayerTeam}roundswon`]);
+        
+          // Odczytaj wynik przeciwnej drużyny
+          const numOpponentTeam = (numPlayerTeam === 1) ? 2 : 1;
+          const opponentTeamRoundswon = Number(lastFiveMatches[i][`t${numOpponentTeam}roundswon`]);
+        
+          // Dodaj mecz do tablicy `aaa`
+          this.aaa.push({'time': lastFiveMatches[i].timestamp, 'playerTeam': playerTeamRoundswon, 'opponentTeam': opponentTeamRoundswon});
+          
+          // Porównaj wyniki i określ bieżący wynik (win/lose/draw)
+          if (playerTeamRoundswon > opponentTeamRoundswon) {
+            currentResult = 'W';
+          } else if (playerTeamRoundswon < opponentTeamRoundswon) {
+            currentResult = 'L';
+          } else {
+            currentResult = 'D';
+          }
+        
+          // Jeśli to pierwszy mecz gracza, zapisz jego wynik
+          if (i === 0) {
+            firstMatchResult = currentResult;
+          }
+        
+          // Jeśli bieżący wynik jest taki sam jak poprzedni (czyli gracz wygrał, przegrał lub zremisował kolejny mecz), zwiększamy wartość `streakCount`
+          if (currentResult === previousResult) {
+            streak.streakCount++;
+          } else {
+            // Jeśli bieżący wynik jest inny niż poprzedni (gracz zmienił wynik meczu), ustawiamy `streakName` i resetujemy `streakCount`
+            if (streak.streakCount === 0) {
+              streak.streakName = currentResult;
+            }
+            streak.streakCount = 1;
+          }
+        
+          // Aktualizujemy `previousResult` na bieżący wynik
+          previousResult = currentResult;
+        }
+        
+
+        // Wyświetl wynik pierwszego meczu gracza
+        console.log('Wynik pierwszego meczu gracza:', firstMatchResult);
+        // Wyświetl wynik drugiego meczu gracza
+        console.log('Wynik drugiego meczu gracza:', secondMatchResult);
+        // Wyświetl wynik trzeciego meczu gracza
+        console.log('Wynik trzeciego meczu gracza:', thirdMatchResult);
+        console.log('lastFiveMatches', lastFiveMatches)
+        console.log('aaa', this.aaa)
+        
+        const mostOftenPlayedFilter = this.mostOftenPlayed.filter(n => n);       
 
         const count = {};
 
@@ -288,7 +394,7 @@ export class PlayerViewComponent implements OnInit {
 
         const sorttedCount = this.publicsortObjectbyValue(count);
         const sorttedCountArr = Object.entries(sorttedCount);
-        const countPlayers = this.get3TopItems(Object.entries(count));
+        const countPlayers = this.get3TopItems(Object.entries(count));        
 
         matches.forEach((el) => {
           if(Object.values(el).includes(player)){
@@ -336,11 +442,10 @@ export class PlayerViewComponent implements OnInit {
             s2ranking_win = el.s2ranking_win,
             active = el.active
           }
-        });
+        });        
 
-        // let playerCard;
-
-        return {
+        let playerCard;
+        playerCard = {
           username: player,
           playername: playerName,
           warcount: warCount,
@@ -377,22 +482,23 @@ export class PlayerViewComponent implements OnInit {
           s1ranking_win: s1ranking_win ? s1ranking_win : '',
           s2wars_win: s2wars_win ? s2wars_win : '',
           s2fpw_win: s2fpw_win ? s2fpw_win : '',
-          s2ranking_win: s2ranking_win ? s2ranking_win : ''
+          s2ranking_win: s2ranking_win ? s2ranking_win : '',
+          streak: streak,
         }
-        // console.log('playerCard', playerCard);
+        console.log('playerCard', playerCard);
 
-        // return playerCard;
-      }),
-    )
+        return playerCard;
+      }),     
+    )    
   }  
   
-  onPlayerClick() {
-    this.rankObjService.setPlayerDetail(this.playerDetail);
-  }
+  // onPlayerClick() {
+  //   this.rankObjService.setPlayerDetail(this.playerDetail);
+  // }
 
   filterObjects1(list) {
     const startDate = new Date('1/1/2023 0:00:00');
-    const endDate = new Date('4/30/2023 23:59');
+    const endDate = new Date('3/31/2023 23:59');
     return list.filter(item => {
       const timestamp = new Date(item.timestamp);
       return timestamp > startDate && timestamp < endDate;
@@ -884,7 +990,6 @@ export class PlayerViewComponent implements OnInit {
       plugins: [ChartAnnotation]
     });
   }
-
   public showRankingSeason2(listwars:any[]){
     this.canvasRank = document.getElementById('rank2Chart');
     this.ctxRank = this.canvasRank.getContext('2d');

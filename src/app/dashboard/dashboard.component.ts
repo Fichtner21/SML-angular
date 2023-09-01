@@ -105,6 +105,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   gmail = 'https://gmail.googleapis.com';
   errorMessage = '';
   modalHeader = '';
+  selectedOption2: string = "Random";  
   @ViewChild('content', { static: false }) content: TemplateRef<any>;
   encapsulation: ViewEncapsulation.None;
   mailSnippets: string[] = []
@@ -115,6 +116,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public lastMatchDisplay$: Observable<any>;
   public listPlayers$: Observable<any>;
   sumSubscription: Subscription;
+  mapProbabilities = {
+    'The Hunt': 20,
+    'V2': 20,
+    'The Bridge': 20,
+    'VSUK Abbey': 10,
+    'Stlo': 10,
+    'Renan': 10,
+    'The Church Final': 10,
+    'V2 Shelter': 5,
+    'Navarone': 5,
+    'Dessau1946': 5,
+    'The Bridge OMG': 5,
+    'The Lost Town': 5,
+    'Stlo4': 5,
+    'The Village': 5,
+    'Harbor': 5,
+    'Holland': 5,
+  };
+  nextMatch: string = '';
+  playerCount: string = "6"; 
   // Team 1
   t1p1name = new FormControl('');
   t1p2name = new FormControl('');
@@ -1598,6 +1619,124 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });  
   }   
+
+  sendToDiscord2() {  
+
+    // General Chat
+    const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
+    const playerCount = parseInt(this.playerCount);    
+
+    let maps: string[] = [];
+
+    const stock = ['The Hunt', 'V2', 'The Bridge'];
+    const customMp = ['VSUK Abbey', 'Stlo', 'Renan', 'The Church Final'];
+    const customLp = ['V2 Shelter', 'Navarone', 'Dessau1946', 'The Bridge OMG', 'The Lost Town', 'Stlo4', 'THe Village', 'Harbor', 'Holland']
+    
+    if (this.selectedOption2=== 'Random') {      
+      let availableMaps: string[] = [];
+      
+      if (playerCount  === 6) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor'];
+      } else if (playerCount  >= 8) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'Navarone', 'The Church Final'];
+      } else if (playerCount  >= 10) {
+        availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Renan', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
+      }
+      
+      maps = this.getExtraRandomMaps(availableMaps, 2, this.mapProbabilities);
+    } else if (this.selectedOption2 === 'TwoStockMaps') {
+      // Wybierz dwie mapy ze zbioru stock
+      maps = this.getExtraRandomMaps(stock, 2, this.mapProbabilities);
+    } else if (this.selectedOption2 === 'TwoCustomMapsMp') {
+      // Wybierz dwie mapy ze zbioru customMp
+      maps = this.getExtraRandomMaps(customMp, 2, this.mapProbabilities);
+    } else if (this.selectedOption2 === 'TwoCustomMapsLp') {
+      // Wybierz dwie mapy ze zbioru customLp
+      maps = this.getExtraRandomMaps(customLp, 2, this.mapProbabilities);
+    } else if (this.selectedOption2 === 'OneStockOneCustomMp') {
+      // Wybierz jedną mapę ze zbioru stock i jedną mapę ze zbioru customMp
+      const stockMap = this.getRandomElementFromArray(stock);
+      const customMap = this.getRandomElementFromArray(customMp);
+      maps = [stockMap, customMap];
+    } else if (this.selectedOption2 === 'OneStockOneCustomLp') {
+      // Wybierz jedną mapę ze zbioru stock i jedną mapę ze zbioru customLp
+      const stockMap = this.getRandomElementFromArray(stock);
+      const customMap = this.getRandomElementFromArray(customLp);
+      maps = [stockMap, customMap];
+    } else if (this.selectedOption2 === 'Teams-decide') {
+      // Dodaj informację o Teams decide do nextMatch
+      maps = ['Teams decide'];
+    }     
+
+    const now = new Date();
+    const day = ("0" + now.getDate()).slice(-2);
+    const month = ("0" + (now.getMonth() + 1)).slice(-2);
+    const year = now.getFullYear();
+    const hours = ("0" + now.getHours()).slice(-2);
+    const minutes = ("0" + now.getMinutes()).slice(-2);
+    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
+   
+
+    let nextMatch = "";
+    nextMatch += "**MAPS for next MATCH**, created: " + formattedDate + "\n";
+    nextMatch += "----------" + "\n";
+    nextMatch += 'MAPS: ' + maps.join(', ') + ' (' + this.selectedOption2 + ')' + '\n';
+    nextMatch += "----------" + "\n";   
+    nextMatch += "Good Luck & Have Fun!";
+    console.log('nextM', nextMatch);
+    const payload = {
+      content: nextMatch
+    };
+    this.http.post(webhookUrl, payload).subscribe({
+      next: (res) => {
+        this.notifier.notify('success', "Teams Send successful!")
+      }, error: (err) => {
+        this.notifier.notify('error', 'Something went wrong')
+      }
+    });
+
+    this.nextMatch = nextMatch;
+  }
+
+  getExtraRandomMaps(mapArray: string[], count: number, probabilities: {[key: string]: number}): string[] {
+    const selectedMaps: string[] = [];
+    const availableMaps: string[] = [];
+  
+    // Wybierz mapy, których prawdopodobieństwo jest większe od 0
+    for (const map of mapArray) {
+      if (probabilities[map] > 0) {
+        availableMaps.push(map);
+      }
+    }
+  
+    // Wylosuj mapy z uwzględnieniem prawdopodobieństwa
+    for (let i = 0; i < count; i++) {
+      const randomIndex = Math.floor(Math.random() * availableMaps.length);
+      const selectedMap = availableMaps[randomIndex];
+      selectedMaps.push(selectedMap);
+  
+      // Zmniejsz prawdopodobieństwo wybranych map do zera, aby nie były wybierane ponownie
+      probabilities[selectedMap] = 0;
+  
+      // Usuń wybraną mapę z dostępnych map
+      availableMaps.splice(randomIndex, 1);
+    }
+  
+    return selectedMaps;
+  }
+
+  getRandomElementFromArray(array: any[]): any {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
+  }
+
+  public sumRanking(array: any[]):number {
+    let sum = 0;
+    array.forEach((el) => {
+      sum += parseFloat(el.ranking.replace(/,/g, ''));
+    })
+    return sum;
+  }
 
   ngOnDestroy() {
     if (this.sumSubscription) {

@@ -14,6 +14,23 @@ export class ListDataComponent implements OnInit {
 
   ngOnInit() {
     this.listData();    
+    const table = document.querySelector('.sticky-table');
+    const thead = table.querySelector('thead');
+    let isSticky = false;
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY >= 100 && !isSticky) {
+        isSticky = true;
+        thead.classList.add('sticky');
+      } else if (window.scrollY < 100 && isSticky) {
+        isSticky = false;
+        thead.classList.remove('sticky');
+        thead.style.animation = 'unstick 0.2s';
+        setTimeout(() => {
+          thead.style.animation = '';
+        }, 200);
+      }
+    });
   }  
 
   listData(){

@@ -1,12 +1,22 @@
 section {
-  padding-top: 80px;
+  padding-top: 100px;
+  background-image: url('/assets/images/winter_1.jpg');
+  // background-size: cover;
+  background-repeat: repeat;
 
   .container {
     margin: 0 auto;
     padding: 0 15px;
     max-width: 1300px;
+    display: flex;
+    justify-content: center;
+    
 
     table {
+      box-shadow: 0 0 20px #000;
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
       thead {
         background-color: #010141;
         color: #ffffc0;  
@@ -21,6 +31,10 @@ section {
 
       tbody {
         tr {
+          &:hover {
+            background-color: #ffffc0 !important;
+          }
+
           &:nth-child(2n){
             background-color: lighten(lightgray,10%);
           }
@@ -30,6 +44,7 @@ section {
           }
 
           td {
+            text-align: center;
             img {
               width: 25px;
               border: 1px solid #000;
@@ -42,5 +57,21 @@ section {
         }
       }
     } 
+  }
+}
+
+.sticky {
+  position: sticky;
+  top: 85px;
+  z-index: 1;
+  animation: unset;
+}
+
+@keyframes unstick {
+  from {
+    top: -1px;
+  }
+  to {
+    top: 0;
   }
 }

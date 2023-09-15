@@ -65,11 +65,11 @@
           <div class="seasons">
             <ng-container *ngIf="playerDetail$ | async as playerDetails;">          
               <mat-tab-group animationDuration="0ms">
-                <mat-tab label="Season #3">
+                <mat-tab label="Season #3" *ngIf="playerDetails.listwars3.length > 0">
                   <h2>01.07.2023 - 30.09.2023</h2>
                   <div>In progress...</div>
                 </mat-tab>
-                <mat-tab label="Season #2">
+                <mat-tab label="Season #2" *ngIf="playerDetails.listwars2.length > 0">
                   <h2>01.04.2023 - 30.06.2023</h2>
                   <h3>Summary</h3>
                   <ul class="achievments">
@@ -77,7 +77,7 @@
                     <li><span>Wars:</span> {{playerDetails.s2wars_win}} / {{season2wars}}</li>
                   </ul>
                 </mat-tab>
-                <mat-tab label="Season #1">
+                <mat-tab label="Season #1" *ngIf="playerDetails.listwars1.length > 0">
                   <h2>01.01.2023 - 31.03.2023</h2>
                   <h3>Summary:</h3>
                   <ul class="achievements">
@@ -128,43 +128,48 @@
           </div> -->
         </div>
         <canvas id="canva"></canvas>
-        <div>
+        <div *ngIf="playerDetails.listwars.length > 0">
           <div class="chart-info">                      
             <button (click)="showRanking(playerDetails.rankings, playerDetails.listwars)">{{ 'playerview.rank_chart' | translate }} TOTAL</button>
             <canvas id="rankChart" width="1320" height="400" style="overflow-x: scroll;">{{ chartRank }}</canvas>
           </div>          
         </div>
-        <div>
+        <div *ngIf="playerDetails.listwars1.length > 0">
           <div class="chart-info">            
             <button (click)="showRankingSeason1(playerDetails.listwars1)">Load season <span>1</span>rankings</button>            
           </div>
           <canvas id="rank1Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
         </div>
-        <div>          
+        <div *ngIf="playerDetails.listwars2.length > 0">          
           <div class="chart-info">            
             <button (click)="showRankingSeason2(playerDetails.listwars2)">Load season <span>2</span> rankings</button>
           </div>
           <canvas id="rank2Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
         </div>
-        <div>
+        <div *ngIf="playerDetails.listwars3.length > 0">
           <div class="chart-info">            
             <button (click)="showRankingSeason3(playerDetails.listwars3)">Load season <span>3</span>rankings</button>            
           </div>
           <canvas id="rank3Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
         </div>
-        <div class="chart-info">          
-          <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">{{ 'playerview.frags_chart' | translate }} TOTAL</button>
+        <div *ngIf="playerDetails.listwars.length > 0">
+          <div class="chart-info">          
+            <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">{{ 'playerview.frags_chart' | translate }} TOTAL</button>
+          </div>
+          <canvas id="myChart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
         </div>
-        <canvas id="myChart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
-        <div class="chart-info">          
-          <button (click)="showFrags2(playerDetails.listwars2)">Load season <span>2</span> frags</button>
+        <div *ngIf="playerDetails.listwars2.length > 0">
+          <div class="chart-info">          
+            <button (click)="showFrags2(playerDetails.listwars2)">Load season <span>2</span> frags</button>
+          </div>
+          <canvas id="myChart2" width="1320" height="400" style="overflow-x: scroll;"></canvas>
         </div>
-        <canvas id="myChart2" width="1320" height="400" style="overflow-x: scroll;"></canvas>
-        <div class="chart-info">          
-          <button (click)="showFrags3(playerDetails.listwars3)">Load season <span>3</span> frags</button>
+        <div *ngIf="playerDetails.listwars3.length > 0">
+          <div class="chart-info">          
+            <button (click)="showFrags3(playerDetails.listwars3)">Load season <span>3</span> frags</button>
+          </div>
+          <canvas id="myChart3" width="1320" height="400" style="overflow-x: scroll;"></canvas>
         </div>
-        <canvas id="myChart3" width="1320" height="400" style="overflow-x: scroll;"></canvas>
-
       </div>
       <div class="big-name">{{playerDetails.playername}}</div>
     </div>

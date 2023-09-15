@@ -160,6 +160,9 @@ export class MixUsComponent implements OnInit {
 
   users: any[];
 
+  nextMatch:string = "";
+  nextMatch2:any;
+
   constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient, public oAuthService: OAuthService) {
     // const client = new Client({
     //   intents: ['Guilds', 'GuildMembers', 'GuildVoiceStates']
@@ -1419,19 +1422,31 @@ export class MixUsComponent implements OnInit {
     chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
 
-    let nextMatch = "";
-    nextMatch += "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + "\n";
-    nextMatch += "----------" + "\n";
-    nextMatch += 'MAPS: ' + maps.join(', ') + ' (' + this.selectedOption + ')' + '\n';
-    nextMatch += "----------" + "\n";
-    nextMatch += "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "\n";
-    nextMatch += "TEAM 1 Chance for win: " + chanceOfWinTeamTwoShow + " %" + "\n";
-    nextMatch += "----------" + "\n";
-    nextMatch += "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + "\n";
-    nextMatch += "TEAM 2 Chance for win: " + chanceOfWinTeamOneShow + " %" + "\n";
-    nextMatch += "----------" + "\n";
-    nextMatch += "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}` + "\n";
-    nextMatch += "----------" + "\n";
+    
+    this.nextMatch += "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + "\n";
+    this.nextMatch += "----------" + "\n";
+    this.nextMatch += 'MAPS: ' + maps.join(', ') + ' (' + this.selectedOption + ')' + '\n';
+    this.nextMatch += "----------" + "\n";
+    this.nextMatch += "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "\n";
+    this.nextMatch += "TEAM 1 Chance for win: " + chanceOfWinTeamTwoShow + " %" + "\n";
+    this.nextMatch += "----------" + "\n";
+    this.nextMatch += "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + "\n";
+    this.nextMatch += "TEAM 2 Chance for win: " + chanceOfWinTeamOneShow + " %" + "\n";
+    this.nextMatch += "----------" + "\n";
+    this.nextMatch += "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}` + "\n";
+    this.nextMatch += "----------" + "\n";
+
+    this.nextMatch2 = "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + 
+    "----------" + 
+    'MAPS: ' + maps.join(', ') + ' (' + this.selectedOption + ')' + "----------"  
+    + "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "TEAM 1 Chance for win: " + chanceOfWinTeamTwoShow + " %" + 
+    + "----------"  
+    + "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + "TEAM 2 Chance for win: " + chanceOfWinTeamOneShow + " %" + "----------"
+    + "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}`  
+    + "----------";
+
+    
+
     // if(this.selectedOption !== 'Teams-decide'){    
     //   for (const mapName in this.mapProbabilities) {
     //     const probability = this.mapProbabilities[mapName];
@@ -1445,21 +1460,31 @@ export class MixUsComponent implements OnInit {
     //   nextMatch += "\n";
     //   nextMatch += "----------" + "\n";
     // }    
-    nextMatch += "Good Luck & Have Fun!";
-    console.log('nextM', nextMatch);
-    const payload = {
-      content: nextMatch
-    };
-    this.http.post(webhookUrl, payload).subscribe({
-      next: (res) => {
-        this.notifier.notify('success', "Teams Send successful!")
-      }, error: (err) => {
-        this.notifier.notify('error', 'Something went wrong')
-      }
-    });
-  }
-
- 
+    this.nextMatch += "Good Luck & Have Fun!";
+    console.log('nextM', this.nextMatch);
+    this.http
+      .post('http://localhost:5000/send-message-to-node', { message: this.nextMatch})
+      .subscribe(
+        (response) => {
+          console.log('Wiadomość została wysłana do serwera Node.js');
+          // Wyczyść pole tekstowe po wysłaniu wiadomości
+          this.nextMatch2 = '';
+        },
+        (error) => {
+          console.error('Błąd podczas wysyłania wiadomości do serwera Node.js', error);
+        }
+      );
+    // const payload = {
+    //   content: nextMatch
+    // };
+    // this.http.post(webhookUrl, payload).subscribe({
+    //   next: (res) => {
+    //     this.notifier.notify('success', "Teams Send successful!")
+    //   }, error: (err) => {
+    //     this.notifier.notify('error', 'Something went wrong')
+    //   }
+    // });
+  } 
 
   isValid(): boolean {
     return this.array1 && this.array1.length > 2 && this.array2 && this.array2.length > 2;

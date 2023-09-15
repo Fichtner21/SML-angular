@@ -10,7 +10,10 @@ import { fa1, fa2, fa3, faArrowDown, faArrowUp, faMinus } from '@fortawesome/fre
 import { OAuthService } from 'angular-oauth2-oidc';
 import { parseFloat } from 'core-js/es/number';
 import { RankObjService } from './rank-obj.service';
-
+interface Streak {
+  streakName: string; // 'W', 'D' lub 'L'
+  streakCount: number;
+}
 
 @Component({
   selector: 'app-ranking-obj',
@@ -30,6 +33,7 @@ export class RankingObjComponent implements OnInit {
   booleanVarFpW = false; 
   booleanVarS1Wars = false; 
   booleanVarS1Fpw = false;
+  aaa = [];
 
   public playersTest$: Observable<any>;
   public playersTest2$: Observable<any>;
@@ -176,12 +180,13 @@ export class RankingObjComponent implements OnInit {
             playerRowArray.push(lastWarDate); 
           }                   
         }     
-        console.log('playerRowArray', playerRowArray[0])
-        console.log('playerRowArray', playerRowArray[1])
-        console.log('playerRowArray', playerRowArray[2])
-        console.log('V2', v2[v2.length - 4])
-        console.log('V2', v2[v2.length - 5])
-        // console.log('V2', v2[v2.length - 3])
+        // console.log('v2', v2)
+        console.log('playerRowArray1', playerRowArray[0])
+        console.log('playerRowArray2', playerRowArray[1])
+        console.log('playerRowArray3', playerRowArray[2])
+        console.log('V2', v2[v2.length - 3])
+        console.log('V2', v2[v2.length - 2])
+        console.log('V2', v2[v2.length - 1])
         // this.topThreePlayers = playerRowArray
         // .sort((a, b) => b.wars - a.wars) // Sortowanie graczy według wartości "wars" (malejąco)
         // .slice(0, 3); // Pobranie trzech graczy z najwyższymi wartościami "wars"
@@ -615,11 +620,62 @@ export class RankingObjComponent implements OnInit {
   //   }
   // }
 
-  calculateStreak(username: string, historyMatches: any[]): number {
-    let currentStreak = 0;
-    let currentTeam = ''; // 't1' or 't2'
+  // calculateStreak(username: string, historyMatches: any[]): number {
+  //   let currentStreak = 0;
+  //   let currentTeam = ''; // 't1' or 't2'
   
-    for (let i = 0; i < historyMatches.length; i++) {
+  //   for (let i = 0; i < historyMatches.length; i++) {
+  //     const match = historyMatches[i];
+  //     let foundInTeam = '';
+  //     let roundsWonByTeam;
+  //     let roundsWonByOpponent;
+  
+  //     for (let teamIndex = 1; teamIndex <= 2; teamIndex++) {
+  //       for (let playerIndex = 1; playerIndex <= 7; playerIndex++) {
+  //         const playerNameKey = `t${teamIndex}p${playerIndex}name`;
+  
+  //         if (match[playerNameKey] === username) {
+  //           foundInTeam = `t${teamIndex}`;
+  //           break;
+  //         }
+  //       }
+  
+  //       if (foundInTeam) {
+  //         break;
+  //       }
+  //     }
+  
+  //     if (foundInTeam) {
+  //       const teamKey = foundInTeam;
+  //       roundsWonByTeam = parseInt(match[`${teamKey}roundswon`]);
+  //       roundsWonByOpponent = parseInt(match[`${teamKey === 't1' ? 't2' : 't1'}roundswon`]);
+  
+  //       if (currentTeam !== teamKey) {
+  //         currentStreak = roundsWonByTeam > roundsWonByOpponent ? 1 : -1;
+  //         currentTeam = teamKey;
+  //       } else {
+  //         if (roundsWonByTeam > roundsWonByOpponent) {
+  //           currentStreak++;
+  //         } else {
+  //           currentStreak--;
+  //         }
+  //       }
+  //       // Continue searching for more matches to determine the streak
+  //     }
+
+  //     // this.aaa.push({'time': historyMatches[i].timestamp, 'playerTeam': roundsWonByTeam, 'opponentTeam': roundsWonByOpponent});
+  //   }
+  //   // console.log('THIS.aaa', this.aaa)
+  //   debugger;
+  //   return currentStreak;
+  // }
+  calculateStreak(username: string, historyMatches: any[]): Streak {
+    let currentStreak = 0;
+    let streakName = '';
+    let streakCount = 0;
+    let currentTeam = '';
+  
+    for (let i = historyMatches.length - 1; i >= 0; i--) {
       const match = historyMatches[i];
       let foundInTeam = '';
   
@@ -644,7 +700,15 @@ export class RankingObjComponent implements OnInit {
         const roundsWonByOpponent = parseInt(match[`${teamKey === 't1' ? 't2' : 't1'}roundswon`]);
   
         if (currentTeam !== teamKey) {
-          currentStreak = roundsWonByTeam > roundsWonByOpponent ? 1 : -1;
+          if (roundsWonByTeam > roundsWonByOpponent) {
+            streakName = 'W';
+          } else if (roundsWonByTeam < roundsWonByOpponent) {
+            streakName = 'L';
+          } else {
+            streakName = 'D';
+          }
+  
+          currentStreak = 1;
           currentTeam = teamKey;
         } else {
           if (roundsWonByTeam > roundsWonByOpponent) {
@@ -653,13 +717,18 @@ export class RankingObjComponent implements OnInit {
             currentStreak--;
           }
         }
-        // Continue searching for more matches to determine the streak
+  
+        if (currentStreak !== 0) {
+          streakCount = currentStreak;
+        }
+      } else {
+        break; // Przerwij, jeśli gracz nie znaleziony w drużynie w danym meczu
       }
     }
   
-    return currentStreak;
+    return {
+      streakName,
+      streakCount,
+    };
   }
-  
-  
-  
 }

@@ -27,6 +27,8 @@ export class InactiveObjComponent implements OnInit {
   booleanVar = false;
   booleanVarRank = false;
   booleanVarFpW = false; 
+  booleanVarLast = false;
+  filterValue = ''; // Domyślna wartość filtra
 
   public playersTestIn$: Observable<any>;
   public historyMatchesIn$: Observable<any>;
@@ -114,10 +116,14 @@ export class InactiveObjComponent implements OnInit {
               ban: name.ban == 'TRUE' ? true : false,
               ban_expiriess: new Date( name.ban_expiriess).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' })          
             };
-            playerRowArrayInactive.push(lastWarDateInactive);   
+
+            playerRowArrayInactive.push(lastWarDateInactive);             
           }                
         }     
         // console.log('playerRowArray', playerRowArrayInactive)
+        playerRowArrayInactive.forEach((el) => {
+          // console.log('EL: ', el.lastWarDate, ' TYP: ', typeof el.lastWarDate)
+        })
         return playerRowArrayInactive;         
       })
     );
@@ -416,5 +422,195 @@ export class InactiveObjComponent implements OnInit {
         res => res.sort((a:any,b:any) => parseFloat(a.fragsperwar) - parseFloat(b.fragsperwar))
       )
     )       
+  }
+
+  sortByLastWarDateAsc(res: Observable<any>) {
+    this.booleanVarLast = !this.booleanVarLast;
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByLastWarDate: 'ASC' } });
+    return this.lastWarOfPlayerIn$ = res.pipe(
+      map(players => {
+        return players.sort((a: any, b: any) => {
+          const dateA = this.convertToDate(a.lastWarDate);
+          const dateB = this.convertToDate(b.lastWarDate);
+          return dateA.getTime() - dateB.getTime();
+        });
+      })
+    );
+  }
+
+  sortByLastWarDateDesc(res: Observable<any>) {
+    this.booleanVarLast = !this.booleanVarLast;
+    this.router.navigate(['/obj-inactive'], { queryParams: { sortByLastWarDate: 'DESC' } });
+    return this.lastWarOfPlayerIn$ = res.pipe(
+      map(players => {
+        return players.sort((a: any, b: any) => {
+          const dateA = this.convertToDate(a.lastWarDate);
+          const dateB = this.convertToDate(b.lastWarDate);
+          return dateB.getTime() - dateA.getTime();
+        });
+      })
+    );
+  }
+  
+  convertToDate(dateString: string): Date {
+    const parts = dateString.split(',');
+    if (parts.length === 2) {
+      const datePart = parts[0].trim();
+      const timePart = parts[1].trim();
+      const dateParts = datePart.split('.');
+      const timeParts = timePart.split(':');
+      if (dateParts.length === 3 && timeParts.length === 2) {
+        const [day, month, year] = dateParts.map(Number);
+        const [hours, minutes] = timeParts.map(Number);
+        if (!isNaN(day) && !isNaN(month) && !isNaN(year) && !isNaN(hours) && !isNaN(minutes)) {
+          return new Date(year, month - 1, day, hours, minutes);
+        }
+      }
+    }
+    // Obsługuje nieprawidłowe lub puste dane, zwracając pustą datę.
+    return new Date(0);
+  }
+
+  getProgressBarColors(lastWarDate: string): { backgroundColor: string; color: string } {
+    const currentDate = new Date();
+    const lastWarDateObject = this.parseDate(lastWarDate);
+    const differenceInDays = this.calculateDifferenceInDays(currentDate, lastWarDateObject);
+    let backgroundColor = '';
+    let fontColor = '';
+  
+    if (differenceInDays >= 31 && differenceInDays <= 60) {
+      backgroundColor = '#f0f0f0'; /* Jasnoszary */
+      fontColor = 'black'; // Czarny kontrastowy kolor czcionki
+    } else if (differenceInDays >= 61 && differenceInDays <= 150) {
+      backgroundColor = '#ccc'; /* Średni szary */
+      fontColor = 'black'; // Czarny kontrastowy kolor czcionki
+    } else if (differenceInDays >= 151 && differenceInDays <= 365) {
+      backgroundColor = '#999'; /* Ciemnoszary */
+      fontColor = 'white'; // Biały kontrastowy kolor czcionki
+    } else if (differenceInDays >= 366 && differenceInDays <= 730) {
+      backgroundColor = '#666'; /* Bardzo ciemny szary */
+      fontColor = 'white'; // Biały kontrastowy kolor czcionki
+    } else if (differenceInDays >= 731 && differenceInDays <= 1095) {
+      backgroundColor = '#333'; /* Najciemniejszy szary */
+      fontColor = 'white'; // Biały kontrastowy kolor czcionki
+    } else if (differenceInDays > 1096) {
+      backgroundColor = 'red'; /* Kolor czerwony */
+      fontColor = 'white'; // Biały kontrastowy kolor czcionki
+    }
+  
+    return { backgroundColor, color: fontColor };
+  }
+  
+  
+  // getProgressBarWidth(lastWarDate: string): string {
+  //   const currentDate = new Date();
+  //   const lastWarDateObject = this.parseDate(lastWarDate);
+  //   const differenceInDays = this.calculateDifferenceInDays(currentDate, lastWarDateObject);
+  
+  //   const percentage = (differenceInDays / 1096) * 100; // Maksymalna liczba dni to 1096
+  //   return percentage + '%';
+  // }
+  
+  getProgressBarWidth(lastWarDate: Date): string {
+    return '100%';
+  }
+
+  // getProgressBarText(lastWarDate: string): string {
+  //   const currentDate = new Date();
+  //   const lastWarDateObject = this.parseDate(lastWarDate);
+  //   const differenceInDays = this.calculateDifferenceInDays(currentDate, lastWarDateObject);
+  
+  //   const years = Math.floor(differenceInDays / 365);
+  //   const months = Math.floor((differenceInDays % 365) / 30); // Założenie, że miesiąc ma 30 dni
+  
+  //   if (years > 0 && months > 0) {
+  //     return `${years} ${years === 1 ? 'rok' : 'lata'} i ${months} ${months === 1 ? 'miesiąc' : 'miesiące'}`;
+  //   } else if (years > 0) {
+  //     return `${years} ${years === 1 ? 'rok' : 'lata'}`;
+  //   } else if (months > 0) {
+  //     return `${months} ${months === 1 ? 'miesiąc' : 'miesiące'}`;
+  //   } else {
+  //     return 'Mniej niż miesiąc';
+  //   }
+  // }
+  
+  getProgressBarText(lastWarDate: string): string {
+    const currentDate = new Date();
+    const lastWarDateObject = this.parseDate(lastWarDate);
+    const differenceInDays = this.calculateDifferenceInDays(currentDate, lastWarDateObject);
+  
+    const years = Math.floor(differenceInDays / 365);
+    const months = Math.floor((differenceInDays % 365) / 30); // Założenie, że miesiąc ma 30 dni
+    const days = differenceInDays % 30; // Oblicz ilość pozostałych dni
+  
+    let text = '';
+  
+    if (years > 0) {
+      text += `${years} ${years === 1 ? 'y.' : 'yrs.'}`;
+    }
+  
+    if (months > 0) {
+      if (text !== '') {
+        text += ' & ';
+      }
+      text += `${months} ${months === 1 ? 'month' : 'ms.'}`;
+    }
+  
+    if (days > 0) {
+      if (text !== '') {
+        text += ' & ';
+      }
+      text += `${days} ${days === 1 ? 'd.' : 'days'}`;
+    }
+  
+    if (text === '') {
+      text = 'less then day';
+    }
+  
+    return text;
+  }
+  
+
+  parseDate(dateString: string): Date {
+    // Sprawdzenie różnych możliwych formatów daty
+    const dateMatch = dateString.match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),\s?(\d{1,2}):(\d{1,2})/);
+  
+    if (dateMatch) {
+      const day = parseInt(dateMatch[1], 10);
+      const month = parseInt(dateMatch[2], 10) - 1; // Miesiące w JavaScript są indeksowane od 0
+      const year = parseInt(dateMatch[3], 10);
+      const hours = parseInt(dateMatch[4], 10);
+      const minutes = parseInt(dateMatch[5], 10);
+  
+      return new Date(year, month, day, hours, minutes);
+    } else {
+      // Jeśli nie można sparsować daty, zwróć pustą datę lub rzucenie błędu
+      // Tutaj można dostosować zachowanie w przypadku błędnego formatu daty
+      throw new Error("Nieprawidłowy format daty: " + dateString);
+    }
+  }
+  
+  calculateDifferenceInDays(date1: Date, date2: Date): number {
+    const timeDifference = date1.getTime() - date2.getTime();
+    return Math.floor(timeDifference / (1000 * 3600 * 24)); // Obliczanie dni
+  }  
+  
+  // Metoda do filtrowania graczy
+  applyFilter() {
+    // Przekształć wartość filtra na małe litery
+    const filterValueLowerCase = this.filterValue.toLowerCase();
+  
+    // Filtrowanie graczy na podstawie różnych pól
+    this.lastWarOfPlayerIn$ = this.lastWarOfPlayerIn$.pipe(
+      map((players: any[]) =>
+        players.filter((player: any) => {
+          return (
+            player.username.toLowerCase().includes(filterValueLowerCase) ||
+            player.playername.toLowerCase().includes(filterValueLowerCase) ||
+            player.nationality.toLowerCase().includes(filterValueLowerCase)
+          );
+        })
+      )
+    );
   }
 }

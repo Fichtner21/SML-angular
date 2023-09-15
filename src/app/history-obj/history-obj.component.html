@@ -5,7 +5,7 @@
       <ng-container *ngIf="historyObj.length > 0">
         <div>
           <div *ngFor="let i = index; let match of historyObj | paginate: {itemsPerPage: 20, currentPage: p}">
-            <div class="match-row">
+            <div class="match-row" id="match-{{match.idwar}}">
               <div class="match-row__date">
                 <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>                
                 <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>

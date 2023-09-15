@@ -264,6 +264,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   message: string;
   name: string;
 
+  messageRcon: string = ''; // Pole do przechowywania treści wiadomości
+
   selectedDate: string = ''; // Wybrana data jako string w formacie 'MM/DD/YYYY'
   sheetsWithHistory: any[] = [];
 
@@ -312,7 +314,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
 
       })
-    });
+    });    
 
     // googleApi.userProfileSubject.subscribe( info => {
     //   console.log('info', info);
@@ -1736,6 +1738,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
       sum += parseFloat(el.ranking.replace(/,/g, ''));
     })
     return sum;
+  }
+
+  sendMessageRcon() {
+    // Wyślij wiadomość do serwera Node.js
+    this.http
+      .post('http://localhost:5000/send-message-to-node', { message: this.messageRcon })
+      .subscribe(
+        (response) => {
+          console.log('Wiadomość została wysłana do serwera Node.js');
+          // Wyczyść pole tekstowe po wysłaniu wiadomości
+          this.messageRcon = '';
+        },
+        (error) => {
+          console.error('Błąd podczas wysyłania wiadomości do serwera Node.js', error);
+        }
+      );
   }
 
   ngOnDestroy() {

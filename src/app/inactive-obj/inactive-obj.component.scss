@@ -137,7 +137,6 @@ section {
   }
 }
 
-
 .ranking-head, .character-card {
   display: grid;
   grid-template-columns: 70px 1.5fr 40px 1fr 1fr 1fr 1fr 40px;
@@ -147,6 +146,10 @@ section {
   @media screen and (max-width: 500px){
     grid-template-columns: 0.5fr 1fr 30px 1fr 0.5fr 0.5fr 1fr;    
     .act {
+      @media screen and (max-width: 800px){
+        display: none;
+      }
+
       :last-child {
         display: none;
       }
@@ -154,7 +157,7 @@ section {
   }  
 
   @media screen and (max-width: 800px){
-    grid-template-columns: 0.5fr 1fr 30px 1fr 0.5fr 0.5fr 1fr 0.5fr;
+    grid-template-columns: 0.5fr 1fr 30px 1fr 0.5fr 0.5fr 1fr;
   }
 
   >div {
@@ -188,7 +191,7 @@ section {
     }
   }
 
-  .ranking, .fpw, .wars {
+  .ranking, .fpw, .wars, .lastdate {
     cursor: pointer;
     position: relative;
     transition: all .3s;
@@ -850,3 +853,70 @@ a {
 //   }
 // }
 
+// .lastInfo {
+//   display: block !important;
+//   a {
+//     display: block;
+//   }
+// }
+
+.progress-bar {
+  height: 16px;
+  border-radius: 4px;
+  margin-top: 3px;
+  color: #010141;
+  text-align: center;
+  line-height: 16px;
+  font-size: 12px;
+  font-weight: bold;
+  position: relative;
+  width: 100%;
+  padding: 0 3px;
+  /* Dodanie efektu gradientu */
+  background: linear-gradient(to right, transparent 0%, transparent 100%),
+              linear-gradient(to right, transparent 0%, transparent 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%, 100% 100%;
+  background-position: 0 0, 100% 0;
+}
+
+/* Dodawanie kolorów dla paska postępu */
+.progress-bar {
+  background-color: #ccc; /* Domyślny kolor szary */  
+}
+
+.progress-bar[data-title^="0-"]:after {
+  content: attr(data-title);
+  color: #f0f0f0; /* Jasnoszary */
+}
+
+.progress-bar[data-title^="1-"]:after {
+  content: attr(data-title);
+  color: #ccc; /* Średni szary */
+}
+
+.progress-bar[data-title^="2-"]:after {
+  content: attr(data-title);
+  color: #999; /* Ciemnoszary */
+}
+
+.progress-bar[data-title^="3-"]:after {
+  content: attr(data-title);
+  color: #666; /* Bardzo ciemny szary */
+}
+
+.progress-bar[data-title^="4-"]:after {
+  content: attr(data-title);
+  color: #333; /* Najciemniejszy szary */
+}
+
+.new {
+  display: block !important;
+}
+
+
+@media screen and (max-width: 1024px){
+  .progress-bar {
+    display: none;
+  }
+}

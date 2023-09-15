@@ -273,3 +273,10 @@ nav {
 //     opacity: 0;
 //   }
 // }
+
+.active {
+  font-weight: 700;
+  text-shadow: #ffffc8 1px 0 10px;
+  text-decoration: underline;  
+  color:aqua !important;
+}

@@ -322,7 +322,7 @@ export class PlayerViewComponent implements OnInit {
         let secondMatchResult = ''; // Inicjalizuj zmienną do przechowania wyniku drugiego meczu gracza
         let thirdMatchResult = ''; // Inicjalizuj zmienną do przechowania wyniku trzeciego meczu gracza
 
-        const lastFiveMatches = foundPlayerArray;
+        const lastFiveMatches = foundPlayerArray.reverse();
         // Iteruj od końca listy meczów, aby znaleźć bieżącą serię
         for (let i = 0; i < lastFiveMatches.length; i++) {
           numPlayerTeam = Number(this.getKeyByValue(lastFiveMatches[i], player).slice(1, 2));

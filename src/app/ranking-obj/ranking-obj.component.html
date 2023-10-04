@@ -24,11 +24,11 @@
               FpW
             </div> -->
             <div style="display: block;">              
-              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" title="sort by Frags per War in Season #3: 01-07-2023 - 30-09-2023">s3 FpW<span></span></div>
+              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" title="sort by Frags per War in Season #3: 01-10-2023 - 31-12-2023">s4 FpW<span></span></div>
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)" title="sort by Frags per War">FpW total:</div>
             </div>
             <div style="display:block;">              
-              <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" title="sort by Wars in Season #3: 01-07-2023 - 30-09-2023">s3 Wars<span></span></div>
+              <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" title="sort by Wars in Season #3: 01-10-2023 - 31-12-2023">s4 Wars<span></span></div>
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)" title="sort by Wars">{{ 'ranking.wars' | translate }} total:</div>
             </div> 
                 <!-- <ng-container *ngIf="booleanVar; then up; else down"></ng-container>
@@ -52,12 +52,12 @@
                   <div class="playername-cont" [ngClass]="{'over1000': (player.wars > 1000)}">
                     <div class="wars-bar" *ngIf="isInfo" title="Exp. rank" [style.width.%]="getPercentage(player.wars)" [ngClass]="getBarColor(player.wars)"></div>
                     <div class="wars-bar" *ngIf="!isInfo"></div>
-                    <a routerLink="/obj-ranking/{{player.username}}" class=" playername" [title]="player.username === 'zazuuuu'
-                    ? 'Winner S#2'
-                    : player.username === 'josh'
-                        ? 'Second in S#2'
-                        : player.username === 'magz'
-                            ? 'Third in S#2'
+                    <a routerLink="/obj-ranking/{{player.username}}" class=" playername" [title]="player.username === 'zielony'
+                    ? 'Winner s3'
+                    : player.username === 'Cronic'
+                        ? '2nd in s3'
+                        : player.username === 'boogie'
+                            ? '3rd in s3'
                             : ''">
                     {{ player.playername }}
                     <!-- <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
@@ -91,13 +91,13 @@
                     <ng-container *ngIf="i == 2">
                       <img [src]='"assets/images/ladder3.gif"'>
                     </ng-container>
-                    <ng-container *ngIf="player.s2ranking_win === 1">                      
+                    <ng-container *ngIf="player.s3ranking_win === 1">                      
                       <fa-icon [icon]="number1" class="number number1"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="player.s2ranking_win === 2">                      
+                    <ng-container *ngIf="player.s3ranking_win === 2">                      
                       <fa-icon [icon]="number2" class="number number2"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="player.s2ranking_win === 3">                      
+                    <ng-container *ngIf="player.s3ranking_win === 3">                      
                       <fa-icon [icon]="number3" class="number number3"></fa-icon>
                     </ng-container>
 
@@ -130,11 +130,12 @@
                   <div class="item">{{ player.ranking | number: '.2-2' }}</div>
                  
                   <div class="item item-block fpw" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
-                    <div title="Season FpW" *ngIf="!isInfo">{{ player.s3fpw }}</div>
-                    <div title="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s3fpw > player.fragsperwar), 'draw-streak-pre': (player.s3fpw == player.fragsperwar), 'down-streak-pre': (player.s3fpw < player.fragsperwar)}">{{ player.s3fpw }}</div>
-
-                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s3fpw < player.fragsperwar), 'draw-streak-post': (player.s3fpw == player.fragsperwar), 'down-streak-post': (player.s3fpw > player.fragsperwar)}"> <span title="Total FpW">{{ player.fragsperwar }}</span></div>
-                  </div>
+                    <div title="Season FpW" *ngIf="!isInfo">{{ player.s4fpw }}</div>
+                    <div title="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s4fpw > player.fragsperwar), 'draw-streak-pre': (player.s4fpw == player.fragsperwar), 'down-streak-pre': (player.s4fpw < player.fragsperwar)}">{{ player.s4fpw }}</div>
+                
+                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s4fpw < player.fragsperwar), 'draw-streak-post': (player.s4fpw == player.fragsperwar), 'down-streak-post': (player.s4fpw > player.fragsperwar)}"> <span title="Total FpW">{{ player.fragsperwar }}</span></div>
+                </div>
+                
                   <!-- <div class="item-block" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
                     <div title="Season FpW" *ngIf="!isInfo">{{ player.s1fpw }}</div>
                     <div title="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s1fpw > player.fragsperwar), 'draw-streak-pre': (player.s1fpw == player.fragsperwar), 'down-streak-pre': (player.s1fpw < player.fragsperwar)}">{{ player.s1fpw }}</div>
@@ -142,7 +143,7 @@
                     <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s1fpw < player.fragsperwar), 'draw-streak-post': (player.s1fpw == player.fragsperwar), 'down-streak-post': (player.s1fpw > player.fragsperwar)}"> <span title="Total FpW">({{ player.fragsperwar }})</span></div>
                   </div> -->
                   <div class="item item-block wars">
-                    <div title="Season played wars">{{ player.s3wars }}</div>
+                    <div title="Season played wars">{{ player.s4wars }}</div>
                     <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars">{{ player.wars }}</span></div>
                   </div>
                   <!-- <div class="item-block">
@@ -268,8 +269,136 @@
         </div> -->
       </div>
       <div class="container">
-        <div class="big-name">Season #3</div> 
+        <div class="big-name">Season #4</div> 
       </div>
+      <div class="floating-icon-container">
+        <div class="floating-icon" [ngClass]="{ 'expanded': isExpanded }" (click)="togglePanel('first')">
+          <fa-icon [icon]="trophy"></fa-icon>
+        </div>
+      
+        <div class="floating-icon" [ngClass]="{ 'expanded': isSecondPanelExpanded }" (click)="togglePanel('second')">
+          <fa-icon [icon]="chartSimple"></fa-icon>
+        </div>
+      
+        <div class="floating-icon" [ngClass]="{ 'expanded': isThirdPanelExpanded }" (click)="togglePanel('third')">
+          <fa-icon [icon]="chartGantt"></fa-icon>
+        </div>
+      </div>
+      
+      <div class="floating-panel first-panel" [ngClass]="{ 'expanded': isExpanded }">
+        <div class="content">        
+          <h2>Winners of seasons</h2>
+          <h3>Season 3 (01.07.2023-30.09.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/zielony" class="gold">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,175.40</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/Cronic" class="silver">^Cronic<img [src]='"assets/images/flags_svg/BE.SVG"'><span>1,132.29</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/boogie" class="bronze">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,127.91</span></a>
+            </li>
+          </ol>
+          <hr>
+          <h3>Season 2 (01.04.2023-30.06.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/zazuuuu" class="gold">ZaZUUUU<img [src]='"assets/images/flags_svg/NL.SVG"'><span>1,190.49</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/josh" class="silver">josh<img [src]='"assets/images/flags_svg/UK.SVG"'><span>1,166.85</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/magz" class="bronze">MGZ<img [src]='"assets/images/flags_svg/NL.SVG"'><span>1,151.45</span></a>
+            </li>
+          </ol>
+          <hr>
+          <h3>Season 1 (01.01.2023-31.03.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/evoltnz" class="gold">evoltnz<img [src]='"assets/images/flags_svg/GR.SVG"'><span>1,405.28</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/tricky" class="silver">tricky<img [src]='"assets/images/flags_svg/UK.SVG"'><span>1,289.96</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/zielony" class="bronze">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,286.88</span></a>
+            </li>
+          </ol>
+        </div>
+      </div>
+      
+      <div class="floating-panel second-panel" [ngClass]="{ 'expanded': isSecondPanelExpanded }">
+        <div class="content">
+          <!-- Zawartość drugiego panelu -->
+          <ul>
+            <li>Second Panel Element 1</li>
+            <li>Second Panel Element 2</li>
+            <!-- Dodaj więcej elementów -->
+          </ul>
+        </div>
+      </div>
+      
+      <div class="floating-panel third-panel" [ngClass]="{ 'expanded': isThirdPanelExpanded }">
+        <div class="content">
+          <!-- Zawartość trzeciego panelu -->
+          <ul>
+            <li>Third Panel Element 1</li>
+            <li>Third Panel Element 2</li>
+            <!-- Dodaj więcej elementów -->
+          </ul>
+        </div>
+      </div>
+      
+      <!-- <div class="floating-icon" [ngClass]="{ 'expanded': isExpanded }" (click)="togglePanel()">
+        <fa-icon [icon]="trophy"></fa-icon>
+        <div class="winners">Winners of seasons by rank</div>
+      </div>
+      <div class="floating-panel" [ngClass]="{ 'expanded': isExpanded }">
+        <div class="content">        
+          <h2>Winners of seasons</h2>
+          <h3>Season 3 (01.07.2023-30.09.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/zielony" class="gold">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,175.40</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/Cronic" class="silver">^Cronic<img [src]='"assets/images/flags_svg/BE.SVG"'><span>1,132.29</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/boogie" class="bronze">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,127.91</span></a>
+            </li>
+          </ol>
+          <hr>
+          <h3>Season 2 (01.04.2023-30.06.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/zazuuuu" class="gold">ZaZUUUU<img [src]='"assets/images/flags_svg/NL.SVG"'><span>1,190.49</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/josh" class="silver">josh<img [src]='"assets/images/flags_svg/UK.SVG"'><span>1,166.85</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/magz" class="bronze">MGZ<img [src]='"assets/images/flags_svg/NL.SVG"'><span>1,151.45</span></a>
+            </li>
+          </ol>
+          <hr>
+          <h3>Season 1 (01.01.2023-31.03.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/evoltnz" class="gold">evoltnz<img [src]='"assets/images/flags_svg/GR.SVG"'><span>1,405.28</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/tricky" class="silver">tricky<img [src]='"assets/images/flags_svg/UK.SVG"'><span>1,289.96</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/zielony" class="bronze">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,286.88</span></a>
+            </li>
+          </ol>
+        </div>
+      </div> -->
+      
     </section>
   </ng-container>
 </ng-container>

@@ -632,7 +632,7 @@
         </mat-card>
       </div>
       <div class="ranking span2">
-        <div>
+        <!-- <div>
           <h2>Formularz Wysyłania Wiadomości do Serwera</h2>
           <form (ngSubmit)="sendMessageRcon()" #messageForm="ngForm">
             <div class="form-group">
@@ -641,7 +641,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Wyślij</button>
           </form>
-        </div>
+        </div> -->
         <mat-card style="margin-bottom: 20px;">
           <h3>Draw only maps</h3>
           <div class="maps">
@@ -654,10 +654,10 @@
                   <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
                   <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
                   <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
-                  <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>              
+                  <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>
                 </mat-select>
               </mat-form-field>
-    
+            
               <mat-form-field appearance="outline" class="mat-select-container">
                 <mat-label>Players</mat-label>
                 <mat-select [(ngModel)]="playerCount" class="mat-select" style="width: 50px">
@@ -666,13 +666,21 @@
                   <mat-option value="10">10+</mat-option>
                 </mat-select>
               </mat-form-field>
-    
+            
+              <div class="radio-group">
+                <mat-radio-group [(ngModel)]="numberOfMapsToDraw" class="mat-radio-group">
+                  <mat-radio-button value="1" style="margin-right: 5px;">1 Map</mat-radio-button>
+                  <mat-radio-button value="2">2 Maps</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            
               <div class="single-btn">
                 <button mat-raised-button color="primary" class="lp" (click)="sendToDiscord2()">
                   Send Maps to Discord
                 </button>
               </div> 
             </div>
+            
             <div class="list">
               <ul>
                 <li><strong>Stock</strong>: <span class="stock">The Hunt</span>, <span class="stock">V2</span>, <span class="stock">The Bridge</span></li>
@@ -719,6 +727,14 @@
             <h4>Drawn maps:</h4>
             <pre>{{ nextMatch }}</pre>
           </div>
+
+          <!-- <div class="map-list">
+            <div class="map" *ngFor="let map of allMaps">
+              {{ map }}
+            </div>
+            <div class="animation-indicator" [style.animation]="animationStyle"></div>
+          </div> -->
+          
         </mat-card>
         <ng-container *ngIf="players$ | async as players">
           <ng-container *ngIf="players.length > 0">

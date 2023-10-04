@@ -652,6 +652,7 @@ a {
   height: 21px;
   background-color: red;
   margin: 2px;
+  // background: repeating-linear-gradient(45deg, #ff9900, #ff9900 10px, red 10px, red 20px);
 }
 
 .moh {
@@ -1197,4 +1198,136 @@ a {
 .expanded.player-seasons {
   max-height: 1000px; /* Dostosuj tę wartość do maksymalnej wysokości zawartości */
   opacity: 1;
+}
+
+.floating-icon-container {
+  position: fixed;
+  top: 105px;
+  right: 20px; /* Dystans od prawej krawędzi strony */
+  z-index: 6;
+}
+
+.floating-icon {
+  width: 40px; /* Szerokość ikony */
+  height: 40px; /* Wysokość ikony */
+  background-color: #007bff; /* Kolor tła ikony */
+  color: #fff; /* Kolor ikony */
+  border-radius: 50%; /* Zaokrąglenie ikony */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 10px; /* Odstęp między ikonami */
+  transition: .3s all; 
+}
+
+.floating-panel {
+  position: fixed;
+  top: 85px;
+  right: 0;
+  width: 340px;
+  opacity: 0;
+  overflow-x: hidden;
+  background-image: linear-gradient(0deg, rgba(47, 48, 96, .95) 25%, rgba(47, 48, 96, .95) 50%, rgba(64, 65, 95, .95) 50%, rgba(64, 65, 95, .95) 75%, rgba(47, 48, 96, .95) 75%, rgba(47, 48, 96, .95) 100%);
+  background-size: 3px 3px;
+  transition: 0.3s;
+  z-index: 5;
+  box-shadow: 0 0 20px #010141;
+  padding-right: 50px;
+  
+  h2, h3 {
+    color: #ffffc8;
+  }
+
+  h3 {
+    padding-top: 10px;
+  }
+
+  .content {
+    margin-top: 40px;
+    padding: 16px;
+    overflow-y: auto; /* Dopuszcza przewijanie wewnątrz panelu, gdy jest za długi */
+  }
+}
+
+// Wszystkie panele są schowane na początku
+.floating-panel:not(.expanded) {
+  display: none;
+}
+
+.first-panel {
+  top: 86px;
+}
+
+.second-panel {
+  top: 86px;
+}
+
+.third-panel {
+  top: 86px;
+}
+
+.floating-panel.expanded {
+  width: 340px; /* Szerokość rozwiniętego panelu */
+  opacity: 1;
+  height: 100%;
+}
+
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ol {
+  margin-top: 15px;
+  margin-left: 15px;
+ 
+  li {
+    margin-bottom: 5px;
+    color: #ffffc8;
+
+    ::marker {
+      color: #ffffc8;
+    }
+
+    .gold {
+      color: #C9B037;
+      font-size: 22px;
+    }
+
+    .silver {
+      color: #D7D7D7;
+      font-size: 22px;
+    }
+
+    .bronze {
+      color: #AD8A56;
+      font-size: 22px;
+    }
+
+    a {
+      font-weight: 700;
+      color:#ffffc8;
+      transition: .4s all;
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      text-decoration: none;
+
+      span {
+        display: inline-block;
+        margin-left: 10px;
+      }
+
+      &:hover {
+        color: red;
+      }
+      img {
+        margin-left: 10px;
+        width: 30px;
+      }
+    }
+  }
 }

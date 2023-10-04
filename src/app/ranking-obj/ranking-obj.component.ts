@@ -6,7 +6,7 @@ import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { fa1, fa2, fa3, faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { fa1, fa2, fa3, faArrowDown, faArrowUp, faChartGantt, faChartSimple, faMinus, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { parseFloat } from 'core-js/es/number';
 import { RankObjService } from './rank-obj.service';
@@ -63,6 +63,12 @@ export class RankingObjComponent implements OnInit {
   number1 = fa1;
   number2 = fa2;
   number3 = fa3;  
+  trophy = faTrophy;
+  chartSimple = faChartSimple;
+  chartGantt = faChartGantt;
+  isExpanded: boolean;
+  isSecondPanelExpanded: boolean;
+  isThirdPanelExpanded: boolean;
 
   // playerDetail: any;  
   
@@ -76,7 +82,6 @@ export class RankingObjComponent implements OnInit {
   ] 
 
   ngOnInit(): void {     
-   
 
     this.playersTest$ = this.playersApiService.getPlayers('Players').pipe(
       map((response: any) => {             
@@ -162,6 +167,8 @@ export class RankingObjComponent implements OnInit {
               s2fpw: Math.round(name.s2fpw * 100) / 100,               
               s3wars: parseFloat(name.s3wars),
               s3fpw: Math.round(name.s3fpw * 100) / 100,               
+              s4wars: parseFloat(name.s4wars),
+              s4fpw: Math.round(name.s4fpw * 100) / 100,               
               activity: name.last30days,              
               lastyear: name.last365days,
               meeting: name.meeting,
@@ -173,6 +180,7 @@ export class RankingObjComponent implements OnInit {
               s1fpw_win: parseInt(name.s1fpw_win),
               s1ranking_win: parseInt(name.s1ranking_win),
               s2ranking_win: parseInt(name.s2ranking_win),
+              s3ranking_win: parseInt(name.s3ranking_win),
               // streak: name.streak,
               winPercentage: this.handleData(this.receivedData),
               streak: this.calculateStreak(name.username, v2)      
@@ -211,6 +219,16 @@ export class RankingObjComponent implements OnInit {
     }
 
     this.ranking.emit(this.lastWarOfPlayer$);
+
+    // Odczytywanie stanu z Local Storage
+    const panelStorageValue = localStorage.getItem('panelState');
+    this.isExpanded = panelStorageValue === 'expand';
+
+    const secondPanelStorageValue = localStorage.getItem('secondPanelState');
+    this.isSecondPanelExpanded = secondPanelStorageValue === 'expand';
+
+    const thirdPanelStorageValue = localStorage.getItem('thirdPanelState');
+    this.isThirdPanelExpanded = thirdPanelStorageValue === 'expand';
   } 
 
   // getPlayerDetailsForPlayer(username: string) {
@@ -489,7 +507,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'DESC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s3wars) - parseFloat(a.s3wars))
+        res => res.sort((a:any,b:any) => parseFloat(b.s4wars) - parseFloat(a.s4wars))
       )
     )       
   }
@@ -499,7 +517,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'ASC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s3wars) - parseFloat(b.s3wars))
+        res => res.sort((a:any,b:any) => parseFloat(a.s4wars) - parseFloat(b.s4wars))
       )
     )       
   }
@@ -508,7 +526,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'DESC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s3fpw) - parseFloat(a.s3fpw))
+        res => res.sort((a:any,b:any) => parseFloat(b.s4fpw) - parseFloat(a.s4fpw))
       )
     )       
   }
@@ -518,7 +536,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'ASC' } }); 
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s3fpw) - parseFloat(b.s3fpw))
+        res => res.sort((a:any,b:any) => parseFloat(a.s4fpw) - parseFloat(b.s4fpw))
       )
     )       
   }
@@ -537,7 +555,7 @@ export class RankingObjComponent implements OnInit {
     } else if (activity >= 41 && activity <= 60) {
       return 'orange';
     } else if (activity >= 61 && activity <= 90) {
-      return 'red';
+      return '#ff4500';
     } else {
       return '#003200';
     }
@@ -730,5 +748,26 @@ export class RankingObjComponent implements OnInit {
       streakName,
       streakCount,
     };
+  }
+
+  togglePanel(panel: string) {
+    // Zamknięcie wszystkich paneli
+    this.isExpanded = false;
+    this.isSecondPanelExpanded = false;
+    this.isThirdPanelExpanded = false;
+
+    // Otwarcie wybranego panelu
+    if (panel === 'first') {
+      this.isExpanded = true;
+    } else if (panel === 'second') {
+      this.isSecondPanelExpanded = true;
+    } else if (panel === 'third') {
+      this.isThirdPanelExpanded = true;
+    }
+
+    // Zapisywanie stanu do Local Storage
+    localStorage.setItem('panelState', this.isExpanded ? 'expand' : 'collapse');
+    localStorage.setItem('secondPanelState', this.isSecondPanelExpanded ? 'expand' : 'collapse');
+    localStorage.setItem('thirdPanelState', this.isThirdPanelExpanded ? 'expand' : 'collapse');
   }
 }

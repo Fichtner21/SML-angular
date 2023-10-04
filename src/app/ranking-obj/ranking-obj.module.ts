@@ -13,6 +13,7 @@ import { HttpClient } from "@angular/common/http";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from "@angular/forms";
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from "@angular/material/button";
 
 // export function createTranslateLoader(http: HttpClient){
 //   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -32,7 +33,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     TranslateModule,
     FontAwesomeModule,
     FormsModule,
-    MatTabsModule  
+    MatTabsModule,   
+    MatButtonModule
   ],
   exports: [
     CommonModule,

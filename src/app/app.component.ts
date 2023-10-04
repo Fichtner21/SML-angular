@@ -64,12 +64,14 @@ export class AppComponent implements OnInit {
     const overlay = document.getElementById("overlay");
 
     setTimeout(function () {
-      overlay.classList.add("hidden");
+      overlay?.classList.add("hidden");
       setTimeout(function () {
-        overlay.classList.remove("hidden");
-        overlay.classList.add("flash");
+        overlay?.classList.remove("hidden");
+        overlay?.classList.add("flash");
         setTimeout(function () {
-          overlay.style.display = "none";
+          if(overlay){
+            overlay.style.display = "none";
+          }          
         }, 2000); // Wait for the flash animation to finish
       }, 100);
     }, 5000);

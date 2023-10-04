@@ -134,6 +134,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     'Harbor': 5,
     'Holland': 5,
   };
+  public allMaps = Object.keys(this.mapProbabilities);
+  animationStyle: string = ''; // Początkowa wartość animacji
+  numberOfMapsToDraw: number = 2;
+  animatedMaps: string[] = [];
+  currentIndex = -1;
+  drawingInProgress = false;
   nextMatch: string = '';
   playerCount: string = "6"; 
   // Team 1
@@ -1623,29 +1629,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }   
 
   sendToDiscord2() {  
-
-    // General Chat
     const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
-    const playerCount = parseInt(this.playerCount);    
-
+    const playerCount = parseInt(this.playerCount);
+  
+    const numberOfMapsToDraw = this.numberOfMapsToDraw;
     let maps: string[] = [];
-
+  
     const stock = ['The Hunt', 'V2', 'The Bridge'];
     const customMp = ['VSUK Abbey', 'Stlo', 'Renan', 'The Church Final'];
-    const customLp = ['V2 Shelter', 'Navarone', 'Dessau1946', 'The Bridge OMG', 'The Lost Town', 'Stlo4', 'THe Village', 'Harbor', 'Holland']
-    
-    if (this.selectedOption2=== 'Random') {      
+    const customLp = ['V2 Shelter', 'Navarone', 'Dessau1946', 'The Bridge OMG', 'The Lost Town', 'Stlo4', 'THe Village', 'Harbor', 'Holland'];
+  
+    if (this.selectedOption2 === 'Random') {      
       let availableMaps: string[] = [];
       
-      if (playerCount  === 6) {
+      if (playerCount === 6) {
         availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor'];
-      } else if (playerCount  >= 8) {
+      } else if (playerCount >= 8) {
         availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor', 'VSUK Abbey', 'Navarone', 'The Church Final'];
-      } else if (playerCount  >= 10) {
+      } else if (playerCount >= 10) {
         availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Renan', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
       }
       
-      maps = this.getExtraRandomMaps(availableMaps, 2, this.mapProbabilities);
+      maps = this.getExtraRandomMaps(availableMaps, numberOfMapsToDraw, this.mapProbabilities);
     } else if (this.selectedOption2 === 'TwoStockMaps') {
       // Wybierz dwie mapy ze zbioru stock
       maps = this.getExtraRandomMaps(stock, 2, this.mapProbabilities);
@@ -1669,7 +1674,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       // Dodaj informację o Teams decide do nextMatch
       maps = ['Teams decide'];
     }     
-
+  
     const now = new Date();
     const day = ("0" + now.getDate()).slice(-2);
     const month = ("0" + (now.getMonth() + 1)).slice(-2);
@@ -1677,8 +1682,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const hours = ("0" + now.getHours()).slice(-2);
     const minutes = ("0" + now.getMinutes()).slice(-2);
     const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
-   
-
+  
     let nextMatch = "";
     nextMatch += "**MAPS for next MATCH**, created: " + formattedDate + "\n";
     nextMatch += "----------" + "\n";
@@ -1686,19 +1690,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     nextMatch += "----------" + "\n";   
     nextMatch += "Good Luck & Have Fun!";
     console.log('nextM', nextMatch);
-    const payload = {
-      content: nextMatch
-    };
-    this.http.post(webhookUrl, payload).subscribe({
-      next: (res) => {
-        this.notifier.notify('success', "Teams Send successful!")
-      }, error: (err) => {
-        this.notifier.notify('error', 'Something went wrong')
-      }
-    });
-
+    // const payload = {
+    //   content: nextMatch
+    // };
+    // this.http.post(webhookUrl, payload).subscribe({
+    //   next: (res) => {
+    //     this.notifier.notify('success', "Teams Send successful!")
+    //   }, error: (err) => {
+    //     this.notifier.notify('error', 'Something went wrong')
+    //   }
+    // });
+  
     this.nextMatch = nextMatch;
   }
+  
 
   getExtraRandomMaps(mapArray: string[], count: number, probabilities: {[key: string]: number}): string[] {
     const selectedMaps: string[] = [];
@@ -1754,6 +1759,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
           console.error('Błąd podczas wysyłania wiadomości do serwera Node.js', error);
         }
       );
+  }
+
+  startMapDrawing() {
+    // Wyłącz przycisk "Start Drawing" podczas losowania
+    this.drawingInProgress = true;
+
+    // Symulacja losowania map (przykład)
+    setTimeout(() => {
+      this.animatedMaps = this.getExtraRandomMaps(Object.keys(this.mapProbabilities), 2, this.mapProbabilities);
+
+      // Rozpocznij animację losowania
+      this.animateMapDrawing(0);
+    }, 5000); // 5000 ms = 5 sekund (zmień na czas losowania)
+  }
+
+  animateMapDrawing(index: number) {
+    setTimeout(() => {
+      if (index < this.animatedMaps.length) {
+        this.currentIndex = index; // Zaznacz mapę w animacji
+        this.animateMapDrawing(index + 1); // Przejdź do następnej mapy w animacji
+      } else {
+        // Po zakończeniu animacji, włącz ponownie przycisk "Start Drawing"
+        this.drawingInProgress = false;
+      }
+    }, 1000); // 1000 ms = 1 sekunda (zmień na czas trwania animacji)
   }
 
   ngOnDestroy() {

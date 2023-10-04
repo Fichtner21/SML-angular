@@ -26,55 +26,53 @@
         <mat-form-field>
           <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
         </mat-form-field>
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    
-          <!-- Checkbox Column -->
-          <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let row">
-              <mat-checkbox *ngIf="!row.ban" (click)="$event.stopPropagation()"
-                            (change)="selectUser(row)"
-                            [checked]="selectedUsers.indexOf(row) > -1" [color]="task.color">
-              </mat-checkbox>
-            </td>
-          </ng-container>
-          <!-- <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let row">
-              <mat-checkbox *ngIf="!row.ban" (click)="$event.stopPropagation()"
-                            (change)="selectUser(row)"
-                            [checked]="row.checkbox1 || row.checkbox2" [color]="task.color">
-              </mat-checkbox>
-            </td>
-          </ng-container> -->
+        <!-- Przycisk lub przełącznik do ukrywania/pokazywania nieaktywnych graczy -->
+        <mat-checkbox [(ngModel)]="showInactivePlayers" style="padding-left: 10px" [color]="task.color">
+          {{ showInactivePlayers ? 'Hide' : 'Show' }} inactive players
+        </mat-checkbox>
         
-          <!-- Nr Column -->
-          <ng-container matColumnDef="nr">
-            <th mat-header-cell *matHeaderCellDef> No. </th>
-            <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }"> {{row.nr}} </td>
-          </ng-container>
-        
-          <!-- Username Column -->
-          <ng-container matColumnDef="playername">
-            <th mat-header-cell *matHeaderCellDef> Playername </th>
-            <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }"> {{row.playername}} </td>
-          </ng-container>
-          <ng-container matColumnDef="flag">
-            <th mat-header-cell *matHeaderCellDef> </th>
-            <td mat-cell *matCellDef="let row"> <img [src]='"assets/images/flags_svg/" + row.flag + ".SVG"'></td>
-          </ng-container>
-          <!-- Username Column -->
-          <ng-container matColumnDef="ranking">
-            <th mat-header-cell *matHeaderCellDef> Ranking </th>
-            <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }"> {{row.ranking}} </td>
-          </ng-container>
-          
-        
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-         
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        
-        </table>
+
+
+<!-- Tabela z graczami -->
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!-- Checkbox Column -->
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef [style.width.px]="50"></th>
+    <td mat-cell *matCellDef="let row" [style.width.px]="50">
+      <mat-checkbox *ngIf="!row.ban" (click)="$event.stopPropagation()"
+                    (change)="selectUser(row)"
+                    [checked]="selectedUsers.indexOf(row) > -1" [color]="task.color">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <!-- Nr Column -->
+  <ng-container matColumnDef="nr">
+    <th mat-header-cell *matHeaderCellDef [style.width.px]="50"> No. </th>
+    <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="50"> {{row.nr}} </td>
+  </ng-container>
+
+  <!-- Username Column -->
+  <ng-container matColumnDef="playername">
+    <th mat-header-cell *matHeaderCellDef [style.width.px]="150"> Playername </th>
+    <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="150"> {{row.playername}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="flag">
+    <th mat-header-cell *matHeaderCellDef [style.width.px]="50"> </th>
+    <td mat-cell *matCellDef="let row" [style.width.px]="50"> <img [src]='"assets/images/flags_svg/" + row.flag + ".SVG"'></td>
+  </ng-container>
+
+  <!-- Username Column -->
+  <ng-container matColumnDef="ranking">
+    <th mat-header-cell *matHeaderCellDef [style.width.px]="100"> Ranking </th>
+    <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="100"> {{row.ranking}} </td>
+  </ng-container>
+  
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <!-- Wiersz gracza z warunkowym ukrywaniem -->
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;" [style.display]="showInactivePlayers || row.active ? 'table-row' : 'none'"></tr>
+</table>
       </div>
       <div class="mix-result">        
         <div class="mix-sticky" [ngClass]="{ 'show': isStickyShown }">
@@ -172,14 +170,14 @@
             <mat-form-field appearance="outline" class="mat-select-container">
               <mat-label>MAPS</mat-label>
               <mat-select [(ngModel)]="selectedOption" class="mat-select">
-                <mat-option value="Random">Random</mat-option>
+                <!-- <mat-option value="Random">Random</mat-option> -->
                 <mat-option value="TwoStockMaps">Two Stock Maps</mat-option>
                 <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
                 <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
                 <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
                 <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>
                 <mat-option value="Teams-decide">Teams decide</mat-option>
-                <mat-option value="extraRandom">Extra Random</mat-option>
+                <mat-option value="extraRandom">Random</mat-option>
               </mat-select>
             </mat-form-field>
             
@@ -207,6 +205,63 @@
                 </mat-radio-group>
                 voice channels.
               </div>
+            </div>
+            <div style="grid-column: span 2;">
+              <form (ngSubmit)="sendMessageRcon()" #messageForm="ngForm">
+                <mat-form-field>
+                  <mat-label>IP:</mat-label>
+                  <input
+                    type="text"
+                    id="ip"
+                    name="ip"
+                    [(ngModel)]="ip"
+                    matInput
+                    required
+                  />
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Repeat (1-5):</mat-label>
+                  <input
+                    type="number"
+                    id="counter"
+                    name="counter"
+                    [(ngModel)]="counter"
+                    matInput
+                    min="1"
+                    max="5"
+                    required
+                  />
+                </mat-form-field>
+                
+                <mat-form-field>
+                  <mat-label>Delay (10s-3min):</mat-label>
+                  <input
+                    type="number"
+                    id="delay"
+                    name="delay"
+                    [(ngModel)]="delay"
+                    matInput
+                    min="10"
+                    max="180"
+                    required
+                  />
+                </mat-form-field>
+                
+                <mat-form-field>
+                  <mat-label>Interval (30s-1min):</mat-label>
+                  <input
+                    type="number"
+                    id="interval"
+                    name="interval"
+                    [(ngModel)]="interval"
+                    matInput
+                    min="30"
+                    max="60"
+                    required
+                  />
+                </mat-form-field>
+                <button [disabled]="!isAuthenticated()" type="submit" mat-raised-button color="primary">Send Squads to SH</button>
+              </form>
             </div>
             <!-- <div class="only-maps">
               <h3>Draw only maps</h3>

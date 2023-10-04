@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Renderer2, ElementRef, HostListener  } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators  } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -135,6 +135,7 @@ export class MixUsComponent implements OnInit {
   displayedColumns: string[] = ['select', 'nr', 'ranking', 'playername','flag'];
   selectedChannels = 'Team 1 and Team 2';
   availableChannels = ['Team 1 and Team 2', 'Team 3 and Team 4'];
+  showInactivePlayers = false;
 
   task: Task = {
     name: 'Indeterminate',
@@ -162,8 +163,16 @@ export class MixUsComponent implements OnInit {
 
   nextMatch:string = "";
   nextMatch2:any;
+  ip: string = "";
+  nextMatchOne: string = "";
+  nextMatchTwo: string = "";
+  nextMatchThree: string = "";
+  nextMatchFour: string = "";
+  counter: number = 1;
+  delay: number = 120; // Domyślnie 2 minuty (120 sekund)
+  interval: number = 60; // Domyślnie 1 minuta (60 sekund)
 
-  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient, public oAuthService: OAuthService) {
+  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient, public oAuthService: OAuthService, private renderer: Renderer2, private el: ElementRef) {
     // const client = new Client({
     //   intents: ['Guilds', 'GuildMembers', 'GuildVoiceStates']
     // });
@@ -179,6 +188,7 @@ export class MixUsComponent implements OnInit {
     // });
 
     // client.login('MTA3NzMzNDUyNDE1NDg3NjAyNg.GLV3pj.RPAovzUTCcezSqvAhRDb3TNTWr6GEr6YzHcbMg'); // podaj swój token dostępowy do bota Discord
+    
 
     this.players$ = this.googleApi.getPlayers('Players').pipe(
       map((response: any) => {
@@ -330,6 +340,16 @@ export class MixUsComponent implements OnInit {
   //   console.log('SUM', sum)
   //   return sum;
   // }
+
+  @HostListener('window:scroll', ['$event'])
+    onWindowScroll(event: any) {
+      const scrollY = window.scrollY || window.pageYOffset;
+      if (scrollY >= 100) {
+        this.renderer.addClass(this.el.nativeElement, 'sticky');
+      } else {
+        this.renderer.removeClass(this.el.nativeElement, 'sticky');
+      }
+    }
 
   addSelectedRows() {
     // this.selected$.subscribe(elements => {
@@ -955,7 +975,7 @@ export class MixUsComponent implements OnInit {
     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
     this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
-
+    console.log('firstArray', firstArray, 'secondArray', secondArray)
     this.addArrayToUrl(firstArray, secondArray);
     return [firstArray, secondArray];
   }
@@ -1141,7 +1161,7 @@ export class MixUsComponent implements OnInit {
     // let a1Usernames = a1.map(item => item.username);
     // let a2Usernames = a2.map(item => item.username);
     // this.router.navigate(['mix/'], { queryParams: { a2: JSON.stringify(a2Usernames), a1: JSON.stringify(a1Usernames) } });
-    this.router.navigate(['mix/'], { queryParams: { a2: JSON.stringify(a2), a1: JSON.stringify(a1) } });
+    this.router.navigate(['mix/'], { queryParams: { a2: JSON.stringify(a2), a1: JSON.stringify(a1) } });   
   }
 
 
@@ -1386,7 +1406,6 @@ export class MixUsComponent implements OnInit {
     "I'm not a hacker, I'm just really good at guessing your spot.", 
     "Volute? We don't need this. Pure game <3."];
 
-
     const admin = `ADMIN: ${selectRandomPlayer([...arr1, ...arr2])}`;
 
     const arr = [...arr1, ...arr2]; // łączymy obie tablice w jedną
@@ -1435,56 +1454,52 @@ export class MixUsComponent implements OnInit {
     this.nextMatch += "----------" + "\n";
     this.nextMatch += "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}` + "\n";
     this.nextMatch += "----------" + "\n";
+    this.nextMatch += "Good Luck & Have Fun!";  
 
-    this.nextMatch2 = "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + 
-    "----------" + 
-    'MAPS: ' + maps.join(', ') + ' (' + this.selectedOption + ')' + "----------"  
-    + "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + "TEAM 1 Chance for win: " + chanceOfWinTeamTwoShow + " %" + 
-    + "----------"  
-    + "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + "TEAM 2 Chance for win: " + chanceOfWinTeamOneShow + " %" + "----------"
-    + "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}`  
-    + "----------";
-
+    this.nextMatchOne = "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + ' MAPS: ' + maps.join(', ') + ' (' + this.selectedOption + ')';
+    this.nextMatchTwo = "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + " Chance for win: " + chanceOfWinTeamTwoShow + " prc.";
+    this.nextMatchThree = "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + " Chance for win: " + chanceOfWinTeamOneShow + " prc.";
+    this.nextMatchFour = "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}`;   
     
-
-    // if(this.selectedOption !== 'Teams-decide'){    
-    //   for (const mapName in this.mapProbabilities) {
-    //     const probability = this.mapProbabilities[mapName];
-    //     nextMatch += `${mapName} ${probability}%`;
-        
-    //     // If it's not the last item, add a comma and space
-    //     if (mapName !== Object.keys(this.mapProbabilities).slice(-1)[0]) {
-    //         nextMatch += ', ';
-    //     }
-    //   }
-    //   nextMatch += "\n";
-    //   nextMatch += "----------" + "\n";
-    // }    
-    this.nextMatch += "Good Luck & Have Fun!";
-    console.log('nextM', this.nextMatch);
-    this.http
-      .post('http://localhost:5000/send-message-to-node', { message: this.nextMatch})
-      .subscribe(
-        (response) => {
-          console.log('Wiadomość została wysłana do serwera Node.js');
-          // Wyczyść pole tekstowe po wysłaniu wiadomości
-          this.nextMatch2 = '';
-        },
-        (error) => {
-          console.error('Błąd podczas wysyłania wiadomości do serwera Node.js', error);
-        }
-      );
-    // const payload = {
-    //   content: nextMatch
-    // };
-    // this.http.post(webhookUrl, payload).subscribe({
-    //   next: (res) => {
-    //     this.notifier.notify('success', "Teams Send successful!")
-    //   }, error: (err) => {
-    //     this.notifier.notify('error', 'Something went wrong')
-    //   }
-    // });
+    // console.log('nextM', this.nextMatch);
+ 
+    const payload = {
+      content: this.nextMatch
+    };
+    this.http.post(webhookUrl, payload).subscribe({
+      next: (res) => {
+        this.notifier.notify('success', "Teams Send successful!")
+      }, error: (err) => {
+        this.notifier.notify('error', 'Something went wrong')
+      }
+    });
   } 
+
+  sendMessageRcon() {
+    const opoznienieMillis = this.delay * 1000;
+    const interwalMillis = this.interval * 1000;
+    // Wyślij wiadomość do serwera Node.js
+    this.http
+      .post('http://localhost:5000/send-message-to-node', 
+      { 
+        // message: this.nextMatch, 
+        message1: this.nextMatchOne,
+        message2: this.nextMatchTwo,
+        message3: this.nextMatchThree,
+        message4: this.nextMatchFour,
+        ip: this.ip,
+        counter: this.counter,
+        delay: opoznienieMillis,
+        interval: interwalMillis 
+      })
+      .subscribe({
+        next: (res) => {
+          this.notifier.notify('success', "Squads to SH sent successful!")
+        }, error: (err) => {
+          this.notifier.notify('error', 'Something went wrong')
+        }
+      })
+  }
 
   isValid(): boolean {
     return this.array1 && this.array1.length > 2 && this.array2 && this.array2.length > 2;
@@ -1607,6 +1622,8 @@ export class MixUsComponent implements OnInit {
   
     return selectedMaps;
   }
+
+  
   
 
 // Metoda do losowania dwóch map z prawdopodobieństwem
@@ -1647,5 +1664,7 @@ getUniqueRandomElementsWithProbability(probabilityMap: Record<string, number>, c
     return array[randomIndex];
   }
 }
+
+
 
 

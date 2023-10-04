@@ -738,3 +738,33 @@ h3, h2 {
   background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%);
   background-size: 4px 4px;
 }
+
+.map-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.map-container div {
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.map-container div.highlighted {
+  background-color: yellow;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

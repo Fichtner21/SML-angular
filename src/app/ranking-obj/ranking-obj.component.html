@@ -4,7 +4,7 @@
   <ng-container *ngIf="lastWarOfPlayers.length > 0">
     <section class="example">
       <div class="container">
-        <div class="cont">        
+        <div class="cont">
           <div class="ranking-head">
             <div class="">{{ 'ranking.place' | translate }}</div>
             <div class="">{{ 'ranking.player_name' | translate }}</div>
@@ -23,14 +23,14 @@
             <!-- <div class="fpw" title="sort by Frags per War" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)">
               FpW
             </div> -->
-            <div style="display: block;">              
+            <div style="display: block;">
               <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" title="sort by Frags per War in Season #3: 01-10-2023 - 31-12-2023">s4 FpW<span></span></div>
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)" title="sort by Frags per War">FpW total:</div>
             </div>
-            <div style="display:block;">              
+            <div style="display:block;">
               <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" title="sort by Wars in Season #3: 01-10-2023 - 31-12-2023">s4 Wars<span></span></div>
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)" title="sort by Wars">{{ 'ranking.wars' | translate }} total:</div>
-            </div> 
+            </div>
                 <!-- <ng-container *ngIf="booleanVar; then up; else down"></ng-container>
                 <ng-template #up>
                   <fa-icon [icon]="arrowUp"></fa-icon>
@@ -40,13 +40,13 @@
                 </ng-template> -->
             <div class="new-head">{{ 'ranking.last_war' | translate }}</div>
             <div class="">{{ 'ranking.act' | translate }}</div>
-          </div> 
+          </div>
           <div class="players-list">
             <ng-container *ngFor="let player of lastWarOfPlayers; let i = index;">
               <!-- <ng-container *ngIf="player.ban"> -->
-                <div class="character-card" [ngClass]="{'goldie': i == 0, 'silverie': i == 1, 'brownie': i == 2 }" *ngIf="player.inactive && !player.ban" (dataEvent)="handleData($event)">                
-                  <div class="item item-place" 
-                 
+                <div class="character-card" [ngClass]="{'goldie': i == 0, 'silverie': i == 1, 'brownie': i == 2 }" *ngIf="player.inactive && !player.ban" (dataEvent)="handleData($event)">
+                  <div class="item item-place"
+
                   >
                   {{ i+1 }}</div>
                   <div class="playername-cont" [ngClass]="{'over1000': (player.wars > 1000)}">
@@ -62,7 +62,7 @@
                     {{ player.playername }}
                     <!-- <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
                       <span attr.data-title="{{player.strike}} in Last war.
-                                            
+
                       "></span>
                        <span *ngIf="player.s1wars_win != 'NaN'" attr.data-title="{{ player.s1wars_win }} place in wars S#1"></span>
                       <span *ngIf="player.s1fpw_win != 'NaN'" attr.data-title="{{ player.s1fpw_win }} place in FpW S#1"></span>
@@ -80,7 +80,7 @@
                       </ng-container>
                       {{player.strike}}
                       <sub>pc</sub>
-                    </div> 
+                    </div>
 
                     <ng-container *ngIf="i == 0">
                       <img [src]='"assets/images/ladder1.gif"'>
@@ -91,13 +91,13 @@
                     <ng-container *ngIf="i == 2">
                       <img [src]='"assets/images/ladder3.gif"'>
                     </ng-container>
-                    <ng-container *ngIf="player.s3ranking_win === 1">                      
+                    <ng-container *ngIf="player.s3ranking_win === 1">
                       <fa-icon [icon]="number1" class="number number1"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="player.s3ranking_win === 2">                      
+                    <ng-container *ngIf="player.s3ranking_win === 2">
                       <fa-icon [icon]="number2" class="number number2"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="player.s3ranking_win === 3">                      
+                    <ng-container *ngIf="player.s3ranking_win === 3">
                       <fa-icon [icon]="number3" class="number number3"></fa-icon>
                     </ng-container>
 
@@ -118,8 +118,8 @@
                     <!-- <ng-container *ngIf="player.username === 'zielony'">
                       <fa-icon [icon]="number3" class="number number3"></fa-icon>
                     </ng-container>
-                     -->                     
-                  </a>   
+                     -->
+                  </a>
                   <!-- <div *ngIf="i === 0 && player.streak" class="streak-small" title="1st place since">
                     <span>since:</span> {{ player.streak }}
                   </div>            -->
@@ -128,14 +128,14 @@
                     <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
                   </div>
                   <div class="item">{{ player.ranking | number: '.2-2' }}</div>
-                 
+
                   <div class="item item-block fpw" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
                     <div title="Season FpW" *ngIf="!isInfo">{{ player.s4fpw }}</div>
                     <div title="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s4fpw > player.fragsperwar), 'draw-streak-pre': (player.s4fpw == player.fragsperwar), 'down-streak-pre': (player.s4fpw < player.fragsperwar)}">{{ player.s4fpw }}</div>
-                
+
                     <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s4fpw < player.fragsperwar), 'draw-streak-post': (player.s4fpw == player.fragsperwar), 'down-streak-post': (player.s4fpw > player.fragsperwar)}"> <span title="Total FpW">{{ player.fragsperwar }}</span></div>
                 </div>
-                
+
                   <!-- <div class="item-block" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
                     <div title="Season FpW" *ngIf="!isInfo">{{ player.s1fpw }}</div>
                     <div title="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s1fpw > player.fragsperwar), 'draw-streak-pre': (player.s1fpw == player.fragsperwar), 'down-streak-pre': (player.s1fpw < player.fragsperwar)}">{{ player.s1fpw }}</div>
@@ -154,9 +154,9 @@
                   <div class="item name act">
                     <div class="act-month" [attr.data-activity]="player.activity" [style.background]="getActivityGradient(player.activity)" title="{{ player.activity }} wars in last month."></div>
                     <div class="act-year" [attr.data-activity]="player.lastyear" [ngClass]="{
-                      'green0': player.lastyear == 0, 
+                      'green0': player.lastyear == 0,
                       'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 30 && player.lastyear <= 90), 'green11_20': (player.lastyear > 90 && player.lastyear <= 150), 'green21_40': (player.lastyear > 150 && player.lastyear <= 250), 'green41_70': (player.lastyear > 250 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>
-                  </div>              
+                  </div>
                 </div>
                 <!-- <div class="player-seasons" [ngClass]="{'expanded': expandedPlayerIndexes.includes(i)}">
                   <div class="seasons">
@@ -171,12 +171,12 @@
                 </div> -->
               <!-- </ng-container>   -->
             </ng-container>
-          </div> 
+          </div>
           <div class="more-less">
             <form action="">
               <label for="infoChange">{{ isInfo == true ? 'Hide total info' : 'Show total info' }}</label>
               <select class="info-select" name="infoChange" id="" (ngModelChange)="infoChange($event)" [(ngModel)]="infoCode">
-                <option value="" disabled selected>Choose a state</option>                           
+                <option value="" disabled selected>Choose a state</option>
                 <option class="language-select" *ngFor="let item of infos" [ngValue]='item.infoCode'>
                   {{ item.infoName }}
                 </option>
@@ -189,104 +189,104 @@
               Now u can sort people by Wars, Frags per War or Ranking.
             </div>
           </div>     -->
-        </div>       
+        </div>
       </div>
       <div class="container-bottom">
         <!-- <div class="legend">
           <div class="cyan"></div>
-          <div class="cyan-info">- 
-            {{ 'ranking.meeting' | translate }} 
+          <div class="cyan-info">-
+            {{ 'ranking.meeting' | translate }}
             <a href="https://discord.com/channels/716723661909786690/716723662337605663/1029825546747646093">More info in topic on DISCORD</a>
             </div>
         </div> -->
         <div class="legend">
-          <div class="name">           
+          <div class="name">
             <div class="green0"></div>
             <span>0</span>
-          </div>          
-          <div class="name">            
+          </div>
+          <div class="name">
             <div class="green1_5"></div>
             <span>1 - 5</span>
-          </div>                    
-          <div class="name">            
+          </div>
+          <div class="name">
             <div class="green6_10"></div>
             <span>6 - 10</span>
-          </div>                    
-          <div class="name">         
+          </div>
+          <div class="name">
             <div class="green11_20"></div>
             <span>11 - 20</span>
-          </div>                    
-          <div class="name">           
+          </div>
+          <div class="name">
             <div class="green21_40"></div>
             <span>21 - 40</span>
-          </div>                    
-          <div class="name">            
+          </div>
+          <div class="name">
             <div class="green41_70"></div>
             <span>41 - 60</span>
-          </div>                    
-          <div class="name">            
+          </div>
+          <div class="name">
             <div class="green71"></div>
             <span>61+</span>
-          </div> 
-          <div>wars in last month.</div>                   
+          </div>
+          <div>wars in last month.</div>
         </div>
         <div class="legend legend-year">
-          <div class="name">           
+          <div class="name">
             <div class="green0"></div>
             <span>0</span>
-          </div>          
-          <div class="name">            
+          </div>
+          <div class="name">
             <div class="green1_5"></div>
             <span>1 - 30</span>
-          </div>                    
-          <div class="name">            
+          </div>
+          <div class="name">
             <div class="green6_10"></div>
             <span>31 - 90</span>
-          </div>                    
-          <div class="name">         
+          </div>
+          <div class="name">
             <div class="green11_20"></div>
             <span>91 - 150</span>
-          </div>                    
-          <div class="name">           
+          </div>
+          <div class="name">
             <div class="green21_40"></div>
             <span>151 - 250</span>
-          </div>                    
-          <div class="name">            
+          </div>
+          <div class="name">
             <div class="green41_70"></div>
             <span>251 - 365</span>
-          </div>                    
-          <div class="name">            
+          </div>
+          <div class="name">
             <div class="green71"></div>
             <span>365+</span>
-          </div> 
-          <div>wars in last year.</div>                   
+          </div>
+          <div>wars in last year.</div>
         </div>
         <!-- <div class="legend" *ngIf="isInfo">
-          <h3>Expirience ranking</h3>          
+          <h3>Expirience ranking</h3>
           <div class="name">100 - 499 <div class="brown bar-legend"></div></div>
           <div class="name">500 - 999 <div class="silver bar-legend"></div></div>
           <div class="name">+1000 <div class="gold bar-legend"></div></div>
         </div> -->
       </div>
       <div class="container">
-        <div class="big-name">Season #4</div> 
+        <div class="big-name">Season #4</div>
       </div>
       <div class="floating-icon-container">
-        <div class="floating-icon" [ngClass]="{ 'expanded': isExpanded }" (click)="togglePanel('first')">
+        <div class="floating-icon" [ngClass]="{ 'expanded': isExpanded }" (click)="togglePanel('first')" title="Winners by Rank">
           <fa-icon [icon]="trophy"></fa-icon>
         </div>
-      
-        <div class="floating-icon" [ngClass]="{ 'expanded': isSecondPanelExpanded }" (click)="togglePanel('second')">
+
+        <div class="floating-icon" [ngClass]="{ 'expanded': isSecondPanelExpanded }" (click)="togglePanel('second')" title="Winners Most played Wars">
           <fa-icon [icon]="chartSimple"></fa-icon>
         </div>
-      
-        <div class="floating-icon" [ngClass]="{ 'expanded': isThirdPanelExpanded }" (click)="togglePanel('third')">
+
+        <div class="floating-icon" [ngClass]="{ 'expanded': isThirdPanelExpanded }" (click)="togglePanel('third')" title="Winners avarage Frags per War">
           <fa-icon [icon]="chartGantt"></fa-icon>
         </div>
       </div>
-      
+
       <div class="floating-panel first-panel" [ngClass]="{ 'expanded': isExpanded }">
-        <div class="content">        
+        <div class="content">
           <h2>Winners of seasons</h2>
           <h3>Season 3 (01.07.2023-30.09.2023)</h3>
           <ol>
@@ -299,6 +299,7 @@
             <li>
               <a routerLink="/obj-ranking/boogie" class="bronze">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,127.91</span></a>
             </li>
+            <div class="num">III</div>
           </ol>
           <hr>
           <h3>Season 2 (01.04.2023-30.06.2023)</h3>
@@ -312,6 +313,7 @@
             <li>
               <a routerLink="/obj-ranking/magz" class="bronze">MGZ<img [src]='"assets/images/flags_svg/NL.SVG"'><span>1,151.45</span></a>
             </li>
+            <div class="num">II</div>
           </ol>
           <hr>
           <h3>Season 1 (01.01.2023-31.03.2023)</h3>
@@ -325,38 +327,349 @@
             <li>
               <a routerLink="/obj-ranking/zielony" class="bronze">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,286.88</span></a>
             </li>
+            <div class="num">I</div>
           </ol>
         </div>
       </div>
-      
+
       <div class="floating-panel second-panel" [ngClass]="{ 'expanded': isSecondPanelExpanded }">
         <div class="content">
-          <!-- Zawartość drugiego panelu -->
-          <ul>
-            <li>Second Panel Element 1</li>
-            <li>Second Panel Element 2</li>
-            <!-- Dodaj więcej elementów -->
-          </ul>
+          <h2>Winners of seasons Most played Wars</h2>
+          <h3>Season 3 (01.07.2023-30.09.2023)</h3>
+          <ol>
+
+            <div class="num">III</div>
+          </ol>
+          <hr>
+          <h3>Season 2 (01.04.2023-30.06.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/glowa" class="gold">GlowaF1!<img [src]='"assets/images/flags_svg/PL.SVG"'><span>147</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/Evildude" class="silver">Evildude<img [src]='"assets/images/flags_svg/NL.SVG"'><span>133</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/p3dr0" class="bronze">P3dr0<img [src]='"assets/images/flags_svg/PT.SVG"'><span>129</span></a>
+            </li>
+            <div class="num">II</div>
+          </ol>
+          <hr>
+          <h3>Season 1 (01.01.2023-31.03.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/glowa" class="gold">GlowaF1!<img [src]='"assets/images/flags_svg/PL.SVG"'><span>227</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/watson" class="silver">Watson<img [src]='"assets/images/flags_svg/PT.SVG"'><span>226</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/Evildude" class="bronze">Evildude<img [src]='"assets/images/flags_svg/NL.SVG"'><span>203</span></a>
+            </li>
+            <div class="num">I</div>
+          </ol>
         </div>
       </div>
-      
+
       <div class="floating-panel third-panel" [ngClass]="{ 'expanded': isThirdPanelExpanded }">
         <div class="content">
-          <!-- Zawartość trzeciego panelu -->
-          <ul>
-            <li>Third Panel Element 1</li>
-            <li>Third Panel Element 2</li>
-            <!-- Dodaj więcej elementów -->
-          </ul>
+          <h2>Winners of seasons Avarage Frags per War</h2>
+          <h3>Season 3 (01.07.2023-30.09.2023)</h3>
+          <ol>
+
+            <div class="num">III</div>
+          </ol>
+          <hr>
+          <h3>Season 2 (01.04.2023-30.06.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/tricky" class="gold">tricky<img [src]='"assets/images/flags_svg/UK.SVG"'><span>29.76</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/boogie" class="silver">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>29.52</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/josh" class="bronze">josh<img [src]='"assets/images/flags_svg/UK.SVG"'><span>29.45</span></a>
+            </li>
+            <div class="num">II</div>
+          </ol>
+          <hr>
+          <h3>Season 1 (01.01.2023-31.03.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/evoltnz" class="gold">evoltnz<img [src]='"assets/images/flags_svg/GR.SVG"'><span>34.23</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/tricky" class="silver">tricky<img [src]='"assets/images/flags_svg/UK.SVG"'><span>32</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/boogie" class="bronze">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>31.65</span></a>
+            </li>
+            <div class="num">I</div>
+          </ol>
         </div>
       </div>
-      
+
+      <div class="floating-icon-container-left">
+        <div class="floating-icon" [ngClass]="{ 'expanded': isExpandedLeft }" (click)="togglePanelLeft('first-left')" title="Last match">
+          <fa-icon [icon]="calendarCheck"></fa-icon>
+        </div>
+
+        <!-- <div class="floating-icon" [ngClass]="{ 'expanded': isSecondPanelExpanded }" (click)="togglePanel('second')" title="Winners Most played Wars">
+          <fa-icon [icon]="chartSimple"></fa-icon>
+        </div>
+
+        <div class="floating-icon" [ngClass]="{ 'expanded': isThirdPanelExpanded }" (click)="togglePanel('third')" title="Winners avarage Frags per War">
+          <fa-icon [icon]="chartGantt"></fa-icon>
+        </div> -->
+      </div>
+
+      <div class="floating-panel-left first-panel" [ngClass]="{ 'expanded': isExpandedLeft }">
+        <div class="last-match content">
+          <h3>Last match:</h3>
+          <ng-container *ngIf="matchRow as match">
+            <div class="match-row">
+              <div class="match-row__date">
+                <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>
+                <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>
+              </div>
+              <div class="match-row__team">
+                <div class="teamrounds">{{ match.t1roundswon }}</div>
+                <div class="teaminfo">
+                  <div>preELO</div>
+                  <div>{{ 'matches.name' | translate }}</div>
+                  <div>{{ 'matches.frags' | translate }}</div>
+                  <div>postELO</div>
+                  <div>{{ 'matches.pc' | translate }}</div>
+                </div>
+                <div class="match-row__team--player">
+                  <div>{{ match.t1p1preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p1username}}">{{ match.t1p1playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p1score }} </div>
+                  <div>{{ match.t1p1postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p1postelo - match.t1p1preelo) > 0, 'lost': (match.t1p1postelo - match.t1p1preelo) < 0, 'draw': (match.t1p1postelo - match.t1p1preelo === 0) }"><span>{{ match.t1p1postelo - match.t1p1preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p2playername !== ''">
+                  <div>{{ match.t1p2preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p2username}}">{{ match.t1p2playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p2score }} </div>
+                  <div>{{ match.t1p2postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p2postelo - match.t1p2preelo) > 0, 'lost': (match.t1p2postelo - match.t1p2preelo) < 0, 'draw': (match.t1p2postelo - match.t1p2preelo === 0) }"><span>{{ match.t1p2postelo - match.t1p2preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p3playername !== ''">
+                  <div>{{ match.t1p3preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p3username}}">{{ match.t1p3playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p3score }} </div>
+                  <div>{{ match.t1p3postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p3postelo - match.t1p3preelo) > 0, 'lost': (match.t1p3postelo - match.t1p3preelo) < 0, 'draw': (match.t1p3postelo - match.t1p3preelo === 0) }"><span>{{ match.t1p3postelo - match.t1p3preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p4playername !== ''">
+                  <div>{{ match.t1p4preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p4playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p4score }} </div>
+                  <div>{{ match.t1p4postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p4postelo - match.t1p4preelo) > 0, 'lost': (match.t1p4postelo - match.t1p4preelo) < 0, 'draw': (match.t1p4postelo - match.t1p4preelo === 0) }"><span>{{ match.t1p4postelo - match.t1p4preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p5playername !== ''">
+                  <div>{{ match.t1p5preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p5playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p5score }} </div>
+                  <div>{{ match.t1p5postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p5postelo - match.t1p5preelo) > 0, 'lost': (match.t1p5postelo - match.t1p5preelo) < 0, 'draw': (match.t1p5postelo - match.t1p5preelo === 0) }"><span>{{ match.t1p5postelo - match.t1p5preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p6playername !== ''">
+                  <div>{{ match.t1p6preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p6username}}">{{ match.t1p6playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p6score }} </div>
+                  <div>{{ match.t1p6postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p6postelo - match.t1p6preelo) > 0, 'lost': (match.t1p6postelo - match.t1p6preelo) < 0, 'draw': (match.t1p6postelo - match.t1p6preelo === 0) }"><span>{{ match.t1p6postelo - match.t1p6preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t1p7username !== ''">
+                  <div>{{ match.t1p7preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p7username}}">{{ match.t1p7playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t1p7score }} </div>
+                  <div>{{ match.t1p7postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t1p7postelo - match.t1p7preelo) > 0, 'lost': (match.t1p7postelo - match.t1p7preelo) < 0, 'draw': (match.t1p7postelo - match.t1p7preelo === 0) }"><span>{{ match.t1p7postelo - match.t1p7preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="preelo-info">
+                  <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>
+                  <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div>
+                </div>
+                <!-- <div class="preelo-info">
+                  <div class="bet">
+                    <img src="../../assets/images/80-163.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div>
+                  </div>
+                  <div class="bet">
+                    <img src="../../assets/images/80-165.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div>
+                  </div>
+                </div>                                -->
+              </div>
+              <div class="match-row__team">
+                <div class="teamrounds">{{ match.t2roundswon }}</div>
+                <div class="teaminfo">
+                  <div>preELO</div>
+                  <div>{{ 'matches.name' | translate }}</div>
+                  <div>{{ 'matches.frags' | translate }}</div>
+                  <div>postELO</div>
+                  <div>{{ 'matches.pc' | translate}}</div>
+                </div>
+                <div class="match-row__team--player">
+                  <div>{{ match.t2p1preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p1username}}">{{ match.t2p1playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p1score }} </div>
+                  <div>{{ match.t2p1postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p1postelo - match.t2p1preelo) > 0, 'lost': (match.t2p1postelo - match.t2p1preelo) < 0, 'draw': (match.t2p1postelo - match.t2p1preelo === 0) }"><span>{{ match.t2p1postelo - match.t2p1preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p2username !== ''">
+                  <div>{{ match.t2p2preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p2username}}">{{ match.t2p2playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p2score }} </div>
+                  <div>{{ match.t2p2postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p2postelo - match.t2p2preelo) > 0, 'lost': (match.t2p2postelo - match.t2p2preelo) < 0, 'draw': (match.t2p2postelo - match.t2p2preelo === 0) }"><span>{{ match.t2p2postelo - match.t2p2preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p3username !== ''">
+                  <div>{{ match.t2p3preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p3username}}">{{ match.t2p3playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p3score }} </div>
+                  <div>{{ match.t2p3postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p3postelo - match.t2p3preelo) > 0, 'lost': (match.t2p3postelo - match.t2p3preelo) < 0, 'draw': (match.t2p3postelo - match.t2p3preelo === 0) }"><span>{{ match.t2p3postelo - match.t2p3preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p4username !== ''">
+                  <div>{{ match.t2p4preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p4username}}">{{ match.t2p4playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p4score }} </div>
+                  <div>{{ match.t2p4postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p4postelo - match.t2p4preelo) > 0, 'lost': (match.t2p4postelo - match.t2p4preelo) < 0, 'draw': (match.t2p4postelo - match.t2p4preelo === 0) }"><span>{{ match.t2p4postelo - match.t2p4preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p5username !== ''">
+                  <div>{{ match.t2p5preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p5username}}">{{ match.t2p5playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p5score }} </div>
+                  <div>{{ match.t2p5postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p5postelo - match.t2p5preelo) > 0, 'lost': (match.t2p5postelo - match.t2p5preelo) < 0, 'draw': (match.t2p5postelo - match.t2p5preelo === 0) }"><span>{{ match.t2p5postelo - match.t2p5preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p6username !== ''">
+                  <div>{{ match.t2p6preelo | number: '1.0-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p6username}}">{{ match.t2p6playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p6score }} </div>
+                  <div>{{ match.t2p6postelo | number: '1.0-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p6postelo - match.t2p6preelo) > 0, 'lost': (match.t2p6postelo - match.t2p6preelo) < 0, 'draw': (match.t2p6postelo - match.t2p6preelo === 0) }"><span>{{ match.t2p6postelo - match.t2p6preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="match-row__team--player" *ngIf="match.t2p7username !== ''">
+                  <div>{{ match.t2p7preelo | number: '.1-2' }}</div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p7username}}">{{ match.t2p7playername }}</a></div>
+                  <div class="match-row__team--player__score">{{ match.t2p7score }} </div>
+                  <div>{{ match.t2p7postelo | number: '.1-2' }}</div>
+                  <div [ngClass]="{ 'won': (match.t2p7postelo - match.t2p7preelo) > 0, 'lost': (match.t2p7postelo - match.t2p7preelo) < 0, 'draw': (match.t2p7postelo - match.t2p7preelo === 0) }"><span>{{ match.t2p7postelo - match.t2p7preelo | number: '.1-2'}}</span></div>
+                </div>
+                <div class="preelo-info">
+                  <div class="preelo_war">preELO before war: {{ match.t2preelo | number:'1.0-2'}}</div>
+                  <div [ngClass]="{ 'teamFavorite': (match.t2preelo > match.t1preelo), 'teamNotFavorite': (match.t1preelo > match.t2preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{ match.t1chance }} %</div>
+                </div>
+                <!-- <div class="preelo-info">
+                  <div class="bet">
+                    <img src="../../assets/images/80-163.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div>
+                  </div>
+                  <div class="bet">
+                    <img src="../../assets/images/80-165.png" alt="">
+                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div>
+                  </div>
+                </div>                  -->
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- <div class="floating-panel-left second-panel" [ngClass]="{ 'expanded': isSecondPanelExpandedLeft }">
+        <div class="content">
+          <h2>Winners of seasons Most played Wars</h2>
+          <h3>Season 3 (01.07.2023-30.09.2023)</h3>
+          <ol>
+
+            <div class="num">III</div>
+          </ol>
+          <hr>
+          <h3>Season 2 (01.04.2023-30.06.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/glowa" class="gold">GlowaF1!<img [src]='"assets/images/flags_svg/PL.SVG"'><span>147</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/Evildude" class="silver">Evildude<img [src]='"assets/images/flags_svg/NL.SVG"'><span>133</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/p3dr0" class="bronze">P3dr0<img [src]='"assets/images/flags_svg/PT.SVG"'><span>129</span></a>
+            </li>
+            <div class="num">II</div>
+          </ol>
+          <hr>
+          <h3>Season 1 (01.01.2023-31.03.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/glowa" class="gold">GlowaF1!<img [src]='"assets/images/flags_svg/PL.SVG"'><span>227</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/watson" class="silver">Watson<img [src]='"assets/images/flags_svg/PT.SVG"'><span>226</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/Evildude" class="bronze">Evildude<img [src]='"assets/images/flags_svg/NL.SVG"'><span>203</span></a>
+            </li>
+            <div class="num">I</div>
+          </ol>
+        </div>
+      </div>
+
+      <div class="floating-panel-left third-panel" [ngClass]="{ 'expanded': isThirdPanelExpandedLeft }">
+        <div class="content">
+          <h2>Winners of seasons Avarage Frags per War</h2>
+          <h3>Season 3 (01.07.2023-30.09.2023)</h3>
+          <ol>
+
+            <div class="num">III</div>
+          </ol>
+          <hr>
+          <h3>Season 2 (01.04.2023-30.06.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/tricky" class="gold">tricky<img [src]='"assets/images/flags_svg/UK.SVG"'><span>29.76</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/boogie" class="silver">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>29.52</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/josh" class="bronze">josh<img [src]='"assets/images/flags_svg/UK.SVG"'><span>29.45</span></a>
+            </li>
+            <div class="num">II</div>
+          </ol>
+          <hr>
+          <h3>Season 1 (01.01.2023-31.03.2023)</h3>
+          <ol>
+            <li>
+              <a routerLink="/obj-ranking/evoltnz" class="gold">evoltnz<img [src]='"assets/images/flags_svg/GR.SVG"'><span>34.23</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/tricky" class="silver">tricky<img [src]='"assets/images/flags_svg/UK.SVG"'><span>32</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/boogie" class="bronze">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>31.65</span></a>
+            </li>
+            <div class="num">I</div>
+          </ol>
+        </div>
+      </div> -->
+
+
+
       <!-- <div class="floating-icon" [ngClass]="{ 'expanded': isExpanded }" (click)="togglePanel()">
         <fa-icon [icon]="trophy"></fa-icon>
         <div class="winners">Winners of seasons by rank</div>
       </div>
       <div class="floating-panel" [ngClass]="{ 'expanded': isExpanded }">
-        <div class="content">        
+        <div class="content">
           <h2>Winners of seasons</h2>
           <h3>Season 3 (01.07.2023-30.09.2023)</h3>
           <ol>
@@ -398,11 +711,11 @@
           </ol>
         </div>
       </div> -->
-      
+
     </section>
   </ng-container>
 </ng-container>
-<ng-http-loader 
+<ng-http-loader
     [backdrop]="false"
     [backgroundColor]="'#010141'"
     [debounceDelay]="100"

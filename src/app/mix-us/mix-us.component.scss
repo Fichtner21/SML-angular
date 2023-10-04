@@ -1,5 +1,5 @@
 section {
-  padding-top: 90px;   
+  padding-top: 90px;
   background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%);
   background-size: 4px 4px;
   min-height: 100%;
@@ -10,7 +10,7 @@ section {
     max-width: 1300px;
 
     form {
-      
+
     }
   }
 }
@@ -36,12 +36,12 @@ section {
       color: green;
       font-weight: 700;
     }
-    
+
     .teamNotFavorite {
       color: red;
       font-weight: 700;
     }
-    
+
     .teamWithoutFavorite {
       color: gray;
       font-weight: 700;
@@ -70,7 +70,7 @@ section {
   margin-bottom: 10px;
 
   @media screen and (max-width: 600px){
-    padding: 5px;    
+    padding: 5px;
     border: 1px dashed #ffffc0;
   }
 
@@ -85,18 +85,18 @@ section {
   span {
     margin-right: 5px;
     font-size: 16px;
-    color: #ffffc0;    
+    color: #ffffc0;
     @media screen and (max-width: 600px){
       font-size: 12px;
     }
   }
 
-  &:nth-of-type(2n-1){        
+  &:nth-of-type(2n-1){
     background-image: linear-gradient(0deg, rgba(64, 65, 95, .7) 25%, rgba(47, 48, 96, .7) 25%, rgba(47, 48, 96, .7) 50%, rgba(64, 65, 95, .7) 50%, rgba(64, 65, 95, .7) 75%, rgba(47, 48, 96, .7) 75%, rgba(47, 48, 96, .7) 100%);
     background-size: 4px 4px;
   }
 
-  &:nth-of-type(2n){        
+  &:nth-of-type(2n){
     background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
     background-size: 4px 4px;
   }
@@ -128,16 +128,16 @@ section {
     }
   }
 
-  &:nth-of-type(2n-1){        
+  &:nth-of-type(2n-1){
     background-image: linear-gradient(0deg, rgba(64, 65, 95, .7) 25%, rgba(47, 48, 96, .7) 25%, rgba(47, 48, 96, .7) 50%, rgba(64, 65, 95, .7) 50%, rgba(64, 65, 95, .7) 75%, rgba(47, 48, 96, .7) 75%, rgba(47, 48, 96, .7) 100%);
     background-size: 4px 4px;
   }
 
-  &:nth-of-type(2n){        
+  &:nth-of-type(2n){
     background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
     background-size: 4px 4px;
   }
-} 
+}
 
 .selectedPlayer {
   img {
@@ -176,14 +176,14 @@ td img {
     justify-content: center;
     background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
     background-size: 4px 4px;
-  
+
     th {
       font-size: 18px;
       font-weight: 700;
       color: #ffffc0;
     }
   }
-  
+
   .mat-row {
     // display: grid;
     // grid-template-columns: 1fr 1fr 2fr 2fr 1fr;
@@ -192,16 +192,16 @@ td img {
     align-items: center;
     justify-content: center;
     height: 30px;
-    &:nth-of-type(2n-1){        
+    &:nth-of-type(2n-1){
       background-image: linear-gradient(0deg, rgba(64, 65, 95, .7) 25%, rgba(47, 48, 96, .7) 25%, rgba(47, 48, 96, .7) 50%, rgba(64, 65, 95, .7) 50%, rgba(64, 65, 95, .7) 75%, rgba(47, 48, 96, .7) 75%, rgba(47, 48, 96, .7) 100%);
       background-size: 4px 4px;
     }
-  
-    &:nth-of-type(2n){        
+
+    &:nth-of-type(2n){
       background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
       background-size: 4px 4px;
     }
-  
+
     td {
       color: #ffffc0;
       font-size: 16px;
@@ -210,12 +210,12 @@ td img {
         font-size: 14px;
       }
     }
-  
+
     .mat-column-playername {
       font-weight: 700;
     }
   }
-  
+
   td.mat-cell, th.mat-header-cell {
     border-bottom-width: 0;
   }
@@ -251,13 +251,13 @@ td img {
 
   .mix-result {
     margin-top: 85px;
-    position: relative;   
+    position: relative;
     flex-grow: 1;
     display: flex;
-    
+
     @media screen and (max-height: 1024px) {
       .mix-sticky.show {
-        right: 0;       
+        right: 0;
         box-shadow: 0 0 10px #010141;
       }
     }
@@ -303,7 +303,7 @@ td img {
         transition: right 0.3s;
         z-index: 1;
         background-image: linear-gradient(0deg, rgba(64, 65, 95, .9) 25%, rgba(47, 48, 96, .9) 25%, rgba(47, 48, 96, .9) 50%, rgba(64, 65, 95, .9) 50%, rgba(64, 65, 95, .9) 75%, rgba(47, 48, 96, .9) 75%, rgba(47, 48, 96, .9) 100%);
-        background-size: 4px 4px;        
+        background-size: 4px 4px;
       }
 
       .restricted-btn-bottom {
@@ -317,7 +317,7 @@ td img {
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-       
+
         @media screen and (max-width: 950px){
           grid-template-columns: 1fr;
         }
@@ -331,7 +331,7 @@ td img {
         }
 
         a {
-          text-decoration: underline;          
+          text-decoration: underline;
           font-weight: 700;
           transition: .4s all;
           color: #ffffc0;
@@ -344,9 +344,9 @@ td img {
             background-color: #ffffc0;
           }
         }
-      }    
-      
-      .instructions {        
+      }
+
+      .instructions {
         padding: 10px;
         color: #ffffc0;
         background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
@@ -357,8 +357,8 @@ td img {
           padding: 0 10px;
 
           li {
-            font-style: italic;            
-            
+            font-style: italic;
+
             &:last-of-type {
               display: flex;
               align-items: center;
@@ -367,7 +367,7 @@ td img {
               img {
                 padding: 0 3px;
               }
-            }            
+            }
           }
         }
       }
@@ -378,11 +378,11 @@ td img {
         color: #ffffc0;
         background-image: linear-gradient(0deg, rgba(64, 65, 95, .6) 25%, rgba(47, 48, 96, .6) 25%, rgba(47, 48, 96, .6) 50%, rgba(64, 65, 95, .6) 50%, rgba(64, 65, 95, .6) 75%, rgba(47, 48, 96, .6) 75%, rgba(47, 48, 96, .6) 100%);
         background-size: 4px 4px;
-        margin-bottom: 20px;       
+        margin-bottom: 20px;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 10px;
-       
+
         // ::ng-deep .mat-form-field-flex{
         //   background-color: #ffd740;
         //   border-radius: 5px;
@@ -400,7 +400,7 @@ td img {
             grid-column: span 1;
           }
 
-          
+
         }
 
         .without-mb {
@@ -412,7 +412,8 @@ td img {
         }
 
         @media screen and (max-width: 950px){
-          grid-template-columns: 1fr;
+          // grid-template-columns: 1fr;
+          display: block;
         }
 
         .single-btn {
@@ -424,7 +425,7 @@ td img {
         }
 
         a {
-          text-decoration: underline;          
+          text-decoration: underline;
           font-weight: 700;
           transition: .4s all;
           color: #ffffc0;
@@ -433,7 +434,7 @@ td img {
             color: darkred;
           }
         }
-      }      
+      }
     }
 
     .mix-sticky::-webkit-scrollbar {
@@ -508,7 +509,7 @@ td img {
           font-weight: 700;
           letter-spacing: 2px;
           border: 2px solid #ffffc0;
-          background-color: #010141;          
+          background-color: #010141;
         }
 
         .hp {
@@ -517,9 +518,9 @@ td img {
           font-weight: 700;
           letter-spacing: 2px;
           border: 2px solid #ffffc0;
-          background-color: darken(red, 15%);         
+          background-color: darken(red, 15%);
         }
-      }      
+      }
     }
 
     .selected-cont {
@@ -552,7 +553,7 @@ td img {
       }
     }
   }
-}  
+}
 
 .inactive {
   opacity: .4;
@@ -578,9 +579,9 @@ td img {
 }
 
 .only-maps {
-  border: 1px solid gray; 
-  padding: 5px; 
-  border-radius: 5px; 
+  border: 1px solid gray;
+  padding: 5px;
+  border-radius: 5px;
   grid-column: span 2;
 
   @media screen and (max-width: 800px){

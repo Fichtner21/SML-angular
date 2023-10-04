@@ -17,8 +17,8 @@ nav {
   position: fixed;
   top: 0;
   width: 100%;
-  color: #ffffc8;  
-  border-bottom: 1px solid gray; 
+  color: #ffffc8;
+  border-bottom: 1px solid gray;
 
   @media screen and (max-width: 768px){
     padding: 10px;
@@ -39,10 +39,10 @@ nav {
 
     #hamburger {
       display: flex;
-      justify-content: flex-end;      
+      justify-content: flex-end;
     }
-  }  
- 
+  }
+
   a {
     margin-right: 15px;
     font-weight: 700;
@@ -57,9 +57,9 @@ nav {
 
     &:hover {
       color: darken(#ffffc8, 20%);
-      
+
     }
-  }  
+  }
 
   .block_class {
     // display: grid !important;
@@ -80,8 +80,8 @@ nav {
     width: 100%;
     transition: .3s all;
 
-    @media screen and (max-width: 1049px){      
-      display: none;      
+    @media screen and (max-width: 1049px){
+      display: none;
     }
 
     .menu a {
@@ -128,13 +128,13 @@ nav {
       }
     }
 
-    .social {    
-      
+    .social {
+
       .social-panel {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        font-weight: 700; 
+        font-weight: 700;
 
         @media screen and (max-width: 768px){
           align-items: flex-end;
@@ -156,29 +156,29 @@ nav {
             }
           }
         }
-        
+
         a {
           display: flex;
           align-items: center;
-          
+
         }
-  
+
         img {
           width: 26px;
           height: auto;
           margin-right: 5px;
         }
-  
+
         div {
           margin-right: 0.2rem;
           font-size: 22px;
-  
+
           @media screen and (max-width: 768px){
             margin-right: 0;
           }
         }
-      }   
-      
+      }
+
       .login-panel {
         display: flex;
         align-items: center;
@@ -203,10 +203,10 @@ nav {
         }
       }
     }
-  }  
+  }
 }
 
-.container {  
+.container {
  padding: 0 15px;
 }
 
@@ -217,7 +217,7 @@ nav {
   justify-content: center;
   border: 5px solid darkred;
   color: #fff;
-  background-color: #000;  
+  background-color: #000;
   text-align: center;
   font-weight: 700;
   font-size: 22px;
@@ -276,7 +276,8 @@ nav {
 
 .active {
   font-weight: 700;
-  text-shadow: #ffffc8 1px 0 10px;
-  text-decoration: underline;  
-  color:aqua !important;
+  text-shadow: #ffffc8 1px;
+  text-decoration: underline;
+  // color:aqua !important;
+  color:rgb(102, 255, 0) !important;
 }

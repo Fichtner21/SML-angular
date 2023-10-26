@@ -32,6 +32,10 @@ section {
     position: relative;
     box-shadow: 0 20px 20px #010141;
 
+    @media screen and (min-width: 1024px){
+      min-width: 950px;
+    }
+
     .more-less {
       padding: 10px 15px;
 
@@ -126,6 +130,21 @@ section {
   }
 }
 
+.ranking-head {
+  @media screen and (max-width: 800px){
+    max-height: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  @media screen and (max-width: 800px){
+    &__playername {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
 
 .ranking-head, .character-card {
   display: grid;
@@ -134,7 +153,7 @@ section {
   color: #ffffc0;
 
   @media screen and (max-width: 500px){
-    grid-template-columns: 0.5fr 1fr 30px 1fr 0.5fr 0.5fr 0.5fr;
+    grid-template-columns: 30px 1fr 30px 1fr 0.5fr 0.5fr 0.5fr;
     .act {
       :last-child {
         display: none;
@@ -143,7 +162,7 @@ section {
   }
 
   @media screen and (max-width: 800px){
-    grid-template-columns: 0.5fr 1fr 30px 0.5fr 0.5fr 0.5fr 0.5fr;
+    grid-template-columns: 30px 1fr 30px 0.5fr 0.5fr 0.5fr 0.5fr;
   }
 
   .item {
@@ -245,6 +264,10 @@ a {
   .playername-cont {
     position: relative;
 
+    @media screen and (max-width: 800px){
+      overflow: auto;
+    }
+
     .number {
       color: #010141;
       width: 20px;
@@ -275,6 +298,11 @@ a {
       bottom: 1px;
       right: 5px;
       font-style: italic;
+      font-weight: 500;
+
+      @media screen and (max-width: 800px){
+        font-size: 13px;
+      }
     }
 
     .streak-small {
@@ -403,7 +431,7 @@ a {
       color: gray;
 
       span {
-        font-weight: 700;
+        font-weight: 500;
         // text-decoration: underline;
         font-size: 15px;
         margin-left: 5px;
@@ -414,7 +442,13 @@ a {
   @media screen and (max-width: 800){
     .item-place {
       text-align: center;
+      display: flex;
+      justify-content: center;
     }
+  }
+
+  .item.new {
+    font-weight: 400;
   }
 
   .item {
@@ -426,7 +460,7 @@ a {
 
     @media screen and (max-width: 800px){
       font-size:14px;
-      justify-content: flex-start;
+      // justify-content: flex-start;
     }
 
     a {
@@ -783,7 +817,7 @@ a {
   // }
 
   .fpw div, .wars div {
-    font-weight: 700;
+    // font-weight: 700;
   }
 
   a {
@@ -1181,7 +1215,7 @@ a {
   font-weight: 700;
 
   .seasons {
-    padding: 5px 70px;
+    padding: 5px 70px;    
 
     .rank {
       background-color: hsl(45, 100%, 15%);
@@ -1205,6 +1239,10 @@ a {
   top: 105px;
   right: 20px; /* Dystans od prawej krawędzi strony */
   z-index: 6;
+
+  @media screen and (max-width: 800px){
+    display: none;
+  }
 }
 
 .floating-icon-container-left {
@@ -1212,6 +1250,11 @@ a {
   top: 105px;
   left: 20px; /* Dystans od prawej krawędzi strony */
   z-index: 6;
+
+  @media screen and (max-width: 800px){
+    top: 70px;
+    left: 15px;
+  }
 }
 
 .floating-icon {
@@ -1234,10 +1277,10 @@ a {
 }
 
 .floating-icon.expanded {
-  box-shadow: 0 0 10px;
+  box-shadow: 0 0 10px #00FF00;
 }
 .floating-icon-left.expanded {
-  box-shadow: 0 0 10px;
+  box-shadow: 0 0 10px #00FF00;
 }
 
 .floating-panel {
@@ -1282,7 +1325,9 @@ a {
         right: 0;
         bottom: 0;
         font-size: 30px;
-        font-family:'Times New Roman', Times, serif;
+        font-style: italic;
+        font-weight: 700;
+        // font-family:'Times New Roman', Times, serif;
         color: #00FF00;
       }
     }
@@ -1446,18 +1491,23 @@ ol {
 }
 
 .last-match {
-  color: #ffffc0;
+  color: lightgray;
 
   .match-row {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
     gap: 10px;
-    color: #ffffc8;
+    color: lightgray;
     font-size: 14px;
 
     a {
-      color: #ffffc8;
+      color: lightgray;
+      transition: .3s all;
+
+      &:hover {
+        color: red;
+      }
     }
 
     @media screen and (max-width: 800px){
@@ -1498,11 +1548,11 @@ ol {
       gap: 0 10px;
       padding-bottom: 5px;
       margin-bottom: 5px;
-      border-bottom: 3px solid #ffffc8;
+      border-bottom: 2px solid lightgray;
       background-image: linear-gradient(
         0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
             background-size: 4px 4px;
-      color: #ffffc8;
+      color: lightgray;
       font-weight: 700;
     }
 
@@ -1533,12 +1583,21 @@ ol {
       // font-weight: 700;
     }
 
+    .preelo-info {
+      border-top: 2px solid lightgray;
+      padding-top: 3px;
+
+      .teamrank {
+        font-weight: 700;
+      }
+    }
+
     .preelo_war {
       font-style: italic;
     }
 
     &__team {
-      background-color: #2f3060;
+      background-color: #40415f;
       padding: 15px;
 
       &--player {
@@ -1597,4 +1656,56 @@ ol {
       }
     }
   }
+}
+
+.donator {
+  color: #ffff00;
+  margin-left: 3px;
+}
+
+.donators {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-image: linear-gradient(0deg, rgba(47, 48, 96, .95) 25%, rgba(47, 48, 96, .95) 50%, rgba(64, 65, 95, .95) 50%, rgba(64, 65, 95, .95) 75%, rgba(47, 48, 96, .95) 75%, rgba(47, 48, 96, .95) 100%);
+  background-size: 3px 3px;
+  box-shadow: 0 0 5px #ffffc8;
+  padding: 10px;
+  border-radius: 10px;
+  color: #ffffc8;  
+
+  @media screen and (max-width: 1024px) {
+    display: none;
+  }
+
+  .donators_s4 {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 200px;
+  }
+
+  .donators_up {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .dolar {
+    margin: 0 2px;
+  }
+
+  .donators__num {
+    font-size: 22px;
+    margin-left: 5px;
+    font-weight: 700;    
+    color: #00FF00;
+  }
+
+  .donator {
+    font-size: 22px;
+  }
+}
+
+::ng-deep .mat-tooltip {
+  font-size: 14px !important;
 }

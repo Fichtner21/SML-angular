@@ -13,7 +13,7 @@
   </div>    
   <div class="nav" id="nav" [ngClass]="{'block_class': isMenuOpen}">
     <div class="menu">
-      <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">{{ 'nav.home' | translate }}</a>
+      <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()"><img class="home_icon" src="assets/images/sh_icon.png"></a>
       <a routerLink="obj-ranking" routerLinkActive="active" (click)="closeMenu()">Ranking OBJ</a>
       <a routerLink="obj-matches" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.matches_obj' | translate }}</a>
       <a routerLink="obj-inactive" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.inactive_obj' | translate }}</a>

@@ -6,8 +6,6 @@ import { SingleMatchResolve } from './single-match/resolver/single-match.resolve
 import { SinglePlayerResolve } from './single-match/resolver/single-player.resolver';
 import { SingleMatchComponent } from './single-match/single-match.component';
 
-
-
 const routes: Routes = [
   { 
     path: '', 
@@ -17,6 +15,10 @@ const routes: Routes = [
     path: ':idwar',
     component: SingleMatchComponent,
     resolve: { match: SingleMatchResolve }
+  },
+  {
+    path: 'page/:page',
+    component: HistoryObjComponent,
   },
   {
     path: ':username',

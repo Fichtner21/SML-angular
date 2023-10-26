@@ -65,36 +65,36 @@
           <div class="seasons">
             <ng-container *ngIf="playerDetail$ | async as playerDetails;">          
               <mat-tab-group animationDuration="0ms">
-                <mat-tab label="Season #3" *ngIf="playerDetails.listwars3.length > 0">
-                  <h2>01.07.2023 - 30.09.2023</h2>
-                  <div>In progress...</div>
+                <mat-tab label="Season 4" title="Season 4" *ngIf="playerDetails.listwars3.length > 0">
+                  <h2>01.10.2023 - 31.12.2023</h2>
+                  <h3>Summary</h3>
+                  <ul class="achievments">
+                    <li><span>Rank:</span> {{playerDetails.place}} / {{currentActivePlayers}}</li>
+                    <li><span>Wars:</span> {{ playerDetails.listwars4.length }} / {{season4wars}}</li>
+                  </ul>
                 </mat-tab>
-                <mat-tab label="Season #2" *ngIf="playerDetails.listwars2.length > 0">
+                <mat-tab label="Season 3" title="Season 3" *ngIf="playerDetails.listwars3.length > 0">
+                  <h2>01.07.2023 - 30.09.2023</h2>
+                  <h3>Summary</h3>
+                  <ul class="achievments">
+                    <li><span>Rank:</span> {{playerDetails.s3ranking_win}} / {{season3players}}</li>
+                    <li><span>Wars:</span> {{playerDetails.listwars3.length }} / {{season3wars}}</li>
+                  </ul>
+                </mat-tab>
+                <mat-tab label="Season 2" title="Season 2" *ngIf="playerDetails.listwars2.length > 0">
                   <h2>01.04.2023 - 30.06.2023</h2>
                   <h3>Summary</h3>
                   <ul class="achievments">
                     <li><span>Rank:</span> {{playerDetails.s2ranking_win}} / {{season2players}}</li>
-                    <li><span>Wars:</span> {{playerDetails.s2wars_win}} / {{season2wars}}</li>
+                    <li><span>Wars:</span> {{playerDetails.listwars2.length }} / {{season2wars}}</li>
                   </ul>
                 </mat-tab>
-                <mat-tab label="Season #1" *ngIf="playerDetails.listwars1.length > 0">
+                <mat-tab label="Season 1" title="Season 1" *ngIf="playerDetails.listwars1.length > 0">
                   <h2>01.01.2023 - 31.03.2023</h2>
                   <h3>Summary:</h3>
                   <ul class="achievements">
-                    <!-- <ng-container *ngIf="playerDetails.s1ranking_win !== ''; then; topR; else downR"></ng-container>
-                    <ng-template #topR> -->
-                      <!-- <li>{{ playerDetails.s1ranking_win }} rank in Season 1.</li> -->
-                      <li><span>Rank:</span> {{ playerDetails.s1ranking_win !== '' ? playerDetails.s1ranking_win : ' Out of top ten rank' }} in Season 1.</li>
-                      <li><span>Avarage frags per War:</span>{{ playerDetails.s1fpw_win !== '' ? playerDetails.s1fpw_win : ' Out of top ten Avg. FpW' }} in Season 1.</li>
-                      <li><span>Played Wars:</span>{{ playerDetails.s1wars_win !== '' ? playerDetails.s1wars_win : ' Out of top ten Played Wars' }} in Season 1.</li>
-
-                    <!-- </ng-template>
-                    <ng-template #downR>
-                      <li>Lower RANKING than the top ten rank in Season 1.</li>
-                    </ng-template> -->
-
-                    <!-- <li>{{ playerDetails.s1fpw_win }} Avarage Frags per War in Season 1!</li>
-                    <li>{{ playerDetails.s1wars_win }} played Wars in Season 1!</li> -->
+                    <li><span>Rank:</span> {{playerDetails.s1ranking_win}} / </li>
+                    <li><span>Wars:</span> {{playerDetails.listwars1.length }} / </li>
                   </ul>
                   <h3>Statistics:</h3>
                   <div class="stat-units">Played wars: <span>{{ playerDetails.s1wars }}</span></div>
@@ -152,6 +152,12 @@
           </div>
           <canvas id="rank3Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
         </div>
+        <div *ngIf="playerDetails.listwars4.length > 0">
+          <div class="chart-info">            
+            <button (click)="showRankingSeason4(playerDetails.listwars4)">Load season <span>4</span>rankings</button>            
+          </div>
+          <canvas id="rank4Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
+        </div>
         <div *ngIf="playerDetails.listwars.length > 0">
           <div class="chart-info">          
             <button (click)="showFrags(playerDetails.frags, playerDetails.listwars)">{{ 'playerview.frags_chart' | translate }} TOTAL</button>
@@ -169,6 +175,12 @@
             <button (click)="showFrags3(playerDetails.listwars3)">Load season <span>3</span> frags</button>
           </div>
           <canvas id="myChart3" width="1320" height="400" style="overflow-x: scroll;"></canvas>
+        </div>
+        <div *ngIf="playerDetails.listwars4.length > 0">
+          <div class="chart-info">          
+            <button (click)="showFrags4(playerDetails.listwars4)">Load season <span>4</span> frags</button>
+          </div>
+          <canvas id="myChart4" width="1320" height="400" style="overflow-x: scroll;"></canvas>
         </div>
       </div>
       <div class="big-name">{{playerDetails.playername}}</div>

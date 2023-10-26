@@ -80,6 +80,10 @@ nav {
     width: 100%;
     transition: .3s all;
 
+    .home_icon {
+      max-width: 35px;
+    }
+
     @media screen and (max-width: 1049px){
       display: none;
     }

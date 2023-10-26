@@ -16,6 +16,12 @@
                 <!-- <app-single-match [comments]="comments$ | async" (lengthEmitter)="updateComments($event)"></app-single-match>                 -->
                 <!-- <div>{{ getCommentsForMatch(match.idwar) | json }}</div> -->
                <!-- <div style="padding:10px; border:3px solid red;">{{ match.comments }}</div> -->
+               <!-- <ng-container *ngIf="match.comments">
+                <div class="comment">
+                  <fa-icon [icon]="commentIcon"></fa-icon> -->
+                  <!-- <div class="comment__num">{{match.comments }}</div> -->
+                 <!-- </div>
+               </ng-container>                -->
               </div>
               <div class="match-row__team" [class]="match.flag ? match.flag : ''" [style.background-image]="match.flag ? 'url(/assets/images/flags_svg/' + match.flag + '.SVG)' : ''" [style.background-size]="match.flag ? '20% 20%' : ''" [style.background-repeat]="match.flag ? 'no-repeat' : ''">
                 <div class="teamrounds">{{ match.t1roundswon }}</div>
@@ -28,49 +34,49 @@
                 </div>
                 <div class="match-row__team--player">
                   <div>{{ match.t1p1preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p1username}}">{{ match.t1p1playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p1username}}" [ngClass]="{ 'banned': match.t1p1playername.ban == 'TRUE', 'inactive': match.t1p1playername.active == 'FALSE'}"  [title]="getTitle(match.t1p1playername)">{{ match.t1p1playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p1score }} </div>
                   <div>{{ match.t1p1postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t1p1postelo - match.t1p1preelo) > 0, 'lost': (match.t1p1postelo - match.t1p1preelo) < 0, 'draw': (match.t1p1postelo - match.t1p1preelo === 0) }"><span>{{ match.t1p1postelo - match.t1p1preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p2playername | keyvalue)?.length">
                   <div>{{ match.t1p2preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p2username}}">{{ match.t1p2playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p2username}}" [ngClass]="{ 'banned': match.t1p2playername.ban == 'TRUE', 'inactive': match.t1p2playername.active == 'FALSE'}"  [title]="getTitle(match.t1p2playername)">{{ match.t1p2playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p2score }} </div>
                   <div>{{ match.t1p2postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t1p2postelo - match.t1p2preelo) > 0, 'lost': (match.t1p2postelo - match.t1p2preelo) < 0, 'draw': (match.t1p2postelo - match.t1p2preelo === 0) }"><span>{{ match.t1p2postelo - match.t1p2preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p3playername | keyvalue)?.length">
                   <div>{{ match.t1p3preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p3username}}">{{ match.t1p3playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p3username}}" [ngClass]="{ 'banned': match.t1p3playername.ban == 'TRUE', 'inactive': match.t1p3playername.active == 'FALSE'}"  [title]="getTitle(match.t1p3playername)">{{ match.t1p3playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p3score }} </div>
                   <div>{{ match.t1p3postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t1p3postelo - match.t1p3preelo) > 0, 'lost': (match.t1p3postelo - match.t1p3preelo) < 0, 'draw': (match.t1p3postelo - match.t1p3preelo === 0) }"><span>{{ match.t1p3postelo - match.t1p3preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p4playername | keyvalue)?.length">
                   <div>{{ match.t1p4preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}">{{ match.t1p4playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}" [ngClass]="{ 'banned': match.t1p4playername.ban == 'TRUE', 'inactive': match.t1p4playername.active == 'FALSE'}"  [title]="getTitle(match.t1p4playername)">{{ match.t1p4playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p4score }} </div>
                   <div>{{ match.t1p4postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t1p4postelo - match.t1p4preelo) > 0, 'lost': (match.t1p4postelo - match.t1p4preelo) < 0, 'draw': (match.t1p4postelo - match.t1p4preelo === 0) }"><span>{{ match.t1p4postelo - match.t1p4preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p5playername | keyvalue)?.length">
                   <div>{{ match.t1p5preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p5username}}">{{ match.t1p5playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p5username}}" [ngClass]="{ 'banned': match.t1p5playername.ban == 'TRUE', 'inactive': match.t1p5playername.active == 'FALSE'}"  [title]="getTitle(match.t1p5playername)">{{ match.t1p5playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p5score }} </div>
                   <div>{{ match.t1p5postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t1p5postelo - match.t1p5preelo) > 0, 'lost': (match.t1p5postelo - match.t1p5preelo) < 0, 'draw': (match.t1p5postelo - match.t1p5preelo === 0) }"><span>{{ match.t1p5postelo - match.t1p5preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p6playername | keyvalue)?.length">
                   <div>{{ match.t1p6preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p6username}}">{{ match.t1p6playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p6username}}" [ngClass]="{ 'banned': match.t1p6playername.ban == 'TRUE', 'inactive': match.t1p6playername.active == 'FALSE'}"  [title]="getTitle(match.t1p6playername)">{{ match.t1p6playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p6score }} </div>
                   <div>{{ match.t1p6postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t1p6postelo - match.t1p6preelo) > 0, 'lost': (match.t1p6postelo - match.t1p6preelo) < 0, 'draw': (match.t1p6postelo - match.t1p6preelo === 0) }"><span>{{ match.t1p6postelo - match.t1p6preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p7playername | keyvalue)?.length">
                   <div>{{ match.t1p7preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p7username}}">{{ match.t1p7playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p7username}}" [ngClass]="{ 'banned': match.t1p7playername.ban == 'TRUE', 'inactive': match.t1p7playername.active == 'FALSE'}"  [title]="getTitle(match.t1p7playername)">{{ match.t1p7playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p7score }} </div>
                   <div>{{ match.t1p7postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t1p7postelo - match.t1p7preelo) > 0, 'lost': (match.t1p7postelo - match.t1p7preelo) < 0, 'draw': (match.t1p7postelo - match.t1p7preelo === 0) }"><span>{{ match.t1p7postelo - match.t1p7preelo | number: '.1-2'}}</span></div>
@@ -102,49 +108,49 @@
                 </div>
                 <div class="match-row__team--player">
                   <div>{{ match.t2p1preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p1username}}">{{ match.t2p1playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p1username}}" [ngClass]="{ 'banned': match.t2p1playername.ban == 'TRUE', 'inactive': match.t2p1playername.active == 'FALSE'}"  [title]="getTitle(match.t2p1playername)">{{ match.t2p1playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p1score }} </div>
                   <div>{{ match.t2p1postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t2p1postelo - match.t2p1preelo) > 0, 'lost': (match.t2p1postelo - match.t2p1preelo) < 0, 'draw': (match.t2p1postelo - match.t2p1preelo === 0) }"><span>{{ match.t2p1postelo - match.t2p1preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p2username !== ''">
                   <div>{{ match.t2p2preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p2username}}">{{ match.t2p2playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p2username}}" [ngClass]="{ 'banned': match.t2p2playername.ban == 'TRUE', 'inactive': match.t2p2playername.active == 'FALSE'}"  [title]="getTitle(match.t2p2playername)">{{ match.t2p2playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p2score }} </div>
                   <div>{{ match.t2p2postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t2p2postelo - match.t2p2preelo) > 0, 'lost': (match.t2p2postelo - match.t2p2preelo) < 0, 'draw': (match.t2p2postelo - match.t2p2preelo === 0) }"><span>{{ match.t2p2postelo - match.t2p2preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p3username !== ''">
                   <div>{{ match.t2p3preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p3username}}">{{ match.t2p3playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p3username}}" [ngClass]="{ 'banned': match.t2p3playername.ban == 'TRUE', 'inactive': match.t2p3playername.active == 'FALSE'}"  [title]="getTitle(match.t2p3playername)">{{ match.t2p3playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p3score }} </div>
                   <div>{{ match.t2p3postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t2p3postelo - match.t2p3preelo) > 0, 'lost': (match.t2p3postelo - match.t2p3preelo) < 0, 'draw': (match.t2p3postelo - match.t2p3preelo === 0) }"><span>{{ match.t2p3postelo - match.t2p3preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p4username !== ''">
                   <div>{{ match.t2p4preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p4username}}">{{ match.t2p4playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p4username}}" [ngClass]="{ 'banned': match.t2p4playername.ban == 'TRUE', 'inactive': match.t2p4playername.active == 'FALSE'}"  [title]="getTitle(match.t2p4playername)">{{ match.t2p4playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p4score }} </div>
                   <div>{{ match.t2p4postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t2p4postelo - match.t2p4preelo) > 0, 'lost': (match.t2p4postelo - match.t2p4preelo) < 0, 'draw': (match.t2p4postelo - match.t2p4preelo === 0) }"><span>{{ match.t2p4postelo - match.t2p4preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p5username !== ''">
                   <div>{{ match.t2p5preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p5username}}">{{ match.t2p5playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p5username}}" [ngClass]="{ 'banned': match.t2p5playername.ban == 'TRUE', 'inactive': match.t2p5playername.active == 'FALSE'}"  [title]="getTitle(match.t2p5playername)">{{ match.t2p5playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p5score }} </div>
                   <div>{{ match.t2p5postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t2p5postelo - match.t2p5preelo) > 0, 'lost': (match.t2p5postelo - match.t2p5preelo) < 0, 'draw': (match.t2p5postelo - match.t2p5preelo === 0) }"><span>{{ match.t2p5postelo - match.t2p5preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p6username !== ''">
                   <div>{{ match.t2p6preelo | number: '1.0-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p6username}}">{{ match.t2p6playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p6username}}" [ngClass]="{ 'banned': match.t2p6playername.ban == 'TRUE', 'inactive': match.t2p6playername.active == 'FALSE'}"  [title]="getTitle(match.t2p6playername)">{{ match.t2p6playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p6score }} </div>
                   <div>{{ match.t2p6postelo | number: '1.0-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t2p6postelo - match.t2p6preelo) > 0, 'lost': (match.t2p6postelo - match.t2p6preelo) < 0, 'draw': (match.t2p6postelo - match.t2p6preelo === 0) }"><span>{{ match.t2p6postelo - match.t2p6preelo | number: '.1-2'}}</span></div>
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p7username !== ''">
                   <div>{{ match.t2p7preelo | number: '.1-2' }}</div>
-                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p7username}}">{{ match.t2p7playername.name }}</a></div>
+                  <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p7username}}" [ngClass]="{ 'banned': match.t2p7playername.ban == 'TRUE', 'inactive': match.t2p7playername.active == 'FALSE'}"  [title]="getTitle(match.t2p7playername)">{{ match.t2p7playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p7score }} </div>
                   <div>{{ match.t2p7postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t2p7postelo - match.t2p7preelo) > 0, 'lost': (match.t2p7postelo - match.t2p7preelo) < 0, 'draw': (match.t2p7postelo - match.t2p7preelo === 0) }"><span>{{ match.t2p7postelo - match.t2p7preelo | number: '.1-2'}}</span></div>
@@ -166,7 +172,7 @@
               </div>
             </div>
           </div>
-          <pagination-controls (pageChange)="p = $event" class="my-pagination"></pagination-controls>          
+          <pagination-controls (pageChange)="p = $event" class="my-pagination"></pagination-controls>        
         </div>
       </ng-container>
     </ng-container>

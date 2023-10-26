@@ -6,7 +6,7 @@ import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { fa1, fa2, fa3, faArrowDown, faArrowUp, faCalendarCheck, faChartGantt, faChartSimple, faMinus, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { fa1, fa2, fa3, faArrowDown, faArrowUp, faCalendarCheck, faChartGantt, faChartSimple, faDollarSign, faMinus, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { parseFloat } from 'core-js/es/number';
 import { RankObjService } from './rank-obj.service';
@@ -52,9 +52,27 @@ export class RankingObjComponent implements OnInit {
   chanceOfWinTeamOneShow: any;
   chanceOfWinTeamTwoShow: any;
   options: any[] = [];
+  donatorsSeason4: any[] = [];
 
   topThreePlayers: any[]
   // expandedPlayerIndexes: number[] = [];
+  
+  tooltipContent: string = `
+    <div>
+      <p>Tekst tooltipu</p>
+      <img src="assets/sh_icon.png" alt="Your Image">
+      <table>
+        <tr>
+          <th>Header 1</th>
+          <th>Header 2</th>
+        </tr>
+        <tr>
+          <td>Data 1</td>
+          <td>Data 2</td>
+        </tr>
+      </table>
+    </div>
+  `;
 
   @Output() ranking:EventEmitter<any> = new EventEmitter();
 
@@ -71,6 +89,7 @@ export class RankingObjComponent implements OnInit {
   chartSimple = faChartSimple;
   chartGantt = faChartGantt;
   calendarCheck = faCalendarCheck;
+  dolar = faDollarSign;
   isExpanded: boolean;
   isSecondPanelExpanded: boolean;
   isThirdPanelExpanded: boolean;
@@ -131,7 +150,7 @@ export class RankingObjComponent implements OnInit {
       map(array => array[array.length - 1])
     );
 
-    this.lastMatch$.subscribe(lastElement => console.log('Last Element:', lastElement));
+    // this.lastMatch$.subscribe(lastElement => console.log('Last Element:', lastElement));
 
     this.lastMatch$.pipe(
 
@@ -240,7 +259,7 @@ export class RankingObjComponent implements OnInit {
           t2p7score: match.t2p7score,
           t2p7postelo: match.t2p7postelo,
         }
-        console.log('THIS.match row', this.matchRow)
+        // console.log('THIS.match row', this.matchRow)
         return this.matchRow;
       })
 
@@ -317,24 +336,32 @@ export class RankingObjComponent implements OnInit {
               s3ranking_win: parseInt(name.s3ranking_win),
               // streak: name.streak,
               winPercentage: this.handleData(this.receivedData),
-              streak: this.calculateStreak(name.username, v2)
+              streak: this.calculateStreak(name.username, v2),
+              donatorS4: name.donate_s4
             };
+
+            if(lastWarDate.donatorS4 == 1){
+              this.donatorsSeason4.push(lastWarDate)
+            }  
+
             playerRowArray.push(lastWarDate);
           }
         }
         // console.log('v2', v2)
-        console.log('playerRowArray1', playerRowArray[0])
-        console.log('playerRowArray2', playerRowArray[1])
-        console.log('playerRowArray3', playerRowArray[2])
-        console.log('V2', v2[v2.length - 3])
-        console.log('V2', v2[v2.length - 2])
-        console.log('V2', v2[v2.length - 1])
+        // console.log('playerRowArray1', playerRowArray[0])
+        // console.log('playerRowArray2', playerRowArray[1])
+        // console.log('playerRowArray3', playerRowArray[2])
+        // console.log('V2', v2[v2.length - 3])
+        // console.log('V2', v2[v2.length - 2])
+        // console.log('V2', v2[v2.length - 1])
         // this.topThreePlayers = playerRowArray
         // .sort((a, b) => b.wars - a.wars) // Sortowanie graczy według wartości "wars" (malejąco)
         // .slice(0, 3); // Pobranie trzech graczy z najwyższymi wartościami "wars"
         return playerRowArray;
       })
-    );
+    );   
+
+    // console.log('=>', this.donatorsSeason4);
 
     if(this.activatedRoute.snapshot.queryParams['sortByWars'] == 'DESC'){
       this.sortByWarsDesc(this.lastWarOfPlayer$);

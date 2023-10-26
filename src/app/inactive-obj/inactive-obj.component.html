@@ -93,44 +93,16 @@
             <div class="">{{ 'ranking.player_name' | translate }}</div>
             <div class=""></div>
             <div class="ranking" (click)="booleanVarRank ? sortByRankingAsc(lastWarOfPlayerIn$) : sortByRankingDesc(lastWarOfPlayerIn$)" title="sort by Ranking">Ranking
-
-              <!-- <ng-container *ngIf="booleanVarRank; then upRank; else downRank"></ng-container>
-              <ng-template #upRank>
-                <fa-icon [icon]="arrowUp"></fa-icon>
-              </ng-template>
-              <ng-template #downRank>
-                <fa-icon [icon]="arrowDown"></fa-icon>
-              </ng-template> -->
-
             </div>
-            <div class="fpw" title="sort by Frags per War" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayerIn$) : sortByFpWDesc(lastWarOfPlayerIn$)">
+            <!-- <div class="fpw" title="sort by Frags per War" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayerIn$) : sortByFpWDesc(lastWarOfPlayerIn$)">
               FpW
-
-              <!-- <ng-container *ngIf="booleanVarFpW; then upFpW; else downFpW"></ng-container>
-              <ng-template #upFpW>
-                <fa-icon [icon]="arrowUp"></fa-icon>
-              </ng-template>
-              <ng-template #downFpW>
-                <fa-icon [icon]="arrowDown"></fa-icon>
-              </ng-template> -->
-
             </div>
             <div class="wars" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayerIn$) : sortByWarsDesc(lastWarOfPlayerIn$)" title="sort by Wars">{{ 'ranking.wars' | translate }} 
-              
-                <!-- <ng-container *ngIf="booleanVar; then up; else down"></ng-container>
-                <ng-template #up>
-                  <fa-icon [icon]="arrowUp"></fa-icon>
-                </ng-template>
-                <ng-template #down>
-                  <fa-icon [icon]="arrowDown"></fa-icon>
-                </ng-template> -->
-              
-            </div>
-            <!-- <div class="new-head">{{ 'ranking.last_war' | translate }}</div> -->
+            </div>  -->
             
-            <div class="new-head" title="sort by Last War Date">{{ 'ranking.last_war' | translate }}</div>
+            <div class="new-head">War</div>
 
-            <div class="">{{ 'ranking.act' | translate }}</div>
+           <!-- <div class="">{{ 'ranking.act' | translate }}</div> -->
           </div> 
           <div class="players-list">
             <ng-container *ngFor="let player of lastWarOfPlayers; let i = index;">
@@ -149,24 +121,21 @@
                     <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
                   </div>
                   <div class="item">{{ player.ranking | number: '.2-2' }}</div>
-                  <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
+                  <!-- <div class="item" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
                     {{ player.fragsperwar | number: '.2-2' }}              
-                  </div>
+                  </div> -->                
                   <!-- <div class="item-block">
-                    <div>{{ player.wars }}</div>
-                    <div class="season-wars" *ngIf="isInfo">(season #1: <span>{{ player.s1wars }}</span>)</div>
-                  </div> -->
-                  <div class="item-block">
                     <div title="Season played wars" ><span class="total">{{ player.wars }}</span></div>
                     <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars in Season 1" class="total">s1: {{ player.s1wars }}</span></div>
                     <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars in Season 2">s2: {{ player.s2wars }}</span></div>
-                  </div>
-                  <div class="item new">{{ player.lastWarDate }}</div>
+                  </div> -->
+                  <div class="item new">Waitin for 1st war</div>
+                  <!--
                   <div class="item name act">                    
                     <div class="act-year" [ngClass]="{
                       'green0': player.lastyear == 0, 
                       'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 30 && player.lastyear <= 90), 'green11_20': (player.lastyear > 90 && player.lastyear <= 150), 'green21_40': (player.lastyear > 150 && player.lastyear <= 250), 'green41_70': (player.lastyear > 250 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>
-                  </div>              
+                  </div> -->             
                 </div>
               <!-- </ng-container>   -->
             </ng-container>

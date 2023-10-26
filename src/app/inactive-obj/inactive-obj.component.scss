@@ -264,7 +264,9 @@ a {
     }
     
     a {
-      position: relative;      
+      position: relative;    
+      text-align: center;
+      max-width: 120px;  
     }
 
     img {

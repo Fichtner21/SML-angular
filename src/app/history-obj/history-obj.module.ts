@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 
 
 // export function createTranslateLoader(http: HttpClient){
@@ -44,7 +45,8 @@ import { MatIconModule } from '@angular/material/icon';
         MatInputModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatIconModule       
+        MatIconModule,
+        FontAwesomeModule       
     ],
     exports: [
       CommonModule,

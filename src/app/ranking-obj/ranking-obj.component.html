@@ -7,9 +7,9 @@
         <div class="cont">
           <div class="ranking-head">
             <div class="">{{ 'ranking.place' | translate }}</div>
-            <div class="">{{ 'ranking.player_name' | translate }}</div>
+            <div class="ranking-head__playername">{{ 'ranking.player_name' | translate }}</div>
             <div class=""></div>
-            <div class="ranking" (click)="booleanVarRank ? sortByRankingAsc(lastWarOfPlayer$) : sortByRankingDesc(lastWarOfPlayer$)" title="sort by Ranking">Ranking
+            <div class="ranking" (click)="booleanVarRank ? sortByRankingAsc(lastWarOfPlayer$) : sortByRankingDesc(lastWarOfPlayer$)" matTooltip="sort by Ranking">Ranking
 
               <!-- <ng-container *ngIf="booleanVarRank; then upRank; else downRank"></ng-container>
               <ng-template #upRank>
@@ -20,16 +20,16 @@
               </ng-template> -->
 
             </div>
-            <!-- <div class="fpw" title="sort by Frags per War" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)">
+            <!-- <div class="fpw" matTooltip="sort by Frags per War" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)">
               FpW
             </div> -->
             <div style="display: block;">
-              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" title="sort by Frags per War in Season #3: 01-10-2023 - 31-12-2023">s4 FpW<span></span></div>
-              <div class="s1wars" *ngIf="isInfo" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)" title="sort by Frags per War">FpW total:</div>
+              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" matTooltip="sort by Frags per War in Season #4: 01-10-2023 - 31-12-2023">s4 FpW<span></span></div>
+              <div class="s1wars" *ngIf="isInfo" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)" matTooltip="sort by Frags per War">FpW total:</div>
             </div>
             <div style="display:block;">
-              <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" title="sort by Wars in Season #3: 01-10-2023 - 31-12-2023">s4 Wars<span></span></div>
-              <div class="s1wars" *ngIf="isInfo" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)" title="sort by Wars">{{ 'ranking.wars' | translate }} total:</div>
+              <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #4: 01-10-2023 - 31-12-2023">s4 Wars<span></span></div>
+              <div class="s1wars" *ngIf="isInfo" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars">{{ 'ranking.wars' | translate }} total:</div>
             </div>
                 <!-- <ng-container *ngIf="booleanVar; then up; else down"></ng-container>
                 <ng-template #up>
@@ -38,7 +38,9 @@
                 <ng-template #down>
                   <fa-icon [icon]="arrowDown"></fa-icon>
                 </ng-template> -->
-            <div class="new-head">{{ 'ranking.last_war' | translate }}</div>
+            <div class="new-head">
+              {{ 'ranking.last_war' | translate }}              
+            </div>
             <div class="">{{ 'ranking.act' | translate }}</div>
           </div>
           <div class="players-list">
@@ -50,25 +52,28 @@
                   >
                   {{ i+1 }}</div>
                   <div class="playername-cont" [ngClass]="{'over1000': (player.wars > 1000)}">
-                    <div class="wars-bar" *ngIf="isInfo" title="Exp. rank" [style.width.%]="getPercentage(player.wars)" [ngClass]="getBarColor(player.wars)"></div>
+                    <div class="wars-bar" *ngIf="isInfo"  [style.width.%]="getPercentage(player.wars)" [ngClass]="getBarColor(player.wars)"></div>
                     <div class="wars-bar" *ngIf="!isInfo"></div>
-                    <a routerLink="/obj-ranking/{{player.username}}" class=" playername" [title]="player.username === 'zielony'
+                    <a routerLink="/obj-ranking/{{player.username}}" class=" playername" [matTooltip]="player.username === 'zielony'
                     ? 'Winner s3'
                     : player.username === 'Cronic'
                         ? '2nd in s3'
                         : player.username === 'boogie'
                             ? '3rd in s3'
                             : ''">
-                    {{ player.playername }}
+                    <span matTooltip="View profile {{player.playername}}">{{ player.playername }}</span>
+                    <ng-container *ngIf="player.donatorS4 == 1">
+                      <fa-icon [icon]="dolar" class="donator" matTooltip="Donator Season 4"></fa-icon>
+                    </ng-container>                    
                     <!-- <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
-                      <span attr.data-title="{{player.strike}} in Last war.
+                      <span attr.data-matTooltip="{{player.strike}} in Last war.
 
                       "></span>
-                       <span *ngIf="player.s1wars_win != 'NaN'" attr.data-title="{{ player.s1wars_win }} place in wars S#1"></span>
-                      <span *ngIf="player.s1fpw_win != 'NaN'" attr.data-title="{{ player.s1fpw_win }} place in FpW S#1"></span>
-                      <span *ngIf="player.s1ranking_win != 'NaN'" attr.data-title="{{ player.s1ranking_win }} rank in S#1"></span>
+                       <span *ngIf="player.s1wars_win != 'NaN'" attr.data-matTooltip="{{ player.s1wars_win }} place in wars S#1"></span>
+                      <span *ngIf="player.s1fpw_win != 'NaN'" attr.data-matTooltip="{{ player.s1fpw_win }} place in FpW S#1"></span>
+                      <span *ngIf="player.s1ranking_win != 'NaN'" attr.data-matTooltip="{{ player.s1ranking_win }} rank in S#1"></span>
                     </div>    -->
-                    <div class="up-down-strike" title="pc in last war" [ngClass]="{ 'up-streak-name': player.strike > 0, 'down-streak-name': player.strike < 0, 'draw-streak-name': player.strike == 0 }">
+                    <div class="up-down-strike" matTooltip="pc in last war" [ngClass]="{ 'up-streak-name': player.strike > 0, 'down-streak-name': player.strike < 0, 'draw-streak-name': player.strike == 0 }">
                       <ng-container *ngIf="player.strike > 0">
                         <fa-icon [icon]="arrowUp"></fa-icon>
                       </ng-container>
@@ -120,7 +125,7 @@
                     </ng-container>
                      -->
                   </a>
-                  <!-- <div *ngIf="i === 0 && player.streak" class="streak-small" title="1st place since">
+                  <!-- <div *ngIf="i === 0 && player.streak" class="streak-small" matTooltip="1st place since">
                     <span>since:</span> {{ player.streak }}
                   </div>            -->
                   </div>
@@ -129,33 +134,34 @@
                   </div>
                   <div class="item">{{ player.ranking | number: '.2-2' }}</div>
 
-                  <div class="item item-block fpw" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
-                    <div title="Season FpW" *ngIf="!isInfo">{{ player.s4fpw }}</div>
-                    <div title="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s4fpw > player.fragsperwar), 'draw-streak-pre': (player.s4fpw == player.fragsperwar), 'down-streak-pre': (player.s4fpw < player.fragsperwar)}">{{ player.s4fpw }}</div>
+                  <div class="item item-block fpw" matTooltip="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
+                    <div matTooltip="Season FpW" *ngIf="!isInfo">{{ player.s4fpw }}</div>
+                    <div matTooltip="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s4fpw > player.fragsperwar), 'draw-streak-pre': (player.s4fpw == player.fragsperwar), 'down-streak-pre': (player.s4fpw < player.fragsperwar)}">{{ player.s4fpw }}</div>
 
-                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s4fpw < player.fragsperwar), 'draw-streak-post': (player.s4fpw == player.fragsperwar), 'down-streak-post': (player.s4fpw > player.fragsperwar)}"> <span title="Total FpW">{{ player.fragsperwar }}</span></div>
+                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s4fpw < player.fragsperwar), 'draw-streak-post': (player.s4fpw == player.fragsperwar), 'down-streak-post': (player.s4fpw > player.fragsperwar)}"> <span matTooltip="Total FpW">{{ player.fragsperwar }}</span></div>
                 </div>
 
-                  <!-- <div class="item-block" title="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
-                    <div title="Season FpW" *ngIf="!isInfo">{{ player.s1fpw }}</div>
-                    <div title="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s1fpw > player.fragsperwar), 'draw-streak-pre': (player.s1fpw == player.fragsperwar), 'down-streak-pre': (player.s1fpw < player.fragsperwar)}">{{ player.s1fpw }}</div>
+                  <!-- <div class="item-block" matTooltip="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
+                    <div matTooltip="Season FpW" *ngIf="!isInfo">{{ player.s1fpw }}</div>
+                    <div matTooltip="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s1fpw > player.fragsperwar), 'draw-streak-pre': (player.s1fpw == player.fragsperwar), 'down-streak-pre': (player.s1fpw < player.fragsperwar)}">{{ player.s1fpw }}</div>
 
-                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s1fpw < player.fragsperwar), 'draw-streak-post': (player.s1fpw == player.fragsperwar), 'down-streak-post': (player.s1fpw > player.fragsperwar)}"> <span title="Total FpW">({{ player.fragsperwar }})</span></div>
+                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s1fpw < player.fragsperwar), 'draw-streak-post': (player.s1fpw == player.fragsperwar), 'down-streak-post': (player.s1fpw > player.fragsperwar)}"> <span matTooltip="Total FpW">({{ player.fragsperwar }})</span></div>
                   </div> -->
                   <div class="item item-block wars">
-                    <div title="Season played wars">{{ player.s4wars }}</div>
-                    <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars">{{ player.wars }}</span></div>
+                    <div matTooltip="Season played wars">{{ player.s4wars }}</div>
+                    <div class="season-wars" *ngIf="isInfo"> <span matTooltip="Total played wars">{{ player.wars }}</span></div>
                   </div>
                   <!-- <div class="item-block">
-                    <div title="Season played wars" >{{ player.s1wars }}</div>
-                    <div class="season-wars" *ngIf="isInfo"> <span title="Total played wars">({{ player.wars }})</span></div>
+                    <div matTooltip="Season played wars" >{{ player.s1wars }}</div>
+                    <div class="season-wars" *ngIf="isInfo"> <span matTooltip="Total played wars">({{ player.wars }})</span></div>
                   </div> -->
-                  <div class="item new">{{ player.lastWarDate }}</div>
+                  <div class="item new">{{ player.lastWarDate }}
+                  </div>
                   <div class="item name act">
-                    <div class="act-month" [attr.data-activity]="player.activity" [style.background]="getActivityGradient(player.activity)" title="{{ player.activity }} wars in last month."></div>
+                    <div class="act-month" [attr.data-activity]="player.activity" [style.background]="getActivityGradient(player.activity)" matTooltip="{{ player.activity }} wars in last month." matTooltipPosition="before"></div>
                     <div class="act-year" [attr.data-activity]="player.lastyear" [ngClass]="{
                       'green0': player.lastyear == 0,
-                      'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 30 && player.lastyear <= 90), 'green11_20': (player.lastyear > 90 && player.lastyear <= 150), 'green21_40': (player.lastyear > 150 && player.lastyear <= 250), 'green41_70': (player.lastyear > 250 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" title="{{ player.lastyear }} wars in last year."></div>
+                      'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 30 && player.lastyear <= 90), 'green11_20': (player.lastyear > 90 && player.lastyear <= 150), 'green21_40': (player.lastyear > 150 && player.lastyear <= 250), 'green41_70': (player.lastyear > 250 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" matTooltip="{{ player.lastyear }} wars in last year." matTooltipPosition="before"></div>
                   </div>
                 </div>
                 <!-- <div class="player-seasons" [ngClass]="{'expanded': expandedPlayerIndexes.includes(i)}">
@@ -184,7 +190,7 @@
             </form>
           </div>
           <!-- <div class="info">
-            <div class="info-title">NEW FEATURE</div>
+            <div class="info-matTooltip">NEW FEATURE</div>
             <div class="info-desc">
               Now u can sort people by Wars, Frags per War or Ranking.
             </div>
@@ -272,15 +278,15 @@
         <div class="big-name">Season #4</div>
       </div>
       <div class="floating-icon-container">
-        <div class="floating-icon" [ngClass]="{ 'expanded': isExpanded }" (click)="togglePanel('first')" title="Winners by Rank">
+        <div class="floating-icon" [ngClass]="{ 'expanded': isExpanded }" (click)="togglePanel('first')" matTooltip="Winners by Rank" matTooltipPosition="before">
           <fa-icon [icon]="trophy"></fa-icon>
         </div>
 
-        <div class="floating-icon" [ngClass]="{ 'expanded': isSecondPanelExpanded }" (click)="togglePanel('second')" title="Winners Most played Wars">
+        <div class="floating-icon" [ngClass]="{ 'expanded': isSecondPanelExpanded }" (click)="togglePanel('second')" matTooltip="Winners Most played Wars" matTooltipPosition="before">
           <fa-icon [icon]="chartSimple"></fa-icon>
         </div>
 
-        <div class="floating-icon" [ngClass]="{ 'expanded': isThirdPanelExpanded }" (click)="togglePanel('third')" title="Winners avarage Frags per War">
+        <div class="floating-icon" [ngClass]="{ 'expanded': isThirdPanelExpanded }" (click)="togglePanel('third')" matTooltip="Winners avarage Frags per War" matTooltipPosition="before">
           <fa-icon [icon]="chartGantt"></fa-icon>
         </div>
       </div>
@@ -299,7 +305,7 @@
             <li>
               <a routerLink="/obj-ranking/boogie" class="bronze">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,127.91</span></a>
             </li>
-            <div class="num">III</div>
+            <div class="num" matTooltip="Season 3">s3</div>
           </ol>
           <hr>
           <h3>Season 2 (01.04.2023-30.06.2023)</h3>
@@ -313,7 +319,7 @@
             <li>
               <a routerLink="/obj-ranking/magz" class="bronze">MGZ<img [src]='"assets/images/flags_svg/NL.SVG"'><span>1,151.45</span></a>
             </li>
-            <div class="num">II</div>
+            <div class="num" matTooltip="Season 2">s2</div>
           </ol>
           <hr>
           <h3>Season 1 (01.01.2023-31.03.2023)</h3>
@@ -327,7 +333,7 @@
             <li>
               <a routerLink="/obj-ranking/zielony" class="bronze">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,286.88</span></a>
             </li>
-            <div class="num">I</div>
+            <div class="num" matTooltip="Season 1">s1</div>
           </ol>
         </div>
       </div>
@@ -337,8 +343,16 @@
           <h2>Winners of seasons Most played Wars</h2>
           <h3>Season 3 (01.07.2023-30.09.2023)</h3>
           <ol>
-
-            <div class="num">III</div>
+            <li>
+              <a routerLink="/obj-ranking/official6" class="gold">official6<img [src]='"assets/images/flags_svg/PT.SVG"'><span>141</span></a>            
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/m0nster" class="silver">M0NST3R<img [src]='"assets/images/flags_svg/UK.SVG"'><span>140</span></a> 
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/glowa" class="bronze">GlowaF1!<img [src]='"assets/images/flags_svg/PL.SVG"'><span>98</span></a>
+            </li>
+            <div class="num" matTooltip="Season 3">s3</div>
           </ol>
           <hr>
           <h3>Season 2 (01.04.2023-30.06.2023)</h3>
@@ -352,7 +366,7 @@
             <li>
               <a routerLink="/obj-ranking/p3dr0" class="bronze">P3dr0<img [src]='"assets/images/flags_svg/PT.SVG"'><span>129</span></a>
             </li>
-            <div class="num">II</div>
+            <div class="num" matTooltip="Season 2">s2</div>
           </ol>
           <hr>
           <h3>Season 1 (01.01.2023-31.03.2023)</h3>
@@ -366,7 +380,7 @@
             <li>
               <a routerLink="/obj-ranking/Evildude" class="bronze">Evildude<img [src]='"assets/images/flags_svg/NL.SVG"'><span>203</span></a>
             </li>
-            <div class="num">I</div>
+            <div class="num" matTooltip="Season 1">s1</div>
           </ol>
         </div>
       </div>
@@ -376,8 +390,16 @@
           <h2>Winners of seasons Avarage Frags per War</h2>
           <h3>Season 3 (01.07.2023-30.09.2023)</h3>
           <ol>
-
-            <div class="num">III</div>
+            <li>
+              <a routerLink="/obj-ranking/josh" class="gold">josh<img [src]='"assets/images/flags_svg/UK.SVG"'><span>31.67</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/boogie" class="silver">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>29.07</span></a>
+            </li>
+            <li>
+              <a routerLink="/obj-ranking/zielony" class="bronze">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>28.73</span></a>
+            </li>
+            <div class="num" matTooltip="Season 3">s3</div>
           </ol>
           <hr>
           <h3>Season 2 (01.04.2023-30.06.2023)</h3>
@@ -391,7 +413,7 @@
             <li>
               <a routerLink="/obj-ranking/josh" class="bronze">josh<img [src]='"assets/images/flags_svg/UK.SVG"'><span>29.45</span></a>
             </li>
-            <div class="num">II</div>
+            <div class="num" matTooltip="Season 2">s2</div>
           </ol>
           <hr>
           <h3>Season 1 (01.01.2023-31.03.2023)</h3>
@@ -405,21 +427,21 @@
             <li>
               <a routerLink="/obj-ranking/boogie" class="bronze">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>31.65</span></a>
             </li>
-            <div class="num">I</div>
+            <div class="num" matTooltip="Season 1">s1</div>
           </ol>
         </div>
       </div>
 
       <div class="floating-icon-container-left">
-        <div class="floating-icon" [ngClass]="{ 'expanded': isExpandedLeft }" (click)="togglePanelLeft('first-left')" title="Last match">
+        <div class="floating-icon" [ngClass]="{ 'expanded': isExpandedLeft }" (click)="togglePanelLeft('first-left')" matTooltip="Last match" matTooltipPosition="after">
           <fa-icon [icon]="calendarCheck"></fa-icon>
         </div>
-
-        <!-- <div class="floating-icon" [ngClass]="{ 'expanded': isSecondPanelExpanded }" (click)="togglePanel('second')" title="Winners Most played Wars">
+       
+        <!-- <div class="floating-icon" [ngClass]="{ 'expanded': isSecondPanelExpanded }" (click)="togglePanel('second')" matTooltip="Winners Most played Wars">
           <fa-icon [icon]="chartSimple"></fa-icon>
         </div>
 
-        <div class="floating-icon" [ngClass]="{ 'expanded': isThirdPanelExpanded }" (click)="togglePanel('third')" title="Winners avarage Frags per War">
+        <div class="floating-icon" [ngClass]="{ 'expanded': isThirdPanelExpanded }" (click)="togglePanel('third')" matTooltip="Winners avarage Frags per War">
           <fa-icon [icon]="chartGantt"></fa-icon>
         </div> -->
       </div>
@@ -493,7 +515,7 @@
                 </div>
                 <div class="preelo-info">
                   <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>
-                  <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div>
+                  <div class="teamrank" [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div>
                 </div>
                 <!-- <div class="preelo-info">
                   <div class="bet">
@@ -566,7 +588,7 @@
                 </div>
                 <div class="preelo-info">
                   <div class="preelo_war">preELO before war: {{ match.t2preelo | number:'1.0-2'}}</div>
-                  <div [ngClass]="{ 'teamFavorite': (match.t2preelo > match.t1preelo), 'teamNotFavorite': (match.t1preelo > match.t2preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{ match.t1chance }} %</div>
+                  <div class="teamrank" [ngClass]="{ 'teamFavorite': (match.t2preelo > match.t1preelo), 'teamNotFavorite': (match.t1preelo > match.t2preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{ match.t1chance }} %</div>
                 </div>
                 <!-- <div class="preelo-info">
                   <div class="bet">
@@ -584,134 +606,17 @@
         </div>
       </div>
 
-      <!-- <div class="floating-panel-left second-panel" [ngClass]="{ 'expanded': isSecondPanelExpandedLeft }">
-        <div class="content">
-          <h2>Winners of seasons Most played Wars</h2>
-          <h3>Season 3 (01.07.2023-30.09.2023)</h3>
-          <ol>
-
-            <div class="num">III</div>
-          </ol>
-          <hr>
-          <h3>Season 2 (01.04.2023-30.06.2023)</h3>
-          <ol>
-            <li>
-              <a routerLink="/obj-ranking/glowa" class="gold">GlowaF1!<img [src]='"assets/images/flags_svg/PL.SVG"'><span>147</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/Evildude" class="silver">Evildude<img [src]='"assets/images/flags_svg/NL.SVG"'><span>133</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/p3dr0" class="bronze">P3dr0<img [src]='"assets/images/flags_svg/PT.SVG"'><span>129</span></a>
-            </li>
-            <div class="num">II</div>
-          </ol>
-          <hr>
-          <h3>Season 1 (01.01.2023-31.03.2023)</h3>
-          <ol>
-            <li>
-              <a routerLink="/obj-ranking/glowa" class="gold">GlowaF1!<img [src]='"assets/images/flags_svg/PL.SVG"'><span>227</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/watson" class="silver">Watson<img [src]='"assets/images/flags_svg/PT.SVG"'><span>226</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/Evildude" class="bronze">Evildude<img [src]='"assets/images/flags_svg/NL.SVG"'><span>203</span></a>
-            </li>
-            <div class="num">I</div>
-          </ol>
+      <!-- <div class="donators">
+        <div class="donators_up">
+          <h3>Donators Season 4:</h3>
+          <div class="donators__num">{{ donatorsSeason4.length }}</div>
         </div>
-      </div>
-
-      <div class="floating-panel-left third-panel" [ngClass]="{ 'expanded': isThirdPanelExpandedLeft }">
-        <div class="content">
-          <h2>Winners of seasons Avarage Frags per War</h2>
-          <h3>Season 3 (01.07.2023-30.09.2023)</h3>
-          <ol>
-
-            <div class="num">III</div>
-          </ol>
-          <hr>
-          <h3>Season 2 (01.04.2023-30.06.2023)</h3>
-          <ol>
-            <li>
-              <a routerLink="/obj-ranking/tricky" class="gold">tricky<img [src]='"assets/images/flags_svg/UK.SVG"'><span>29.76</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/boogie" class="silver">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>29.52</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/josh" class="bronze">josh<img [src]='"assets/images/flags_svg/UK.SVG"'><span>29.45</span></a>
-            </li>
-            <div class="num">II</div>
-          </ol>
-          <hr>
-          <h3>Season 1 (01.01.2023-31.03.2023)</h3>
-          <ol>
-            <li>
-              <a routerLink="/obj-ranking/evoltnz" class="gold">evoltnz<img [src]='"assets/images/flags_svg/GR.SVG"'><span>34.23</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/tricky" class="silver">tricky<img [src]='"assets/images/flags_svg/UK.SVG"'><span>32</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/boogie" class="bronze">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>31.65</span></a>
-            </li>
-            <div class="num">I</div>
-          </ol>
+        <div class="donators_s4">          
+          <div *ngFor="let donator of donatorsSeason4" class="donator" matTooltip="Donator Season 4 - {{donator.playername}}">
+            <fa-icon [icon]="dolar"></fa-icon>
+          </div>
         </div>
       </div> -->
-
-
-
-      <!-- <div class="floating-icon" [ngClass]="{ 'expanded': isExpanded }" (click)="togglePanel()">
-        <fa-icon [icon]="trophy"></fa-icon>
-        <div class="winners">Winners of seasons by rank</div>
-      </div>
-      <div class="floating-panel" [ngClass]="{ 'expanded': isExpanded }">
-        <div class="content">
-          <h2>Winners of seasons</h2>
-          <h3>Season 3 (01.07.2023-30.09.2023)</h3>
-          <ol>
-            <li>
-              <a routerLink="/obj-ranking/zielony" class="gold">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,175.40</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/Cronic" class="silver">^Cronic<img [src]='"assets/images/flags_svg/BE.SVG"'><span>1,132.29</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/boogie" class="bronze">booGie<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,127.91</span></a>
-            </li>
-          </ol>
-          <hr>
-          <h3>Season 2 (01.04.2023-30.06.2023)</h3>
-          <ol>
-            <li>
-              <a routerLink="/obj-ranking/zazuuuu" class="gold">ZaZUUUU<img [src]='"assets/images/flags_svg/NL.SVG"'><span>1,190.49</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/josh" class="silver">josh<img [src]='"assets/images/flags_svg/UK.SVG"'><span>1,166.85</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/magz" class="bronze">MGZ<img [src]='"assets/images/flags_svg/NL.SVG"'><span>1,151.45</span></a>
-            </li>
-          </ol>
-          <hr>
-          <h3>Season 1 (01.01.2023-31.03.2023)</h3>
-          <ol>
-            <li>
-              <a routerLink="/obj-ranking/evoltnz" class="gold">evoltnz<img [src]='"assets/images/flags_svg/GR.SVG"'><span>1,405.28</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/tricky" class="silver">tricky<img [src]='"assets/images/flags_svg/UK.SVG"'><span>1,289.96</span></a>
-            </li>
-            <li>
-              <a routerLink="/obj-ranking/zielony" class="bronze">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,286.88</span></a>
-            </li>
-          </ol>
-        </div>
-      </div> -->
-
     </section>
   </ng-container>
 </ng-container>

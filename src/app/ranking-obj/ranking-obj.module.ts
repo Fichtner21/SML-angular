@@ -14,6 +14,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from "@angular/forms";
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from "@angular/material/button";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 // export function createTranslateLoader(http: HttpClient){
 //   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -34,7 +35,8 @@ import { MatButtonModule } from "@angular/material/button";
     FontAwesomeModule,
     FormsModule,
     MatTabsModule,   
-    MatButtonModule
+    MatButtonModule, 
+    MatTooltipModule
   ],
   exports: [
     CommonModule,

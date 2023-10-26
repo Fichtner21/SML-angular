@@ -58,6 +58,8 @@ export class CommentsService {
     return this.db.list(this.dbPath);
   }
 
+  
+
   // getNumberOfCommentsForMatch(matchId: string, underscore: string): Observable<number> {
   //   return this.db.list(`postComments${matchId}/${underscore}`).snapshotChanges().map(changes => changes.length);
   // }

@@ -41,6 +41,7 @@ export class AppComponent implements OnInit {
   languageCode = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';
   monthPlaying: any;  
   isMenuOpen = false;
+  
 
   constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router, private oAuthService: OAuthService) {
     translateService.setDefaultLang(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');    

@@ -44,6 +44,10 @@ export class PlayerViewComponent implements OnInit {
   public chartFrags: any;
   season2players = 55;
   season2wars = 333;
+  season3players = 41;
+  season3wars = 215;
+  season4wars: number = 0; // Zmienna, do której przypiszesz ilość wystąpień
+  currentActivePlayers: number = 0; // Zmienna, do której przypiszesz ilość aktywnych graczy
   aaa = [];
   resultCanvas: any;
   ctxResult: any;
@@ -135,6 +139,14 @@ export class PlayerViewComponent implements OnInit {
           }
           historyMatches.push(rowObject);
         }
+        const startDate = new Date('10/1/2023 0:00:00');
+        const endDate = new Date('12/31/2023 23:59');
+  
+        // Wykonaj filtrowanie dla przedziału dat
+        const filteredMatches = this.totalWarsSeason4(historyMatches, startDate, endDate);
+  
+        // Przypisz ilość wystąpień do zmiennej s4
+        this.season4wars = filteredMatches.length;
         return historyMatches;
       }),
     );
@@ -150,6 +162,12 @@ export class PlayerViewComponent implements OnInit {
           }
           players.push(rowObject);
         }
+      
+        const activePlayers = players.filter(player => player.active === 'TRUE');
+
+        // Oblicz ilość aktywnych graczy i przypisz wynik do zmiennej currentActivePlayers
+        this.currentActivePlayers = activePlayers.length;
+      
         return players;
       }),
     );
@@ -187,7 +205,7 @@ export class PlayerViewComponent implements OnInit {
       map((response: any) => {
         return Number(response.values[0][2]);
       })
-    )
+    )    
 
     this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$, this.playersTab$, this.inactiveTab$]).pipe(
       map(([player, matches, players, inactives]) => {
@@ -203,6 +221,7 @@ export class PlayerViewComponent implements OnInit {
         let listwars1: any[] = [];
         let listwars2: any[] = [];
         let listwars3: any[] = [];
+        let listwars4: any[] = [];
         let rankings: any[] = [];
         let rankings2: any[] = [];
         let resultPerPlayer: any[] = [];
@@ -218,6 +237,9 @@ export class PlayerViewComponent implements OnInit {
         let s2wars_win: number;
         let s2fpw_win: number;
         let s2ranking_win: number;
+        let s3wars_win: number;
+        let s3fpw_win: number;
+        let s3ranking_win: number;
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);
 
@@ -368,13 +390,13 @@ export class PlayerViewComponent implements OnInit {
         
 
         // Wyświetl wynik pierwszego meczu gracza
-        console.log('Wynik pierwszego meczu gracza:', firstMatchResult);
-        // Wyświetl wynik drugiego meczu gracza
-        console.log('Wynik drugiego meczu gracza:', secondMatchResult);
-        // Wyświetl wynik trzeciego meczu gracza
-        console.log('Wynik trzeciego meczu gracza:', thirdMatchResult);
-        console.log('lastFiveMatches', lastFiveMatches)
-        console.log('aaa', this.aaa)
+        // console.log('Wynik pierwszego meczu gracza:', firstMatchResult);
+        // // Wyświetl wynik drugiego meczu gracza
+        // console.log('Wynik drugiego meczu gracza:', secondMatchResult);
+        // // Wyświetl wynik trzeciego meczu gracza
+        // console.log('Wynik trzeciego meczu gracza:', thirdMatchResult);
+        // console.log('lastFiveMatches', lastFiveMatches)
+        // console.log('aaa', this.aaa)
         
         const mostOftenPlayedFilter = this.mostOftenPlayed.filter(n => n);       
 
@@ -416,6 +438,8 @@ export class PlayerViewComponent implements OnInit {
 
             listwars3.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
 
+            listwars4.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
+
             rankings.push(Math.round(rankHistory * 100) / 100);
             playerArray.push([el.idwar, el.timestamp, fragPerWar]);
             timestampArray.push(new Date(el.timestamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }));
@@ -440,6 +464,9 @@ export class PlayerViewComponent implements OnInit {
             s2wars_win = el.s2wars_win,
             s2fpw_win = el.s2fpw_win,
             s2ranking_win = el.s2ranking_win,
+            s3wars_win = el.s3wars_win,
+            s3fpw_win = el.s3fpw_win,
+            s3ranking_win = el.s3ranking_win,
             active = el.active
           }
         });        
@@ -460,6 +487,7 @@ export class PlayerViewComponent implements OnInit {
           listwars1: this.filterObjects1(listwars1),
           listwars2: this.filterObjects(listwars2),
           listwars3: this.filterObjects3(listwars3),
+          listwars4: this.filterObjects4(listwars4),
           win: win,
           lose: lose,
           draw: draw,
@@ -483,9 +511,12 @@ export class PlayerViewComponent implements OnInit {
           s2wars_win: s2wars_win ? s2wars_win : '',
           s2fpw_win: s2fpw_win ? s2fpw_win : '',
           s2ranking_win: s2ranking_win ? s2ranking_win : '',
+          s3wars_win: s3wars_win ? s3wars_win : '',
+          s3fpw_win: s3fpw_win ? s3fpw_win : '',
+          s3ranking_win: s3ranking_win ? s3ranking_win : '',
           streak: streak,
         }
-        console.log('playerCard', playerCard);
+        // console.log('playerCard', playerCard);
 
         return playerCard;
       }),     
@@ -515,6 +546,22 @@ export class PlayerViewComponent implements OnInit {
   filterObjects3(list) {
     const startDate = new Date('7/1/2023 0:00:00');
     const endDate = new Date('9/30/2023 23:59');
+    return list.filter(item => {
+      const timestamp = new Date(item.timestamp);
+      return timestamp > startDate && timestamp < endDate;
+    });
+  }
+
+  filterObjects4(list) {
+    const startDate = new Date('10/1/2023 0:00:00');
+    const endDate = new Date('12/31/2023 23:59');
+    return list.filter(item => {
+      const timestamp = new Date(item.timestamp);
+      return timestamp > startDate && timestamp < endDate;
+    });
+  }
+
+  totalWarsSeason4(list: any[], startDate: Date, endDate: Date): any[] {
     return list.filter(item => {
       const timestamp = new Date(item.timestamp);
       return timestamp > startDate && timestamp < endDate;
@@ -709,6 +756,89 @@ export class PlayerViewComponent implements OnInit {
 
   public showFrags3(listwars:any[]){
     this.canvas = document.getElementById('myChart3');
+    this.ctx = this.canvas.getContext('2d');
+    const labels = listwars.map(obj => obj.idwar);
+    const frags = listwars.map(obj => obj.frags);
+    const rankings = listwars.map(obj => obj.ranking);
+    const timestamp = listwars.map(obj => obj.timestamp);
+    let myChart = new Chart(this.ctx, {
+      type: 'bar',
+      data: {
+          labels: labels.map(i => 'War #' + i),
+          datasets: [{
+              label: 'Frags in war',
+              data: frags,
+              backgroundColor: frags.map(function(frag, i){
+                if(frags[i] == Math.max.apply(null, frags)){
+                  return 'rgba(11,156,49,0.6)';
+                }
+                if(frags[i] == Math.min.apply(null, frags)){
+                  return 'rgba(255,0,0,0.6)';
+                }
+                return "rgba(199, 199, 199, 0.6)";
+              }),
+              borderWidth: 1
+          }]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        responsive: true,
+        scales: {
+          xAxes: [
+            {
+              ticks: {
+                beginAtZero: false,
+                min: 1,
+              },
+              offset: true,
+              id: 'date-x-axis',
+              scaleLabel: {
+                display: false,
+                labelString: 'Date of match',
+              },
+            },
+          ],
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: false,
+                labelString: 'Frags per war',
+              },
+            },
+          ],
+        },
+        annotation: {
+          drawTime: 'afterDatasetsDraw',
+          annotations: [
+            {
+              id: 'hline1',
+              type: 'line',
+              mode: 'horizontal',
+              scaleID: 'y-axis-0',
+              value: this.avarageWarsPerMonth(frags),
+              borderColor: 'red',
+              borderDash: [10, 5],
+              label: {
+                backgroundColor: 'red',
+                content: 'Avg. ' + this.avarageWarsPerMonth(frags).toFixed(2) + ' frags per war.',
+                enabled: true,
+              },
+            },
+          ]
+        },
+        // display:true
+      } as ChartOptions,
+      plugins: [ChartAnnotation]
+    });
+  }
+
+  public showFrags4(listwars:any[]){
+    this.canvas = document.getElementById('myChart4');
     this.ctx = this.canvas.getContext('2d');
     const labels = listwars.map(obj => obj.idwar);
     const frags = listwars.map(obj => obj.frags);
@@ -1067,6 +1197,81 @@ export class PlayerViewComponent implements OnInit {
   }
   public showRankingSeason3(listwars:any[]){
     this.canvasRank = document.getElementById('rank3Chart');
+    this.ctxRank = this.canvasRank.getContext('2d');
+    const labels = listwars.map(obj => obj.idwar);
+    const frags = listwars.map(obj => obj.frags);
+    const rankings = listwars.map(obj => obj.ranking);
+    const timestamp = listwars.map(obj => obj.timestamp);
+    let myChart = new Chart(this.ctxRank, {
+      type: 'line',
+      data: {
+          labels: labels.map(i => '#' + i),
+          datasets: [{
+              label: 'Ranking',
+              borderColor: '#ffffc0',
+              lineTension: 0,
+              order: 1,
+              data: rankings,
+              backgroundColor: rankings.map(function(rank, i){
+                if(rankings[i] == Math.max.apply(null, rankings)){
+                  return 'rgba(11,156,49,0.6)';
+                }
+                if(rankings[i] == Math.min.apply(null, rankings)){
+                  return 'rgba(255,0,0,0.6)';
+                }
+                // return "rgba(199, 199, 199, 0.1)";
+              }),
+              borderWidth: 1
+          }]
+      },
+      options: {
+        onClick: function(c,i) {
+          let e:any;
+          e = i[0];
+          console.log(e._index)
+          var x_value = this.data.labels[e._index];
+          var y_value = this.data.datasets[0].data[e._index];
+          const toWarLink = x_value.substring(1);
+          window.open(`/obj-matches/${toWarLink}`);
+          console.log(toWarLink);
+          console.log(y_value);
+        },
+        elements: {
+          line: {
+            tension: 0,
+          },
+        },
+        annotation: {
+          drawTime: 'afterDatasetsDraw',
+          annotations: [
+            {
+              id: 'hline1',
+              type: 'line',
+              mode: 'horizontal',
+              scaleID: 'y-axis-0',
+              value: 1000,
+              borderColor: 'red',
+              borderDash: [10, 5],
+              label: {
+                backgroundColor: 'red',
+                content: '1000pc',
+                enabled: true,
+              },
+            },
+          ]
+        },
+        legend: {
+          display: false
+        },
+        responsive: true,
+
+        // display:true
+      } as ChartOptions,
+      plugins: [ChartAnnotation]
+    });
+  }
+  public showRankingSeason4(listwars:any[]){
+    this.canvasRank = document.getElementById('rank4Chart');
     this.ctxRank = this.canvasRank.getContext('2d');
     const labels = listwars.map(obj => obj.idwar);
     const frags = listwars.map(obj => obj.frags);

@@ -6,7 +6,7 @@ import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { fa1, fa2, fa3, faArrowDown, faArrowUp, faCalendarCheck, faChartGantt, faChartSimple, faDollarSign, faMinus, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { fa1, fa2, fa3, faArrowDown, faArrowUp, faCalendarCheck, faChartGantt, faChartSimple, faDollarSign, faMinus, faSuitcaseMedical, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { parseFloat } from 'core-js/es/number';
 import { RankObjService } from './rank-obj.service';
@@ -56,6 +56,7 @@ export class RankingObjComponent implements OnInit {
 
   topThreePlayers: any[]
   // expandedPlayerIndexes: number[] = [];
+  isRedLineAdded: boolean = true;
   
   tooltipContent: string = `
     <div>
@@ -90,6 +91,7 @@ export class RankingObjComponent implements OnInit {
   chartGantt = faChartGantt;
   calendarCheck = faCalendarCheck;
   dolar = faDollarSign;
+  medic = faSuitcaseMedical;
   isExpanded: boolean;
   isSecondPanelExpanded: boolean;
   isThirdPanelExpanded: boolean;
@@ -612,6 +614,7 @@ export class RankingObjComponent implements OnInit {
   //SORTING
   public sortByWarsDesc(res:Observable<any>){
     this.booleanVar = !this.booleanVar;
+    this.isRedLineAdded = false;
     this.router.navigate(['/obj-ranking'], { queryParams: {sortByWars: 'DESC' }});
     // console.log('this.booleanVar', this.booleanVar);
     return this.lastWarOfPlayer$ = res.pipe(
@@ -623,6 +626,7 @@ export class RankingObjComponent implements OnInit {
 
   public sortByWarsAsc(res:Observable<any>){
     this.booleanVar = !this.booleanVar;
+    this.isRedLineAdded = false;
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByWars: 'ASC' } });
     // console.log('this.booleanVar', this.booleanVar);
     return this.lastWarOfPlayer$ = res.pipe(
@@ -634,6 +638,7 @@ export class RankingObjComponent implements OnInit {
 
   public sortByRankingDesc(res:Observable<any>){
     this.booleanVarRank = !this.booleanVarRank;
+    this.isRedLineAdded = true;
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByRanking: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
@@ -644,6 +649,7 @@ export class RankingObjComponent implements OnInit {
 
   public sortByRankingAsc(res:Observable<any>){
     this.booleanVarRank = !this.booleanVarRank;
+    this.isRedLineAdded = false;
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByRanking: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
@@ -654,6 +660,7 @@ export class RankingObjComponent implements OnInit {
 
   public sortByFpWDesc(res:Observable<any>){
     this.booleanVarFpW = !this.booleanVarFpW;
+    this.isRedLineAdded = false;
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByFpW: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
@@ -664,6 +671,7 @@ export class RankingObjComponent implements OnInit {
 
   public sortByFpWAsc(res:Observable<any>){
     this.booleanVarFpW = !this.booleanVarFpW;
+    this.isRedLineAdded = false;
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByFpW: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
@@ -674,6 +682,7 @@ export class RankingObjComponent implements OnInit {
 
   public sortByS1WarsDesc(res:Observable<any>){
     this.booleanVarS1Wars = !this.booleanVarS1Wars;
+    this.isRedLineAdded = false;
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
@@ -684,6 +693,7 @@ export class RankingObjComponent implements OnInit {
 
   public sortByS1WarsAsc(res:Observable<any>){
     this.booleanVarS1Wars = !this.booleanVarS1Wars;
+    this.isRedLineAdded = false;
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
@@ -693,6 +703,7 @@ export class RankingObjComponent implements OnInit {
   }
   public sortByS1FpwDesc(res:Observable<any>){
     this.booleanVarS1Fpw = !this.booleanVarS1Fpw;
+    this.isRedLineAdded = false;
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
@@ -703,6 +714,7 @@ export class RankingObjComponent implements OnInit {
 
   public sortByS1FpwAsc(res:Observable<any>){
     this.booleanVarS1Fpw = !this.booleanVarS1Fpw;
+    this.isRedLineAdded = false;
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
@@ -1001,4 +1013,17 @@ export class RankingObjComponent implements OnInit {
   public addPreelo(accumulator:any, a:any) {
     return accumulator + a;
   }
+
+  getTooltipText(index: number, list: any): string {
+    if (index === list - 1) {
+      return 'Apothecary TOP1';
+    } else if (index === list - 2) {
+      return 'Apothecary TOP2';
+    } else if (index === list - 3) {
+      return 'Apothecary TOP3';
+    } else {
+      return ''; // Jeśli nie ma Tooltipu dla pozostałych graczy
+    }
+  }
+  
 }

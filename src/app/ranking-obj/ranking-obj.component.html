@@ -46,7 +46,8 @@
           <div class="players-list">
             <ng-container *ngFor="let player of lastWarOfPlayers; let i = index;">
               <!-- <ng-container *ngIf="player.ban"> -->
-                <div class="character-card" [ngClass]="{'goldie': i == 0, 'silverie': i == 1, 'brownie': i == 2 }" *ngIf="player.inactive && !player.ban" (dataEvent)="handleData($event)">
+                <div class="character-card" [ngClass]="{'goldie': i == 0, 'silverie': i == 1, 'brownie': i == 2, 'leftBorder': player.ranking > 1000,
+                  'rightBorder': player.ranking < 1000 }" *ngIf="player.inactive && !player.ban" (dataEvent)="handleData($event)">
                   <div class="item item-place"
 
                   >
@@ -105,7 +106,11 @@
                     <ng-container *ngIf="player.s3ranking_win === 3">
                       <fa-icon [icon]="number3" class="number number3"></fa-icon>
                     </ng-container>
-
+                    <ng-container>
+                      <fa-icon [ngClass]="{'lastMedical3': i === lastWarOfPlayers.length - 1, 'lastMedical2': i === lastWarOfPlayers.length - 2, 'lastMedical1': i === lastWarOfPlayers.length - 3 }" class="medical-icon" [icon]="medic" *ngIf="lastWarOfPlayers.length - i <= 3"
+                      [matTooltip]="getTooltipText(i, lastWarOfPlayers.length)"
+                      ></fa-icon>
+                    </ng-container>
                     <!-- <ng-container *ngIf="(player.s2wars_win === 1 || player.s2fpw_win === 1 || player.s2ranking_win === 1)">
                       <fa-icon [icon]="number1" class="number number1"></fa-icon>
                     </ng-container>
@@ -176,6 +181,11 @@
                   <app-player-view [playerDetail]="player.username" [expanded]="expandedPlayerIndexes.includes(i)"></app-player-view>
                 </div> -->
               <!-- </ng-container>   -->
+              <ng-container *ngIf="isInfo">
+                <ng-container *ngIf="isRedLineAdded">
+                  <div matTooltip="Entry value for each player" class="red-line" *ngIf="player.ranking >= 1000 && lastWarOfPlayers[i + 1]?.ranking < 1000"></div>
+                </ng-container>
+              </ng-container>             
             </ng-container>
           </div>
           <div class="more-less">

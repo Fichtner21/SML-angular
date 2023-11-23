@@ -1690,16 +1690,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     nextMatch += "----------" + "\n";   
     nextMatch += "Good Luck & Have Fun!";
     console.log('nextM', nextMatch);
-    // const payload = {
-    //   content: nextMatch
-    // };
-    // this.http.post(webhookUrl, payload).subscribe({
-    //   next: (res) => {
-    //     this.notifier.notify('success', "Teams Send successful!")
-    //   }, error: (err) => {
-    //     this.notifier.notify('error', 'Something went wrong')
-    //   }
-    // });
+    const payload = {
+      content: nextMatch
+    };
+    this.http.post(webhookUrl, payload).subscribe({
+      next: (res) => {
+        this.notifier.notify('success', "Teams Send successful!")
+      }, error: (err) => {
+        this.notifier.notify('error', 'Something went wrong')
+      }
+    });
   
     this.nextMatch = nextMatch;
   }

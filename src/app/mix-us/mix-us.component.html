@@ -1,5 +1,13 @@
 <section>
   <div class="container">
+    <!-- <div style="border: 3px solid red; padding: 20px;">
+      <div *ngIf="!isAuthenticated2()">
+        <button (click)="loginWithDiscord()">Log with Discord</button>
+      </div>
+      <div *ngIf="isAuthenticated2()">
+        <button (click)="logout()">Log out</button>
+      </div>
+    </div> -->
     <div class="mix">
       <button mat-raised-button (click)="toggleSticky()" class="sticky-btn">        
         <span *ngIf="!isStickyShown"><fa-icon [icon]="arrowLeftCircle"></fa-icon> Show Teams</span>

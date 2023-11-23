@@ -9,7 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ThemePalette } from '@angular/material/core';
 import { NotifierService } from 'angular-notifier';
 import { HideRowDirective } from '../hide-row.directive';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -17,6 +17,7 @@ import { faArrowCircleLeft, faArrowCircleRight, faArrowDown, faArrowsDownToPeopl
 import * as Discord from 'discord.js';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
+
 
 
 export interface UserData {
@@ -267,7 +268,7 @@ export class MixUsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.oAuthService.loadDiscoveryDocumentAndLogin();
+    // this.oAuthService.loadDiscoveryDocumentAndLogin();
     this.route.queryParams.subscribe(params => {
       // this.array1 = params['a1'] ? JSON.parse(params['a1']).map(username => ({username})) : [];
       // this.array2 = params['a2'] ? JSON.parse(params['a2']).map(username => ({username})) : [];
@@ -307,6 +308,8 @@ export class MixUsComponent implements OnInit {
 
     });
 
+    // this.configureOAuth();
+    // console.log('OAUTH:', this.configureOAuth())
     const arr = this.playerRowArray;
 
     // this.dataSource = new MatTableDataSource(arr);
@@ -322,6 +325,35 @@ export class MixUsComponent implements OnInit {
     // console.log('this.dataSource', this.dataSource)
     // console.log('this.playerRowArray', arr)
   }
+
+
+  configureOAuth() {      
+    const authConfig: AuthConfig = {
+      issuer: 'https://discord.com', // Adres URL dostawcy OpenID Connect (Discord)
+      redirectUri: window.location.origin,
+      clientId: '1177014136773820457',
+      scope: 'identify', // Uprawnienia wymagane dla autoryzacji Discord
+      responseType: 'token'
+    };    
+
+    this.oauthService.configure(authConfig);
+    this.oauthService.loadDiscoveryDocumentAndLogin();
+
+    console.log('OAuth configured successfully'); 
+}
+
+  loginWithDiscord() {
+    this.oauthService.initImplicitFlow();
+  }
+
+  logout() {
+    this.oauthService.logOut();
+  }
+
+  isAuthenticated2() {
+    return this.oauthService.hasValidAccessToken();
+  }
+
   selectUser(user: User) {
     const index = this.selectedUsers.indexOf(user);
     if (index === -1) {

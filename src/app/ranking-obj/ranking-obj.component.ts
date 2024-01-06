@@ -1,6 +1,6 @@
 import { map, last,toArray, takeLast, reduce } from 'rxjs/operators';
 import { PlayersApiService } from './../services/players-api.service';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
@@ -34,6 +34,9 @@ export class RankingObjComponent implements OnInit {
   booleanVarS1Wars = false;
   booleanVarS1Fpw = false;
   aaa = [];
+
+  @ViewChild('shIcon') shIcon!: ElementRef;
+  @ViewChild('blackOverlay') blackOverlay!: ElementRef;
 
   public playersTest$: Observable<any>;
   public playersTest2$: Observable<any>;
@@ -324,6 +327,8 @@ export class RankingObjComponent implements OnInit {
               s3fpw: Math.round(name.s3fpw * 100) / 100,
               s4wars: parseFloat(name.s4wars),
               s4fpw: Math.round(name.s4fpw * 100) / 100,
+              s5wars: parseFloat(name.s5wars),
+              s5fpw: Math.round(name.s5fpw * 100) / 100,
               activity: name.last30days,
               lastyear: name.last365days,
               meeting: name.meeting,
@@ -336,10 +341,12 @@ export class RankingObjComponent implements OnInit {
               s1ranking_win: parseInt(name.s1ranking_win),
               s2ranking_win: parseInt(name.s2ranking_win),
               s3ranking_win: parseInt(name.s3ranking_win),
+              s4ranking_win: parseInt(name.s4ranking_win),
               // streak: name.streak,
               winPercentage: this.handleData(this.receivedData),
               streak: this.calculateStreak(name.username, v2),
-              donatorS4: name.donate_s4
+              donatorS4: name.donate_s4,
+              donatorS5: name.donate_s5
             };
 
             if(lastWarDate.donatorS4 == 1){
@@ -686,7 +693,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s4wars) - parseFloat(a.s4wars))
+        res => res.sort((a:any,b:any) => parseFloat(b.s5wars) - parseFloat(a.s5wars))
       )
     )
   }
@@ -697,7 +704,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s4wars) - parseFloat(b.s4wars))
+        res => res.sort((a:any,b:any) => parseFloat(a.s5wars) - parseFloat(b.s5wars))
       )
     )
   }
@@ -707,7 +714,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s4fpw) - parseFloat(a.s4fpw))
+        res => res.sort((a:any,b:any) => parseFloat(b.s5fpw) - parseFloat(a.s5fpw))
       )
     )
   }
@@ -718,7 +725,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s4fpw) - parseFloat(b.s4fpw))
+        res => res.sort((a:any,b:any) => parseFloat(a.s5fpw) - parseFloat(b.s5fpw))
       )
     )
   }
@@ -1026,4 +1033,19 @@ export class RankingObjComponent implements OnInit {
     }
   }
   
+  handleClick() {
+    // Pobieramy referencje do ikony i tła
+    const shIcon = this.shIcon.nativeElement as HTMLElement;
+    const blackOverlay = this.blackOverlay.nativeElement as HTMLElement;
+
+    // Pokazujemy ikonę i czarne tło
+    shIcon.style.display = 'block';
+    blackOverlay.style.display = 'block';
+
+    // Ustawiamy timer, który wyłączy ikonę po 5 sekundach
+    setTimeout(() => {
+      shIcon.style.display = 'none';
+      blackOverlay.style.display = 'none';
+    }, 5000);
+  }
 }

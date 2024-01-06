@@ -24,11 +24,11 @@
               FpW
             </div> -->
             <div style="display: block;">
-              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" matTooltip="sort by Frags per War in Season #4: 01-10-2023 - 31-12-2023">s4 FpW<span></span></div>
+              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" matTooltip="sort by Frags per War in Season #5: 01-01-2024 - 31-03-2024">s5 FpW<span></span></div>
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)" matTooltip="sort by Frags per War">FpW total:</div>
             </div>
             <div style="display:block;">
-              <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #4: 01-10-2023 - 31-12-2023">s4 Wars<span></span></div>
+              <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #5: 01-01-2024 - 31-03-2024">s5 Wars<span></span></div>
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars">{{ 'ranking.wars' | translate }} total:</div>
             </div>
                 <!-- <ng-container *ngIf="booleanVar; then up; else down"></ng-container>
@@ -56,15 +56,15 @@
                     <div class="wars-bar" *ngIf="isInfo"  [style.width.%]="getPercentage(player.wars)" [ngClass]="getBarColor(player.wars)"></div>
                     <div class="wars-bar" *ngIf="!isInfo"></div>
                     <a routerLink="/obj-ranking/{{player.username}}" class=" playername" [matTooltip]="player.username === 'zielony'
-                    ? 'Winner s3'
-                    : player.username === 'Cronic'
-                        ? '2nd in s3'
-                        : player.username === 'boogie'
-                            ? '3rd in s3'
+                    ? 'Winner s4'
+                    : player.username === 'neo'
+                        ? '2nd in s4'
+                        : player.username === 'Cronic'
+                            ? '3rd in s4'
                             : ''">
                     <span matTooltip="View profile {{player.playername}}">{{ player.playername }}</span>
-                    <ng-container *ngIf="player.donatorS4 == 1">
-                      <fa-icon [icon]="dolar" class="donator" matTooltip="Donator Season 4"></fa-icon>
+                    <ng-container *ngIf="player.donatorS5 == 1">
+                      <fa-icon [icon]="dolar" class="donator" matTooltip="Donator Season 5"></fa-icon>
                     </ng-container>                    
                     <!-- <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
                       <span attr.data-matTooltip="{{player.strike}} in Last war.
@@ -97,13 +97,13 @@
                     <ng-container *ngIf="i == 2">
                       <img [src]='"assets/images/ladder3.gif"'>
                     </ng-container>
-                    <ng-container *ngIf="player.s3ranking_win === 1">
+                    <ng-container *ngIf="player.s4ranking_win === 1">
                       <fa-icon [icon]="number1" class="number number1"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="player.s3ranking_win === 2">
+                    <ng-container *ngIf="player.s4ranking_win === 2">
                       <fa-icon [icon]="number2" class="number number2"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="player.s3ranking_win === 3">
+                    <ng-container *ngIf="player.s4ranking_win === 3">
                       <fa-icon [icon]="number3" class="number number3"></fa-icon>
                     </ng-container>
                     <ng-container>
@@ -140,10 +140,10 @@
                   <div class="item">{{ player.ranking | number: '.2-2' }}</div>
 
                   <div class="item item-block fpw" matTooltip="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
-                    <div matTooltip="Season FpW" *ngIf="!isInfo">{{ player.s4fpw }}</div>
-                    <div matTooltip="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s4fpw > player.fragsperwar), 'draw-streak-pre': (player.s4fpw == player.fragsperwar), 'down-streak-pre': (player.s4fpw < player.fragsperwar)}">{{ player.s4fpw }}</div>
+                    <div matTooltip="Season FpW" *ngIf="!isInfo">{{ player.s5fpw }}</div>
+                    <div matTooltip="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s5fpw > player.fragsperwar), 'draw-streak-pre': (player.s5fpw == player.fragsperwar), 'down-streak-pre': (player.s5fpw < player.fragsperwar)}">{{ player.s5fpw }}</div>
 
-                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s4fpw < player.fragsperwar), 'draw-streak-post': (player.s4fpw == player.fragsperwar), 'down-streak-post': (player.s4fpw > player.fragsperwar)}"> <span matTooltip="Total FpW">{{ player.fragsperwar }}</span></div>
+                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s5fpw < player.fragsperwar), 'draw-streak-post': (player.s5fpw == player.fragsperwar), 'down-streak-post': (player.s5fpw > player.fragsperwar)}"> <span matTooltip="Total FpW">{{ player.fragsperwar }}</span></div>
                 </div>
 
                   <!-- <div class="item-block" matTooltip="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
@@ -153,7 +153,7 @@
                     <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s1fpw < player.fragsperwar), 'draw-streak-post': (player.s1fpw == player.fragsperwar), 'down-streak-post': (player.s1fpw > player.fragsperwar)}"> <span matTooltip="Total FpW">({{ player.fragsperwar }})</span></div>
                   </div> -->
                   <div class="item item-block wars">
-                    <div matTooltip="Season played wars">{{ player.s4wars }}</div>
+                    <div matTooltip="Season played wars">{{ player.s5wars }}</div>
                     <div class="season-wars" *ngIf="isInfo"> <span matTooltip="Total played wars">{{ player.wars }}</span></div>
                   </div>
                   <!-- <div class="item-block">
@@ -182,9 +182,15 @@
                 </div> -->
               <!-- </ng-container>   -->
               <ng-container *ngIf="isInfo">
+                <!-- <ng-container *ngIf="isRedLineAdded">
+                  <div matTooltip="" class="line-1100" *ngIf="player.ranking >= 1100 && lastWarOfPlayers[i + 1]?.ranking < 1100"></div>
+                </ng-container> -->
                 <ng-container *ngIf="isRedLineAdded">
-                  <div matTooltip="Entry value for each player" class="red-line" *ngIf="player.ranking >= 1000 && lastWarOfPlayers[i + 1]?.ranking < 1000"></div>
+                  <div matTooltip="Entry value for each player" class="red-line" *ngIf="player.ranking >= 1000 && lastWarOfPlayers[i + 1]?.ranking < 1000" (click)="handleClick()"></div>
                 </ng-container>
+                <!-- <ng-container *ngIf="isRedLineAdded">
+                  <div matTooltip="" class="line-900" *ngIf="player.ranking >= 900 && lastWarOfPlayers[i + 1]?.ranking < 900"></div>
+                </ng-container> -->
               </ng-container>             
             </ng-container>
           </div>
@@ -285,7 +291,7 @@
         </div> -->
       </div>
       <div class="container">
-        <div class="big-name">Season #4</div>
+        <div class="big-name">Season #5</div>
       </div>
       <div class="floating-icon-container">
         <div class="floating-icon" [ngClass]="{ 'expanded': isExpanded }" (click)="togglePanel('first')" matTooltip="Winners by Rank" matTooltipPosition="before">
@@ -627,9 +633,13 @@
           </div>
         </div>
       </div> -->
+      
     </section>
+   
   </ng-container>
 </ng-container>
+<div class="black-overlay" #blackOverlay></div>
+<div class="sh-icon" #shIcon></div>
 <ng-http-loader
     [backdrop]="false"
     [backgroundColor]="'#010141'"

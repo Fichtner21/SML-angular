@@ -1689,9 +1689,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     nextMatch += 'MAPS: ' + maps.join(', ') + ' (' + this.selectedOption2 + ')' + '\n';
     nextMatch += "----------" + "\n";   
     nextMatch += "Good Luck & Have Fun!";
-    console.log('nextM', nextMatch);
+    // console.log('nextM', nextMatch);
     const payload = {
-      content: nextMatch
+      content: nextMatch 
     };
     this.http.post(webhookUrl, payload).subscribe({
       next: (res) => {

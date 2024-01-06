@@ -56,6 +56,7 @@ export class HistoryObjComponent implements OnInit  {
   commentsData: any; // Zmienna do przechowywania danych od dziecka
   @ViewChild(SingleMatchComponent) childComponent!: SingleMatchComponent;
   matchRowArray: any[] = [];  
+  commentsList: any[] = []; // Utwórz tablicę na listę komentarzy
   
   constructor(private MatchDetail: MatchesDetailsService, private activatedRoute: ActivatedRoute, private router: Router, private httpClient: HttpClient, private fetchMatches: FetchMatchesService, private tabApiService: PlayersApiService, private translateService: TranslateService, private commentsService: CommentsService, private db: AngularFireDatabase, private commentService: CommentsService) {
     
@@ -334,13 +335,20 @@ export class HistoryObjComponent implements OnInit  {
            // console.log('M =>', this.matchRowArray[2001]);
         // console.log('M 2 =>', this.matchRowArray[2002]);
         
-        // console.log('M 2=>', this.matchRowArray[2567]);
+        console.log('M 2=>', this.matchRowArray[2567]);
         // console.log('M =>', matchRowArray);
         return this.matchRowArray.reverse();
       }),
       
       // tap(x => console.log('xx', x))
     ) 
+
+    const commentsRef = this.getCommentsForMatch('100');
+    
+    commentsRef.valueChanges().subscribe((comments: any[]) => {
+      this.commentsList = comments; // Przypisanie listy komentarzy do zmiennej w komponencie
+      console.log('Comments:', this.commentsList); // Wyświetlenie listy komentarzy w konsoli
+    });
   };  
 
   ngAfterViewInit(){
@@ -361,6 +369,12 @@ export class HistoryObjComponent implements OnInit  {
     // return commentsRef.snapshotChanges().pipe(
     //   map(changes => changes.length)
     // );
+  }
+
+  getComments(): AngularFireList<any> {
+    const commentsRef = this.db.list('postComments'); // Zmieniono sposób pobierania listy komentarzy
+    console.log('commentsRef', commentsRef);
+    return commentsRef;
   }
 
   updateComments(length: any) {

@@ -58,6 +58,30 @@ background-size: 4px 4px;
         align-items: center;
         justify-content: center;
       }
+
+      
+    }
+
+    img {
+      max-width: 1300px;
+    }
+    .meet-users2 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 10px;
+      background-color: #010141;
+
+      :nth-child(n):not(:last-child){
+        border-right: 2px solid #ffffc0;
+      }
+
+      div {
+        font-weight: 700;
+        font-size:22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
 
     h2 {

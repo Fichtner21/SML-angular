@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Renderer2, ElementRef, HostListener  } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators  } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 import { PlayersApiService } from '../services/players-api.service';
 // import {MatListModule} from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
@@ -172,6 +172,9 @@ export class MixUsComponent implements OnInit {
   counter: number = 1;
   delay: number = 120; // Domyślnie 2 minuty (120 sekund)
   interval: number = 60; // Domyślnie 1 minuta (60 sekund)
+  isSplitNationalitiesClicked: boolean = false;
+  isSplitArrayIntoTwoClicked: boolean = false;
+  discordUsersAll: any[] = [];
 
   constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient, public oAuthService: OAuthService, private renderer: Renderer2, private el: ElementRef) {
     // const client = new Client({
@@ -635,6 +638,8 @@ export class MixUsComponent implements OnInit {
   }
 
   splitArrayIntoTwo(inputArray: User[]): [User[], User[]] {
+    this.isSplitArrayIntoTwoClicked = true;
+    this.isSplitNationalitiesClicked = false;
     localStorage.setItem('mixway', 'HP');
     this.notifier.notify('default', 'MIX TEAMS HP has been called');
   
@@ -966,6 +971,8 @@ export class MixUsComponent implements OnInit {
   //
 
   splitNationalities(inputArray) {
+    this.isSplitNationalitiesClicked = true;
+    this.isSplitArrayIntoTwoClicked = false;
     if (inputArray.length % 2 !== 0) {
       // console.error("Błąd: Tablica musi mieć parzystą liczbę obiektów.");
       this.notifier.notify('error', 'Players must be even')
@@ -1334,16 +1341,19 @@ export class MixUsComponent implements OnInit {
   }
 
   sendToDiscord() {
+    
     // Last War and Log
     // const webhookUrl = 'https://discord.com/api/webhooks/1075178845067563138/FpKf7iiu3dhI9NTxyS-VkMNcv4mdq2KORNhNUbkeZnfCgLtDaJSIFxi9Uz5YUTCDPqmX';
 
     let mixWay = localStorage.getItem('mixway');
-
+    this.nextMatch = '';
     // General Chat
     const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
 
     const arr1 = this.array1;
     const arr2 = this.array2;
+
+  
 
     let maps: string[] = [];
 
@@ -1407,8 +1417,8 @@ export class MixUsComponent implements OnInit {
       return arr[randomIndex].playername;
     };
 
-    // console.log('arr1', arr1)
-    // console.log('arr2', arr2)
+    console.log('arr1', arr1)
+    console.log('arr2', arr2)
 
     const t1p1name = (arr1.length > 0 && arr1[0] && arr1[0].playername) ? arr1[0].playername : '';
     const t1p2name = (arr1.length > 1 && arr1[1] && arr1[1].playername) ? arr1[1].playername : '';
@@ -1472,7 +1482,90 @@ export class MixUsComponent implements OnInit {
 
     chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
+  //   this.getDiscordUserData().subscribe(
+  //     (data: any) => {
+  //         // console.log('Dane użytkowników z Discorda:', data);
 
+  //         this.discordUsersAll = data;
+
+  //         // Konwersja obiektu this.discordUsersAll na tablicę
+  //         const discordUsersArray = Object.values(this.discordUsersAll);
+  //         console.log('discordUsersArray', discordUsersArray)
+
+  //         // Tworzenie listy nazw użytkowników z arr1 i arr2        
+
+  //         // Przygotowanie tablic z nazwami użytkowników
+  //         const arr1Usernames = arr1.map(user => [user.playername, user.username.toLowerCase()]).reduce((acc, val) => acc.concat(val), []);
+  //         const arr2Usernames = arr2.map(user => [user.playername, user.username.toLowerCase()]).reduce((acc, val) => acc.concat(val), []);
+  //         console.log('arr1Usernames', arr1Usernames)
+  //         console.log('arr2Usernames', arr2Usernames)
+
+  //         // Sprawdzenie, czy nazwy użytkowników z Discorda znajdują się w arr1 i arr2
+  //         const matchingUsersArr1 = discordUsersArray.filter(user =>
+  //           arr1Usernames.includes(user.username) || arr1Usernames.includes(user.playername) || 
+  //           arr2Usernames.includes(user.username) || arr2Usernames.includes(user.playername)
+  //         );
+  //         console.log('matchingUsersArr1', matchingUsersArr1)
+          
+
+  //         // Rozdzielenie użytkowników zgodnych z arr1 i arr2
+  //         const matchingUsersArr1Arr = matchingUsersArr1.filter(user => {
+  //           const lowerCaseUsername = user.username;
+  //           const lowerCaseNickname = user.nickname;
+  //           return arr1Usernames.includes(lowerCaseUsername) || arr1Usernames.includes(lowerCaseNickname);
+  //       });
+  //         console.log('matchingUsersArr1Arr', matchingUsersArr1Arr)
+  //         const matchingUsersArr2Arr = matchingUsersArr1.filter(user => {
+  //           const lowerCaseUsername = user.username;
+  //           const lowerCaseNickname = user.nickname;
+  //           return arr2Usernames.includes(lowerCaseUsername) || arr2Usernames.includes(lowerCaseNickname);
+  //       });
+  //         console.log('matchingUsersArr2Arr', matchingUsersArr2Arr)
+
+  //         const mentionArr1 = matchingUsersArr1Arr.map(user => `<@${user.username}>`).join(' ');
+  //         console.log('mentionArr1', mentionArr1)
+
+  //         const mentionArr2 = matchingUsersArr2Arr.map(user => `<@${user.username}>`).join(' ');
+  //         console.log('mentionArr2', mentionArr2)
+
+  //         // Tworzenie treści wiadomości z wzmiankowaniami
+  //         let messageContent = '';
+  //         messageContent += `**NEXT MATCH**, (${mixWay}) created: ${formattedDate}\n`;
+  //         messageContent += "----------\n";
+  //         messageContent += `MAPS: ${maps.join(', ')} (${this.selectedOption})\n`;
+  //         messageContent += "----------\n";
+  //         messageContent += `TEAM 1: ${t1p1name} ${t1p2name} ${t1p3name} ${t1p4name} ${t1p5name} ${t1p6name} ${t1p7name}\n`;
+  //         messageContent += `TEAM 1 Chance for win: ${chanceOfWinTeamTwoShow} %\n`;
+  //         messageContent += "----------\n";
+  //         messageContent += `TEAM 2: ${t2p1name} ${t2p2name} ${t2p3name} ${t2p4name} ${t2p5name} ${t2p6name} ${t2p7name}\n`;
+  //         messageContent += `TEAM 2 Chance for win: ${chanceOfWinTeamOneShow} %\n`;
+  //         messageContent += "----------\n";
+  //         messageContent += `SS MAKER: **${highestRankingPlayer}** ${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}\n`;
+  //         messageContent += "----------\n";
+  //         messageContent += "Good Luck & Have Fun!";
+          
+  //         // Dodanie wzmianek do treści wiadomości
+  //         messageContent += `\n\n${mentionArr1}\n\n${mentionArr2}`;
+  //         // console.log('messageContent', messageContent)
+  //         // Wysyłanie wiadomości na Discord
+  //         const payload = { 
+  //           content: messageContent 
+  //         };
+  //         this.http.post(webhookUrl, payload).subscribe({
+  //             next: (res) => {
+  //                 console.log('Wiadomość wysłana pomyślnie na Discorda!');
+  //                 this.notifier.notify('success', "Teams Send successful!")
+  //             },
+  //             error: (err) => {
+  //                 console.error('Coś poszło nie tak:', err);
+  //                 this.notifier.notify('error', 'Something went wrong')
+  //             }
+  //         });
+  //     },
+  //     error => {
+  //         console.error('Błąd pobierania danych z Discorda:', error);
+  //     }
+  // );
     
     this.nextMatch += "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + "\n";
     this.nextMatch += "----------" + "\n";
@@ -1488,13 +1581,24 @@ export class MixUsComponent implements OnInit {
     this.nextMatch += "----------" + "\n";
     this.nextMatch += "Good Luck & Have Fun!";  
 
-    this.nextMatchOne = "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + ' MAPS: ' + maps.join(', ') + ' (' + this.selectedOption + ')';
-    this.nextMatchTwo = "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + " Chance for win: " + chanceOfWinTeamTwoShow + " prc.";
-    this.nextMatchThree = "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + " Chance for win: " + chanceOfWinTeamOneShow + " prc.";
-    this.nextMatchFour = "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}`;   
+    // this.nextMatchOne = "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + ' MAPS: ' + maps.join(', ') + ' (' + this.selectedOption + ')';
+    // this.nextMatchTwo = "TEAM 1: " + t1p1name + " " + t1p2name + " " + t1p3name + " " + t1p4name + " " + t1p5name + " " + t1p6name + " " + t1p7name + " Chance for win: " + chanceOfWinTeamTwoShow + " prc.";
+    // this.nextMatchThree = "TEAM 2: " + t2p1name + " " + t2p2name + " " + t2p3name + " " + t2p4name + " " + t2p5name + " " + t2p6name + " " + t2p7name + " Chance for win: " + chanceOfWinTeamOneShow + " prc.";
+    // this.nextMatchFour = "SS MAKER: **" + highestRankingPlayer + "** " + `${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}`;   
     
     // console.log('nextM', this.nextMatch);
- 
+    // this.getDiscordUserData().subscribe(
+    //   data => {
+    //     // console.log('Dane użytkowników z Discorda:', data);
+    //     this.discordUsersAll = data;
+    //     // Tutaj możesz przetworzyć dane i wyświetlić je na stronie       
+    //   },
+    //   error => {
+    //     console.error('Błąd pobierania danych z Discorda:', error);
+    //   }
+    // );
+
+    // console.log('discordUsersAll', this.discordUsersAll)
     const payload = {
       content: this.nextMatch
     };
@@ -1505,7 +1609,31 @@ export class MixUsComponent implements OnInit {
         this.notifier.notify('error', 'Something went wrong')
       }
     });
+  
   } 
+
+  findMatchingUsers(arr: any[]): any[] {
+    const matchingUsers: any[] = [];
+
+    for (const user of arr) {
+        for (const discordUserId in this.discordUsersAll) {
+            const discordUser = this.discordUsersAll[discordUserId];
+            
+            // Sprawdź, czy pola username lub nickname z Discorda pasują do username lub playername z arr1/arr2
+            if (discordUser.username === user.username || discordUser.nickname === user.playername) {
+                matchingUsers.push(discordUser);
+                // Możesz tu dodać logikę lub inne operacje, jeśli użytkownik się zgadza
+            }
+        }
+    }
+
+    return matchingUsers;
+}
+
+
+  getDiscordUserData(){
+    return this.http.get('http://localhost:5000/discord-users')
+  }
 
   sendMessageRcon() {
     const opoznienieMillis = this.delay * 1000;

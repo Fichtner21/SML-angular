@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
   languageCode = localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en';
   monthPlaying: any;  
   isMenuOpen = false;
-  
+  numberOfMatches = 0;
 
   constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router, private oAuthService: OAuthService) {
     translateService.setDefaultLang(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');    
@@ -95,13 +95,24 @@ export class AppComponent implements OnInit {
         const resValues = response.values;
         resValues.shift();
         const matchesDate = [];
-        resValues.forEach((el:any) => {          
-          matchesDate.push(new Date(el[0]).toISOString());
-        });       
+        const startDate = new Date('2024-01-01T00:00:00Z');
+        const endDate = new Date('2024-03-31T23:59:59Z');
         
+    
+        resValues.forEach((el: any) => {          
+          const matchDate = new Date(el[0]).toISOString();
+          matchesDate.push(matchDate);
+    
+          // Sprawdzamy, czy data meczu mieści się w zakresie
+          const matchDateTime = new Date(matchDate).getTime();
+          if (matchDateTime >= startDate.getTime() && matchDateTime <= endDate.getTime()) {
+            this.numberOfMatches++;
+          }
+        });
+    
         return response.values;       
       })
-    )     
+    );
     
     // console.log('local =>', localStorage.getItem('lang'));
   }  

@@ -285,3 +285,17 @@ nav {
   // color:aqua !important;
   color:rgb(102, 255, 0) !important;
 }
+
+.curr-season {
+  padding-right: 3px;
+}
+
+.total-seasons {
+  padding-left: 3px;
+  animation: colorChange 5s infinite linear;
+}
+
+@keyframes colorChange {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}

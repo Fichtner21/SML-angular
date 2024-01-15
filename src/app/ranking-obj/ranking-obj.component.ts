@@ -1,7 +1,7 @@
 import { map, last,toArray, takeLast, reduce } from 'rxjs/operators';
 import { PlayersApiService } from './../services/players-api.service';
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
@@ -34,6 +34,8 @@ export class RankingObjComponent implements OnInit {
   booleanVarS1Wars = false;
   booleanVarS1Fpw = false;
   aaa = [];
+  showInactivePlayersOnly$ = new BehaviorSubject<boolean>(false);
+  showActivePlayersOnly: boolean = true;
 
   @ViewChild('shIcon') shIcon!: ElementRef;
   @ViewChild('blackOverlay') blackOverlay!: ElementRef;
@@ -301,8 +303,8 @@ export class RankingObjComponent implements OnInit {
     //   map((historyMatches: any[]) => historyMatches.filter(match => match['timestamp'] <= selectedDate))
     // );
 
-    this.lastWarOfPlayer$ = combineLatest([this.playersTest$, this.historyMatches$]).pipe(
-      map(([v1, v2, ]) => {
+    this.lastWarOfPlayer$ = combineLatest([this.playersTest$, this.historyMatches$,this.showInactivePlayersOnly$]).pipe(
+      map(([v1, v2, showActivePlayersOnly]) => {
         let lastWarDate: any;
         let playerRowArray: any[] = [];
         for( let name of v1){
@@ -356,6 +358,7 @@ export class RankingObjComponent implements OnInit {
             playerRowArray.push(lastWarDate);
           }
         }
+       
         // console.log('v2', v2)
         // console.log('playerRowArray1', playerRowArray[0])
         // console.log('playerRowArray2', playerRowArray[1])
@@ -370,6 +373,7 @@ export class RankingObjComponent implements OnInit {
       })
     );   
 
+   
     // console.log('=>', this.donatorsSeason4);
 
     if(this.activatedRoute.snapshot.queryParams['sortByWars'] == 'DESC'){
@@ -1048,4 +1052,5 @@ export class RankingObjComponent implements OnInit {
       blackOverlay.style.display = 'none';
     }, 5000);
   }
+ 
 }

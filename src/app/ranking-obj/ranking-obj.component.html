@@ -2,7 +2,8 @@
 
 <ng-container *ngIf="lastWarOfPlayer$ | async as lastWarOfPlayers">
   <ng-container *ngIf="lastWarOfPlayers.length > 0">
-    <section class="example">
+    <section class="example"> 
+      
       <div class="container">
         <div class="cont">
           <div class="ranking-head">
@@ -47,7 +48,7 @@
             <ng-container *ngFor="let player of lastWarOfPlayers; let i = index;">
               <!-- <ng-container *ngIf="player.ban"> -->
                 <div class="character-card" [ngClass]="{'goldie': i == 0, 'silverie': i == 1, 'brownie': i == 2, 'leftBorder': player.ranking > 1000,
-                  'rightBorder': player.ranking < 1000 }" *ngIf="player.inactive && !player.ban" (dataEvent)="handleData($event)">
+                  'rightBorder': player.ranking < 1000 }" *ngIf="!player.ban" (dataEvent)="handleData($event)">
                   <div class="item item-place"
 
                   >

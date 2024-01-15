@@ -15,6 +15,7 @@ import { FormsModule } from "@angular/forms";
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // export function createTranslateLoader(http: HttpClient){
 //   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -36,7 +37,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     FormsModule,
     MatTabsModule,   
     MatButtonModule, 
-    MatTooltipModule
+    MatTooltipModule,
+    MatCheckboxModule
   ],
   exports: [
     CommonModule,

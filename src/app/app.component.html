@@ -41,14 +41,15 @@
           </div>        
         </div>
         <div *ngIf="matches$ | async as numOfMatches">        
-          <div *ngIf="numOfMatches.length > 0">
-            <a routerLink="obj-matches" routerLinkActive="active" title="MATCHES PLAYED">
+          <div *ngIf="numOfMatches.length > 0">            
+            <a routerLink="obj-matches" routerLinkActive="active">              
               <img src="../assets/images/icons/avarage.png" alt="">
-              {{ numOfMatches.length }}
+              <span class="curr-season" title="SEASON 5 WARS">{{numberOfMatches}}</span>&middot;&middot;&middot;
+              <span class="total-seasons" title="TOTAL WARS">{{ numOfMatches.length }}</span>
             </a>
           </div>       
         </div>
-        <a href="https://discord.gg/ytZSpQ2" target="_blank" title="DISCORD" class="disco">
+        <a href="https://discord.gg/DB5PybFPhC" target="_blank" title="DISCORD" class="disco">
           <img src="assets/images/icons/discord.svg" alt="">
           <div>DISCORD</div>        
         </a>  

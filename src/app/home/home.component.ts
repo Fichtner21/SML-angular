@@ -215,8 +215,137 @@ export class HomeComponent implements OnInit {
         }); 
         return response.values;       
       })
-    )    
+    )
+    
+    // WYKRES TYLKO STYCZNIE
+    // this.playedWars$ = this.playersApiService.getPlayers('Match+History').pipe(
+    //   map((response: any) => {         
+    //     const resValues = response.values;
+    //     resValues.shift();
+    //     const matchesDate = [];
+    //     resValues.forEach((el: any) => {          
+    //       const date = new Date(el[0]).toISOString();
+    //       // Dodaj tylko te daty, które są w miesiącach styczeń 2021, 2022, 2023 i 2024
+    //       const year = new Date(el[0]).getFullYear();
+    //       const month = new Date(el[0]).getMonth() + 1; // getMonth() zwraca wartość od 0 do 11
+    //       if (year >= 2021 && year <= 2024 && month === 1) {
+    //         matchesDate.push(date);
+    //       }   
+    
+    //     });               
+    
+    //     const listOfActivity = this.groupDates(matchesDate);
+    
+    //     const yearMonth = [];
+    //     const datesInMonth = [];
+    
+    //     listOfActivity.forEach(el => {          
+    //       const monthWithYear = el['month'] + '/' + el['year'];
+    //       yearMonth.push(monthWithYear);
+    //       datesInMonth.push(el['dates'].length);
+    //     }); 
+    
+    //     //CANVAS
+    //     this.activityCanvas = document.getElementById('allActivity');       
+    //     this.ctx = this.activityCanvas.getContext('2d');
+    //     new Chart(this.ctx, {
+    //       type: 'bar',
+    //       data: {
+    //         labels: yearMonth,
+    //         datasets: [{
+    //           label: 'Wars in month',
+    //           data: datesInMonth,
+    //           backgroundColor: datesInMonth.map(function (wars, i) {
+    //             if (datesInMonth[i] == Math.max.apply(null, datesInMonth)) {
+    //               return 'rgba(11,156,49,0.6)';
+    //             }
+    //             if (datesInMonth[i] == Math.min.apply(null, datesInMonth)) {
+    //               return 'rgba(255,0,0,0.6)';
+    //             }
+    //             return 'rgba(239, 239, 240, 0.6)';
+    //           }),                        
+    //           borderWidth: 1
+    //         }] 
+    //       },                  
+    //       options: {            
+           
+    //         plugins: {
+    //             datalabels: {
+    //                 anchor: 'end',
+    //                 align: 'top',
+    //                 formatter: Math.round,
+    //                 font: {
+    //                     weight: 'bold'
+    //                 }
+    //             }
+    //         },
+    //         legend: {
+    //           display: false
+    //         },
+    //         responsive: true,
+    //         scales: {
+    //           xAxes: [
+    //             {
+    //               ticks: {
+    //                 beginAtZero: false,
+    //                 min: 1,
+    //               },
+    //               offset: true,
+    //               id: 'date-x-axis',
+    //               scaleLabel: {
+    //                 display: false,
+    //                 labelString: 'Date of match',
+    //               },
+    //             },
+    //           ],
+    //           yAxes: [
+    //             {
+    //               ticks: {
+    //                 beginAtZero: true,
+    //               },
+    //               scaleLabel: {
+    //                 display: false,
+    //                 labelString: 'Frags per war',
+    //               },
+    //             },
+    //           ],
+    //         },
+    //         animation: {
+    //           duration: 500,
+    //           easing: "easeOutQuart",
+    //           onComplete: function () {
+    //               var ctx = this.chart.ctx;
+    //               ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
+    //               ctx.color = 'white';
+    //               ctx.textAlign = 'center';
+    //               ctx.textBaseline = 'bottom';
+  
+    //               this.data.datasets.forEach(function (dataset) {
+    //                   for (var i = 0; i < dataset.data.length; i++) {
+    //                       var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model,
+    //                           scale_max = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._yScale.maxHeight;
+    //                       ctx.fillStyle = '#fff';
+    //                       var y_pos = model.y - 5;
+    //                       // Make sure data value does not get overflown and hidden
+    //                       // when the bar's value is too close to max value of scale
+    //                       // Note: The y value is reverse, it counts from top down
+    //                       if ((scale_max - model.y) / scale_max >= 0.93)
+    //                           y_pos = model.y + 20;
+    //                       ctx.fillText(dataset.data[i], model.x, y_pos);
+    //                   }
+    //               });
+    //           }
+    //       }
+    //       } as ChartOptions,             
+    //       plugins: [ChartAnnotation] 
+    //     }); 
+    //     return response.values;       
+    //   })
+    // );
+    
   } 
+
+  
  
   public addPlayerLink(player:string, obj:any) {
     let convertedPlayer = '';    

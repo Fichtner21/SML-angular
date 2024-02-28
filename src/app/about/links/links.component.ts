@@ -7,11 +7,11 @@ import { faCircleArrowRight } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./links.component.scss']
 })
 export class LinksComponent implements OnInit {
-  arrowRightIcon = faCircleArrowRight;
+  arrowRightIcon = faCircleArrowRight; 
 
   constructor() { }
 
   ngOnInit(): void {
-  }
-
+  
+  } 
 }

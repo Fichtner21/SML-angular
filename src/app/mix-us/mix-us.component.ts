@@ -641,18 +641,16 @@ export class MixUsComponent implements OnInit {
     this.isSplitArrayIntoTwoClicked = true;
     this.isSplitNationalitiesClicked = false;
     localStorage.setItem('mixway', 'HP');
-    this.notifier.notify('default', 'MIX TEAMS HP has been called');
-  
-    // Przekonwertuj pola ranking na wartości liczbowe
+    this.notifier.notify('default', 'MIX TEAMS HP has been called');  
+    
     inputArray.forEach(obj => parseFloat(obj.ranking.replace(/,/g, '')));
   
     let array1: User[] = [];
     let array2: User[] = [];
   
     const sumRanking = (arr: User[]) =>
-      arr.reduce((sum, obj) => sum + parseFloat(obj.ranking.replace(/,/g, '')), 0);
-  
-    // Wybierz startowy podział
+    arr.reduce((sum, obj) => sum + parseFloat(obj.ranking.replace(/,/g, '')), 0);  
+    
     let bestSplit: [User[], User[]] = [[], []];
     let bestDifference = Number.MAX_VALUE;
     let currentDifference = 0;
@@ -666,9 +664,8 @@ export class MixUsComponent implements OnInit {
         bestSplit = [array1, array2];
         bestDifference = currentDifference;
       }
-    }
-  
-    // Iteracyjnie poprawiaj podział tablicy dopóki jest możliwe polepszenie
+    }  
+    
     let improved = true;
     while (improved) {
       improved = false;
@@ -687,23 +684,40 @@ export class MixUsComponent implements OnInit {
           }
         }
       }
-    }
-  
-    // Oblicz szanse na zwycięstwo dla każdej drużyny
+    }  
+    
     const sumTeam1 = sumRanking(bestSplit[0]);
     const sumTeam2 = sumRanking(bestSplit[1]);
     const chanceOfWinTeamOne = 1 / (1 + 10 ** ((sumTeam1 - sumTeam2) / 400)) * 100;
-    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((sumTeam2 - sumTeam1) / 400)) * 100;
-  
-    // Przypisz wyniki do zmiennych klasy
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((sumTeam2 - sumTeam1) / 400)) * 100;  
+    
     this.array1 = bestSplit[0];
     this.array2 = bestSplit[1];
     this.sumTeam1 = sumTeam1;
     this.sumTeam2 = sumTeam2;
     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
-    // console.log('THIS.ARRAY 1', this.array1)
-    // console.log('THIS.ARRAY 2', this.array2)   
+    console.log('THIS.ARRAY 1', this.array1)
+    console.log('THIS.ARRAY 2', this.array2)   
+    const currentDate = new Date().toISOString();
+    const newArr1 = this.array1;
+    newArr1.forEach(user => {
+      user.team = 1;
+      user.createdAt = currentDate;
+    });
+
+    const newArr2 = this.array2;
+    newArr2.forEach(user => {
+        user.team = 2;
+        user.createdAt = currentDate;
+    });
+
+    // Połączenie obu tablic w jedną
+    const mergedArray = this.array1.concat(this.array2);
+
+    this.http.post<any>('http://localhost:5000/api/save-data', mergedArray).subscribe(response => {
+      console.log('Dane zostały wysłane do backendu', response);
+    });
     // Dodaj tablice do URL
     this.addArrayToUrl(this.array1, this.array2);
   

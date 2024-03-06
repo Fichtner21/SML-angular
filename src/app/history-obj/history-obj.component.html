@@ -7,11 +7,12 @@
           <div *ngFor="let i = index; let match of historyObj | paginate: {itemsPerPage: 20, currentPage: p}">
             <div class="match-row" id="match-{{match.idwar}}">
               <div class="match-row__date">
-                <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>                
+                <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>
                 <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>
+                <div style="padding: 10px; color: red; border: 2px solid red;">aa {{ match.comments }}</div>
                 <div *ngIf="match.video.length > 0">
                   <img src="../../assets/images/icons/video.svg" alt="" class="video-icon">
-                </div>               
+                </div>
                 <!-- <app-single-match (commentsEmitter)="onChildComments($event)"></app-single-match> -->
                 <!-- <app-single-match [comments]="comments$ | async" (lengthEmitter)="updateComments($event)"></app-single-match>                 -->
                 <!-- <div>{{ getCommentsForMatch(match.idwar) | json }}</div> -->
@@ -80,20 +81,20 @@
                   <div class="match-row__team--player__score">{{ match.t1p7score }} </div>
                   <div>{{ match.t1p7postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t1p7postelo - match.t1p7preelo) > 0, 'lost': (match.t1p7postelo - match.t1p7preelo) < 0, 'draw': (match.t1p7postelo - match.t1p7preelo === 0) }"><span>{{ match.t1p7postelo - match.t1p7preelo | number: '.1-2'}}</span></div>
-                </div>   
+                </div>
                 <div class="preelo-info">
-                  <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>            
-                  <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div> 
-                </div>  
+                  <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>
+                  <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div>
+                </div>
                 <!-- <div class="preelo-info">
                   <div class="bet">
                     <img src="../../assets/images/80-163.png" alt="">
-                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
+                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div>
                   </div>
                   <div class="bet">
                     <img src="../../assets/images/80-165.png" alt="">
-                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
-                  </div>                   
+                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div>
+                  </div>
                 </div>                                -->
               </div>
               <div class="match-row__team" [class]="match.flag2 ? match.flag2 : ''" [style.background-image]="match.flag2 ? 'url(/assets/images/flags_svg/' + match.flag2 + '.SVG)' : ''" [style.background-size]="match.flag2 ? '20% 20%' : ''" [style.background-repeat]="match.flag2 ? 'no-repeat' : ''">
@@ -162,24 +163,24 @@
                 <!-- <div class="preelo-info">
                   <div class="bet">
                     <img src="../../assets/images/80-163.png" alt="">
-                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
+                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div>
                   </div>
                   <div class="bet">
                     <img src="../../assets/images/80-165.png" alt="">
-                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
-                  </div>                   
+                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div>
+                  </div>
                 </div>                  -->
               </div>
             </div>
           </div>
-          <pagination-controls (pageChange)="p = $event" class="my-pagination"></pagination-controls>        
+          <pagination-controls (pageChange)="p = $event" class="my-pagination"></pagination-controls>
         </div>
       </ng-container>
     </ng-container>
   </div>
-</section> 
+</section>
 
-<ng-http-loader 
+<ng-http-loader
     [backdrop]="false"
     [backgroundColor]="'#010141'"
     [debounceDelay]="100"

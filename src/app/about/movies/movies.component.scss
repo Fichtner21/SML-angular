@@ -1,0 +1,55 @@
+section {
+  padding-top: 80px;
+  min-height: 100vh;
+  min-width: 100%;
+  background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+  background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+  background-size: 4px 4px;
+  color: #ffffc8;
+
+  .about__nav {
+    padding: 20px 10px;
+    font-size: 20px;
+    background-image: linear-gradient(
+0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
+background-size: 4px 4px;
+  }
+
+  .container {
+    padding: 20px 50px;
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+
+      .players {
+        img {
+          height: 20px;
+        }
+      }
+
+      .pre {
+        font-style: italic;
+        font-weight: 700;
+        padding-right: 5px;
+        display: inline-block;
+      }
+
+       .desc, .players {
+        background-color: #ffffc8;
+        color:#2f3060;
+        padding: 2px;
+      }
+    }
+    .grid-item {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    .thumbnail {
+      width: 100%;
+      cursor: pointer;
+    }
+  }
+}

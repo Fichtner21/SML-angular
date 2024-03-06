@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { OAuthService, AuthConfig } from 'angular-oauth2-oidc';
-import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NotifierService } from 'angular-notifier';
 import { ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -14,12 +14,14 @@ import { MatSelectChange } from '@angular/material/select';
 import { environment } from 'src/environments/environment';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
 export interface UserInfo {
   info: {
     at_hash: string,
     aud: string,
-    azp: string,    
+    azp: string,
     email: string,
     email_verified: boolean,
     exp: number,
@@ -48,7 +50,7 @@ export interface filterOption{
   isdefault:boolean;
 }
 
-export interface Employee {  
+export interface Employee {
   index: number;
   name: string,
   username: string,
@@ -57,6 +59,13 @@ export interface Employee {
   ban: boolean,
   flag: string,
   wars: string
+}
+
+export interface FormData2 {
+  scoreTeamOne: any; // typ zależy od tego, jakie wartości zawierają pola scoreTeamOne, scoreTeamTwo, teamOneRoundsWon, teamTwoRoundsWon
+  scoreTeamTwo: any;
+  teamOneRoundsWon: any;
+  teamTwoRoundsWon: any;
 }
 
 export const authCodeFlowConfig: AuthConfig = {
@@ -73,14 +82,14 @@ export const authCodeFlowConfig: AuthConfig = {
   // The SPA's id. The SPA is registerd with this id at the auth-server
   // clientId: 'server.code',
   clientId: '326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com',
-  
-  // set the scope for the permissions the client should request  
-  scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',  
-  
+
+  // set the scope for the permissions the client should request
+  scope: 'openid profile email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/script.scriptapp https://www.googleapis.com/auth/script.external_request',
+
   // maybe help with CORS?
   oidc: true,
 
-  showDebugInformation: true  
+  showDebugInformation: true
 }
 
 @Component({
@@ -88,7 +97,7 @@ export const authCodeFlowConfig: AuthConfig = {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit, OnDestroy { 
+export class DashboardComponent implements OnInit, OnDestroy {
   @Input() ranking:any;
   userPlusIcon = faUserPlus;
   usersIcon = faUsers;
@@ -105,11 +114,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   gmail = 'https://gmail.googleapis.com';
   errorMessage = '';
   modalHeader = '';
-  selectedOption2: string = "Random";  
+  selectedOption2: string = "Random";
   @ViewChild('content', { static: false }) content: TemplateRef<any>;
   encapsulation: ViewEncapsulation.None;
   mailSnippets: string[] = []
-  userInfo?: UserInfo; 
+  userInfo?: UserInfo;
   public addAmatch$: Observable<any>;
   public players$: Observable<any>;
   public lastMatch$: Observable<any>;
@@ -141,7 +150,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   currentIndex = -1;
   drawingInProgress = false;
   nextMatch: string = '';
-  playerCount: string = "6"; 
+  playerCount: string = "6";
   // Team 1
   t1p1name = new FormControl('');
   t1p2name = new FormControl('');
@@ -189,7 +198,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   t1roundsWonInput = new FormControl('');
   cumulativeTeamOneArray: any[];
   // Team 2
-  t2p1name = new FormControl('');
+  // t2p1name = new FormControl('');
+  t2p1name = new FormControl('', [this.validatePlayer.bind(this)]);
   t2p2name = new FormControl('');
   t2p3name = new FormControl('');
   t2p4name = new FormControl('');
@@ -241,16 +251,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   teamTwoRoundsWon: FormGroup;
   team1preview: any;
   team2preview: any;
-  private readonly notifier: NotifierService;  
+  private readonly notifier: NotifierService;
   disabled: boolean = true;
   chanceOfWinTeamOneShow: any;
-  chanceOfWinTeamTwoShow: any; 
-  // public selectedOptionT1p1name;  
+  chanceOfWinTeamTwoShow: any;
+  // public selectedOptionT1p1name;
   matchRow:any;
   public sumCumulativeTeamOne:any;
   public sumCumulativeTeamTwo:number = 0;
   selectedValues: number[] = [];
- 
+
   // displayedColumns: string[] = ['Name', 'ELO', 'Active', 'Flag'];
   displayedColumns: string[];
   EmpData: Employee[];
@@ -278,13 +288,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   firstFormValue: string;
   @Output() firstFormValueChange = new EventEmitter<string>();
 
-  constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, public oAuthService: OAuthService, private formBuilder: FormBuilder,notifierService: NotifierService, private modalService: NgbModal) { 
+  playerRowArray2: any[] = []; // Tablica graczy
+  playerList: string[] = []; // Lista nazw graczy do walidacji
 
-  //  
+  constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, public oAuthService: OAuthService, private formBuilder: FormBuilder,notifierService: NotifierService, private modalService: NgbModal, public dialog: MatDialog) {
+
+  //
     // confiure oauth2 service
     oAuthService.configure(authCodeFlowConfig);
     // manually configure a logout url, because googles discovery document does not provide it
-    oAuthService.logoutUrl = "https://www.google.com/accounts/Logout";     
+    oAuthService.logoutUrl = "https://www.google.com/accounts/Logout";
 
     // loading the discovery document from google, which contains all relevant URL for
     // the OAuth flow, e.g. login url
@@ -297,7 +310,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // when not logged in, redirecvt to google for login
         // else load user profile
         if (!oAuthService.hasValidAccessToken()) {
-          oAuthService.initLoginFlow()          
+          oAuthService.initLoginFlow()
         } else {
           oAuthService.loadUserProfile().then((userProfile: UserInfo) => {
             // console.log('USER PROFILES',userProfile);
@@ -312,7 +325,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           //   this.userProfile.subscribe((data) => {
           //     console.log('data', data)
           //   })
-          //   // .next(userProfile as UserInfo)            
+          //   // .next(userProfile as UserInfo)
           // })
           // this.oAuthService.loadUserProfile().subscribe((profile) => {
           //   this.userProfile = profile;
@@ -320,15 +333,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
 
       })
-    });    
+    });
 
     // googleApi.userProfileSubject.subscribe( info => {
     //   console.log('info', info);
     //   this.userInfo = info
     // })
-    // console.log(googleApi);    
+    // console.log(googleApi);
     this.notifier = notifierService;
-   
+
     // Team One Form
     this.playersToWar = this.formBuilder.group({
       t1p1name: [''],
@@ -352,14 +365,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.preEloTeamOne = this.formBuilder.group({
-      t1p1preelo: [''],    
+      t1p1preelo: [''],
       t1p2preelo: [''],
       t1p3preelo: [''],
       t1p4preelo: [''],
       t1p5preelo: [''],
       t1p6preelo: [''],
-      t1p7preelo: [''],   
-      t1cumulative: ['']   
+      t1p7preelo: [''],
+      t1cumulative: ['']
     })
 
     this.scoreTeamOne = this.formBuilder.group({
@@ -382,7 +395,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       t2p5preelo: [''],
       t2p6preelo: [''],
       t2p7preelo: [''],
-      t2cumulative: ['']    
+      t2cumulative: ['']
     })
 
     this.scoreTeamTwo = this.formBuilder.group({
@@ -408,56 +421,54 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.addAmatch$ = this.googleApi.getPlayers('Add+a+Match').pipe(
-      map((response: any) => {             
-        let batchRowValues = response.values;      
+      map((response: any) => {
+        let batchRowValues = response.values;
         return batchRowValues;
       })
-    ); 
+    );
     // const addAmatchArray = this.addAmatch$.subscribe();
     this.players$ = this.googleApi.getPlayers('Players').pipe(
-      map((response: any) => {             
+      map((response: any) => {
         let batchRowValues = response.values;
-        // console.log('player 1', batchRowValues[1])        
+        // console.log('player 1', batchRowValues[1])
         let players: any[] = [];
         for(let i = 1; i < batchRowValues.length; i++){
           const rowObject: object = {};
           for(let j = 0; j < batchRowValues[i].length; j++){
             rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
           }
-          
+
           players.push(rowObject);
-        }     
-     
+        }
+
         return players;
         // return batchRowValues[1];
       }),
-    ); 
+    );
 
     this.lastMatch$ = this.googleApi.getPlayers('Match+History').pipe(
-      map((response: any) => {             
-        let batchRowValues = response.values;          
+      map((response: any) => {
+        let batchRowValues = response.values;
         let players: any[] = [];
         for(let i = 1; i < batchRowValues.length; i++){
           const rowObject: object = {};
           for(let j = 0; j < batchRowValues[i].length; j++){
             rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
-          }          
+          }
           players.push(rowObject);
-        } 
-        return players[players.length -1];       
+        }
+        return players[players.length -1];
       }),
     )
 
     this.players$.subscribe(data => {
-      this.options = data;      
-      }     
+      this.options = data;
+      }
     )
 
     this.listPlayers$ = this.players$;
 
     this.listPlayers$.subscribe(data => {
-      
-      // console.log('data =>', data)
       for(let [index, value] of data.entries()){
         const obj = {
           nr: Number(index) + 1,
@@ -466,25 +477,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
           elo: value.ranking,
           active: value.active == 'TRUE' ? true : false,
           ban: value.ban == 'TRUE' ? true : false,
-          // flag: value.nationality,
+          nationality: value.nationality,
           wars: value.warcount
         }
-        // console.log('OBJ', obj)
         this.playerRowArray.push(obj)
+        this.playerList.push(value.username);
       }
       // console.log('playerRowArray', this.playerRowArray)
       return this.playerRowArray;
     })
-  }  
+  }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     // this.oAuthService.configure(environment.authConfig);
     this.oAuthService.loadDiscoveryDocumentAndLogin();
 
-    this.oAuthService.setupAutomaticSilentRefresh();   
- 
+    this.oAuthService.setupAutomaticSilentRefresh();
+
     this.displayedColumns= ['nr','name','username','elo','wars','active', 'ban'];
-   
+
     this.dataSource = new MatTableDataSource(this.playerRowArray);
     this.dataSourceFilters = new MatTableDataSource(this.playerRowArray);
 
@@ -493,146 +504,146 @@ export class DashboardComponent implements OnInit, OnDestroy {
       var map = new Map(JSON.parse(filter));
       let isMatch = false;
       for(let [key,value] of map){
-        isMatch = (value=="All") || (record[key as keyof Employee] == value); 
+        isMatch = (value=="All") || (record[key as keyof Employee] == value);
         if(!isMatch) return false;
       }
       return isMatch;
     }
-   
+
     // console.log('PERMUTATION:', this.splitPermutations([1000,1001,1002,1003,1004,1005,1009,1010, 1023,1023]))
 
     this.filteredOptionsT1p1name = this.t1p1name.valueChanges.pipe(
-      startWith(''),    
+      startWith(''),
       map(value => this._filter(value || '')),
-            
+
     );
     this.filteredOptionsT1p2name = this.t1p2name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT1p3name = this.t1p3name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT1p4name = this.t1p4name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT1p5name = this.t1p5name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT1p6name = this.t1p6name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT1p7name = this.t1p7name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT2p1name = this.t2p1name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT2p2name = this.t2p2name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT2p3name = this.t2p3name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT2p4name = this.t2p4name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT2p5name = this.t2p5name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT2p6name = this.t2p6name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    )   
+    )
     this.filteredOptionsT2p7name = this.t2p7name.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
-    ) 
+    )
 
-    // *** TEAM ONE ***    
+    // *** TEAM ONE ***
     this.googleApi.getMultipleRanges('A12:B19').subscribe(data => {
-      this.team1preview = data['values'];         
+      this.team1preview = data['values'];
       // console.log('this.team1preview', this.team1preview)
       // If less then 7 players add array with empty string
-      const t1preview = this.team1preview.concat(Array(8 - this.team1preview.length).fill(['']))      
+      const t1preview = this.team1preview.concat(Array(8 - this.team1preview.length).fill(['']))
 
 
       // console.log('t1preview ! =>', t1preview);
 
       // Add everytimes 3 fieldsin row
-      const t1p1row = t1preview[0].concat(Array(3 - t1preview[0].length).fill(''));      
-      const t1p2row = t1preview[1].concat(Array(3 - t1preview[1].length).fill(''));      
-      const t1p3row = t1preview[2].concat(Array(3 - t1preview[2].length).fill(''));      
-      const t1p4row = t1preview[3].concat(Array(3 - t1preview[3].length).fill(''));      
-      const t1p5row = t1preview[4].concat(Array(3 - t1preview[4].length).fill(''));      
-      const t1p6row = t1preview[5].concat(Array(3 - t1preview[5].length).fill(''));      
-      const t1p7row = t1preview[6].concat(Array(3 - t1preview[6].length).fill(''));      
+      const t1p1row = t1preview[0].concat(Array(3 - t1preview[0].length).fill(''));
+      const t1p2row = t1preview[1].concat(Array(3 - t1preview[1].length).fill(''));
+      const t1p3row = t1preview[2].concat(Array(3 - t1preview[2].length).fill(''));
+      const t1p4row = t1preview[3].concat(Array(3 - t1preview[3].length).fill(''));
+      const t1p5row = t1preview[4].concat(Array(3 - t1preview[4].length).fill(''));
+      const t1p6row = t1preview[5].concat(Array(3 - t1preview[5].length).fill(''));
+      const t1p7row = t1preview[6].concat(Array(3 - t1preview[6].length).fill(''));
 
       // set value from values from GET
-      this.t1p1name?.setValue(t1p1row[0]); 
-      this.t1p2name?.setValue(t1p2row[0]); 
-      this.t1p3name?.setValue(t1p3row[0]); 
-      this.t1p4name?.setValue(t1p4row[0]); 
+      this.t1p1name?.setValue(t1p1row[0]);
+      this.t1p2name?.setValue(t1p2row[0]);
+      this.t1p3name?.setValue(t1p3row[0]);
+      this.t1p4name?.setValue(t1p4row[0]);
       this.t1p5name?.setValue(t1p5row[0]);
       this.t1p6name?.setValue(t1p6row[0]);
-      this.t1p7name?.setValue(t1p7row[0]);  
-    
-      
+      this.t1p7name?.setValue(t1p7row[0]);
+
+
       // Team 1 Initial ELO
-     
+
       this.t1p1preelo?.setValue(t1p1row[1]);
-      this.t1p2preelo?.setValue(t1p2row[1]);   
+      this.t1p2preelo?.setValue(t1p2row[1]);
       this.t1p3preelo?.setValue(t1p3row[1]);
       this.t1p4preelo?.setValue(t1p4row[1]);
       this.t1p5preelo?.setValue(t1p5row[1]);
       this.t1p6preelo?.setValue(t1p6row[1]);
       this.t1p7preelo?.setValue(t1p7row[1]);
-    
+
       // this.t1cumulative?.setValue('');
       this.t1cumulative?.setValue(Number(t1preview[7][1]).toFixed(2));
-  
+
 
       // console.log('t1preview', t1preview)
     }, error => {
       console.log('error getPriviewPlayers', error)
     })
 
-    // *** TEAM TWO ***    
+    // *** TEAM TWO ***
     this.googleApi.getMultipleRanges('A23:C30').subscribe(data => {
-      this.team2preview = data['values'];    
-  
+      this.team2preview = data['values'];
+
       // If less then 7 players add array with empty string
-      const t2preview = this.team2preview.concat(Array(9 - this.team2preview.length).fill(['']))  
-      // console.log('t2preview', t2preview)    
+      const t2preview = this.team2preview.concat(Array(9 - this.team2preview.length).fill(['']))
+      // console.log('t2preview', t2preview)
 
       // Add everytimes 3 fieldsin row
-      const t2p1row = t2preview[0].concat(Array(3 - t2preview[0].length).fill(''));      
-      const t2p2row = t2preview[1].concat(Array(3 - t2preview[1].length).fill(''));      
-      const t2p3row = t2preview[2].concat(Array(3 - t2preview[2].length).fill(''));      
-      const t2p4row = t2preview[3].concat(Array(3 - t2preview[3].length).fill(''));      
-      const t2p5row = t2preview[4].concat(Array(3 - t2preview[4].length).fill(''));      
-      const t2p6row = t2preview[5].concat(Array(3 - t2preview[5].length).fill(''));      
-      const t2p7row = t2preview[6].concat(Array(3 - t2preview[6].length).fill(''));      
+      const t2p1row = t2preview[0].concat(Array(3 - t2preview[0].length).fill(''));
+      const t2p2row = t2preview[1].concat(Array(3 - t2preview[1].length).fill(''));
+      const t2p3row = t2preview[2].concat(Array(3 - t2preview[2].length).fill(''));
+      const t2p4row = t2preview[3].concat(Array(3 - t2preview[3].length).fill(''));
+      const t2p5row = t2preview[4].concat(Array(3 - t2preview[4].length).fill(''));
+      const t2p6row = t2preview[5].concat(Array(3 - t2preview[5].length).fill(''));
+      const t2p7row = t2preview[6].concat(Array(3 - t2preview[6].length).fill(''));
 
       // TEAM 2 set value from values from GET
-      this.t2p1name?.setValue(t2p1row[0]); 
-      this.t2p2name?.setValue(t2p2row[0]); 
-      this.t2p3name?.setValue(t2p3row[0]); 
-      this.t2p4name?.setValue(t2p4row[0]); 
+      this.t2p1name?.setValue(t2p1row[0]);
+      this.t2p2name?.setValue(t2p2row[0]);
+      this.t2p3name?.setValue(t2p3row[0]);
+      this.t2p4name?.setValue(t2p4row[0]);
       this.t2p5name?.setValue(t2p5row[0]);
       this.t2p6name?.setValue(t2p6row[0]);
-      this.t2p7name?.setValue(t2p7row[0]);  
-      
+      this.t2p7name?.setValue(t2p7row[0]);
+
       //Team 2 Initial ELO
       this.t2p1preelo?.setValue(t2p1row[1]);
       this.t2p2preelo?.setValue(t2p2row[1]);
@@ -649,34 +660,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
     })
 
     this.lastMatch$.pipe(
-      map((match) => {        
+      map((match) => {
         const sumPreeloTeam1 = [
-          (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) + 
-          (Number(match.t1p2preelo) ? Number(match.t1p2preelo) : 0) + 
-          (Number(match.t1p3preelo) ? Number(match.t1p3preelo) : 0) + 
-          (Number(match.t1p4preelo) ? Number(match.t1p4preelo) : 0) + 
-          (Number(match.t1p5preelo) ? Number(match.t1p5preelo) : 0) + 
-          (Number(match.t1p6preelo) ? Number(match.t1p6preelo) : 0) + 
-          (Number(match.t1p7preelo) ? Number(match.t1p7preelo) : 0) 
-        ].reduce(this.addPreelo, 0);     
+          (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) +
+          (Number(match.t1p2preelo) ? Number(match.t1p2preelo) : 0) +
+          (Number(match.t1p3preelo) ? Number(match.t1p3preelo) : 0) +
+          (Number(match.t1p4preelo) ? Number(match.t1p4preelo) : 0) +
+          (Number(match.t1p5preelo) ? Number(match.t1p5preelo) : 0) +
+          (Number(match.t1p6preelo) ? Number(match.t1p6preelo) : 0) +
+          (Number(match.t1p7preelo) ? Number(match.t1p7preelo) : 0)
+        ].reduce(this.addPreelo, 0);
 
         const sumPreeloTeam2 = [
-          (Number(match.t2p1preelo) ? Number(match.t2p1preelo) : 0) + 
-          (Number(match.t2p2preelo) ? Number(match.t2p2preelo) : 0) + 
-          (Number(match.t2p3preelo) ? Number(match.t2p3preelo) : 0) + 
-          (Number(match.t2p4preelo) ? Number(match.t2p4preelo) : 0) + 
-          (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) + 
-          (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) + 
-          (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0) 
-        ].reduce(this.addPreelo, 0); 
+          (Number(match.t2p1preelo) ? Number(match.t2p1preelo) : 0) +
+          (Number(match.t2p2preelo) ? Number(match.t2p2preelo) : 0) +
+          (Number(match.t2p3preelo) ? Number(match.t2p3preelo) : 0) +
+          (Number(match.t2p4preelo) ? Number(match.t2p4preelo) : 0) +
+          (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) +
+          (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) +
+          (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0)
+        ].reduce(this.addPreelo, 0);
         // console.log('THIS.OPTIONS', this.options)
         // console.log('MATCH', match)
-        
+
         this.matchRow = {
           timestamp: match.timestamp,
           idwar: match.idwar,
           t1roundswon: match.t1roundswon,
-          t2roundswon: match.t2roundswon, 
+          t2roundswon: match.t2roundswon,
           video: match.video,
           info: match.info,
           t1preelo: sumPreeloTeam1,
@@ -754,126 +765,133 @@ export class DashboardComponent implements OnInit, OnDestroy {
           t2p7preelo: match.t2p7preelo,
           t2p7score: match.t2p7score,
           t2p7postelo: match.t2p7postelo,
-        }       
+        }
         return this.matchRow;
       })
-      
-    ).subscribe();    
+
+    ).subscribe();
 
     this.t1p1name.
-    valueChanges.subscribe(value => {     
+    valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
           this.t1p1preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
-  
+
     this.t1p2name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p2preeloNgModel = el.ranking;                      
+          this.t1p2preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
-  
+
     this.t1p3name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p3preeloNgModel = el.ranking;                        
+          this.t1p3preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
     this.t1p4name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p4preeloNgModel = el.ranking; 
+          this.t1p4preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
     this.t1p5name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p5preeloNgModel = el.ranking;         
+          this.t1p5preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
     this.t1p6name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p6preeloNgModel = el.ranking;          
+          this.t1p6preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
     this.t1p7name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t1p7preeloNgModel = el.ranking; 
+          this.t1p7preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
     this.t2p1name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p1preeloNgModel = el.ranking;          
+          this.t2p1preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
     this.t2p2name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p2preeloNgModel = el.ranking;         
+          this.t2p2preeloNgModel = el.ranking;
         }
-      })      
-    })  
+      })
+    })
     this.t2p3name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p3preeloNgModel = el.ranking;          
+          this.t2p3preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
     this.t2p4name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p4preeloNgModel = el.ranking;          
+          this.t2p4preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
     this.t2p5name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p5preeloNgModel = el.ranking;          
+          this.t2p5preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
     this.t2p6name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p6preeloNgModel = el.ranking;          
+          this.t2p6preeloNgModel = el.ranking;
         }
-      })      
+      })
     })
     this.t2p7name.
     valueChanges.subscribe(value => {
       this.options.forEach((el:any) => {
         if(el.username == value){
-          this.t2p7preeloNgModel = el.ranking;          
+          this.t2p7preeloNgModel = el.ranking;
         }
-      })      
-    })   
+      })
+    })
+  }
+
+  validatePlayer(control: FormControl): { [s: string]: boolean } | null {
+    if (control.value && this.playerList.indexOf(control.value) === -1) {
+      return { 'invalidPlayer': true };
+    }
+    return null;
   }
 
   // onSubmitDiscord() {
@@ -899,8 +917,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   applyEmpFilter(ob:MatSelectChange,empfilter:EmpFilter) {
     this.filterDictionary.set(empfilter.name,ob.value);
-    var jsonString = JSON.stringify(Array.from(this.filterDictionary.entries()));    
-    this.dataSourceFilters.filter = jsonString;   
+    var jsonString = JSON.stringify(Array.from(this.filterDictionary.entries()));
+    this.dataSourceFilters.filter = jsonString;
   }
 
   applyFilter(event: Event) {
@@ -918,15 +936,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private _filter(value: string): any[] {
     const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
-    return this.options.filter(option => option.playername.toLowerCase().includes(filterValue));     
+    return this.options.filter(option => option.playername.toLowerCase().includes(filterValue));
     // return this.options.filter(option => option.playername.toLowerCase().indexOf(filterValue) === 0);
   }
- 
+
   public addPlayerLink(player:string, obj:any) {
     let convertedPlayer = '';
-    obj.forEach((el:any) => {     
+    obj.forEach((el:any) => {
       if (player === el.username) {
-        convertedPlayer = el.playername;        
+        convertedPlayer = el.playername;
       } else if (player === '') {
         // console.log('N/A player');
       } else {
@@ -942,7 +960,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   sendPlayersManually(){
-    const t1p1name = this.t1p1name.value != null ? this.t1p1name.value : ''; 
+    const t1p1name = this.t1p1name.value != null ? this.t1p1name.value : '';
     const t1p2name = this.t1p2name.value != null ? this.t1p2name.value : '';
     const t1p3name = this.t1p3name.value != null ? this.t1p3name.value : '';
     const t1p4name = this.t1p4name.value != null ? this.t1p4name.value : '';
@@ -951,44 +969,44 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const t1p7name = this.t1p7name.value != null ? this.t1p7name.value : '';
 
     //TEAM 2
-    const t2p1name = this.t2p1name.value != null ? this.t2p1name.value : ''; 
+    const t2p1name = this.t2p1name.value != null ? this.t2p1name.value : '';
     const t2p2name = this.t2p2name.value != null ? this.t2p2name.value : '';
     const t2p3name = this.t2p3name.value != null ? this.t2p3name.value : '';
     const t2p4name = this.t2p4name.value != null ? this.t2p4name.value : '';
     const t2p5name = this.t2p5name.value != null ? this.t2p5name.value : '';
     const t2p6name = this.t2p6name.value != null ? this.t2p6name.value : '';
     const t2p7name = this.t2p7name.value != null ? this.t2p7name.value : '';
-    
+
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', t1p1name, t1p2name, t1p3name, t1p4name, t1p5name, t1p6name, t1p7name).subscribe({
       next: (res) => {
-        if(res.done = true){         
+        if(res.done = true){
           this.modalHeader = 'SUCCESS'
           this.errorMessage = 'Teams updated!'
           this.modalService.open(
-            this.content, 
-            { 
+            this.content,
+            {
               centered: true,
-              windowClass: 'success' 
+              windowClass: 'success'
             }
           );
 
-          this.googleApi.getMultipleRanges('B19').subscribe(data =>{      
-            const values = data['values'];     
-            this.t1cumulative?.setValue(values[0]);       
+          this.googleApi.getMultipleRanges('B19').subscribe(data =>{
+            const values = data['values'];
+            this.t1cumulative?.setValue(values[0]);
           })
         }
       }
     })
 
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', t2p1name, t2p2name, t2p3name, t2p4name, t2p5name, t2p6name, t2p7name).subscribe({
-      next: (res) => {        
-        this.googleApi.getMultipleRanges('B30').subscribe(data =>{      
-          const values = data['values'];     
-          this.t2cumulative?.setValue(values[0]);     
-          this.notifier.notify('success', 'Confirm Players successful.');  
+      next: (res) => {
+        this.googleApi.getMultipleRanges('B30').subscribe(data =>{
+          const values = data['values'];
+          this.t2cumulative?.setValue(values[0]);
+          this.notifier.notify('success', 'Confirm Players successful.');
         })
       }, error: (err) => {
-        this.notifier.notify('error', 'Confirm Players error.', err); 
+        this.notifier.notify('error', 'Confirm Players error.', err);
       }
     })
   }
@@ -1000,7 +1018,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ...this.teamOneRoundsWon.value,
       ...this.teamTwoRoundsWon.value
     }
-    // console.log('formValues', formValues)
+    console.log('formValues', formValues)
     const t1p1score = formValues.t1p1score;
     const t1p2score = formValues.t1p2score;
     const t1p3score = formValues.t1p3score;
@@ -1022,40 +1040,40 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const t2sumFrags = '=SUMA.JEŻELI(C23:C29,"<>#N/A")';
     const t2roundsWon = Number(formValues.t2roundsWon);
     const t1roundsWonInput = formValues.t1roundsWonInput;
-    const t2roundsWonInput = formValues.t2roundsWonInput;  
-   
+    const t2roundsWonInput = formValues.t2roundsWonInput;
+
     //TEAM ONE
-    this.googleApi.updateRoundsWon('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','B20', t1roundsWonInput).subscribe({
-      next: (res) => {
-        // console.log('updateRoundsWon res =>', res)    
-        this.notifier.notify('success', 'Update Rounds Won Team 1 successful.');       
-      },
-      error: (err) => {
-        console.log('updateRoundsWon err =>', err)
-      }
-    })
+    // this.googleApi.updateRoundsWon('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','B20', t1roundsWonInput).subscribe({
+    //   next: (res) => {
+    //     // console.log('updateRoundsWon res =>', res)
+    //     this.notifier.notify('success', 'Update Rounds Won Team 1 successful.');
+    //   },
+    //   error: (err) => {
+    //     console.log('updateRoundsWon err =>', err)
+    //   }
+    // })
 
-    //TEAM TWO
-    this.googleApi.updateRoundsWon('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','B31', t2roundsWonInput).subscribe({
-      next: (res) => {
-        // console.log('updateRoundsWon res =>', res)
-        this.notifier.notify('success', 'Update Rounds Won Team 2 successful.');  
-      },
-      error: (err) => {
-        console.log('updateRoundsWon err =>', err)
-      }
-    })
+    // //TEAM TWO
+    // this.googleApi.updateRoundsWon('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','B31', t2roundsWonInput).subscribe({
+    //   next: (res) => {
+    //     // console.log('updateRoundsWon res =>', res)
+    //     this.notifier.notify('success', 'Update Rounds Won Team 2 successful.');
+    //   },
+    //   error: (err) => {
+    //     console.log('updateRoundsWon err =>', err)
+    //   }
+    // })
 
-    this.googleApi.sendScore('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','C12:C31', t1p1score, t1p2score, t1p3score, t1p4score, t1p5score, t1p6score, t1p7score, t1sumFrags, t1roundsWon, emptyCell, headDesc, t2p1score, t2p2score, t2p3score, t2p4score, t2p5score, t2p6score, t2p7score, t2sumFrags, t2roundsWon).subscribe({
-      next: (res) => {
-        // console.log('sendScore res =>', res)
-        this.notifier.notify('success', 'Send Score successful.'); 
-        this.updateELO();
-      },
-      error: (err) => {
-        console.log('sendScore err =>', err)
-      }
-    })
+    // this.googleApi.sendScore('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','C12:C31', t1p1score, t1p2score, t1p3score, t1p4score, t1p5score, t1p6score, t1p7score, t1sumFrags, t1roundsWon, emptyCell, headDesc, t2p1score, t2p2score, t2p3score, t2p4score, t2p5score, t2p6score, t2p7score, t2sumFrags, t2roundsWon).subscribe({
+    //   next: (res) => {
+    //     // console.log('sendScore res =>', res)
+    //     this.notifier.notify('success', 'Send Score successful.');
+    //     this.updateELO();
+    //   },
+    //   error: (err) => {
+    //     console.log('sendScore err =>', err)
+    //   }
+    // })
   }
 
   // updateSelectedValue(event: any) {
@@ -1078,7 +1096,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // const { value } = this.playersToWar;
     // console.log('value', value)
     //TEAM 1
-    const t1p1name = this.t1p1name.value != null ? this.t1p1name.value : ''; 
+    const t1p1name = this.t1p1name.value != null ? this.t1p1name.value : '';
     const t1p2name = this.t1p2name.value != null ? this.t1p2name.value : '';
     const t1p3name = this.t1p3name.value != null ? this.t1p3name.value : '';
     const t1p4name = this.t1p4name.value != null ? this.t1p4name.value : '';
@@ -1087,7 +1105,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const t1p7name = this.t1p7name.value != null ? this.t1p7name.value : '';
 
     //TEAM 2
-    const t2p1name = this.t2p1name.value != null ? this.t2p1name.value : ''; 
+    const t2p1name = this.t2p1name.value != null ? this.t2p1name.value : '';
     const t2p2name = this.t2p2name.value != null ? this.t2p2name.value : '';
     const t2p3name = this.t2p3name.value != null ? this.t2p3name.value : '';
     const t2p4name = this.t2p4name.value != null ? this.t2p4name.value : '';
@@ -1102,13 +1120,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     //   't1p5name', t1p5name,
     //   't1p6name', t1p6name,
     //   't1p7name', t1p7name
-    // )   
+    // )
 
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', t1p1name, t1p2name, t1p3name, t1p4name, t1p5name,  t1p6name, t1p7name).subscribe({
         next: (res) => {
           // console.log('update cells A12:A18 res =>', res)
-          this.notifier.notify('success', 'Update Team 1 successful.'); 
-          this.getInitialEloTeamOne('B12:B19'); 
+          this.notifier.notify('success', 'Update Team 1 successful.');
+          this.getInitialEloTeamOne('B12:B19');
         },
         error: (err) => {
           console.log('update cell err =>', err)
@@ -1118,26 +1136,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', t2p1name, t2p2name, t2p3name, t2p4name, t2p5name,  t2p6name, t2p7name).subscribe({
         next: (res) => {
           // console.log('update cells A23:A29 res =>', res)
-          this.notifier.notify('success', 'Update Team 2 successful.'); 
-          this.getInitialEloTeamTwo('B23:B30') 
+          this.notifier.notify('success', 'Update Team 2 successful.');
+          this.getInitialEloTeamTwo('B23:B30')
         },
         error: (err) => {
           console.log('update cell err =>', err)
         }
-    });       
+    });
   }
 
   // onOptionSelectedOne(event: any) {
-  //   console.log('************* event =>', event.option.value)    
+  //   console.log('************* event =>', event.option.value)
   // }
   getInitialEloTeamOne(range: string){
     this.googleApi.getMultipleRanges(range).subscribe(data => {
       const values = data['values'];
-     
-      this.t1p1preelo?.setValue(values[0]); 
-      this.t1p2preelo?.setValue(values[1]); 
-      this.t1p3preelo?.setValue(values[2]); 
-      this.t1p4preelo?.setValue(values[3]); 
+
+      this.t1p1preelo?.setValue(values[0]);
+      this.t1p2preelo?.setValue(values[1]);
+      this.t1p3preelo?.setValue(values[2]);
+      this.t1p4preelo?.setValue(values[3]);
       this.t1p5preelo?.setValue(values[4]);
       this.t1p6preelo?.setValue(values[5]);
       this.t1p7preelo?.setValue(values[6]);
@@ -1154,11 +1172,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getInitialEloTeamTwo(range: string){
     this.googleApi.getMultipleRanges(range).subscribe(data => {
       const values = data['values'];
-     
-      this.t2p1preelo?.setValue(values[0]); 
-      this.t2p2preelo?.setValue(values[1]); 
-      this.t2p3preelo?.setValue(values[2]); 
-      this.t2p4preelo?.setValue(values[3]); 
+
+      this.t2p1preelo?.setValue(values[0]);
+      this.t2p2preelo?.setValue(values[1]);
+      this.t2p3preelo?.setValue(values[2]);
+      this.t2p4preelo?.setValue(values[3]);
       this.t2p5preelo?.setValue(values[4]);
       this.t2p6preelo?.setValue(values[5]);
       this.t2p7preelo?.setValue(values[6]);
@@ -1189,7 +1207,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       next: (res) => {
         // console.log('BALANCE res =>', res)
         // this.selectTeams();
-       
+
         this.googleApi.runScriptFunction('selectTeams').subscribe({
           next: (res) => {
             // console.log(' SELECT res =>', res)
@@ -1197,37 +1215,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
               this.modalHeader = 'SUCCESS'
               this.errorMessage = 'Teams are balanced successfuly!';
               this.modalService.open(
-                this.content, 
-                { 
+                this.content,
+                {
                   centered: true,
-                  windowClass: 'success' 
+                  windowClass: 'success'
                 }
               );
             }
 
               // *** TEAM ONE ***
             this.googleApi.getMultipleRanges('A12:A19').subscribe(data => {
-              const t1preview = data['values'];         
+              const t1preview = data['values'];
               //  console.log('t1preview => =>', t1preview)
                // set value from values from GET
-           
-               this.t1p1name?.setValue(t1preview[0]); 
-               this.t1p2name?.setValue(t1preview[1]); 
-               this.t1p3name?.setValue(t1preview[2]); 
-               this.t1p4name?.setValue(t1preview[3]); 
+
+               this.t1p1name?.setValue(t1preview[0]);
+               this.t1p2name?.setValue(t1preview[1]);
+               this.t1p3name?.setValue(t1preview[2]);
+               this.t1p4name?.setValue(t1preview[3]);
                this.t1p5name?.setValue(t1preview[4]);
                this.t1p6name?.setValue(t1preview[5]);
                this.t1p7name?.setValue(t1preview[6]);
-         
+
                // console.log('t1preview', t1preview)
              }, error => {
                console.log('error getPriviewPlayers', error)
             })
 
             this.googleApi.getMultipleRanges('B12:B19').subscribe( data => {
-              const t1preview = data['values'];  
+              const t1preview = data['values'];
               //Team 1 Initial ELO
-              
+
               this.t1p1preelo?.setValue(t1preview[0]);
               this.t1p2preelo?.setValue(t1preview[1]);
               this.t1p3preelo?.setValue(t1preview[2]);
@@ -1247,10 +1265,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }, error => {
               console.log("getMultipleRanges('B12:B19')", error)
             })
-         
-             // *** TEAM TWO ***    
+
+             // *** TEAM TWO ***
              this.googleApi.getMultipleRanges('A23:A29').subscribe(data => {
-              const t2preview = data['values'];    
+              const t2preview = data['values'];
               // console.log('t1preview => =>', t2preview)
              // TEAM 2 set value from values from GET
             //  this.teamTwoToWar.controls['t2p1name'].setValue(t2preview[0])
@@ -1260,21 +1278,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
             //  this.teamTwoToWar.controls['t2p5name'].setValue(t2preview[4])
             //  this.teamTwoToWar.controls['t2p6name'].setValue(t2preview[5])
             //  this.teamTwoToWar.controls['t2p7name'].setValue(t2preview[6])
-               this.t2p1name?.setValue(t2preview[0]);            
-               this.t2p2name?.setValue(t2preview[1]); 
-               this.t2p3name?.setValue(t2preview[2]); 
-               this.t2p4name?.setValue(t2preview[3]); 
+               this.t2p1name?.setValue(t2preview[0]);
+               this.t2p2name?.setValue(t2preview[1]);
+               this.t2p3name?.setValue(t2preview[2]);
+               this.t2p4name?.setValue(t2preview[3]);
                this.t2p5name?.setValue(t2preview[4]);
                this.t2p6name?.setValue(t2preview[5]);
                this.t2p7name?.setValue(t2preview[6]);
-               
+
                // console.log('t2preview', t2preview)
              }, error => {
                console.log('error getPriviewPlayers', error)
              })
 
              this.googleApi.getMultipleRanges('B23:B30').subscribe(data => {
-              const t2preview = data['values']; 
+              const t2preview = data['values'];
                //Team 2 Initial ELO
                this.t2p1preelo?.setValue(t2preview[0]);
                this.t2p2preelo?.setValue(t2preview[1]);
@@ -1295,13 +1313,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
              }, error => {
               console.log("getMultipleRanges('B23:B30')", error)
              })
-          
+
           },
           error: (err) => {
             console.log(' SELECT err =>', err)
           }
         })
-       
+
       },
       error: (err) => {
         console.log('BALANCE err =>', err)
@@ -1309,7 +1327,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     })
   }
 
-  selectTeams(){ 
+  selectTeams(){
     this.googleApi.runScriptFunction('selectTeams').subscribe({
       next: (res) => {
         console.log(' SELECT res =>', res)
@@ -1328,10 +1346,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.modalHeader = 'SUCCESS'
           this.errorMessage = 'Ranking update!';
           this.modalService.open(
-            this.content, 
-            { 
+            this.content,
+            {
               centered: true,
-              windowClass: 'success' 
+              windowClass: 'success'
             }
           );
         }
@@ -1393,14 +1411,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   clearTeam(){
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A12:A18', '','','','','', '', '').subscribe({
       next: (res) => {
-        // console.log('res CLEAR A12:A18 =>', res)       
+        // console.log('res CLEAR A12:A18 =>', res)
         this.t1p1name.reset()
         this.t1p2name.reset()
         this.t1p3name.reset()
         this.t1p4name.reset()
         this.t1p5name.reset()
         this.t1p6name.reset()
-        this.t1p7name.reset()        
+        this.t1p7name.reset()
 
         this.t1p1preelo.reset()
         this.t1p2preelo.reset()
@@ -1429,13 +1447,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         })
       },
       error: (err) => {
-        console.log('err clear A12:A18 =>', err)        
+        console.log('err clear A12:A18 =>', err)
       }
     })
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C12:C18', '','','','','', '', '')
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'A23:A29', '','','','','', '', '').subscribe({
       next: (res) => {
-        // console.log('res CLEAR A23:A29 =>', res)    
+        // console.log('res CLEAR A23:A29 =>', res)
         this.t2p1name.reset()
         this.t2p2name.reset()
         this.t2p3name.reset()
@@ -1471,7 +1489,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         })
       },
       error: (err) => {
-        console.log('err clear A23:A29 =>', err)       
+        console.log('err clear A23:A29 =>', err)
       }
     })
     this.googleApi.updateCell('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo', 'Add+a+Match', 'C23:C29', '','','','','', '', '')
@@ -1479,10 +1497,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   public showNotification( type: string, message: string ): void {
 		this.notifier.notify( type, message );
-	} 
-  
+	}
+
   /// from player-api.service.ts
-  public authHeader() : HttpHeaders { 
+  public authHeader() : HttpHeaders {
     return new HttpHeaders ({
       'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`
     })
@@ -1493,12 +1511,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     window.location.reload();
   }
 
-  public getPlayers(name: string): Observable<any> {  
+  public getPlayers(name: string): Observable<any> {
     // this.oAuthService.setupAutomaticSilentRefresh();
     return this.http.get<any>(
       `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
       );
-  } 
+  }
 
   permutate(input: number[]) {
     let result = [];
@@ -1523,11 +1541,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   public addPreelo(accumulator:any, a:any) {
     return accumulator + a;
-  } 
+  }
 
   public calculateChance(team1PreElo:any, team2PreElo:any){
     const chanceOfWinTeamOne = 1 / (1 + 10 ** ((team1PreElo - team2PreElo) / 400)) * 100;
-    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((team2PreElo - team1PreElo) / 400)) * 100; 
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((team2PreElo - team1PreElo) / 400)) * 100;
 
     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
@@ -1568,7 +1586,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // General Chat
     const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
     //TEAM 1
-    const t1p1name = this.t1p1name.value != null ? this.t1p1name.value : ''; 
+    const t1p1name = this.t1p1name.value != null ? this.t1p1name.value : '';
     const t1p2name = this.t1p2name.value != null ? this.t1p2name.value : '';
     const t1p3name = this.t1p3name.value != null ? this.t1p3name.value : '';
     const t1p4name = this.t1p4name.value != null ? this.t1p4name.value : '';
@@ -1577,21 +1595,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const t1p7name = this.t1p7name.value != null ? this.t1p7name.value : '';
 
     //TEAM 2
-    const t2p1name = this.t2p1name.value != null ? this.t2p1name.value : ''; 
+    const t2p1name = this.t2p1name.value != null ? this.t2p1name.value : '';
     const t2p2name = this.t2p2name.value != null ? this.t2p2name.value : '';
     const t2p3name = this.t2p3name.value != null ? this.t2p3name.value : '';
     const t2p4name = this.t2p4name.value != null ? this.t2p4name.value : '';
     const t2p5name = this.t2p5name.value != null ? this.t2p5name.value : '';
     const t2p6name = this.t2p6name.value != null ? this.t2p6name.value : '';
     const t2p7name = this.t2p7name.value != null ? this.t2p7name.value : '';
-    
+
     const now = new Date();
     const day = ("0" + now.getDate()).slice(-2);
     const month = ("0" + (now.getMonth() + 1)).slice(-2);
     const year = now.getFullYear();
     const hours = ("0" + now.getHours()).slice(-2);
     const minutes = ("0" + now.getMinutes()).slice(-2);
-    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;  
+    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
 
     const chanceFutureTeamOne:any = this.t1cumulative;
     const chanceFutureTeamTwo:any = this.t2cumulative;
@@ -1599,11 +1617,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     let chanceOfWinTeamOneShow = 0;
     let chanceOfWinTeamTwoShow = 0;
 
-    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne.value - chanceFutureTeamTwo.value) / 400)) * 100;       
+    const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne.value - chanceFutureTeamTwo.value) / 400)) * 100;
     const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo.value - chanceFutureTeamOne.value) / 400)) * 100;
 
     chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-    chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);    
+    chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
 
     let nextMatch = "";
     nextMatch += "**NEXT MATCH**, created: " + formattedDate + "\n";
@@ -1615,7 +1633,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     nextMatch += "TEAM 2 Chance for win: " + chanceOfWinTeamOneShow + " %" + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += "Good Luck & Have Fun!";
-    
+
     const payload = {
       content: nextMatch
     };
@@ -1625,23 +1643,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }, error: (err) => {
         this.notifier.notify('error', 'Something went wrong')
       }
-    });  
-  }   
+    });
+  }
 
-  sendToDiscord2() {  
+  sendToDiscord2() {
     const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
     const playerCount = parseInt(this.playerCount);
-  
+
     const numberOfMapsToDraw = this.numberOfMapsToDraw;
     let maps: string[] = [];
-  
+
     const stock = ['The Hunt', 'V2', 'The Bridge'];
     const customMp = ['VSUK Abbey', 'Stlo', 'Renan', 'The Church Final'];
     const customLp = ['V2 Shelter', 'Navarone', 'Dessau1946', 'The Bridge OMG', 'The Lost Town', 'Stlo4', 'THe Village', 'Harbor', 'Holland'];
-  
-    if (this.selectedOption2 === 'Random') {      
+
+    if (this.selectedOption2 === 'Random') {
       let availableMaps: string[] = [];
-      
+
       if (playerCount === 6) {
         availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Stlo', 'Renan', 'Dessau1946', 'Harbor'];
       } else if (playerCount >= 8) {
@@ -1649,7 +1667,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       } else if (playerCount >= 10) {
         availableMaps = ['The Hunt', 'V2', 'The Bridge', 'Renan', 'VSUK Abbey', 'The Church Final', 'Stlo4', 'V2 Shelter', 'Holland', 'The Bridge OMG', 'The Village'];
       }
-      
+
       maps = this.getExtraRandomMaps(availableMaps, numberOfMapsToDraw, this.mapProbabilities);
     } else if (this.selectedOption2 === 'TwoStockMaps') {
       // Wybierz dwie mapy ze zbioru stock
@@ -1673,8 +1691,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     } else if (this.selectedOption2 === 'Teams-decide') {
       // Dodaj informację o Teams decide do nextMatch
       maps = ['Teams decide'];
-    }     
-  
+    }
+
     const now = new Date();
     const day = ("0" + now.getDate()).slice(-2);
     const month = ("0" + (now.getMonth() + 1)).slice(-2);
@@ -1682,16 +1700,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const hours = ("0" + now.getHours()).slice(-2);
     const minutes = ("0" + now.getMinutes()).slice(-2);
     const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
-  
+
     let nextMatch = "";
     nextMatch += "**MAPS for next MATCH**, created: " + formattedDate + "\n";
     nextMatch += "----------" + "\n";
     nextMatch += 'MAPS: ' + maps.join(', ') + ' (' + this.selectedOption2 + ')' + '\n';
-    nextMatch += "----------" + "\n";   
+    nextMatch += "----------" + "\n";
     nextMatch += "Good Luck & Have Fun!";
     // console.log('nextM', nextMatch);
     const payload = {
-      content: nextMatch 
+      content: nextMatch
     };
     this.http.post(webhookUrl, payload).subscribe({
       next: (res) => {
@@ -1700,35 +1718,35 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.notifier.notify('error', 'Something went wrong')
       }
     });
-  
+
     this.nextMatch = nextMatch;
   }
-  
+
 
   getExtraRandomMaps(mapArray: string[], count: number, probabilities: {[key: string]: number}): string[] {
     const selectedMaps: string[] = [];
     const availableMaps: string[] = [];
-  
+
     // Wybierz mapy, których prawdopodobieństwo jest większe od 0
     for (const map of mapArray) {
       if (probabilities[map] > 0) {
         availableMaps.push(map);
       }
     }
-  
+
     // Wylosuj mapy z uwzględnieniem prawdopodobieństwa
     for (let i = 0; i < count; i++) {
       const randomIndex = Math.floor(Math.random() * availableMaps.length);
       const selectedMap = availableMaps[randomIndex];
       selectedMaps.push(selectedMap);
-  
+
       // Zmniejsz prawdopodobieństwo wybranych map do zera, aby nie były wybierane ponownie
       probabilities[selectedMap] = 0;
-  
+
       // Usuń wybraną mapę z dostępnych map
       availableMaps.splice(randomIndex, 1);
     }
-  
+
     return selectedMaps;
   }
 
@@ -1784,6 +1802,52 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.drawingInProgress = false;
       }
     }, 1000); // 1000 ms = 1 sekunda (zmień na czas trwania animacji)
+  }
+
+  isTeamValid(player1: FormControl, player2: FormControl, player3: FormControl): boolean {
+    return this.validatePlayer(player1) === null &&
+           this.validatePlayer(player2) === null &&
+           this.validatePlayer(player3) === null &&
+           player1.value && player2.value && player3.value;
+  }
+
+  openConfirmationDialog(): void {
+    const formValues: any = {
+      scoreTeamOne: this.scoreTeamOne.value,
+      scoreTeamTwo: this.scoreTeamTwo.value,
+      teamOneRoundsWon: this.teamOneRoundsWon.value,
+      teamTwoRoundsWon: this.teamTwoRoundsWon.value,
+      t1p1name: this.t1p1name.value,
+      t1p2name: this.t1p2name.value,
+      t1p3name: this.t1p3name.value,
+      t1p4name: this.t1p4name.value,
+      t1p5name: this.t1p5name.value,
+      t1p6name: this.t1p6name.value,
+      t1p7name: this.t1p7name.value,
+      t2p1name: this.t2p1name.value,
+      t2p2name: this.t2p2name.value,
+      t2p3name: this.t2p3name.value,
+      t2p4name: this.t2p4name.value,
+      t2p5name: this.t2p5name.value,
+      t2p6name: this.t2p6name.value,
+      t2p7name: this.t2p7name.value
+    };
+
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: 'auto',
+      data: {
+        form: formValues, // Przekazujemy dane do okna dialogowego
+        playerRowArray: this.playerRowArray
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Tutaj wywołaj metodę scoresTwoTeams() jeśli użytkownik potwierdził
+        this.scoresTwoTeams();
+      }
+    });
   }
 
   ngOnDestroy() {

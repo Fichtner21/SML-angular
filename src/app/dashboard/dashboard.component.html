@@ -1,23 +1,23 @@
 <!-- <script src="https://accounts.google.com/gsi/client" async defer></script> -->
 <section>
-  <div class="container">   
+  <div class="container">
     <div class="main-grid">
       <div class="grid span5">
         <mat-card class="span3 menage">
           <button mat-raised-button color="primary" routerLink="/dashboard/create-player"><span>Create player</span> <fa-icon [icon]="userPlusIcon"></fa-icon></button>
           <div>
-          
+
           </div>
         </mat-card>
         <mat-card class="span3 menage">
-          <button mat-raised-button color="primary" routerLink="/dashboard/list-players"><span>List players</span> <fa-icon [icon]="usersIcon"></fa-icon></button>     
+          <button mat-raised-button color="primary" routerLink="/dashboard/list-players"><span>List players</span> <fa-icon [icon]="usersIcon"></fa-icon></button>
         </mat-card>
         <mat-card class="span1 menage logout">
           <button mat-raised-button color="primary" *ngIf="!oAuthService.hasValidAccessToken()" (click)="loginTest()"><span>Login</span> <fa-icon [icon]="doorOpen"></fa-icon></button>
-         
-          <button mat-raised-button color="primary" *ngIf="oAuthService.hasValidAccessToken()" (click)="logoutTest()"><span>Logout</span>from <fa-icon [icon]="google"></fa-icon></button> 
-        </mat-card> 
-       
+
+          <button mat-raised-button color="primary" *ngIf="oAuthService.hasValidAccessToken()" (click)="logoutTest()"><span>Logout</span>from <fa-icon [icon]="google"></fa-icon></button>
+        </mat-card>
+
         <mat-card class="team match span3">
           <form class="example-form team1name" [formGroup]="playersToWar" (ngSubmit)="onSubmit()">
             <h3>Team 1</h3>
@@ -128,34 +128,34 @@
               <div></div>
             </mat-form-field>
             <!-- <button mat-raised-button type="submit">submit</button>   -->
-            <notifier-container></notifier-container>     
+            <notifier-container></notifier-container>
           </form>
           <form [formGroup]="preEloTeamOne">
             <h3>ELO</h3>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t1p1preelo" [(ngModel)]="t1p1preeloNgModel"> 
+              <input type="text" matInput [formControl]="t1p1preelo" [(ngModel)]="t1p1preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
               <input type="text" matInput [formControl]="t1p2preelo" [(ngModel)]="t1p2preeloNgModel">
-            </mat-form-field>           
-            <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t1p3preelo" [(ngModel)]="t1p3preeloNgModel"> 
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t1p4preelo" [(ngModel)]="t1p4preeloNgModel"> 
+              <input type="text" matInput [formControl]="t1p3preelo" [(ngModel)]="t1p3preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t1p5preelo" [(ngModel)]="t1p5preeloNgModel"> 
+              <input type="text" matInput [formControl]="t1p4preelo" [(ngModel)]="t1p4preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t1p6preelo" [(ngModel)]="t1p6preeloNgModel"> 
+              <input type="text" matInput [formControl]="t1p5preelo" [(ngModel)]="t1p5preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t1p7preelo" [(ngModel)]="t1p7preeloNgModel"> 
+              <input type="text" matInput [formControl]="t1p6preelo" [(ngModel)]="t1p6preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t1cumulative" [(ngModel)]="t1cumulativeNgModel"> 
-              
+              <input type="text" matInput [formControl]="t1p7preelo" [(ngModel)]="t1p7preeloNgModel">
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="initial-elo readonly">
+              <input type="text" matInput [formControl]="t1cumulative" [(ngModel)]="t1cumulativeNgModel">
+
             </mat-form-field>
             <!-- <p style="border:3px solid red; padding: 10px;">{{ sum }}</p> -->
           </form>
@@ -204,7 +204,7 @@
             </form>
           </div>
         </mat-card>
-      
+
         <mat-card class="team match span3">
           <form class="example-form" [formGroup]="teamTwoToWar">
             <h3>Team 2</h3>
@@ -214,7 +214,7 @@
                     placeholder="Pick one"
                     aria-label="Player 1"
                     matInput
-                    [formControl]="t2p1name"                
+                    [formControl]="t2p1name"
                     [matAutocomplete]="auto15">
               <mat-autocomplete autoActiveFirstOption #auto15="matAutocomplete">
                 <mat-option *ngFor="let option of filteredOptionsT2p1name | async" [value]="option.username">
@@ -315,35 +315,35 @@
               <div></div>
             </mat-form-field>
             <!-- <button mat-raised-button type="submit">submit</button>   -->
-            <notifier-container></notifier-container> 
-          </form>       
+            <notifier-container></notifier-container>
+          </form>
           <form [formGroup]="preEloTeamTwo">
             <h3>ELO</h3>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t2p1preelo" [(ngModel)]="t2p1preeloNgModel"> 
+              <input type="text" matInput [formControl]="t2p1preelo" [(ngModel)]="t2p1preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t2p2preelo" [(ngModel)]="t2p2preeloNgModel"> 
+              <input type="text" matInput [formControl]="t2p2preelo" [(ngModel)]="t2p2preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t2p3preelo" [(ngModel)]="t2p3preeloNgModel"> 
+              <input type="text" matInput [formControl]="t2p3preelo" [(ngModel)]="t2p3preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t2p4preelo" [(ngModel)]="t2p4preeloNgModel"> 
+              <input type="text" matInput [formControl]="t2p4preelo" [(ngModel)]="t2p4preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t2p5preelo" [(ngModel)]="t2p5preeloNgModel"> 
+              <input type="text" matInput [formControl]="t2p5preelo" [(ngModel)]="t2p5preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t2p6preelo" [(ngModel)]="t2p6preeloNgModel"> 
+              <input type="text" matInput [formControl]="t2p6preelo" [(ngModel)]="t2p6preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t2p7preelo" [(ngModel)]="t2p7preeloNgModel"> 
+              <input type="text" matInput [formControl]="t2p7preelo" [(ngModel)]="t2p7preeloNgModel">
             </mat-form-field>
             <mat-form-field appearance="fill" class="initial-elo readonly">
-              <input type="text" matInput [formControl]="t2cumulative"> 
+              <input type="text" matInput [formControl]="t2cumulative">
             </mat-form-field>
-          </form>   
+          </form>
           <div>
             <form [formGroup]="scoreTeamTwo" (ngSubmit)="scoresTwoTeams()">
               <h3>Frags</h3>
@@ -386,9 +386,9 @@
                 <input matInput formControlName="t2roundsWonInput">
               </mat-form-field>
             </form>
-          </div> 
+          </div>
         </mat-card>
-       
+
         <div class="buttons span1">
           <mat-card class="match">
             <h3 style="margin-bottom:10px;">Match:</h3>
@@ -397,8 +397,8 @@
                 <div class="step-number">1</div>
                 <button mat-raised-button color="primary" (click)="sendPlayersManually()">Confirm Players <fa-icon [icon]="stamp"></fa-icon></button>
               </div>
-              <div class="step-info">Click here to confirm added players, if u add one more or remove, need to click once again.</div>               
-            </mat-card-content> 
+              <div class="step-info">Click here to confirm added players, if u add one more or remove, need to click once again.</div>
+            </mat-card-content>
             <mat-card-content style="padding-top:10px;">
               <div class="step">
                 <div class="step-number">2</div>
@@ -412,35 +412,38 @@
               <div class="step">
                 <div class="step-number"></div>
                 <button mat-raised-button color="primary" (click)="sendToDiscord()">Squads to Discord <fa-icon [icon]="paperPlaneTop"></fa-icon></button>
-              </div>  
+              </div>
             </mat-card-content>
             <mat-card-content>
               <div class="step">
                 <div class="step-number">3</div>
-                <button mat-raised-button color="warn" (click)="scoresTwoTeams()">Send score (UPDATE ELO) <fa-icon [icon]="paperPlaneTop"></fa-icon></button>
+                <!-- <button mat-raised-button color="warn" (click)="scoresTwoTeams()" [disabled]="!(isTeamValid(t1p1name, t1p2name, t1p3name) && isTeamValid(t2p1name, t2p2name, t2p3name))">Send score (UPDATE ELO) <fa-icon [icon]="paperPlaneTop"></fa-icon></button> -->
+                <button mat-raised-button color="warn" (click)="openConfirmationDialog()" [disabled]="!(isTeamValid(t1p1name, t1p2name, t1p3name) && isTeamValid(t2p1name, t2p2name, t2p3name))">
+                  Send score (UPDATE ELO) <fa-icon [icon]="paperPlaneTop"></fa-icon>
+                </button>
               </div>
               <div class="step-info">If everything is correct, just click!</div>
-            </mat-card-content>            
+            </mat-card-content>
             <mat-card-content>
               <div class="step">
                 <div class="step-number"></div>
                 <button mat-raised-button (click)="clearTeam()">Clear</button>
               </div>
               <div class="step-info">Clear teams.</div>
-            </mat-card-content>      
-            <mat-card-content>              
-              <div>If something not working properly, just click REFRESH button. If u are not sure about added player, find player in All Players Table, copy - paste his "username" and CONFIRM teams once again.</div>              
-            </mat-card-content>      
-          </mat-card>           
-        </div> 
+            </mat-card-content>
+            <mat-card-content>
+              <div>If something not working properly, just click REFRESH button. If u are not sure about added player, find player in All Players Table, copy - paste his "username" and CONFIRM teams once again.</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
         <!-- <div class="span4"> -->
           <mat-card class="dashboard-tab span2">
             <h3>Dashboard:</h3>
             <mat-card-content>
               <button mat-raised-button color="warn" (click)="refresh()">Refresh <fa-icon [icon]="refreshIcon"></fa-icon></button>
-              <div class="desc">Click to refresh token. Reload dashboard data.</div>              
+              <div class="desc">Click to refresh token. Reload dashboard data.</div>
             </mat-card-content>
-          </mat-card>  
+          </mat-card>
           <mat-card class="ranking-tab span3">
             <h3>BOT Last War:</h3>
             <mat-card-content>
@@ -458,7 +461,7 @@
             <h3>Ranking:</h3>
             <mat-card-content>
               <button mat-raised-button color="accent" (click)="sortPlayers()"> Update ranking <fa-icon [icon]="arrowUpArrowDown"></fa-icon></button>
-              <div class="desc">Click when you want to sort players by ranking.</div> 
+              <div class="desc">Click when you want to sort players by ranking.</div>
             </mat-card-content>
           </mat-card>
         <!-- </div> -->
@@ -467,8 +470,8 @@
           <ng-container *ngIf="matchRow as match">
             <div class="match-row">
               <div class="match-row__date">
-                <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>                
-                <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>                     
+                <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>
+                <a routerLink="/obj-matches/{{match.idwar}}">#{{ match.idwar }}</a>
               </div>
               <div class="match-row__team">
                 <div class="teamrounds">{{ match.t1roundswon }}</div>
@@ -527,20 +530,20 @@
                   <div class="match-row__team--player__score">{{ match.t1p7score }} </div>
                   <div>{{ match.t1p7postelo | number: '.1-2' }}</div>
                   <div [ngClass]="{ 'won': (match.t1p7postelo - match.t1p7preelo) > 0, 'lost': (match.t1p7postelo - match.t1p7preelo) < 0, 'draw': (match.t1p7postelo - match.t1p7preelo === 0) }"><span>{{ match.t1p7postelo - match.t1p7preelo | number: '.1-2'}}</span></div>
-                </div>   
+                </div>
                 <div class="preelo-info">
-                  <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>            
-                  <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div> 
-                </div>  
+                  <div class="preelo_war">preELO before war: {{ match.t1preelo | number:'1.0-2'}}</div>
+                  <div [ngClass]="{ 'teamFavorite': (match.t1preelo > match.t2preelo), 'teamNotFavorite': (match.t2preelo > match.t1preelo), 'teamWithoutFavorite': (match.t2preelo == match.t1preelo) }">Chance for win: {{  match.t2chance | number:'1.0-2'}} %</div>
+                </div>
                 <!-- <div class="preelo-info">
                   <div class="bet">
                     <img src="../../assets/images/80-163.png" alt="">
-                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
+                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div>
                   </div>
                   <div class="bet">
                     <img src="../../assets/images/80-165.png" alt="">
-                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div> 
-                  </div>                   
+                    <div class="bet-odd">{{ betOdd(match.t2chance) }}</div>
+                  </div>
                 </div>                                -->
               </div>
               <div class="match-row__team">
@@ -608,24 +611,24 @@
                 <!-- <div class="preelo-info">
                   <div class="bet">
                     <img src="../../assets/images/80-163.png" alt="">
-                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
+                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div>
                   </div>
                   <div class="bet">
                     <img src="../../assets/images/80-165.png" alt="">
-                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div> 
-                  </div>                   
+                    <div class="bet-odd">{{ betOdd(match.t1chance) }}</div>
+                  </div>
                 </div>                  -->
               </div>
             </div>
           </ng-container>
-        </mat-card>  
+        </mat-card>
         <mat-card class="span7 send-message">
           <form (ngSubmit)="sendMessageToDiscord()">
             <mat-form-field appearance="outline">
               <div class="form-group">
                 <mat-label>Message</mat-label>
-                <input matInput class="form-control" id="message" [(ngModel)]="message" name="message" required>                
-              </div>             
+                <input matInput class="form-control" id="message" [(ngModel)]="message" name="message" required>
+              </div>
             </mat-form-field>
             <button style="margin-left: 10px;" mat-raised-button color="primary" class="btn btn-primary">Send message</button>
           </form>
@@ -657,7 +660,7 @@
                   <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>
                 </mat-select>
               </mat-form-field>
-            
+
               <mat-form-field appearance="outline" class="mat-select-container">
                 <mat-label>Players</mat-label>
                 <mat-select [(ngModel)]="playerCount" class="mat-select" style="width: 50px">
@@ -666,21 +669,21 @@
                   <mat-option value="10">10+</mat-option>
                 </mat-select>
               </mat-form-field>
-            
+
               <div class="radio-group">
                 <mat-radio-group [(ngModel)]="numberOfMapsToDraw" class="mat-radio-group">
                   <mat-radio-button value="1" style="margin-right: 5px;">1 Map</mat-radio-button>
                   <mat-radio-button value="2">2 Maps</mat-radio-button>
                 </mat-radio-group>
               </div>
-            
+
               <div class="single-btn">
                 <button mat-raised-button color="primary" class="lp" (click)="sendToDiscord2()">
                   Send Maps to Discord
                 </button>
-              </div> 
+              </div>
             </div>
-            
+
             <div class="list">
               <ul>
                 <li><strong>Stock</strong>: <span class="stock">The Hunt</span>, <span class="stock">V2</span>, <span class="stock">The Bridge</span></li>
@@ -734,7 +737,7 @@
             </div>
             <div class="animation-indicator" [style.animation]="animationStyle"></div>
           </div> -->
-          
+
         </mat-card>
         <ng-container *ngIf="players$ | async as players">
           <ng-container *ngIf="players.length > 0">
@@ -757,18 +760,18 @@
                   <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
                   <td mat-cell *matCellDef="let emp" scope="row">{{ emp[column] }}</td>
                 </ng-container>
-              
+
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
               </table>
-            </mat-card> 
+            </mat-card>
           </ng-container>
-        </ng-container>        
+        </ng-container>
       </div>
     </div>
 
     <router-outlet></router-outlet>
-     
+
   </div>
 </section>
 <ng-template #content let-modal>
@@ -785,5 +788,5 @@
     <button mat-raised-button color="warn" type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
   </div>
 </ng-template>
-<ng-http-loader>    
+<ng-http-loader>
 </ng-http-loader>

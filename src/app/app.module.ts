@@ -48,7 +48,8 @@ import { HideRowDirective } from './hide-row.directive';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -99,21 +100,21 @@ const customNotifierOptions: NotifierOptions = {
 
 
 @NgModule({
-  declarations: [    
+  declarations: [
     AppComponent,
-    HomeComponent,    
-    DateFormatPipePipe,     
-    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective
+    HomeComponent,
+    DateFormatPipePipe,
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent
   ],
   imports: [
     CommonModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxPaginationModule,  
+    NgxPaginationModule,
     ChartsModule,
     FormsModule,
-    GoogleMapsModule,    
+    GoogleMapsModule,
     AngularFireModule.initializeApp(environment.firebase, 'spearhead-mix-league'),
     AngularFirestoreModule,
     NgxLodashPipesModule,
@@ -131,9 +132,10 @@ const customNotifierOptions: NotifierOptions = {
     MatRadioModule,
     MatIconModule,
     MatDatepickerModule,
+    MatToolbarModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
-    NgHttpLoaderModule.forRoot(),      
+    NgHttpLoaderModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -141,12 +143,12 @@ const customNotifierOptions: NotifierOptions = {
         deps: [HttpClient],
       },
       // defaultLanguage: 'en',
-    }), FontAwesomeModule, BrowserAnimationsModule,        
+    }), FontAwesomeModule, BrowserAnimationsModule,
   ],
   providers: [{
-    provide: API_KEY, 
-    useValue: 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU',    
-  }, 
+    provide: API_KEY,
+    useValue: 'AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU',
+  },
   AuthService,
   AuthGuard,
   OAuthService,
@@ -162,7 +164,7 @@ const customNotifierOptions: NotifierOptions = {
     provide: LocationStrategy,
     useClass: PathLocationStrategy
   },
-    GoogleSheetsDbService,        
+    GoogleSheetsDbService,
   ],
   bootstrap: [AppComponent]
 })

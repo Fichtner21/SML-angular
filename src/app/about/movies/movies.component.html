@@ -1,0 +1,22 @@
+<section>
+  <app-about-nav></app-about-nav>
+  <div class="container">
+    <mat-toolbar color="primary">
+      <mat-form-field>
+        <input matInput placeholder="Szukaj..." [formControl]="searchTerm">
+      </mat-form-field>
+    </mat-toolbar>
+
+    <div class="grid-container">
+      <div *ngFor="let movie of filteredMovies$ | async" class="grid-item">
+        <img [src]="getThumbnailUrl(movie.youtube)" (click)="loadVideo(movie.youtube)" class="thumbnail">
+        <div class="desc"><span class="pre">Description:</span><span class="post-movie">{{ movie.desc }}</span></div>
+        <div class="players"><span class="pre">Players:</span>
+          <ng-container *ngFor="let player of movie.players">
+            <a href="/obj-ranking/{{player.username}}" target="blank"><span class="post-movie">{{player.playername}}</span><img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'> </a>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

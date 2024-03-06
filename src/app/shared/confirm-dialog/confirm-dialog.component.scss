@@ -1,0 +1,102 @@
+h1 {
+  text-align: center;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  @media screen and (max-width: 500px){
+    grid-template-columns: 1fr;
+  }
+
+  .player {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    padding: 2px 5px;
+
+    &:nth-child(even) {
+      background-color: #f0f0f0; /* Tutaj możesz ustawić kolor tła dla parzystych graczy */
+    }
+
+    /* Styl dla nieparzystych graczy */
+    &:nth-child(odd) {
+      background-color: #e0e0e0; /* Tutaj możesz ustawić kolor tła dla nieparzystych graczy */
+    }
+
+    .head {
+      text-decoration: underline;
+    }
+
+    .property {
+
+      .name {
+        font-weight: 700;
+      }
+
+      img {
+        height: 20px;
+      }
+    }
+  }
+
+  .rounds {
+    margin-top: 5px;
+    span {
+      font-size: 22px;
+      font-weight: 700;
+      padding: 3px 10px;
+      color: #fff;
+      display: inline-block;
+      border-radius: 5px;
+    }
+
+    .green {
+      background-color: green;
+    }
+
+    .gray {
+      background-color: gray;
+    }
+
+    .red {
+      background-color: red;
+    }
+  }
+}
+
+/* Success syling */
+
+.mat-button.mat-success,
+.mat-stroked-button.mat-success {
+    color: #155724;
+    background-color: lighten(#155724, 30%);
+}
+.mat-button.mat-success:hover,
+.mat-stroked-button.mat-success:hover {
+  background-color: #f0fff3;
+}
+
+.mat-raised-button.mat-success,
+.mat-flat-button.mat-success,
+.mat-fab.mat-success,
+.mat-mini-fab.mat-success {
+  color: #f0fff3;
+  background-color: #155724;
+}
+
+.mat-icon-button.mat-success {
+  color:#155724;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+
+  :nth-child(1){
+    margin-right: 20px;
+  }
+}

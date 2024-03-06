@@ -25,7 +25,8 @@ import { MatInputModule } from '@angular/material/input';
 import { RulesComponent } from './rules/rules.component';
 import { AboutNavComponent } from './about-nav/about-nav.component';
 import { SeasonsComponent } from './seasons/seasons.component';
-
+import { MoviesComponent } from './movies/movies.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 export function createTranslateLoader(http: HttpClient){
@@ -34,33 +35,34 @@ export function createTranslateLoader(http: HttpClient){
 
 @NgModule({
   declarations: [
-    AboutComponent, 
-    MapsComponent, 
-    DownloadComponent, 
-    LogComponent, 
-    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent, RulesComponent, AboutNavComponent, SeasonsComponent
+    AboutComponent,
+    MapsComponent,
+    DownloadComponent,
+    LogComponent,
+    WantedComponent, ConfigComponent, MeetingComponent, SecretComponent, LinksComponent, RulesComponent, AboutNavComponent, SeasonsComponent, MoviesComponent
   ],
   imports: [
-    CommonModule,      
-    AboutRoutingModule,  
-    RouterModule,   
-    NgHttpLoaderModule.forRoot(),  
-    TranslateModule,    
+    CommonModule,
+    AboutRoutingModule,
+    RouterModule,
+    NgHttpLoaderModule.forRoot(),
+    TranslateModule,
     GoogleMapsModule,
     FontAwesomeModule,
-    HttpClientModule, 
+    HttpClientModule,
     NgxGalleryModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatInputModule       
+    MatInputModule,
+    MatToolbarModule
    ],
   exports: [
     CommonModule,
-    TranslateModule,   
-    SecretComponent     
-  ]  
+    TranslateModule,
+    SecretComponent
+  ]
 })
-export class AboutModule { 
+export class AboutModule {
   static forRoot(): ModuleWithProviders<AboutModule> {
     return {
       ngModule: AboutModule

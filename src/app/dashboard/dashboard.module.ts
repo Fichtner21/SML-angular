@@ -20,41 +20,43 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
-  declarations: [  
+  declarations: [
     CreateDataComponent,
     EditDataComponent,
     ListDataComponent,
     SlugTransformDirective
   ],
   imports: [
-    CommonModule,      
-    DashboardRoutingModule,  
-    RouterModule,   
-    NgHttpLoaderModule.forRoot(),  
+    CommonModule,
+    DashboardRoutingModule,
+    RouterModule,
+    NgHttpLoaderModule.forRoot(),
     TranslateModule,
     ReactiveFormsModule,
     MatSelectModule,
     MatInputModule,
-    HttpClientModule,  
+    HttpClientModule,
     MatButtonModule,
     MatCheckboxModule,
     MatFormFieldModule,
     FontAwesomeModule,
     MatDatepickerModule,
-    MatNativeDateModule 
+    MatNativeDateModule,
+    MatDialogModule
    ],
   exports: [
     CommonModule,
     TranslateModule,
-    SlugTransformDirective   
+    SlugTransformDirective
   ],
-  
-   
+
+
 })
-export class DashboardModule { 
+export class DashboardModule {
   static forRoot(): ModuleWithProviders<DashboardModule> {
     return {
       ngModule: DashboardModule

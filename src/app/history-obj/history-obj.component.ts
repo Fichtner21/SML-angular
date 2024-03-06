@@ -10,7 +10,7 @@ import { Spinkit } from 'ng-http-loader';
 import { PlayersApiService } from '../services/players-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { CommentsService } from './single-match/comments.service';
-import { SingleComment } from './single-match/single-comment.model';
+// import { SingleComment } from './single-match/single-comment.model';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { mergeMap } from 'rxjs/operators';
 import { SingleMatchComponent } from './single-match/single-match.component';
@@ -20,6 +20,13 @@ import { faComment } from '@fortawesome/free-solid-svg-icons';
 interface Length {
   idwar: any,
   comments: any
+}
+
+export interface SingleComment {
+  email: string;
+  message: string;
+  name: string;
+  postedAt: any;
 }
 
 @Component({
@@ -33,41 +40,41 @@ export class HistoryObjComponent implements OnInit  {
   public spinkit = Spinkit;
   matches$: Observable<Matches[]>;
   p: number = 1;
-  collection: any[];   
+  collection: any[];
   public match: Matches;
 
   public playersTab$: Observable<any>;
-  public matchesTab$: Observable<any>;  
+  public matchesTab$: Observable<any>;
   public inactiveTab$: Observable<any>;
   public comments$: any;
 
   public historyObj$: any;
   chanceOfWinTeamOneShow: any;
-  chanceOfWinTeamTwoShow: any; 
+  chanceOfWinTeamTwoShow: any;
   length: number = 0;
   // comments: any;
-  public warsAndComments$: any; 
-  public newArray: any[] = []; 
+  public warsAndComments$: any;
+  public newArray: any[] = [];
 
   commentIcon = faComment;
- 
+
   comments: Observable<any[]>;
   // public commentsData: { [idwar: string]: number } = {};
   commentsData: any; // Zmienna do przechowywania danych od dziecka
   @ViewChild(SingleMatchComponent) childComponent!: SingleMatchComponent;
-  matchRowArray: any[] = [];  
+  matchRowArray: any[] = [];
   commentsList: any[] = []; // Utwórz tablicę na listę komentarzy
-  
+  valueFromSafeSubscriber: any;
+
   constructor(private MatchDetail: MatchesDetailsService, private activatedRoute: ActivatedRoute, private router: Router, private httpClient: HttpClient, private fetchMatches: FetchMatchesService, private tabApiService: PlayersApiService, private translateService: TranslateService, private commentsService: CommentsService, private db: AngularFireDatabase, private commentService: CommentsService) {
-    
+
    }
- 
-  ngOnInit() { 
-    
-    this.matches$ = this.fetchMatches.fetchMatches();   
-    
+
+  ngOnInit() {
+    this.matches$ = this.fetchMatches.fetchMatches();
+
     this.playersTab$ = this.tabApiService.getPlayers('Players').pipe(
-      map((response: any) => {        
+      map((response: any) => {
         let batchRowValues = response.values;
         let players: any[] = [];
         for(let i = 1; i < batchRowValues.length; i++){
@@ -76,13 +83,13 @@ export class HistoryObjComponent implements OnInit  {
             rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
           }
           players.push(rowObject);
-        }          
+        }
         return players;
       }),
     );
 
     this.matchesTab$ = this.tabApiService.getPlayers('Match+History').pipe(
-      map((response: any) => {        
+      map((response: any) => {
         let batchRowValuesHistory = response.values;
         let historyMatches: any[] = [];
         for(let i = 1; i < batchRowValuesHistory.length; i++){
@@ -91,14 +98,14 @@ export class HistoryObjComponent implements OnInit  {
             rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
           }
           historyMatches.push(rowObject);
-        }       
-        
+        }
+
         return historyMatches;
       }),
     );
 
     // this.matchesTab$ = this.tabApiService.getPlayers('Match+History').pipe(
-    //   map((response: any) => {        
+    //   map((response: any) => {
     //     let batchRowValuesHistory = response.values;
     //     let historyMatches: any[] = [];
     //     for(let i = 1; i < batchRowValuesHistory.length; i++){
@@ -107,13 +114,13 @@ export class HistoryObjComponent implements OnInit  {
     //         rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
     //       }
     //       historyMatches.push(rowObject);
-    //     } 
-    
+    //     }
+
     //     // Przekształć timestamp na format daty
     //     historyMatches.forEach((match) => {
     //       match['timestamp'] = new Date(match['timestamp']);
     //     });
-        
+
     //     return historyMatches;
     //   }),
     //   // Opcjonalnie, jeśli potrzebujesz sortowania meczów wg daty
@@ -129,7 +136,7 @@ export class HistoryObjComponent implements OnInit  {
     // );
 
     this.inactiveTab$ = this.tabApiService.getPlayers('Inactive').pipe(
-      map((response: any) => {        
+      map((response: any) => {
         let batchRowValuesHistory = response.values;
         let inactivePlayers: any[] = [];
         for(let i = 1; i < batchRowValuesHistory.length; i++){
@@ -138,11 +145,11 @@ export class HistoryObjComponent implements OnInit  {
             rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
           }
           inactivePlayers.push(rowObject);
-        }        
+        }
         return inactivePlayers;
       }),
-    );     
-    
+    );
+
     // this.matchesTab$.subscribe(historyMatches => {
     //   let newArray: any[] = [];
     //   historyMatches.forEach((el:any) => {
@@ -153,46 +160,52 @@ export class HistoryObjComponent implements OnInit  {
     //     newArray.push(newObject);
     //   })
     //   newArray.forEach((matchRow: any) => {
-    //     this.commentsService.getCommentsForMatch(matchRow.id, '_').snapshotChanges().subscribe(data => {    
-    //        const commentCount = data.length;    
+    //     this.commentsService.getCommentsForMatch(matchRow.id, '_').snapshotChanges().subscribe(data => {
+    //        const commentCount = data.length;
     //        matchRow.comments = commentCount;
     //      });
     //   });
-    //   this.warsAndComments$ = newArray; 
+    //   this.warsAndComments$ = newArray;
     //   console.log(this.warsAndComments$)
     // });
-    
+
     this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$, this.inactiveTab$]).pipe(
       map(([players, matches, inactive]) => {
         let matchRow;
-        // let matchRowArray: any[] = []; 
-       
-        for(let match of matches){ 
+        const observables: Observable<number>[] = [];
+        // let matchRowArray: any[] = [];
+
+        for(let match of matches){
           const sumPreeloTeam1 = [
-            (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) + 
-            (Number(match.t1p2preelo) ? Number(match.t1p2preelo) : 0) + 
-            (Number(match.t1p3preelo) ? Number(match.t1p3preelo) : 0) + 
-            (Number(match.t1p4preelo) ? Number(match.t1p4preelo) : 0) + 
-            (Number(match.t1p5preelo) ? Number(match.t1p5preelo) : 0) + 
-            (Number(match.t1p6preelo) ? Number(match.t1p6preelo) : 0) + 
-            (Number(match.t1p7preelo) ? Number(match.t1p7preelo) : 0) 
-          ].reduce(this.addPreelo, 0);     
+            (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) +
+            (Number(match.t1p2preelo) ? Number(match.t1p2preelo) : 0) +
+            (Number(match.t1p3preelo) ? Number(match.t1p3preelo) : 0) +
+            (Number(match.t1p4preelo) ? Number(match.t1p4preelo) : 0) +
+            (Number(match.t1p5preelo) ? Number(match.t1p5preelo) : 0) +
+            (Number(match.t1p6preelo) ? Number(match.t1p6preelo) : 0) +
+            (Number(match.t1p7preelo) ? Number(match.t1p7preelo) : 0)
+          ].reduce(this.addPreelo, 0);
 
           const sumPreeloTeam2 = [
-            (Number(match.t2p1preelo) ? Number(match.t2p1preelo) : 0) + 
-            (Number(match.t2p2preelo) ? Number(match.t2p2preelo) : 0) + 
-            (Number(match.t2p3preelo) ? Number(match.t2p3preelo) : 0) + 
-            (Number(match.t2p4preelo) ? Number(match.t2p4preelo) : 0) + 
-            (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) + 
-            (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) + 
-            (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0) 
-          ].reduce(this.addPreelo, 0);       
+            (Number(match.t2p1preelo) ? Number(match.t2p1preelo) : 0) +
+            (Number(match.t2p2preelo) ? Number(match.t2p2preelo) : 0) +
+            (Number(match.t2p3preelo) ? Number(match.t2p3preelo) : 0) +
+            (Number(match.t2p4preelo) ? Number(match.t2p4preelo) : 0) +
+            (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) +
+            (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) +
+            (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0)
+          ].reduce(this.addPreelo, 0);
+
+          this.commentsService.getCommentsForMatch(match.idwar, '_').valueChanges().subscribe((data) => {
+            // console.log('DATaaa', data, ' data length: ', data.length)
+            this.valueFromSafeSubscriber = data.length; // Assign the length to your variable
+          });
 
           matchRow = {
             timestamp: match.timestamp,
             idwar: match.idwar,
             t1roundswon: match.t1roundswon,
-            t2roundswon: match.t2roundswon, 
+            t2roundswon: match.t2roundswon,
             video: match.video,
             info: match.info,
             t1preelo: sumPreeloTeam1,
@@ -269,28 +282,28 @@ export class HistoryObjComponent implements OnInit  {
             t2p7preelo: match.t2p7preelo,
             t2p7score: match.t2p7score,
             t2p7postelo: match.t2p7postelo,
-            // comments: 0      
-            // comments: this.commentsService.getCommentsForMatch(match.idwar, '_').snapshotChanges().subscribe(data => data.length)      
-            comments: this.commentsService.getCommentsForMatch(match.idwar, '_').valueChanges().subscribe(comments => {
-              comments.length;
-            }) 
+            comments: this.valueFromSafeSubscriber
+
+            // comments: this.commentsService.getCommentsForMatch(match.idwar, '_').valueChanges().subscribe(comments => {
+            //   comments.length;
+            // })
           }
-          
+
           const newObj = {
             ...matchRow,
             flag: '',
             flag2: ''
           };
-          
+
           let firstPlayerFlag = '';
           let firstPlayerFlag2 = '';
 
           for (let i = 1; i <= 7; i++) {
             const playerName = matchRow[`t1p${i}playername`];
-            
+
             if (playerName) {
               const playerFlag = playerName.flag;
-              
+
               if (!firstPlayerFlag) {
                 firstPlayerFlag = playerFlag;
               } else if (playerFlag && playerFlag !== firstPlayerFlag) {
@@ -303,10 +316,10 @@ export class HistoryObjComponent implements OnInit  {
 
           for (let i = 1; i <= 7; i++) {
             const playerName = matchRow[`t2p${i}playername`];
-            
+
             if (playerName) {
               const playerFlag = playerName.flag;
-              
+
               if (!firstPlayerFlag2) {
                 firstPlayerFlag2 = playerFlag;
               } else if (playerFlag && playerFlag !== firstPlayerFlag2) {
@@ -320,36 +333,32 @@ export class HistoryObjComponent implements OnInit  {
           if (firstPlayerFlag) {
             // Ustawiamy flagę w newObj tylko wtedy, gdy wszyscy niepuste gracze mają tę samą flagę.
             newObj.flag = firstPlayerFlag;
-          }          
+          }
           if (firstPlayerFlag2) {
             // Ustawiamy flagę w newObj tylko wtedy, gdy wszyscy niepuste gracze mają tę samą flagę.
             newObj.flag2 = firstPlayerFlag2;
-          }   
-          
+          }
 
-          this.matchRowArray.push(newObj);         
-          
+          this.matchRowArray.push(newObj);
         }
-        this.loadMatchesData();
-        
-           // console.log('M =>', this.matchRowArray[2001]);
-        // console.log('M 2 =>', this.matchRowArray[2002]);
-        
-        console.log('M 2=>', this.matchRowArray[2567]);
-        // console.log('M =>', matchRowArray);
+
+        // this.loadMatchesData();
+
+        // console.log('M 2=>', this.matchRowArray[2909]);
         return this.matchRowArray.reverse();
       }),
-      
-      // tap(x => console.log('xx', x))
-    ) 
 
-    const commentsRef = this.getCommentsForMatch('100');
-    
-    commentsRef.valueChanges().subscribe((comments: any[]) => {
-      this.commentsList = comments; // Przypisanie listy komentarzy do zmiennej w komponencie
-      console.log('Comments:', this.commentsList); // Wyświetlenie listy komentarzy w konsoli
-    });
-  };  
+      // tap(x => console.log('xx', x))
+    )
+
+    // const commentsRef = this.getCommentsForMatch('100');
+
+    // commentsRef.valueChanges().subscribe((comments: any[]) => {
+    //   this.commentsList = comments; // Przypisanie listy komentarzy do zmiennej w komponencie
+    //   console.log('Comments:', this.commentsList); // Wyświetlenie listy komentarzy w konsoli
+    // });
+    // this.getAllComments()
+  };
 
   ngAfterViewInit(){
     // console.log('after view');
@@ -358,8 +367,13 @@ export class HistoryObjComponent implements OnInit  {
     // console.log('AfterViewInit =>', this.matchRowArray[2567]);
   }
 
-  getCommentsForMatch(idwar: string): AngularFireList<SingleComment[]> {     
-    return this.db.list<SingleComment[]>(`postComments${idwar}/_`)
+  // getCommentsForMatch(idwar: string): AngularFireList<any> {
+  //   return this.db.list<SingleComment[]>(`postComments${idwar}/_`)
+  // }
+
+  getCommentsForMatch(matchId: string, underscore: string): any[] {
+    const commentsRef: any = this.db.list<SingleComment>(`postComments${matchId}/${underscore}`);
+    return commentsRef.valueChanges();
   }
 
   getCommentsCountForMatch(idwar: string): AngularFireList<any> {
@@ -369,6 +383,12 @@ export class HistoryObjComponent implements OnInit  {
     // return commentsRef.snapshotChanges().pipe(
     //   map(changes => changes.length)
     // );
+  }
+
+  getAllComments(): AngularFireList<any>{
+    const commentsRef = this.db.list('/');
+    console.log('getAllComments', commentsRef);
+    return commentsRef;
   }
 
   getComments(): AngularFireList<any> {
@@ -411,24 +431,24 @@ export class HistoryObjComponent implements OnInit  {
     });
   }
 
-  updateKomentarze() {
-    this.historyObj$.pipe(
-      map((matches:any) => {
-        return matches.map(match => {
-          this.getCommentsForMatch(match.idwar).valueChanges().subscribe(comments => {
-            if (comments) {
-              match.comments = comments.length;
-            }
-          });
-          return match;
-        });
-      })
-    ).subscribe(matches => {
-      // console.log(matches);      
-      // tu możesz dodać logikę do aktualizacji listy meczów i ich liczby komentarzy
-    });
-  }
-  
+  // updateKomentarze() {
+  //   this.historyObj$.pipe(
+  //     map((matches:any) => {
+  //       return matches.map(match => {
+  //         this.getCommentsForMatch(match.idwar).valueChanges().subscribe(comments => {
+  //           if (comments) {
+  //             match.comments = comments.length;
+  //           }
+  //         });
+  //         return match;
+  //       });
+  //     })
+  //   ).subscribe(matches => {
+  //     // console.log(matches);
+  //     // tu możesz dodać logikę do aktualizacji listy meczów i ich liczby komentarzy
+  //   });
+  // }
+
   fn(id){
     let aaa;
     this.commentsService.getCommentsForMatch(id, '_').snapshotChanges().subscribe(result => result = aaa)
@@ -439,7 +459,7 @@ export class HistoryObjComponent implements OnInit  {
     const comments = await this.commentsService.getCommentsForMatch(id, '_').valueChanges().toPromise();
     return comments;
   }
- 
+
   onChildComments(event: { id: string, comments: number }) {
     this.historyObj$.forEach(matchRow => {
       if (matchRow.idwar === event.id) {
@@ -447,17 +467,17 @@ export class HistoryObjComponent implements OnInit  {
       }
     });
   }
-  
+
   // handleLength(event: {idwar: string, comments: number}) {
   //   this.historyObj$.forEach((el) => {
   //     if(el.idwar == event.idwar){
   //       return event.comments;
   //     }
-  //   })    
+  //   })
   // }
 
   public addPlayerLink(player:string, obj:any, obj2:any) {
-    let convertedPlayer = {};    
+    let convertedPlayer = {};
     obj.forEach((el:any) => {
       if (player === el.username) {
         convertedPlayer = {
@@ -485,11 +505,11 @@ export class HistoryObjComponent implements OnInit  {
       }
     });
     return convertedPlayer;
-  }   
+  }
 
   public addPreelo(accumulator:any, a:any) {
     return accumulator + a;
-  } 
+  }
 
   public floorPrecised(number, precision) {
     const power = Math.pow(10, precision);
@@ -502,7 +522,7 @@ export class HistoryObjComponent implements OnInit  {
 
   public calculateChance(team1PreElo:any, team2PreElo:any){
     const chanceOfWinTeamOne = 1 / (1 + 10 ** ((team1PreElo - team2PreElo) / 400)) * 100;
-    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((team2PreElo - team1PreElo) / 400)) * 100; 
+    const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((team2PreElo - team1PreElo) / 400)) * 100;
 
     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
     this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
@@ -547,7 +567,7 @@ export class HistoryObjComponent implements OnInit  {
       case bet == 50:
         return "2";
         break;
-      case bet > 50.1 && bet < 52: 
+      case bet > 50.1 && bet < 52:
         return this.randomNumber(1.85, 1.99);
         break;
       case bet > 52 && bet < 54:
@@ -572,11 +592,11 @@ export class HistoryObjComponent implements OnInit  {
         return "1";
         break;
       default:
-        return "unknown odd";      
+        return "unknown odd";
     }
   }
 
-  public randomNumber(min, max) { 
+  public randomNumber(min, max) {
     return (Math.random() * (max - min) + min).toFixed(2);
   }
 
@@ -590,13 +610,13 @@ export class HistoryObjComponent implements OnInit  {
     });
   }
 
-  loadMatchesData() {
-    this.matchRowArray.forEach(matchRow => {
-      this.commentsService.getCommentsForMatch(matchRow.idwar, '_').valueChanges().subscribe(comments => {
-        matchRow.comments = comments.length;
-      });
-    });
-  }
+  // loadMatchesData() {
+  //   this.matchRowArray.forEach(matchRow => {
+  //     this.commentsService.getCommentsForMatch(matchRow.idwar, '_').valueChanges().subscribe(comments => {
+  //       matchRow.comments = comments.length;
+  //     });
+  //   });
+  // }
 
   getTitle(playerName: any): string {
     if (playerName.ban === 'TRUE') {

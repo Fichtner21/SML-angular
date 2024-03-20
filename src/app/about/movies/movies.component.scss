@@ -27,6 +27,20 @@ background-size: 4px 4px;
         img {
           height: 20px;
         }
+
+        a {
+          color: #2f3060;
+          text-decoration: none;
+          margin-right: 3px;
+
+          img {
+            margin: 0 2px;
+          }
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
 
       .pre {
@@ -53,3 +67,4 @@ background-size: 4px 4px;
     }
   }
 }
+

@@ -3,9 +3,7 @@
 <section class="single-match">
   <div class="container">
     <ng-container *ngIf="historyObj$ | async as match">
-
         <div>
-
             <div class="match-row">
               <div class="match-row__date">
                 <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>

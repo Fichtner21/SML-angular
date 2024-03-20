@@ -1016,9 +1016,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ...this.scoreTeamOne.value,
       ...this.scoreTeamTwo.value,
       ...this.teamOneRoundsWon.value,
-      ...this.teamTwoRoundsWon.value
+      ...this.teamTwoRoundsWon.value,  
+      t1sumFrags: '=SUMA.JEŻELI(C12:C18,"<>#N/A")',
+      t1roundsWon: Number(this.teamOneRoundsWon.value.t1roundsWonInput),
+      emptyCell: '',
+      headDesc: 'Combat Score',
+      t2sumFrags: '=SUMA.JEŻELI(C23:C29,"<>#N/A")',
+      t2roundsWon: Number(this.teamTwoRoundsWon.value.t2roundsWonInput)
     }
-    console.log('formValues', formValues)
+    
     const t1p1score = formValues.t1p1score;
     const t1p2score = formValues.t1p2score;
     const t1p3score = formValues.t1p3score;
@@ -1041,39 +1047,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const t2roundsWon = Number(formValues.t2roundsWon);
     const t1roundsWonInput = formValues.t1roundsWonInput;
     const t2roundsWonInput = formValues.t2roundsWonInput;
+    
 
-    //TEAM ONE
-    // this.googleApi.updateRoundsWon('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','B20', t1roundsWonInput).subscribe({
-    //   next: (res) => {
-    //     // console.log('updateRoundsWon res =>', res)
-    //     this.notifier.notify('success', 'Update Rounds Won Team 1 successful.');
-    //   },
-    //   error: (err) => {
-    //     console.log('updateRoundsWon err =>', err)
-    //   }
-    // })
+    // TEAM ONE
+    this.googleApi.updateRoundsWon('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','B20', t1roundsWonInput).subscribe({
+      next: (res) => {
+        // console.log('updateRoundsWon res =>', res)
+        this.notifier.notify('success', 'Update Rounds Won Team 1 successful.');
+      },
+      error: (err) => {
+        console.log('updateRoundsWon err =>', err)
+      }
+    })
 
-    // //TEAM TWO
-    // this.googleApi.updateRoundsWon('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','B31', t2roundsWonInput).subscribe({
-    //   next: (res) => {
-    //     // console.log('updateRoundsWon res =>', res)
-    //     this.notifier.notify('success', 'Update Rounds Won Team 2 successful.');
-    //   },
-    //   error: (err) => {
-    //     console.log('updateRoundsWon err =>', err)
-    //   }
-    // })
+    //TEAM TWO
+    this.googleApi.updateRoundsWon('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','B31', t2roundsWonInput).subscribe({
+      next: (res) => {
+        // console.log('updateRoundsWon res =>', res)
+        this.notifier.notify('success', 'Update Rounds Won Team 2 successful.');
+      },
+      error: (err) => {
+        console.log('updateRoundsWon err =>', err)
+      }
+    })
 
-    // this.googleApi.sendScore('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','C12:C31', t1p1score, t1p2score, t1p3score, t1p4score, t1p5score, t1p6score, t1p7score, t1sumFrags, t1roundsWon, emptyCell, headDesc, t2p1score, t2p2score, t2p3score, t2p4score, t2p5score, t2p6score, t2p7score, t2sumFrags, t2roundsWon).subscribe({
-    //   next: (res) => {
-    //     // console.log('sendScore res =>', res)
-    //     this.notifier.notify('success', 'Send Score successful.');
-    //     this.updateELO();
-    //   },
-    //   error: (err) => {
-    //     console.log('sendScore err =>', err)
-    //   }
-    // })
+    this.googleApi.sendScore('1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo','Add+a+Match','C12:C31', t1p1score, t1p2score, t1p3score, t1p4score, t1p5score, t1p6score, t1p7score, t1sumFrags, t1roundsWon, emptyCell, headDesc, t2p1score, t2p2score, t2p3score, t2p4score, t2p5score, t2p6score, t2p7score, t2sumFrags, t2roundsWon).subscribe({
+      next: (res) => {
+        // console.log('sendScore res =>', res)
+        this.notifier.notify('success', 'Send Score successful.');
+        this.updateELO();
+      },
+      error: (err) => {
+        console.log('sendScore err =>', err)
+      }
+    })
+
+    console.log('formValues', formValues)
   }
 
   // updateSelectedValue(event: any) {
@@ -1830,16 +1839,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
       t2p4name: this.t2p4name.value,
       t2p5name: this.t2p5name.value,
       t2p6name: this.t2p6name.value,
-      t2p7name: this.t2p7name.value
+      t2p7name: this.t2p7name.value,
+      t1sumFrags: '=SUMA.JEŻELI(C12:C18,"<>#N/A")',
+      t1roundsWon: Number(this.teamOneRoundsWon.value),
+      emptyCell: '',
+      headDesc: 'Combat Score',
+      t2sumFrags: '=SUMA.JEŻELI(C23:C29,"<>#N/A")',
+      t2roundsWon: Number(this.teamTwoRoundsWon.value)
     };
-
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: 'auto',
       data: {
         form: formValues, // Przekazujemy dane do okna dialogowego
         playerRowArray: this.playerRowArray
-      }
+      }      
     });
 
     dialogRef.afterClosed().subscribe(result => {

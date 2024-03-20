@@ -3,20 +3,42 @@
   <div class="container">
     <mat-toolbar color="primary">
       <mat-form-field>
-        <input matInput placeholder="Szukaj..." [formControl]="searchTerm">
+        <input matInput placeholder="Seach by players or description" [formControl]="searchTerm">
       </mat-form-field>
     </mat-toolbar>
 
     <div class="grid-container">
       <div *ngFor="let movie of filteredMovies$ | async" class="grid-item">
-        <img [src]="getThumbnailUrl(movie.youtube)" (click)="loadVideo(movie.youtube)" class="thumbnail">
+        <!-- <img [src]="getThumbnailUrl(movie.youtube)" (click)="loadVideo(movie.youtube)" class="thumbnail"> -->
+        <div class="thumbnail video-responsive">
+          <iframe
+              #frame
+              id="ytplayer-"
+              type="text/html"
+              height="450"
+              width="100%"
+              frameborder="0"
+              allowfullscreen
+              [src]="getVideoUrl(movie.youtube)">
+          </iframe>
+      </div>
         <div class="desc"><span class="pre">Description:</span><span class="post-movie">{{ movie.desc }}</span></div>
         <div class="players"><span class="pre">Players:</span>
           <ng-container *ngFor="let player of movie.players">
-            <a href="/obj-ranking/{{player.username}}" target="blank"><span class="post-movie">{{player.playername}}</span><img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'> </a>
+            <a href="/obj-ranking/{{player.username}}" target="blank"><span class="post-movie">{{player.playername}}</span><img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"'></a>
           </ng-container>
         </div>
       </div>
     </div>
   </div>
 </section>
+<ng-http-loader
+    [backdrop]="false"
+    [backgroundColor]="'#010141'"
+    [debounceDelay]="100"
+    [extraDuration]="300"
+    [minDuration]="300"
+    [opacity]=".6"
+    [backdropBackgroundColor]="'#777777'"
+    [spinner]="spinkit.skWave">
+</ng-http-loader>

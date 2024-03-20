@@ -1663,6 +1663,18 @@ ol {
   margin-left: 3px;
 }
 
+.centator {
+  color: gray;
+  margin-left: 3px;
+}
+
+.donators-info div {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-right: 10px;
+}
+
 .donators {
   position: fixed;
   bottom: 20px;

@@ -64,9 +64,12 @@
                             ? '3rd in s4'
                             : ''">
                     <span matTooltip="View profile {{player.playername}}">{{ player.playername }}</span>
-                    <ng-container *ngIf="player.donatorS5 == 1">
+                    <ng-container *ngIf="player.donatorS5 == 1 && player.username != 'wicio'">
                       <fa-icon [icon]="dolar" class="donator" matTooltip="Donator Season 5"></fa-icon>
-                    </ng-container>                    
+                    </ng-container>     
+                    <ng-container *ngIf="player.donatorS5 == 1 && player.username == 'wicio'">
+                      <fa-icon [icon]="cent" class="centator" matTooltip="Centator Season 5"></fa-icon>
+                    </ng-container>               
                     <!-- <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
                       <span attr.data-matTooltip="{{player.strike}} in Last war.
 
@@ -192,7 +195,8 @@
                 <!-- <ng-container *ngIf="isRedLineAdded">
                   <div matTooltip="" class="line-900" *ngIf="player.ranking >= 900 && lastWarOfPlayers[i + 1]?.ranking < 900"></div>
                 </ng-container> -->
-              </ng-container>             
+              </ng-container>  
+                       
             </ng-container>
           </div>
           <div class="more-less">
@@ -205,6 +209,7 @@
                 </option>
               </select>
             </form>
+            
           </div>
           <!-- <div class="info">
             <div class="info-matTooltip">NEW FEATURE</div>
@@ -283,6 +288,16 @@
             <span>365+</span>
           </div>
           <div>wars in last year.</div>
+        </div>
+        <div class="legend donators-info">
+          <div>
+            <h3>High donator</h3>
+            <fa-icon [icon]="dolar" class="donator" matTooltip="Donator Season 5"></fa-icon>
+          </div>
+          <div>
+            <h3>Low donator</h3>
+            <fa-icon [icon]="cent" class="centator" matTooltip="Donator Season 5"></fa-icon>
+          </div>
         </div>
         <!-- <div class="legend" *ngIf="isInfo">
           <h3>Expirience ranking</h3>

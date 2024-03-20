@@ -60,6 +60,19 @@ export class PlayerViewComponent implements OnInit {
   mostOftenPlayed = [];
   currentRanking = [];
 
+  totalChartVisible: boolean = true;
+  season1ChartVisible: boolean = true;
+  season2ChartVisible: boolean = true;
+  season3ChartVisible: boolean = true;
+  season4ChartVisible: boolean = true;
+  season5ChartVisible: boolean = true;
+  totalFragsChartVisible: boolean = true;
+  seasonFrags1ChartVisible: boolean = true;
+  seasonFrags2ChartVisible: boolean = true;
+  seasonFrags3ChartVisible: boolean = true;
+  seasonFrags4ChartVisible: boolean = true;
+  seasonFrags5ChartVisible: boolean = true;
+
   // @Input() playerDetail: any;
   // @Input() expanded: boolean;
   
@@ -573,8 +586,9 @@ export class PlayerViewComponent implements OnInit {
     })
   }
 
-  public showFrags(frags:any[], listwars:any[]){
-    this.canvas = document.getElementById('myChart');
+  public showFrags(frags:any[], listwars:any[], chartId: string){
+    this.canvas = document.getElementById(chartId);
+    if (!this.canvas) return;
     this.ctx = this.canvas.getContext('2d');
     let myChart = new Chart(this.ctx, {
       type: 'bar',
@@ -652,8 +666,9 @@ export class PlayerViewComponent implements OnInit {
     });
   }
 
-  public showFragsSeason(listwars:any[]){
-    this.canvas = document.getElementById('myChart2');
+  public showFragsSeason(listwars:any[], chartId: string){
+    this.canvas = document.getElementById(chartId);
+    if (!this.canvas) return;
     this.ctx = this.canvas.getContext('2d');
     const labels = listwars.map(obj => obj.idwar);
     const frags = listwars.map(obj => obj.frags);
@@ -737,6 +752,7 @@ export class PlayerViewComponent implements OnInit {
 
   public showResult(resultPerPlayer:any[]){
     this.resultCanvas = document.getElementById('playerResult');
+    if (!this.resultCanvas) return;
     this.ctxResult = this.resultCanvas.getContext('2d');
     new Chart(this.ctxResult, {
       type: 'bar',
@@ -789,8 +805,9 @@ export class PlayerViewComponent implements OnInit {
     });
   }
 
-  public showRanking(rankings:any[], listwars:any[]){
-    this.canvasRank = document.getElementById('rankChart');
+  public showRanking(rankings:any[], listwars:any[], chartId: string){
+    this.canvasRank = document.getElementById(chartId);
+    if (!this.canvasRank) return;
     this.ctxRank = this.canvasRank.getContext('2d');
     let myChart = new Chart(this.ctxRank, {
       type: 'line',
@@ -860,8 +877,9 @@ export class PlayerViewComponent implements OnInit {
     });
   }
 
-  public showRankingSeason(listwars:any[]){
-    this.canvasRank = document.getElementById('rank5Chart');
+  public showRankingSeason(listwars:any[], chartId: string){
+    this.canvasRank = document.getElementById(chartId);
+    if (!this.canvasRank ) return;
     this.ctxRank = this.canvasRank.getContext('2d');
     const labels = listwars.map(obj => obj.idwar);
     const frags = listwars.map(obj => obj.frags);
@@ -934,6 +952,47 @@ export class PlayerViewComponent implements OnInit {
       } as ChartOptions,
       plugins: [ChartAnnotation]
     });
+  }
+
+  toggleChart(chart: string) {
+    switch (chart) {
+      case 'totalChartVisible':
+        this.totalChartVisible = !this.totalChartVisible;
+        break;
+      case 'season1ChartVisible':
+        this.season1ChartVisible = !this.season1ChartVisible;
+        break;
+      case 'season2ChartVisible':
+        this.season2ChartVisible = !this.season2ChartVisible;
+        break;
+      case 'season3ChartVisible':
+        this.season3ChartVisible = !this.season3ChartVisible;
+        break;
+      case 'season4ChartVisible':
+        this.season4ChartVisible = !this.season4ChartVisible;
+        break;
+      case 'season5ChartVisible':
+        this.season5ChartVisible = !this.season5ChartVisible;
+        break;
+      case 'totalFragsChartVisible':
+        this.totalChartVisible = !this.totalChartVisible;
+        break;
+      case 'seasonFrags1ChartVisible':
+        this.season1ChartVisible = !this.season1ChartVisible;
+        break;
+      case 'seasonFrags2ChartVisible':
+        this.season2ChartVisible = !this.season2ChartVisible;
+        break;
+      case 'seasonFrags3ChartVisible':
+        this.season3ChartVisible = !this.season3ChartVisible;
+        break;
+      case 'seasonFrags4ChartVisible':
+        this.season4ChartVisible = !this.season4ChartVisible;
+        break;
+      case 'seasonFrags5ChartVisible':
+        this.season5ChartVisible = !this.season5ChartVisible;
+        break;
+    }
   }
 
   public avarageWarsPerMonth(obj:any){

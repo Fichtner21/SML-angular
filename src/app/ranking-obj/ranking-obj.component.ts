@@ -6,7 +6,7 @@ import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { fa1, fa2, fa3, faArrowDown, faArrowUp, faCalendarCheck, faChartGantt, faChartSimple, faDollarSign, faMinus, faSuitcaseMedical, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { fa1, fa2, fa3, faArrowDown, faArrowUp, faCalendarCheck, faCentSign, faChartGantt, faChartSimple, faDollarSign, faMinus, faSuitcaseMedical, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { parseFloat } from 'core-js/es/number';
 import { RankObjService } from './rank-obj.service';
@@ -36,6 +36,7 @@ export class RankingObjComponent implements OnInit {
   aaa = [];
   showInactivePlayersOnly$ = new BehaviorSubject<boolean>(false);
   showActivePlayersOnly: boolean = true;
+  infoCode: string; 
 
   @ViewChild('shIcon') shIcon!: ElementRef;
   @ViewChild('blackOverlay') blackOverlay!: ElementRef;
@@ -83,7 +84,7 @@ export class RankingObjComponent implements OnInit {
   @Output() ranking:EventEmitter<any> = new EventEmitter();
 
   currentInfo: any = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';
-  infoCode = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';
+  // infoCode = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';
 
   arrowUp = faArrowUp;
   arrowDown = faArrowDown;
@@ -97,6 +98,7 @@ export class RankingObjComponent implements OnInit {
   calendarCheck = faCalendarCheck;
   dolar = faDollarSign;
   medic = faSuitcaseMedical;
+  cent = faCentSign;
   isExpanded: boolean;
   isSecondPanelExpanded: boolean;
   isThirdPanelExpanded: boolean;
@@ -104,7 +106,7 @@ export class RankingObjComponent implements OnInit {
   isSecondPanelExpandedLeft: boolean;
   isThirdPanelExpandedLeft: boolean;
   matchRow:any;
-
+  showAllPlayers: boolean = false;
   // playerDetail: any;
 
   constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute, private rankObjService: RankObjService) {
@@ -272,7 +274,8 @@ export class RankingObjComponent implements OnInit {
 
     ).subscribe();
 
-
+    const storedInfo = localStorage.getItem('info');
+    this.infoCode = storedInfo ? storedInfo : 'less';
     // this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
     //   map((response: any) => {
     //     let batchRowValuesHistory = response.values;
@@ -308,6 +311,7 @@ export class RankingObjComponent implements OnInit {
         let lastWarDate: any;
         let playerRowArray: any[] = [];
         for( let name of v1){
+          // if(name.active == 'FALSE'){
           if(name.active == 'FALSE'){
             continue;
           } else {
@@ -962,6 +966,11 @@ export class RankingObjComponent implements OnInit {
     localStorage.setItem('panelState', this.isExpanded ? 'expand' : 'collapse');
     localStorage.setItem('secondPanelState', this.isSecondPanelExpanded ? 'expand' : 'collapse');
     localStorage.setItem('thirdPanelState', this.isThirdPanelExpanded ? 'expand' : 'collapse');
+  }
+
+  toggleShowAllPlayers() {
+    this.showAllPlayers = !this.showAllPlayers;
+    console.log('this.showAllPlayers', this.showAllPlayers)
   }
 
   togglePanelLeft(panel: string) {

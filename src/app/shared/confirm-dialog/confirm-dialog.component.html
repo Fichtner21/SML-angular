@@ -1,4 +1,4 @@
-<h1>Please confirm the score</h1>
+<h1>Confirm the score</h1>
 <hr>
 <div class="summary">
     <div>
@@ -9,22 +9,34 @@
       <div class="property head">Score</div>
     </div>
     <div class="player" *ngFor="let player of ['t1p1name', 't1p2name', 't1p3name', 't1p4name', 't1p5name', 't1p6name', 't1p7name']; let i = index">
-      <ng-container *ngIf="getPlayerData(data.form[player])">
+      <ng-container *ngIf="data.form[player] !== ''">
         <div class="property"><span class="name">{{ getPlayerData(data.form[player]).playername }}</span></div>
         <div class="property">
           <ng-container *ngIf="getPlayerData(data.form[player]).nationality">
             <img [src]="'assets/images/flags_svg/' + getPlayerData(data.form[player]).nationality + '.SVG'">
           </ng-container>
         </div>
-        <div class="property score"><span class="name">{{ data.form.scoreTeamOne['t1p' + (i + 1) + 'score'] }}</span></div>
+        <div class="property score">          
+          <ng-container *ngIf="data.form.scoreTeamOne['t1p' + (i + 1) + 'score'] !== ''">
+            <span class="green">{{ data.form.scoreTeamOne['t1p' + (i + 1) + 'score'] }} <fa-icon [icon]="faCheck"></fa-icon></span>
+          </ng-container>
+          <ng-container *ngIf="data.form.scoreTeamOne['t1p' + (i + 1) + 'score'] === ''"><span class="red">put score!</span></ng-container>
+        </div>
       </ng-container>
-    </div>
-    <div class="rounds">Team 1 Rounds: <span [ngClass]="{
-      'green': data.form.teamOneRoundsWon.t1roundsWonInput > data.form.teamTwoRoundsWon.t2roundsWonInput,
-      'gray': data.form.teamOneRoundsWon.t1roundsWonInput === data.form.teamTwoRoundsWon.t2roundsWonInput,
-      'red': data.form.teamOneRoundsWon.t1roundsWonInput < data.form.teamTwoRoundsWon.t2roundsWonInput
-      }">{{ data.form.teamOneRoundsWon.t1roundsWonInput }}</span>
-    </div>
+    </div>    
+    <div class="rounds">
+      Team 1 Rounds:
+      <span [ngClass]="{
+        'red': +data.form.teamOneRoundsWon.t1roundsWonInput < +data.form.teamTwoRoundsWon.t2roundsWonInput,
+        'gray': +data.form.teamOneRoundsWon.t1roundsWonInput === +data.form.teamTwoRoundsWon.t2roundsWonInput,
+        'green': +data.form.teamOneRoundsWon.t1roundsWonInput > +data.form.teamTwoRoundsWon.t2roundsWonInput
+    }">
+        {{ data.form.teamOneRoundsWon.t1roundsWonInput !== undefined && data.form.teamOneRoundsWon.t1roundsWonInput !== '' ? data.form.teamOneRoundsWon.t1roundsWonInput : 'Put rounds!' }}
+    </span>
+      <ng-container *ngIf="data.form.teamOneRoundsWon.t1roundsWonInput">
+        <fa-icon class="green" [icon]="faCheck"></fa-icon>
+      </ng-container>
+    </div>     
   </div>
   <div>
     <h2>Team 2</h2>
@@ -34,21 +46,38 @@
       <div class="property head">Score</div>
     </div>
     <div class="player" *ngFor="let player of ['t2p1name', 't2p2name', 't2p3name', 't2p4name', 't2p5name', 't2p6name', 't2p7name']; let i = index">
-      <ng-container *ngIf="getPlayerData(data.form[player])">
+      <ng-container *ngIf="data.form[player] !== ''">
         <div class="property"><span class="name">{{ getPlayerData(data.form[player]).playername }}</span></div>
         <div class="property">
           <ng-container *ngIf="getPlayerData(data.form[player]).nationality">
             <img [src]="'assets/images/flags_svg/' + getPlayerData(data.form[player]).nationality + '.SVG'">
           </ng-container>
         </div>
-        <div class="property score"><span class="name">{{ data.form.scoreTeamTwo['t2p' + (i + 1) + 'score'] }}</span></div>
+        <div class="property score">          
+          <ng-container *ngIf="data.form.scoreTeamTwo['t2p' + (i + 1) + 'score'] !== ''">
+            <span class="green">{{ data.form.scoreTeamTwo['t2p' + (i + 1) + 'score'] }}
+              <fa-icon [icon]="faCheck"></fa-icon>
+            </span>
+          </ng-container>
+          <ng-container *ngIf="data.form.scoreTeamTwo['t2p' + (i + 1) + 'score'] === '' && data.form[player] !== ''">
+            <span class="red">score!!</span>
+          </ng-container>
+        </div>
       </ng-container>
     </div>
-    <div class="rounds">Team 2 Rounds: <span [ngClass]="{
-      'green': data.form.teamOneRoundsWon.t1roundsWonInput < data.form.teamTwoRoundsWon.t2roundsWonInput,
-      'gray': data.form.teamOneRoundsWon.t1roundsWonInput === data.form.teamTwoRoundsWon.t2roundsWonInput,
-      'red': data.form.teamOneRoundsWon.t1roundsWonInput > data.form.teamTwoRoundsWon.t2roundsWonInput
-      }">{{ data.form.teamTwoRoundsWon.t2roundsWonInput }}</span>
+    
+    <div class="rounds">
+      Team 2 Rounds:
+      <span [ngClass]="{
+        'red': +data.form.teamTwoRoundsWon.t2roundsWonInput < +data.form.teamOneRoundsWon.t1roundsWonInput,
+        'gray': +data.form.teamTwoRoundsWon.t2roundsWonInput === +data.form.teamOneRoundsWon.t1roundsWonInput,
+        'green': +data.form.teamTwoRoundsWon.t2roundsWonInput > +data.form.teamOneRoundsWon.t1roundsWonInput
+    }">
+        {{ data.form.teamTwoRoundsWon.t2roundsWonInput !== undefined && data.form.teamTwoRoundsWon.t2roundsWonInput !== '' ? data.form.teamTwoRoundsWon.t2roundsWonInput : 'Put rounds!' }}
+    </span>
+      <ng-container *ngIf="data.form.teamTwoRoundsWon.t2roundsWonInput">
+        <fa-icon class="green" [icon]="faCheck"></fa-icon>
+      </ng-container>
     </div>
   </div>
 

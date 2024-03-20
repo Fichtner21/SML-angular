@@ -1,8 +1,6 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { PlayersApiService } from 'src/app/services/players-api.service';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 export interface FormData {
   scoreTeamOne: any;
   scoreTeamTwo: any;
@@ -30,30 +28,46 @@ export interface FormData {
   styleUrls: ['./confirm-dialog.component.scss']
 })
 
-export class ConfirmDialogComponent {
+export class ConfirmDialogComponent implements OnInit {
+  isConfirmButtonDisabled: boolean = false;
+  faCheck = faCheck;
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any, // Przyjmujemy dane z formularza jako input,
-    private listPlayersService: PlayersApiService
+    @Inject(MAT_DIALOG_DATA) public data: any, // Przyjmujemy dane z formularza jako input,    
   ) {}
 
-  // getPlayerName(username: string): Observable<string> {
-  //   return this.listPlayersService.getPlayers(username).pipe(
-  //     switchMap(player => {
-  //       const playerName = player.values[0][1]; // Przyjmując, że imię gracza znajduje się na pierwszej pozycji w pierwszej kolumnie
-  //       console.log('playerName', playerName)
-  //       return of(playerName); // Zwracamy imię gracza
-  //     })
-  //   );
-  // }
+  ngOnInit() {
+    if (this.data.form.teamOneRoundsWon.t1roundsWonInput === undefined || this.data.form.teamOneRoundsWon.t1roundsWonInput === '' || this.data.form.teamOneRoundsWon.t1roundsWonInput === 0) {
+      this.isConfirmButtonDisabled = true;
+    } else {
+      for (let i = 0; i < 7; i++) {
+        let player = `t1p${i + 1}name`;
+        if (this.data.form[player] === '' || this.data.form.scoreTeamOne[`t1p${i + 1}score`] === '') {
+          this.isConfirmButtonDisabled = true;
+          break;
+        }
+      }
+    }
+  }
+
+  isConfirmButtonEnabled(): boolean {
+    // Sprawdzamy, czy wszystkie dane są wprowadzone
+    const allPlayersFilled = Object.values(this.data.form).every(value => value !== '');
+    // Sprawdzamy, czy obie drużyny mają wpisane rundy
+    const roundsFilled = this.data.form.teamOneRoundsWon.t1roundsWonInput !== undefined && this.data.form.teamOneRoundsWon.t1roundsWonInput !== '' &&
+                        this.data.form.teamTwoRoundsWon.t2roundsWonInput !== undefined && this.data.form.teamTwoRoundsWon.t2roundsWonInput !== '';
+    // Zwracamy, czy oba warunki są spełnione
+    return allPlayersFilled && roundsFilled;
+  }
+
+
   getPlayerData(username: string): any {
     const player = this.data.playerRowArray.find(player => player.username === username);
     return player ? { playername: player.name, nationality: player.nationality } : { playername: '', nationality: '' };
   }
 
-
-  onConfirm(): void {
+  onConfirm(): void {    
     this.dialogRef.close(true);
   }
 

@@ -3,6 +3,8 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { PlayersApiService } from 'src/app/services/players-api.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Spinkit } from 'ng-http-loader';
 
 @Component({
   selector: 'app-movies',
@@ -13,8 +15,10 @@ export class MoviesComponent implements OnInit {
   public movies$: Observable<any[]>;
   filteredMovies$: Observable<any[]>;
   searchTerm = new FormControl('');
+  matchVideo: string = '';
+  public spinkit = Spinkit;
 
-  constructor(private googleApi: PlayersApiService) { }
+  constructor(private googleApi: PlayersApiService, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.movies$ = this.googleApi.getPlayers('Movies').pipe(
@@ -49,8 +53,7 @@ export class MoviesComponent implements OnInit {
                     player.nationality = matchedPlayer.nationality;
                   }
                 });
-              }
-              console.log('movie', movie)
+              }            
               return movie;
             });
           })
@@ -80,7 +83,13 @@ export class MoviesComponent implements OnInit {
 
   loadVideo(youtubeId: string): void {
     // Obsługa ładowania filmu z YouTube po kliknięciu
+    this.matchVideo = youtubeId;
   }
+
+  getVideoUrl(videoId: string): any {
+    // Funkcja do uzyskiwania bezpiecznego URL-a do wyświetlenia w iframe
+    return this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/' + videoId);
+}
 
   onPlayerReady(event: any) {
     event.target.playVideo();

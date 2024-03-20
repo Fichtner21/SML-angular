@@ -30,6 +30,10 @@ h1 {
       text-decoration: underline;
     }
 
+    .score {
+      padding: 2px;
+    }
+
     .property {
 
       .name {
@@ -51,20 +55,33 @@ h1 {
       color: #fff;
       display: inline-block;
       border-radius: 5px;
-    }
-
-    .green {
-      background-color: green;
-    }
-
-    .gray {
-      background-color: gray;
-    }
-
-    .red {
-      background-color: red;
-    }
+    }    
   }
+}
+
+.red_color {
+  color: red;
+}
+
+.green {
+  background-color: green;
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 5px;
+  margin: 2px;
+}
+
+.gray {
+  background-color: gray;
+}
+
+.red {
+  background-color: red;
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 5px;
+  margin: 2px;
+  animation: pulseRed 1s infinite alternate;
 }
 
 /* Success syling */
@@ -98,5 +115,14 @@ h1 {
 
   :nth-child(1){
     margin-right: 20px;
+  }
+}
+
+@keyframes pulseRed {
+  0% {
+    box-shadow: 0 0 10px red;
+  }
+  100% {
+    box-shadow: 0 0 20px red;
   }
 }

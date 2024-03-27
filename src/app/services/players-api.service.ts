@@ -68,8 +68,32 @@ export class PlayersApiService {
     return this.http.get<any>(
       `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
       );
-  } 
-  
+  }  
+
+  public getJsonDataConverted(name: string): Observable<any[]> {
+    const filePath = 'assets/snapshots/31_dec_2020.json'; // Ścieżka do pliku JSON
+
+    return this.http.get<any>(filePath).pipe(
+      map((response: any) => {
+        const sheetData = response[name];
+        if (!sheetData) {
+          throw new Error(`Nie znaleziono arkusza o nazwie '${name}' w pliku JSON.`);
+        }
+        return sheetData.map((item: any) => ({
+          playername: item['Player Name'],
+          username: item['User Name'],
+          ranking: item['Ranking'],
+          percentile: item['Percentile'],
+          place: item['Place'],
+          warcount: item['War Count'],
+          nationality: item['Nationality'],
+          clanhistory: item['Clan history'],
+          active: item['active'],
+          lastwar: item['lastwar']
+        }));
+      })
+    );
+  }
   // public getPlayer(fieldname:any, filteredOptions:Observable<any>){
   //   filteredOptions = fieldname.valueChanges.pipe(
   //     startWith(''),

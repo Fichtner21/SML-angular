@@ -65,6 +65,21 @@ section {
     font-weight: 700;   
   }
 
+  .teaminfo3009 {
+    display: grid;
+    grid-template-columns: 1fr 0.5fr 1fr 0.5fr 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 0 10px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: 3px solid #ffffc8;
+    background-image: linear-gradient(
+      0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
+          background-size: 4px 4px;
+    color: #ffffc8;
+    font-weight: 700;   
+  }
+
   .roundswon_row {
     border-color:green;
   }
@@ -132,9 +147,70 @@ section {
 
       &__score {
         font-size: 20px;
+      }      
+    }
+    &--player3009 {
+      display: grid;
+      grid-template-columns: 1fr 0.5fr 1fr 0.5fr 1fr 1fr;
+      grid-template-rows: auto;
+      gap: 0 10px;
+      position: relative;       
+      
+      >div{
+        display: flex;
+        align-items: center;
+      }
+
+      .rank {
+        background-color: #010141;
+        width: 26px;
+        justify-content: center;
+        border-radius: 50%;
+      }
+
+      .won {
+        position: relative;
+       
+        span {
+          &:after {
+            position: absolute;
+            top: 10px;
+            margin-left: 5px;
+            content: " ";
+            background-image: url("/assets/images/uprate.gif");
+            width: 10px;
+            height: 5px;
+          }
+        }        
+      }
+
+      .lost {
+        position: relative;
+
+        span {
+          &:after {
+            position: absolute;
+            top: 10px;
+            margin-left: 5px;
+            content: "";
+            background-image: url("/assets/images/downrate.gif");
+            width: 10px;
+            height: 5px;
+          }
+        }       
+      }
+
+      &__name {
+        font-size: 20px;
+      }
+
+      &__score {
+        font-size: 20px;
       }
     }
-  }
+
+
+  } 
 }
 
 .my-pagination {

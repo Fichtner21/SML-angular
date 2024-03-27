@@ -46,6 +46,10 @@ export class RankingObjComponent implements OnInit {
   public historyMatches$: Observable<any>;
   public lastMatch$: Observable<any>;
 
+  public state_s1_20_ranking$: Observable<any>;
+  public state_s1_20_wars$: Observable<any>;
+  public state_s4_20$: any;
+
   minValue = 100;
   maxValue = 2000;
   brownMinValue = 100;
@@ -130,7 +134,8 @@ export class RankingObjComponent implements OnInit {
             rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
           }
           players.push(rowObject);
-        }
+        }        
+        console.log('players', players)
         return players;
       }),
     );
@@ -138,7 +143,14 @@ export class RankingObjComponent implements OnInit {
     this.playersTest$.subscribe(data => {
       this.options = data;
       }
-    )
+    )   
+
+    this.playersApiService.getJsonDataConverted('Players').subscribe(data => {
+      console.log('Dane z pliku JSON dla arkusza "Players":', data);
+      this.state_s4_20$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
 
     this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
       map((response: any) => {

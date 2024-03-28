@@ -2,8 +2,8 @@
 
 <ng-container *ngIf="lastWarOfPlayer$ | async as lastWarOfPlayers">
   <ng-container *ngIf="lastWarOfPlayers.length > 0">
-    <section class="example"> 
-      
+    <section class="example">
+
       <div class="container">
         <div class="cont">
           <div class="ranking-head">
@@ -40,7 +40,7 @@
                   <fa-icon [icon]="arrowDown"></fa-icon>
                 </ng-template> -->
             <div class="new-head">
-              {{ 'ranking.last_war' | translate }}              
+              {{ 'ranking.last_war' | translate }}
             </div>
             <div class="">{{ 'ranking.act' | translate }}</div>
           </div>
@@ -66,10 +66,10 @@
                     <span matTooltip="View profile {{player.playername}}">{{ player.playername }}</span>
                     <ng-container *ngIf="player.donatorS5 == 1 && player.username != 'wicio'">
                       <fa-icon [icon]="dolar" class="donator" matTooltip="Donator Season 5"></fa-icon>
-                    </ng-container>     
+                    </ng-container>
                     <ng-container *ngIf="player.donatorS5 == 1 && player.username == 'wicio'">
                       <fa-icon [icon]="cent" class="centator" matTooltip="Centator Season 5"></fa-icon>
-                    </ng-container>               
+                    </ng-container>
                     <!-- <div [ngClass]="{ 'up-streak': player.strike > 0, 'down-streak': player.strike < 0, 'draw-streak': player.strike == 0 }">
                       <span attr.data-matTooltip="{{player.strike}} in Last war.
 
@@ -195,8 +195,8 @@
                 <!-- <ng-container *ngIf="isRedLineAdded">
                   <div matTooltip="" class="line-900" *ngIf="player.ranking >= 900 && lastWarOfPlayers[i + 1]?.ranking < 900"></div>
                 </ng-container> -->
-              </ng-container>  
-                       
+              </ng-container>
+
             </ng-container>
           </div>
           <div class="more-less">
@@ -209,7 +209,7 @@
                 </option>
               </select>
             </form>
-            
+
           </div>
           <!-- <div class="info">
             <div class="info-matTooltip">NEW FEATURE</div>
@@ -376,10 +376,10 @@
           <h3>Season 3 (01.07.2023-30.09.2023)</h3>
           <ol>
             <li>
-              <a routerLink="/obj-ranking/official6" class="gold">official6<img [src]='"assets/images/flags_svg/PT.SVG"'><span>141</span></a>            
+              <a routerLink="/obj-ranking/official6" class="gold">official6<img [src]='"assets/images/flags_svg/PT.SVG"'><span>141</span></a>
             </li>
             <li>
-              <a routerLink="/obj-ranking/m0nster" class="silver">M0NST3R<img [src]='"assets/images/flags_svg/UK.SVG"'><span>140</span></a> 
+              <a routerLink="/obj-ranking/m0nster" class="silver">M0NST3R<img [src]='"assets/images/flags_svg/UK.SVG"'><span>140</span></a>
             </li>
             <li>
               <a routerLink="/obj-ranking/glowa" class="bronze">GlowaF1!<img [src]='"assets/images/flags_svg/PL.SVG"'><span>98</span></a>
@@ -468,7 +468,7 @@
         <div class="floating-icon" [ngClass]="{ 'expanded': isExpandedLeft }" (click)="togglePanelLeft('first-left')" matTooltip="Last match" matTooltipPosition="after">
           <fa-icon [icon]="calendarCheck"></fa-icon>
         </div>
-       
+
         <!-- <div class="floating-icon" [ngClass]="{ 'expanded': isSecondPanelExpanded }" (click)="togglePanel('second')" matTooltip="Winners Most played Wars">
           <fa-icon [icon]="chartSimple"></fa-icon>
         </div>
@@ -643,15 +643,15 @@
           <h3>Donators Season 4:</h3>
           <div class="donators__num">{{ donatorsSeason4.length }}</div>
         </div>
-        <div class="donators_s4">          
+        <div class="donators_s4">
           <div *ngFor="let donator of donatorsSeason4" class="donator" matTooltip="Donator Season 4 - {{donator.playername}}">
             <fa-icon [icon]="dolar"></fa-icon>
           </div>
         </div>
       </div> -->
-      
+
     </section>
-   
+
   </ng-container>
 </ng-container>
 <div class="black-overlay" #blackOverlay></div>

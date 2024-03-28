@@ -26,9 +26,10 @@
               </div>
               <div class="match-row__team" [class]="match.flag ? match.flag : ''" [style.background-image]="match.flag ? 'url(/assets/images/flags_svg/' + match.flag + '.SVG)' : ''" [style.background-size]="match.flag ? '20% 20%' : ''" [style.background-repeat]="match.flag ? 'no-repeat' : ''">
                 <div class="teamrounds">{{ match.t1roundswon }}</div>
-                <div class="teaminfo" [ngClass]="{'teaminfo': match.idwar < 3010, 'teaminfo3009': match.idwar > 3009}">
+                <!-- <div class="teaminfo" [ngClass]="{'teaminfo': match.idwar < 3010, 'teaminfo3009': match.idwar > 3009}"> -->
+                <div class="teaminfo">
                   <div>preELO</div>
-                  <div *ngIf="match.idwar > 3009">Rank</div>
+                  <!-- <div *ngIf="match.idwar > 3009">Rank</div> -->
                   <div>{{ 'matches.name' | translate }}</div>
                   <div>{{ 'matches.frags' | translate }}</div>
                   <div>postELO</div>
@@ -36,14 +37,14 @@
                 </div>
                 <div class="match-row__team--player" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t1p1preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t1p1rank; else infoIcon">
                         {{ match.t1p1rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p1username}}" [ngClass]="{ 'banned': match.t1p1playername.ban == 'TRUE', 'inactive': match.t1p1playername.active == 'FALSE'}"  [title]="getTitle(match.t1p1playername)">{{ match.t1p1playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p1score }} </div>
                   <div>{{ match.t1p1postelo | number: '.1-2' }}</div>
@@ -51,14 +52,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p2playername | keyvalue)?.length" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t1p2preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t1p2rank; else infoIcon">
                         {{ match.t1p2rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p2username}}" [ngClass]="{ 'banned': match.t1p2playername.ban == 'TRUE', 'inactive': match.t1p2playername.active == 'FALSE'}"  [title]="getTitle(match.t1p2playername)">{{ match.t1p2playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p2score }} </div>
                   <div>{{ match.t1p2postelo | number: '.1-2' }}</div>
@@ -66,14 +67,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p3playername | keyvalue)?.length" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t1p3preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t1p3rank; else infoIcon">
                         {{ match.t1p3rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p3username}}" [ngClass]="{ 'banned': match.t1p3playername.ban == 'TRUE', 'inactive': match.t1p3playername.active == 'FALSE'}"  [title]="getTitle(match.t1p3playername)">{{ match.t1p3playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p3score }} </div>
                   <div>{{ match.t1p3postelo | number: '.1-2' }}</div>
@@ -81,14 +82,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p4playername | keyvalue)?.length" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t1p4preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t1p4rank; else infoIcon">
                         {{ match.t1p4rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p4username}}" [ngClass]="{ 'banned': match.t1p4playername.ban == 'TRUE', 'inactive': match.t1p4playername.active == 'FALSE'}"  [title]="getTitle(match.t1p4playername)">{{ match.t1p4playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p4score }} </div>
                   <div>{{ match.t1p4postelo | number: '.1-2' }}</div>
@@ -96,14 +97,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p5playername | keyvalue)?.length" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t1p5preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t1p5rank; else infoIcon">
                         {{ match.t1p5rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p5username}}" [ngClass]="{ 'banned': match.t1p5playername.ban == 'TRUE', 'inactive': match.t1p5playername.active == 'FALSE'}"  [title]="getTitle(match.t1p5playername)">{{ match.t1p5playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p5score }} </div>
                   <div>{{ match.t1p5postelo | number: '.1-2' }}</div>
@@ -111,14 +112,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p6playername | keyvalue)?.length" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t1p6preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t1p6rank; else infoIcon">
                         {{ match.t1p6rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p6username}}" [ngClass]="{ 'banned': match.t1p6playername.ban == 'TRUE', 'inactive': match.t1p6playername.active == 'FALSE'}"  [title]="getTitle(match.t1p6playername)">{{ match.t1p6playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p6score }} </div>
                   <div>{{ match.t1p6postelo | number: '.1-2' }}</div>
@@ -126,14 +127,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="( match.t1p7playername | keyvalue)?.length" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t1p7preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t1p7rank; else infoIcon">
                         {{ match.t1p7rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t1p7username}}" [ngClass]="{ 'banned': match.t1p7playername.ban == 'TRUE', 'inactive': match.t1p7playername.active == 'FALSE'}"  [title]="getTitle(match.t1p7playername)">{{ match.t1p7playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t1p7score }} </div>
                   <div>{{ match.t1p7postelo | number: '.1-2' }}</div>
@@ -159,7 +160,7 @@
                 <div class="teamrounds">{{ match.t2roundswon }}</div>
                 <div class="teaminfo" [ngClass]="{'teaminfo': match.idwar < 3010, 'teaminfo3009': match.idwar > 3009}">
                   <div>preELO</div>
-                  <div *ngIf="match.idwar > 3009">Rank</div>
+                  <!-- <div *ngIf="match.idwar > 3009">Rank</div> -->
                   <div>{{ 'matches.name' | translate }}</div>
                   <div>{{ 'matches.frags' | translate }}</div>
                   <div>postELO</div>
@@ -167,14 +168,14 @@
                 </div>
                 <div class="match-row__team--player" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t2p1preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t2p1rank; else infoIcon">
                         {{ match.t2p1rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p1username}}" [ngClass]="{ 'banned': match.t2p1playername.ban == 'TRUE', 'inactive': match.t2p1playername.active == 'FALSE'}"  [title]="getTitle(match.t2p1playername)">{{ match.t2p1playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p1score }} </div>
                   <div>{{ match.t2p1postelo | number: '.1-2' }}</div>
@@ -182,14 +183,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p2username !== ''" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t2p2preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t2p2rank; else infoIcon">
                         {{ match.t2p2rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p2username}}" [ngClass]="{ 'banned': match.t2p2playername.ban == 'TRUE', 'inactive': match.t2p2playername.active == 'FALSE'}"  [title]="getTitle(match.t2p2playername)">{{ match.t2p2playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p2score }} </div>
                   <div>{{ match.t2p2postelo | number: '.1-2' }}</div>
@@ -197,14 +198,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p3username !== ''" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t2p3preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t2p3rank; else infoIcon">
                         {{ match.t2p3rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p3username}}" [ngClass]="{ 'banned': match.t2p3playername.ban == 'TRUE', 'inactive': match.t2p3playername.active == 'FALSE'}"  [title]="getTitle(match.t2p3playername)">{{ match.t2p3playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p3score }} </div>
                   <div>{{ match.t2p3postelo | number: '.1-2' }}</div>
@@ -212,14 +213,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p4username !== ''" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t2p4preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t2p4rank; else infoIcon">
                         {{ match.t2p4rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p4username}}" [ngClass]="{ 'banned': match.t2p4playername.ban == 'TRUE', 'inactive': match.t2p4playername.active == 'FALSE'}"  [title]="getTitle(match.t2p4playername)">{{ match.t2p4playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p4score }} </div>
                   <div>{{ match.t2p4postelo | number: '.1-2' }}</div>
@@ -227,14 +228,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p5username !== ''" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t2p5preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009">
+                  <!-- <div *ngIf="match.idwar > 3009">
                     <ng-container *ngIf="match.t2p5rank; else infoIcon">
                         {{ match.t2p5rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p5username}}" [ngClass]="{ 'banned': match.t2p5playername.ban == 'TRUE', 'inactive': match.t2p5playername.active == 'FALSE'}"  [title]="getTitle(match.t2p5playername)">{{ match.t2p5playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p5score }} </div>
                   <div>{{ match.t2p5postelo | number: '.1-2' }}</div>
@@ -242,14 +243,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p6username !== ''" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t2p6preelo | number: '1.0-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t2p6rank; else infoIcon">
                         {{ match.t2p6rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p6username}}" [ngClass]="{ 'banned': match.t2p6playername.ban == 'TRUE', 'inactive': match.t2p6playername.active == 'FALSE'}"  [title]="getTitle(match.t2p6playername)">{{ match.t2p6playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p6score }} </div>
                   <div>{{ match.t2p6postelo | number: '1.0-2' }}</div>
@@ -257,14 +258,14 @@
                 </div>
                 <div class="match-row__team--player" *ngIf="match.t2p7username !== ''" [ngClass]="{'match-row__team--player': match.idwar < 3010, 'match-row__team--player3009': match.idwar > 3009}">
                   <div>{{ match.t2p7preelo | number: '.1-2' }}</div>
-                  <div *ngIf="match.idwar > 3009" class="rank">
+                  <!-- <div *ngIf="match.idwar > 3009" class="rank">
                     <ng-container *ngIf="match.t2p7rank; else infoIcon">
                         {{ match.t2p7rank | number: '1.0-0' }}
                     </ng-container>
                     <ng-template #infoIcon>
                         <fa-icon [icon]="circleInfoIcon" matTooltip="back from Inactive"></fa-icon>
                     </ng-template>
-                  </div>
+                  </div> -->
                   <div class="match-row__team--player__name"><a routerLink="/obj-ranking/{{match.t2p7username}}" [ngClass]="{ 'banned': match.t2p7playername.ban == 'TRUE', 'inactive': match.t2p7playername.active == 'FALSE'}"  [title]="getTitle(match.t2p7playername)">{{ match.t2p7playername.name }}</a></div>
                   <div class="match-row__team--player__score">{{ match.t2p7score }} </div>
                   <div>{{ match.t2p7postelo | number: '.1-2' }}</div>

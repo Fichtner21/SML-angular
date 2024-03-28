@@ -50,6 +50,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { RankingObjModule } from './ranking-obj/ranking-obj.module';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -97,8 +98,6 @@ const customNotifierOptions: NotifierOptions = {
   }
 };
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -133,6 +132,7 @@ const customNotifierOptions: NotifierOptions = {
     MatIconModule,
     MatDatepickerModule,
     MatToolbarModule,
+    RankingObjModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),

@@ -7,7 +7,7 @@ h1 {
   // font-size: 72px;
   font-size: 38px;
   font-weight: 700;
-  width: 100%;  
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,9 +15,9 @@ h1 {
   color: #ffffc8;
 }
 
-.character-card {  
+.character-card {
   padding: 15px;
-  color: #ffffc8;  
+  color: #ffffc8;
   display: flex;
 }
 
@@ -46,7 +46,7 @@ h1 {
   top: 54px;
   left: 0;
   right: 0;
-  z-index: 6;    
+  z-index: 6;
 
   h1 {
     display: flex;
@@ -67,7 +67,7 @@ h1 {
   // min-width: 100%;
   // overflow: hidden;
   // display: flex;
-  // align-items: center;  
+  // align-items: center;
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -124,18 +124,18 @@ video {
   justify-content: space-between;
   max-height: 180px;
   background-image: linear-gradient(0deg, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2) 100%);
-  background-size: 12px 12px;  
+  background-size: 12px 12px;
   align-items: center;
   padding-top: 15px;
 
   &__right {
     margin-top: 25px;
-    
+
     h1 {
       line-height: 1;
       z-index: 6;
     }
-  
+
     .since {
       color: #ffffc8;
       font-style: italic;
@@ -168,10 +168,10 @@ video {
           color: #fff;
           animation: pulsate 10s infinite;
         }
-      }      
+      }
     }
   }
-  
+
   img {
     z-index: 6;
   }
@@ -180,7 +180,7 @@ video {
     h1 {
       font-size: 22px;
     }
-  }  
+  }
 }
 
 .teams-container {
@@ -198,7 +198,7 @@ video {
   .teamsNext {
     font-size: 28px;
     background-image: linear-gradient(0deg, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2) 100%);
-    background-size: 12px 12px; 
+    background-size: 12px 12px;
     color: #ffffc8;
     font-weight: 700;
     padding: 5px 30px;
@@ -220,7 +220,7 @@ video {
     @media screen and (max-width: 768px){
       padding: 0px 15px;
     }
-    
+
     div {
       text-decoration: underline;
     }
@@ -231,9 +231,9 @@ video {
     grid-template-columns: 1fr 1fr;
     column-gap: 2rem;
     max-width: 600px;
-    margin: 0 auto;   
+    margin: 0 auto;
     background-color: rgba(0,0,0,0.5);
-    color: #ffffc8;    
+    color: #ffffc8;
     padding: 5px 30px;
     font-size: 20px;
 
@@ -259,18 +259,18 @@ video {
     color: #ffffc8;
     padding: 5px 30px;
     background-image: linear-gradient(0deg, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2) 100%);
-    background-size: 12px 12px; 
+    background-size: 12px 12px;
 
     @media screen and (max-width: 768px){
       padding: 5px 15px;
     }
 
     .teamFavorite {
-      // animation: pulsate 2.5s infinite alternate;  
+      // animation: pulsate 2.5s infinite alternate;
     }
 
     .teamNotFavorite {
-      // animation: pulsate2 2.5s infinite alternate;  
+      // animation: pulsate2 2.5s infinite alternate;
     }
 
     .teamWithoutFavorite {
@@ -330,6 +330,90 @@ video {
       }
     }
   }
+
+  .game_discord {
+    display: none;
+
+    @media screen and (min-height: 700px){
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 10px 30px;
+
+      .game, .discord {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        a {
+          text-align: center;
+          border-radius: 15px; // Zaokrąglenie rogów
+          overflow: hidden; // Ukrycie treści, która wystaje poza kontener
+          padding: 5px 10px;
+          position: relative;
+          color: #ffffc8;
+          text-decoration: none;
+          align-items: center;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          height: 136px;
+          width: 147px;
+        }
+      }
+
+      .discord a {
+        background-color: #010141;
+      }
+
+      .game a {
+        background-color: rgba(144, 238, 144, 0.5);
+        transition: .3s all;
+
+        &:hover {
+          box-shadow: 0 0 30px rgba(144, 238, 144, 0.9);
+        }
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 0;
+          height: 0;
+          background-color: rgba(255, 255, 255, 0.5); // Początkowy kolor przezroczysty
+          border-radius: 15px; // Zaokrąglenie do kształtu koła
+          animation: pulse 5s infinite; // Animacja pulsowania
+        }
+
+        @keyframes pulse {
+          0% {
+            width: 0;
+            height: 0;
+            opacity: 0; // Początkowa przejrzystość
+            // border: green 0px solid;
+          }
+          50% {
+            width: 147px; // Rozszerzanie do maksymalnego rozmiaru
+            height: 136px; // Rozszerzanie do maksymalnego rozmiaru
+            opacity: .3; // Maksymalna widoczność
+            // border: green 30px solid;
+          }
+          100% {
+            width: 0;
+            height: 0;
+            opacity: 0; // Powrót do zerowej przejrzystości i rozmiaru
+            // border: green 0px solid;
+          }
+        }
+      }
+
+      img {
+        max-width: 70px;
+      }
+    }
+  }
 }
 
 .logo_icon {
@@ -374,7 +458,7 @@ video {
 		// box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
   }
 
-  100% {    
+  100% {
     transform: scale(0.95);
     height: 100%;
 		// box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
@@ -384,7 +468,7 @@ video {
 .teamIdOne {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;  
+  gap: 1rem;
 }
 
 .monthActivity {
@@ -399,7 +483,7 @@ video {
     display: flex;
     justify-content: center;
     min-width: 100%;
-  
+
     h1 {
       font-size: 20px;
       display: flex;

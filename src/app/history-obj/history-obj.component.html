@@ -26,7 +26,8 @@
               </div>
               <div class="match-row__team" [class]="match.flag ? match.flag : ''" [style.background-image]="match.flag ? 'url(/assets/images/flags_svg/' + match.flag + '.SVG)' : ''" [style.background-size]="match.flag ? '20% 20%' : ''" [style.background-repeat]="match.flag ? 'no-repeat' : ''">
                 <div class="teamrounds">{{ match.t1roundswon }}</div>
-                <div class="teaminfo" [ngClass]="{'teaminfo': match.idwar < 3010, 'teaminfo3009': match.idwar > 3009}">
+                <!-- <div class="teaminfo" [ngClass]="{'teaminfo': match.idwar < 3010, 'teaminfo3009': match.idwar > 3009}"> -->
+                <div class="teaminfo">
                   <div>preELO</div>
                   <!-- <div *ngIf="match.idwar > 3009">Rank</div> -->
                   <div>{{ 'matches.name' | translate }}</div>

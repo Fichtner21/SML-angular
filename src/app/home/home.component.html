@@ -1,30 +1,32 @@
 <div class="home">
   <div class="wrapper-fix">
     <div class="wrapper-head">
-      <img src="assets/images/sh_icon.png" alt="" class="logo_icon">
-      <div class="wrapper-head__right">
-        <h1>MoH: SH <br> Mix League</h1>
-        <div class="since">  
-          <div>Since 10.11.2020</div>
-          <!-- <div class="second">2nd Anniversary!</div> -->
-        </div>
-        <!-- <div class="meet"><a href="https://discord.com/channels/716723661909786690/716723662337605663/1029825546747646093" title="CLICK for more INFO" target="_blank">Meeting 18.11. - 20.11.2022</a></div> -->
+      <div>
+        <img src="assets/images/sh_icon.png" alt="" class="logo_icon">
       </div>
-    </div>       
-    <!-- <div class="lol">LOL, Fantastic Action (c) YP</div> -->    
+      <div>
+        <div class="wrapper-head__right">
+          <h1>MoH: SH <br> Mix League</h1>
+          <div class="since">
+            <div>Since 10.11.2020</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="lol">LOL, Fantastic Action (c) YP</div> -->
   </div>
   <div class="gradient"></div>
   <div class="videoContainer">
-    <video autoplay [muted]="true" loop id="myVideo1">      
-      <source src="assets/video/{{randomVideo}}.mp4" type="video/mp4">      
-    </video>   
+    <video autoplay [muted]="true" loop id="myVideo1">
+      <source src="assets/video/{{randomVideo}}.mp4" type="video/mp4">
+    </video>
   </div>
   <div class="monthActivity">
     <div class="container">
-      <div *ngIf="playedWars$ | async as playedWars"></div>     
-      <h1>{{ 'home.month_activity' | translate }}:</h1>      
-      <canvas id="allActivity" width="1320" height="280" style="overflow-x: scroll;"> 
-      </canvas>     
+      <div *ngIf="playedWars$ | async as playedWars"></div>
+      <h1>{{ 'home.month_activity' | translate }}:</h1>
+      <canvas id="allActivity" width="1320" height="280" style="overflow-x: scroll;">
+      </canvas>
     </div>
   </div>
 </div>
@@ -34,28 +36,42 @@
     <div>Team 1</div>
     <div>Team 2</div>
   </div>
-  <div class="teamsCont">  
+  <div class="teamsCont">
     <ng-container *ngIf="teamSelections$ | async as teamOneSelection;">
       <ng-container *ngFor="let teamOne of teamOneSelection; let i = index;">
-        <div class="teamIdOne">          
+        <div class="teamIdOne">
           <div class="teamIdOne__playerElo">{{ teamOne.t1preelo }}</div>
-          <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t1username}}">{{ teamOne.t1playername }}</a></div>                 
-        </div>        
+          <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t1username}}">{{ teamOne.t1playername }}</a></div>
+        </div>
         <div class="teamIdOne">
           <div class="teamIdOne__playerElo">{{ teamOne.t2preelo }}</div>
-          <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t2username}}">{{ teamOne.t2playername }}</a></div> 
-        </div>        
+          <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t2username}}">{{ teamOne.t2playername }}</a></div>
+        </div>
       </ng-container>
-    </ng-container>   
+    </ng-container>
   </div>
   <div class="teamsCumulative">
     <div>{{ 'home.cumulative' | translate }} {{ teamOneCumulative }}</div>
     <div>{{ 'home.cumulative' | translate }} {{ teamTwoCumulative }}</div>
     <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShow > chanceOfWinTeamOneShow), 'teamNotFavorite': (chanceOfWinTeamTwoShow < chanceOfWinTeamOneShow), 'teamWithoutFavorite': (chanceOfWinTeamTwoShow == chanceOfWinTeamOneShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamTwoShow | number : '.2-2' }} %</div>
-    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>    
+    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>
+  </div>
+  <div class="game_discord">
+    <div class="game">
+      <a href="../../assets/MOHAA.rar" target="_self" download="MOHAA.rar" title="CLICK HERE TO DOWNLOAD">
+        <img src="assets/images/sh_log70x70.png" alt="">
+        <div>Download (3Gb)</div>
+      </a>
+    </div>
+    <div class="discord">
+      <a href="https://discord.gg/DB5PybFPhC" target="_blank" title="DISCORD" class="disco">
+        <img src="assets/images/icons/discord.svg" alt="">
+        <div>Join DISCORD</div>
+      </a>
+    </div>
   </div>
 </div>
-<ng-http-loader 
+<ng-http-loader
     [backdrop]="false"
     [backgroundColor]="'#fff'"
     [debounceDelay]="100"

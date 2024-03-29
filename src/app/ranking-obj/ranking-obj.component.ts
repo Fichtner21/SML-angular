@@ -1,6 +1,6 @@
-import { map, last,toArray, takeLast, reduce } from 'rxjs/operators';
+import { map, last,toArray, takeLast, reduce, tap, shareReplay } from 'rxjs/operators';
 import { PlayersApiService } from './../services/players-api.service';
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
@@ -23,6 +23,7 @@ interface Streak {
   styleUrls: ['./ranking-obj.component.scss']
 })
 export class RankingObjComponent implements OnInit {
+  @Input() playersData: any;
   receivedData: number;
   public spinkit = Spinkit;
   players$: Observable<Players[]>;
@@ -38,7 +39,7 @@ export class RankingObjComponent implements OnInit {
   aaa = [];
   showInactivePlayersOnly$ = new BehaviorSubject<boolean>(false);
   showActivePlayersOnly: boolean = true;
-  infoCode: string; 
+  infoCode: string;
 
   @ViewChild('shIcon') shIcon!: ElementRef;
   @ViewChild('blackOverlay') blackOverlay!: ElementRef;
@@ -69,7 +70,7 @@ export class RankingObjComponent implements OnInit {
   topThreePlayers: any[]
   // expandedPlayerIndexes: number[] = [];
   isRedLineAdded: boolean = true;
-  
+
   tooltipContent: string = `
     <div>
       <p>Tekst tooltipu</p>
@@ -141,12 +142,13 @@ export class RankingObjComponent implements OnInit {
         // console.log('players', players)
         return players;
       }),
+      // shareReplay(1)
     );
 
     this.playersTest$.subscribe(data => {
       this.options = data;
       }
-    )   
+    )
 
     // this.playersApiService.getJsonDataConverted('Players').subscribe(data => {
     //   console.log('Dane z pliku JSON dla arkusza "Players":', data);
@@ -166,15 +168,15 @@ export class RankingObjComponent implements OnInit {
           }
           historyMatches.push(rowObject);
         }
+        this.playersApiService.setHistoryMatches(historyMatches);
         return historyMatches;
       }),
+      // shareReplay(1)
     );
 
     this.lastMatch$ = this.historyMatches$.pipe(
       map(array => array[array.length - 1])
     );
-
-    // this.lastMatch$.subscribe(lastElement => console.log('Last Element:', lastElement));
 
     this.lastMatch$.pipe(
 
@@ -198,8 +200,6 @@ export class RankingObjComponent implements OnInit {
           (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) +
           (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0)
         ].reduce(this.addPreelo, 0);
-        // console.log('THIS.OPTIONS', this.options)
-        // console.log('MATCH', match)
 
         this.matchRow = {
           timestamp: match.timestamp,
@@ -283,10 +283,8 @@ export class RankingObjComponent implements OnInit {
           t2p7score: match.t2p7score,
           t2p7postelo: match.t2p7postelo,
         }
-        // console.log('THIS.match row', this.matchRow)
         return this.matchRow;
       })
-
     ).subscribe();
 
     const storedInfo = localStorage.getItem('info');
@@ -474,8 +472,7 @@ export class RankingObjComponent implements OnInit {
             playerRowArray.push(lastWarDate);
           }
         }
-       
-        // console.log('v2', v2)
+
         // console.log('playerRowArray1', playerRowArray[0])
         // console.log('playerRowArray2', playerRowArray[1])
         // console.log('playerRowArray3', playerRowArray[2])
@@ -487,10 +484,10 @@ export class RankingObjComponent implements OnInit {
         // .slice(0, 3); // Pobranie trzech graczy z najwyższymi wartościami "wars"
         console.log('playerRowArray', playerRowArray)
         return playerRowArray;
-      })
-    );   
+      }),
+      tap(data => console.log('players', data))
+    );
 
-   
     // console.log('=>', this.donatorsSeason4);
 
     if(this.activatedRoute.snapshot.queryParams['sortByWars'] == 'DESC'){
@@ -1158,7 +1155,7 @@ export class RankingObjComponent implements OnInit {
       return ''; // Jeśli nie ma Tooltipu dla pozostałych graczy
     }
   }
-  
+
   handleClick() {
     // Pobieramy referencje do ikony i tła
     const shIcon = this.shIcon.nativeElement as HTMLElement;

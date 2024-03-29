@@ -10,20 +10,24 @@
     </div>
     <div class="player" *ngFor="let player of ['t1p1name', 't1p2name', 't1p3name', 't1p4name', 't1p5name', 't1p6name', 't1p7name']; let i = index">
       <ng-container *ngIf="data.form[player] !== ''">
-        <div class="property"><span class="name">{{ getPlayerData(data.form[player]).playername }}</span></div>
         <div class="property">
-          <ng-container *ngIf="getPlayerData(data.form[player]).nationality">
-            <img [src]="'assets/images/flags_svg/' + getPlayerData(data.form[player]).nationality + '.SVG'">
-          </ng-container>
+            <span class="name">{{ getPlayerData(data.form[player]).playername }}</span>
         </div>
-        <div class="property score">          
-          <ng-container *ngIf="data.form.scoreTeamOne['t1p' + (i + 1) + 'score'] !== ''">
-            <span class="green">{{ data.form.scoreTeamOne['t1p' + (i + 1) + 'score'] }} <fa-icon [icon]="faCheck"></fa-icon></span>
+        <div class="property">
+            <ng-container *ngIf="getPlayerData(data.form[player]).nationality">
+                <img [src]="'assets/images/flags_svg/' + getPlayerData(data.form[player]).nationality + '.SVG'">
+            </ng-container>
+        </div>
+        <div class="property score">
+            <ng-container *ngIf="data.form.scoreTeamOne['t1p' + (i + 1) + 'score'] !== ''">
+                <span class="green">{{ data.form.scoreTeamOne['t1p' + (i + 1) + 'score'] }} <fa-icon [icon]="faCheck"></fa-icon></span>
+            </ng-container>
+            <ng-container *ngIf="data.form['t1p' + (i + 1) + 'name'] !== '' && data.form.scoreTeamOne['t1p' + (i + 1) + 'score'] === ''">
+              <span class="red">put score!</span>
           </ng-container>
-          <ng-container *ngIf="data.form.scoreTeamOne['t1p' + (i + 1) + 'score'] === ''"><span class="red">put score!</span></ng-container>
         </div>
       </ng-container>
-    </div>    
+    </div>
     <div class="rounds">
       Team 1 Rounds:
       <span [ngClass]="{
@@ -36,7 +40,7 @@
       <ng-container *ngIf="data.form.teamOneRoundsWon.t1roundsWonInput">
         <fa-icon class="green" [icon]="faCheck"></fa-icon>
       </ng-container>
-    </div>     
+    </div>
   </div>
   <div>
     <h2>Team 2</h2>
@@ -47,25 +51,25 @@
     </div>
     <div class="player" *ngFor="let player of ['t2p1name', 't2p2name', 't2p3name', 't2p4name', 't2p5name', 't2p6name', 't2p7name']; let i = index">
       <ng-container *ngIf="data.form[player] !== ''">
-        <div class="property"><span class="name">{{ getPlayerData(data.form[player]).playername }}</span></div>
         <div class="property">
-          <ng-container *ngIf="getPlayerData(data.form[player]).nationality">
-            <img [src]="'assets/images/flags_svg/' + getPlayerData(data.form[player]).nationality + '.SVG'">
+            <span class="name">{{ getPlayerData(data.form[player]).playername }}</span>
+        </div>
+        <div class="property">
+            <ng-container *ngIf="getPlayerData(data.form[player]).nationality">
+                <img [src]="'assets/images/flags_svg/' + getPlayerData(data.form[player]).nationality + '.SVG'">
+            </ng-container>
+        </div>
+        <div class="property score">
+            <ng-container *ngIf="data.form.scoreTeamTwo['t2p' + (i + 1) + 'score'] !== ''">
+                <span class="green">{{ data.form.scoreTeamTwo['t2p' + (i + 1) + 'score'] }} <fa-icon [icon]="faCheck"></fa-icon></span>
+            </ng-container>
+            <ng-container *ngIf="data.form['t2p' + (i + 1) + 'name'] !== '' && data.form.scoreTeamTwo['t2p' + (i + 1) + 'score'] === ''">
+              <span class="red">put score!</span>
           </ng-container>
         </div>
-        <div class="property score">          
-          <ng-container *ngIf="data.form.scoreTeamTwo['t2p' + (i + 1) + 'score'] !== ''">
-            <span class="green">{{ data.form.scoreTeamTwo['t2p' + (i + 1) + 'score'] }}
-              <fa-icon [icon]="faCheck"></fa-icon>
-            </span>
-          </ng-container>
-          <ng-container *ngIf="data.form.scoreTeamTwo['t2p' + (i + 1) + 'score'] === '' && data.form[player] !== ''">
-            <span class="red">score!!</span>
-          </ng-container>
-        </div>
-      </ng-container>
+    </ng-container>
     </div>
-    
+
     <div class="rounds">
       Team 2 Rounds:
       <span [ngClass]="{

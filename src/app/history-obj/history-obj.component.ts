@@ -175,7 +175,7 @@ export class HistoryObjComponent implements OnInit  {
         let matchRow;
         const observables: Observable<number>[] = [];
         // let matchRowArray: any[] = [];
-
+        console.log('PLAYERS', players)
         for(let match of matches){
           const sumPreeloTeam1 = [
             (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) +
@@ -359,7 +359,7 @@ export class HistoryObjComponent implements OnInit  {
 
         // this.loadMatchesData();
 
-        console.log('M 2=>', this.matchRowArray[3010]);
+        console.log('M 2=>', this.matchRowArray[3022]);
         return this.matchRowArray.reverse();
       }),
 

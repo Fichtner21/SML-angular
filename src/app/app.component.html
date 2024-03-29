@@ -2,7 +2,7 @@
   <div class="mobile">
     <a href="/">
       <img src="../assets/images/sh_icon.png" alt="" class="mobile-icon">
-    </a>    
+    </a>
     <div id="hamburger" (click)="toggleMenu()">
       <svg viewBox="0 0 100 80" width="40" height="30" fill="#ffffc8">
         <rect width="100" height="10"></rect>
@@ -10,7 +10,7 @@
         <rect y="60" width="100" height="10"></rect>
       </svg>
     </div>
-  </div>    
+  </div>
   <div class="nav" id="nav" [ngClass]="{'block_class': isMenuOpen}">
     <div class="menu">
       <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()"><img class="home_icon" src="assets/images/sh_icon.png"></a>
@@ -18,50 +18,51 @@
       <a routerLink="obj-matches" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.matches_obj' | translate }}</a>
       <a routerLink="obj-inactive" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.inactive_obj' | translate }}</a>
       <a routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</a>
-      <a routerLink="cup" routerLinkActive="active" (click)="closeMenu()">Cup</a>      
+      <a routerLink="cup" routerLinkActive="active" (click)="closeMenu()">Cup</a>
       <a routerLink="mix" routerLinkActive="active" class="mix" (click)="closeMenu()">Mix</a>
       <form action="">
         <label for="langChange">{{ 'nav.choose' | translate }}</label>
-        <select class="language-select" name="langChange" (ngModelChange)="languageChange($event)" [(ngModel)]="languageCode">          
-          <option class="language-select" *ngFor='let item of languages' [ngValue]='item.languageCode'>    
+        <select class="language-select" name="langChange" (ngModelChange)="languageChange($event)" [(ngModel)]="languageCode">
+          <option class="language-select" *ngFor='let item of languages' [ngValue]='item.languageCode'>
             {{item.languageName}}</option>
         </select>
         <div class="season" title="1.01.2024 - 31.03.2024">Season #5</div>
-      </form>      
+      </form>
     </div>
-    <div class="social">  
+    <div class="social">
       <div class="social-panel">
-        <div *ngIf="players$ | async as numOfPlayers">        
+        <div *ngIf="players$ | async as numOfPlayers">
           <div *ngIf="numOfPlayers.length > 0">
             <a routerLink="obj-ranking" routerLinkActive="active" title="ACTIVE PLAYERS">
               <img src="../assets/images/icons/people.png" alt="" class="people">
-              <!-- {{ numOfPlayers.length - 1 }} -->
-              {{ numOfPlayers$ | async }}
-            </a> 
-          </div>        
-        </div>
-        <div *ngIf="matches$ | async as numOfMatches">        
-          <div *ngIf="numOfMatches.length > 0">            
-            <a routerLink="obj-matches" routerLinkActive="active">              
-              <img src="../assets/images/icons/avarage.png" alt="">
-              <span class="curr-season" title="SEASON 5 WARS">{{numberOfMatches}}</span>&middot;&middot;&middot;
-              <span class="total-seasons" title="TOTAL WARS">{{ numOfMatches.length }}</span>
+              {{ num_Players }} <!-- Wyświetlenie liczby graczy -->
             </a>
-          </div>       
+          </div>
         </div>
+        <div *ngIf="numOfPlayers$ | async as numOfMatches">
+          <div *ngIf="numOfMatches.length > 0">
+            <a routerLink="obj-matches" routerLinkActive="active">
+              <img src="../assets/images/icons/avarage.png" alt="">
+              <span class="curr-season" title="SEASON 5 WARS">{{ s5_wars }}</span> <!-- Wyświetlenie ilości wojen z sezonu 5 -->
+              &middot;&middot;&middot;
+              <span class="total-seasons" title="TOTAL WARS">{{ total_wars }}</span> <!-- Wyświetlenie łącznej liczby wojen -->
+            </a>
+          </div>
+        </div>
+
         <a href="https://discord.gg/DB5PybFPhC" target="_blank" title="DISCORD" class="disco">
           <img src="assets/images/icons/discord.svg" alt="">
-          <div>DISCORD</div>        
-        </a>  
-        
+          <div>DISCORD</div>
+        </a>
+
         <!-- <div class="donation">
-          
+
         </div>  -->
-      </div>     
+      </div>
       <div class="login-panel">
         <a href="https://zrzutka.pl/en/t4ujr8" title="Donate with zrzutka.pl" target="_blank" class="donation">
           <span>Donate League</span>
-          <fa-icon [icon]="euro"></fa-icon> 
+          <fa-icon [icon]="euro"></fa-icon>
         </a>
         <a href="https://www.paypal.com/donate/?hosted_button_id=K5HHU9LGEWULS" target="_blank" title="Donate with PayPal" class="donation">
           <span>Donate with</span> <fa-icon [icon]="paypal"></fa-icon>
@@ -71,12 +72,12 @@
         </a>
         <div *ngIf="_authService.loggedIn()">
           <!-- <a class="navbar-brand" href="">EventsHub</a> -->
-          
-          <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+
+          <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button> -->
-        
+
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- <ul class="navbar-nav mr-auto">
               <li class="nav-item">
@@ -86,29 +87,31 @@
                 <a class="nav-link" routerLink="/users"  *ngIf="isAdmin" rouetrLinkActive="active">Users</a>
               </li>
             </ul> -->
-            
+
             <ul class="navbar-nav">
-              
+
               <a class="nav-link"  routerLink="/login" *ngIf="!_authService.loggedIn()" rouetrLinkActive="active">Login</a>
               <a class="nav-link" style="cursor:pointer" *ngIf="_authService.loggedIn()" (click)="logoutUser(); logoutTest();">{{ 'about.logout' | translate }}</a>
             </ul>
           </div>
         </div>
-      </div>    
-      
+      </div>
+
     </div>
-    
-  </div>  
+
+  </div>
 </nav>
 
 <!-- <iframe style="position: absolute; right: 30px; bottom: 30px; z-index: 99999;" src="https://discord.com/widget?id=716723661909786690&theme=dark" width="350" height="800" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe> -->
 <!-- <iframe style="position: absolute; right: 30px; bottom: 30px; z-index: 99999;" src="https://e.widgetbot.io/channels/716723661909786690" height="600" width="350"></iframe> -->
 <!-- <div class="overlay" id="overlay">
   <div class="content">
-    <h1>the league is dying</h1>   
-    <div class="cross">†</div>     
+    <h1>the league is dying</h1>
+    <div class="cross">†</div>
   </div>
 </div> -->
 
 
-<router-outlet></router-outlet>
+<router-outlet>
+
+</router-outlet>

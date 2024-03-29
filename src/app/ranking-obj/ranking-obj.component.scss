@@ -46,6 +46,20 @@ section {
       select {
         margin-left: 5px;
       }
+
+      .charts-section {
+        display: flex;
+        color: #ffffc8;
+
+        .info-charts {
+          display: flex;
+          margin-left: 5px;
+
+          div, input {
+            margin-left: 3px;
+          }
+        }
+      }
     }
 
     // @media screen and (min-width: 1295px){
@@ -238,14 +252,53 @@ a {
 .character-card {
   background-color: #40415f;
   transition: .4s all;
+  position: relative;
+  
+  .chart-name {
+    position: absolute;
+    bottom: 5px;
+    right: 25px;
+    font-style: italic;
+    font-size: 50px;
+    color: lightgray;
+    opacity: .3;
+  }
 
-  // @media screen and (min-width: 1024px){
-  //   &:hover {
-  //     box-shadow: 0 0 30px #010141;
-  //     transform: scale(1.1) translateX(20px);
-  //     z-index: 10;
-  //   }
-  // }
+  .last-wars {
+    grid-column: 2/8;
+    border-top: 1px solid #010141;
+    border-right: none;
+    display: flex;
+
+    .square {
+      border-radius: 5px;
+      padding: 2px;
+      color: #fff;
+      margin-right: 3px;
+      width: 22px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .green {
+      background-color: green;
+    }
+
+    .red {
+      background-color: red;
+    }
+
+    .gray {
+      background-color: gray;
+    }
+  }
+
+  .chart {
+    grid-column: 2/3;    
+  }
+
   .playername {
     z-index: 5;
     padding-left: 5px;

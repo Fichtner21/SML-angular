@@ -172,6 +172,17 @@
                       'green0': player.lastyear == 0,
                       'green1_5': (player.lastyear > 0 && player.lastyear <= 30), 'green6_10': (player.lastyear > 30 && player.lastyear <= 90), 'green11_20': (player.lastyear > 90 && player.lastyear <= 150), 'green21_40': (player.lastyear > 150 && player.lastyear <= 250), 'green41_70': (player.lastyear > 250 && player.lastyear <= 365), 'green71': (player.lastyear > 365) }" matTooltip="{{ player.lastyear }} wars in last year." matTooltipPosition="before"></div>
                   </div>
+                  <div class="last-wars" *ngIf="isInfo">
+                    <div *ngFor="let result of player.lastMatches" [ngClass]="{'green': result.result == 'W', 'red': result.result == 'L', 'gray': result.result == 'D'}" class="square" matTooltip="{{result.resultOfMatch}}, {{result.time}}">
+                      <a href="/obj-matches/{{result.id}}">{{ result.result }}</a>
+                    </div>
+                  </div>
+                  <div class="chart" *ngIf="showCharts === 'yes'">
+                    <canvas id="{{ 'id-' + player.username }}" width="300" height="150"></canvas>                    
+                  </div>
+                  <div class="chart-name" *ngIf="showCharts === 'yes'">
+                    {{player.playername}}
+                  </div>
                 </div>
                 <!-- <div class="player-seasons" [ngClass]="{'expanded': expandedPlayerIndexes.includes(i)}">
                   <div class="seasons">
@@ -208,8 +219,16 @@
                   {{ item.infoName }}
                 </option>
               </select>
-            </form>
-            
+            </form>    
+            <div class="charts-section">
+            <label>Show charts:</label>
+            <div class="info-charts">
+              <div>Yes</div>
+              <input type="radio" id="chartsYes" name="charts" value="yes" [(ngModel)]="showCharts" (ngModelChange)="showChartsChanged($event)">
+              <div>No</div>
+              <input type="radio" id="chartsNo" name="charts" value="no" [(ngModel)]="showCharts" (ngModelChange)="showChartsChanged($event)">
+              </div>
+            </div>        
           </div>
           <!-- <div class="info">
             <div class="info-matTooltip">NEW FEATURE</div>

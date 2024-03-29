@@ -67,7 +67,8 @@ section {
 
   .teaminfo3009 {
     display: grid;
-    grid-template-columns: 1fr 0.5fr 1fr 0.5fr 1fr 1fr;
+    // grid-template-columns: 1fr 0.5fr 1fr 0.5fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 0.5fr 1fr 1fr;
     grid-template-rows: auto;
     gap: 0 10px;
     padding-bottom: 5px;
@@ -151,7 +152,8 @@ section {
     }
     &--player3009 {
       display: grid;
-      grid-template-columns: 1fr 0.5fr 1fr 0.5fr 1fr 1fr;
+      // grid-template-columns: 1fr 0.5fr 1fr 0.5fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 0.5fr 1fr 1fr;
       grid-template-rows: auto;
       gap: 0 10px;
       position: relative;       

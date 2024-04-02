@@ -81,19 +81,25 @@ export class PlayersApiService {
   //     );
   // }
 
-  getPlayers(name: string): Observable<any> {
-    if (!this.playersData) {
-      // Pobranie danych tylko raz, jeśli nie zostały jeszcze pobrane
-      return this.http.get<any>(
-        `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
-      ).pipe(
-        tap(data => this.playersData = data)
+  // getPlayers(name: string): Observable<any> {
+  //   if (!this.playersData) {
+  //     // Pobranie danych tylko raz, jeśli nie zostały jeszcze pobrane
+  //     return this.http.get<any>(
+  //       `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
+  //     ).pipe(
+  //       tap(data => this.playersData = data)
+  //     );
+  //   } else {
+  //     // Zwrócenie danych z pamięci podręcznej, jeśli już zostały pobrane
+  //     return of(this.playersData);
+  //   }
+  // }
+  public getPlayers(name: string): Observable<any> {  
+    // this.oAuthService.setupAutomaticSilentRefresh();
+    return this.http.get<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
       );
-    } else {
-      // Zwrócenie danych z pamięci podręcznej, jeśli już zostały pobrane
-      return of(this.playersData);
-    }
-  }
+  } 
 
 
 public getJsonDataConverted(name: string): Observable<any[]> {

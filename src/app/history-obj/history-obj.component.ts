@@ -175,7 +175,7 @@ export class HistoryObjComponent implements OnInit  {
         let matchRow;
         const observables: Observable<number>[] = [];
         // let matchRowArray: any[] = [];
-        console.log('PLAYERS', players)
+        // console.log('PLAYERS', players)
         for(let match of matches){
           const sumPreeloTeam1 = [
             (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) +
@@ -197,10 +197,10 @@ export class HistoryObjComponent implements OnInit  {
             (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0)
           ].reduce(this.addPreelo, 0);
 
-          this.commentsService.getCommentsForMatch(match.idwar, '_').valueChanges().subscribe((data) => {
-            // console.log('DATaaa', data, ' data length: ', data.length)
-            this.valueFromSafeSubscriber = data.length; // Assign the length to your variable
-          });
+          // this.commentsService.getCommentsForMatch(match.idwar, '_').valueChanges().subscribe((data) => {
+          //   // console.log('DATaaa', data, ' data length: ', data.length)
+          //   this.valueFromSafeSubscriber = data.length; // Assign the length to your variable
+          // });
 
           matchRow = {
             timestamp: match.timestamp,
@@ -359,7 +359,7 @@ export class HistoryObjComponent implements OnInit  {
 
         // this.loadMatchesData();
 
-        console.log('M 2=>', this.matchRowArray[3022]);
+        // console.log('M 2=>', this.matchRowArray[3022]);
         return this.matchRowArray.reverse();
       }),
 

@@ -190,12 +190,15 @@ video {
   transform: translate(-50%,-50%);
   z-index: 5;
   font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 
   @media screen and (max-width: 500px){
     min-width: 100%;
   }
 
-  .teamsNext {
+  .teamsNext, .podium {
     font-size: 28px;
     background-image: linear-gradient(0deg, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2) 100%);
     background-size: 12px 12px;
@@ -207,6 +210,109 @@ video {
       padding: 5px 15px;
     }
   }
+
+  .podium {
+    display: flex;
+    align-items: flex-end; /* Zmiana z align-items: end; */
+    margin-bottom: 30px;
+
+    .podium-cont {
+        display: flex;
+        align-items: flex-end; /* Zmiana z align-items: baseline; */
+
+        .bar {
+            width: 60px;
+
+            /* Dodanie właściwości flex-direction: column-reverse; */
+            display: flex;
+            flex-direction: column-reverse;
+
+            a {
+              text-decoration: none;
+              position: relative;
+              color: #ffffc8;
+
+              span {
+                writing-mode: vertical-lr;
+                transform: skew(-20deg) rotate(180deg);
+                font-size: 16px;
+                font-style: italic;
+                display: inline-block;
+                padding-right: 20px;
+                padding-left: 10px;
+              }
+
+              img {
+                margin-bottom: 3px;
+                width: 40px;                
+                padding-left: 15px;
+              }
+          }
+        }
+
+        .first {
+            background-color: #C9B037;
+            width: 60px;
+            height: 100px;
+            position: relative;
+
+            &:after {
+                position: absolute;
+                bottom: 20px; /* Zmiana z bottom: 20px; */
+                left: 50%;
+                transform: translate(-50%, -50%); /* Dodanie obrócenia o 180 stopni */
+                content: '1';
+                font-size: 30px;
+            }
+
+            a {
+                text-decoration: none;
+                position: relative;
+                color: #ffffc8;
+            }
+        }
+
+        .second {
+            background-color: #D7D7D7;
+            width: 60px;
+            height: 70px;
+            position: relative;
+
+            &:after {
+                position: absolute;
+                bottom: 0; /* Zmiana z bottom: 0; */
+                left: 50%;
+                transform: translate(-50%, -50%); /* Dodanie obrócenia o 180 stopni */
+                content: '2';
+                font-size: 30px;
+            }            
+        }
+
+        .third {
+            background-color: #AD8A56;
+            width: 60px;
+            height: 40px;
+            position: relative;
+
+            &:after {
+                position: absolute;
+                bottom: -20px; /* Zmiana z bottom: -20px; */
+                left: 50%;
+                transform: translate(-50%, -50%); /* Dodanie obrócenia o 180 stopni */
+                content: '3';
+                font-size: 30px;
+            }
+
+            a {
+                text-decoration: none;
+                position: relative;
+                display: inline-block;
+                color: #ffffc8;
+            }
+        }
+    }
+}
+
 
   .teamsDivide {
     display: grid;
@@ -355,9 +461,8 @@ video {
           text-decoration: none;
           align-items: center;
           display: flex;
-          justify-content: center;
-          flex-direction: column;
-          height: 136px;
+          justify-content: center;         
+          height: 70px;
           width: 147px;
         }
       }
@@ -410,7 +515,12 @@ video {
       }
 
       img {
-        max-width: 70px;
+        max-width: 40px;
+        margin-right: 5px;
+      }
+
+      a {
+        min-width: 100%;
       }
     }
   }

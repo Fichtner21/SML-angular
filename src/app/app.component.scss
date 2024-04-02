@@ -108,6 +108,19 @@ nav {
         margin-left: 10px;
         font-weight: 700;
         text-shadow: #ffffc8 1px 0 10px;
+        position: relative;
+
+        &:after {
+          right: 0px;
+          top: 0;
+          content: 'NEW SEASON!';
+          color: red;
+          font-style: italic;
+          font-size: 18px;
+          font-weight: 700;
+          text-shadow: none;
+          margin-left: 3px;
+        }
       }
 
       label {

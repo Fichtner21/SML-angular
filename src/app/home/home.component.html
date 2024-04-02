@@ -31,46 +31,66 @@
   </div>
 </div>
 <div class="teams-container">
-  <div class="teamsNext">{{ 'home.next_war' | translate }}</div>
-  <div class="teamsDivide">
-    <div>Team 1</div>
-    <div>Team 2</div>
-  </div>
-  <div class="teamsCont">
-    <ng-container *ngIf="teamSelections$ | async as teamOneSelection;">
-      <ng-container *ngFor="let teamOne of teamOneSelection; let i = index;">
-        <div class="teamIdOne">
-          <div class="teamIdOne__playerElo">{{ teamOne.t1preelo }}</div>
-          <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t1username}}">{{ teamOne.t1playername }}</a></div>
-        </div>
-        <div class="teamIdOne">
-          <div class="teamIdOne__playerElo">{{ teamOne.t2preelo }}</div>
-          <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t2username}}">{{ teamOne.t2playername }}</a></div>
-        </div>
+  <div>
+    <div class="teamsNext">{{ 'home.next_war' | translate }}</div>
+    <div class="teamsDivide">
+      <div>Team 1</div>
+      <div>Team 2</div>
+    </div>
+    <div class="teamsCont">
+      <ng-container *ngIf="teamSelections$ | async as teamOneSelection;">
+        <ng-container *ngFor="let teamOne of teamOneSelection; let i = index;">
+          <div class="teamIdOne">
+            <div class="teamIdOne__playerElo">{{ teamOne.t1preelo }}</div>
+            <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t1username}}">{{ teamOne.t1playername }}</a></div>
+          </div>
+          <div class="teamIdOne">
+            <div class="teamIdOne__playerElo">{{ teamOne.t2preelo }}</div>
+            <div class="teamIdOne__playerName"><a routerLink="/obj-ranking/{{teamOne.t2username}}">{{ teamOne.t2playername }}</a></div>
+          </div>
+        </ng-container>
       </ng-container>
-    </ng-container>
-  </div>
-  <div class="teamsCumulative">
-    <div>{{ 'home.cumulative' | translate }} {{ teamOneCumulative }}</div>
-    <div>{{ 'home.cumulative' | translate }} {{ teamTwoCumulative }}</div>
-    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShow > chanceOfWinTeamOneShow), 'teamNotFavorite': (chanceOfWinTeamTwoShow < chanceOfWinTeamOneShow), 'teamWithoutFavorite': (chanceOfWinTeamTwoShow == chanceOfWinTeamOneShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamTwoShow | number : '.2-2' }} %</div>
-    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>
-  </div>
-  <div class="game_discord">
-    <div class="game">
-      <a href="../../assets/MOHAA.rar" target="_self" download="MOHAA.rar" title="CLICK HERE TO DOWNLOAD">
-        <img src="assets/images/sh_log70x70.png" alt="">
-        <div>Download (3Gb)</div>
-      </a>
     </div>
-    <div class="discord">
-      <a href="https://discord.gg/DB5PybFPhC" target="_blank" title="DISCORD" class="disco">
-        <img src="assets/images/icons/discord.svg" alt="">
-        <div>Join DISCORD</div>
-      </a>
+    <div class="teamsCumulative">
+      <div>{{ 'home.cumulative' | translate }} {{ teamOneCumulative }}</div>
+      <div>{{ 'home.cumulative' | translate }} {{ teamTwoCumulative }}</div>
+      <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShow > chanceOfWinTeamOneShow), 'teamNotFavorite': (chanceOfWinTeamTwoShow < chanceOfWinTeamOneShow), 'teamWithoutFavorite': (chanceOfWinTeamTwoShow == chanceOfWinTeamOneShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamTwoShow | number : '.2-2' }} %</div>
+      <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>
+    </div>
+    <div class="game_discord">
+      <div class="game">
+        <a href="../../assets/MOHAA.rar" target="_self" download="MOHAA.rar" title="CLICK HERE TO DOWNLOAD">
+          <img src="assets/images/sh_log70x70.png" alt="">
+          <div>Download (3Gb)</div>
+        </a>
+      </div>
+      <div class="discord">
+        <a href="https://discord.gg/DB5PybFPhC" target="_blank" title="DISCORD" class="disco">
+          <img src="assets/images/icons/discord.svg" alt="">
+          <div>Join DISCORD</div>
+        </a>
+      </div>
     </div>
   </div>
+  <!-- <div class="podium">
+    <div class="podium-cont">
+      <div class="bar">
+       
+        <div class="second"></div>
+        <a href="/obj-ranking/zielony"><span>lolandiusz</span><img src="/assets/images/flags_svg/PL.SVG" alt=""></a>
+      </div>
+      <div class="bar">        
+        <div class="first"></div>  
+        <a href="/obj-ranking/watson"><span>Watson</span><img src="/assets/images/flags_svg/PT.SVG" alt=""></a>      
+      </div>
+      <div class="bar">       
+        <div class="third"></div> 
+        <a href="/obj-ranking/dim_gr"><span>Dim</span><img src="/assets/images/flags_svg/GR.SVG" alt=""></a>      
+      </div> 
+    </div>
+  </div> -->
 </div>
+
 <ng-http-loader
     [backdrop]="false"
     [backgroundColor]="'#fff'"

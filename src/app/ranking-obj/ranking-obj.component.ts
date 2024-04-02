@@ -11,6 +11,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { parseFloat } from 'core-js/es/number';
 import { RankObjService } from './rank-obj.service';
 import { Chart, ChartOptions } from 'chart.js';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 interface Streak {
   streakName: string; // 'W', 'D' lub 'L'
@@ -115,9 +116,10 @@ export class RankingObjComponent implements OnInit {
   matchRow:any;
   showAllPlayers: boolean = false;
   showCharts: string = 'no';
+  showStreak: string = 'no';
   // playerDetail: any;
 
-  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute, private rankObjService: RankObjService) {
+  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute, private rankObjService: RankObjService, private sanitizer: DomSanitizer) {
     // localStorage.setItem('info', 'less');
    }
 
@@ -294,6 +296,11 @@ export class RankingObjComponent implements OnInit {
     if (savedValue) {
       this.showCharts = savedValue; // Ustawiamy wartość na wcześniej zapisaną, jeśli istnieje
     }
+
+    const savedValueStreak = localStorage.getItem('showStreak');
+    if (savedValueStreak) {
+      this.showStreak = savedValueStreak; // Ustawiamy wartość na wcześniej zapisaną, jeśli istnieje
+    }
     // this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
     //   map((response: any) => {
     //     let batchRowValuesHistory = response.values;
@@ -354,6 +361,8 @@ export class RankingObjComponent implements OnInit {
               s4fpw: Math.round(name.s4fpw * 100) / 100,
               s5wars: parseFloat(name.s5wars),
               s5fpw: Math.round(name.s5fpw * 100) / 100,
+              s6wars: parseFloat(name.s6wars),
+              s6fpw: Math.round(name.s6fpw * 100) / 100,              
               activity: name.last30days,
               lastyear: name.last365days,
               meeting: name.meeting,
@@ -367,11 +376,13 @@ export class RankingObjComponent implements OnInit {
               s2ranking_win: parseInt(name.s2ranking_win),
               s3ranking_win: parseInt(name.s3ranking_win),
               s4ranking_win: parseInt(name.s4ranking_win),
+              s5ranking_win: parseInt(name.s5ranking_win),
               // streak: name.streak,
               winPercentage: this.handleData(this.receivedData),
               streak: this.calculateStreak(name.username, v2),
               donatorS4: name.donate_s4,
               donatorS5: name.donate_s5,
+              donatorS6: name.donate_s6,
               lastMatches: [],
               last10ranking: []
             };                
@@ -485,7 +496,7 @@ export class RankingObjComponent implements OnInit {
         console.log('playerRowArray', playerRowArray)
         return playerRowArray;
       }),
-      tap(data => console.log('players', data))
+      // tap(data => console.log('players', data))
     );
 
     // console.log('=>', this.donatorsSeason4);
@@ -811,7 +822,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s5wars) - parseFloat(a.s5wars))
+        res => res.sort((a:any,b:any) => parseFloat(b.s6wars) - parseFloat(a.s6wars))
       )
     )
   }
@@ -822,7 +833,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s5wars) - parseFloat(b.s5wars))
+        res => res.sort((a:any,b:any) => parseFloat(a.s6wars) - parseFloat(b.s6wars))
       )
     )
   }
@@ -832,7 +843,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s5fpw) - parseFloat(a.s5fpw))
+        res => res.sort((a:any,b:any) => parseFloat(b.s6fpw) - parseFloat(a.s6fpw))
       )
     )
   }
@@ -843,7 +854,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s5fpw) - parseFloat(b.s5fpw))
+        res => res.sort((a:any,b:any) => parseFloat(a.s6fpw) - parseFloat(b.s6fpw))
       )
     )
   }
@@ -888,6 +899,34 @@ export class RankingObjComponent implements OnInit {
     const color = this.getActivityColor(activity);
     return `linear-gradient(to top, ${color} ${percentage}%, gray ${percentage}%)`;
   }
+
+  // getActivityGradient(activity: number): string | SafeStyle {
+  //   let gradient: string | SafeStyle;
+  //   let percentage = 0;
+  
+  //   if (activity >= 1 && activity <= 5) {
+  //     percentage = ((activity - 1) / 5) * 100;
+  //   } else if (activity >= 6 && activity <= 10) {
+  //     percentage = ((activity - 6) / 5) * 100;
+  //   } else if (activity >= 11 && activity <= 20) {
+  //     percentage = ((activity - 11) / 10) * 100;
+  //   } else if (activity >= 21 && activity <= 40) {
+  //     percentage = ((activity - 21) / 20) * 100;
+  //   } else if (activity >= 41 && activity <= 60) {
+  //     percentage = ((activity - 41) / 20) * 100;
+  //   } else if (activity >= 61 && activity <= 90) {
+  //     percentage = ((activity - 61) / 30) * 100;
+  //   } else if (activity > 90) {
+  //     // Utwórz gradient z obrazkiem medalu
+  //     const imageUrl = '/assets/images/medal_of_hh.png';
+  //     gradient = this.sanitizer.bypassSecurityTrustStyle(`url(${imageUrl})`);
+  //     return gradient;
+  //   }
+  
+  //   const color = this.getActivityColor(activity);
+  //   gradient = `linear-gradient(to top, ${color} ${percentage}%, gray ${percentage}%)`;
+  //   return gradient;
+  // }
 
   // getPercentage(value: number): number {
   //   if (value >= this.brownMinValue && value <= this.brownMaxValue) {
@@ -1175,5 +1214,9 @@ export class RankingObjComponent implements OnInit {
   showChartsChanged(value: string) {
     // Zapisujemy nową wartość w localStorage po zmianie wartości radiobuttona
     localStorage.setItem('showCharts', value);    
+  }
+
+  showStreakChanged(value: string) {   
+    localStorage.setItem('showStreak', value);    
   }
 }

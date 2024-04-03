@@ -1,11 +1,29 @@
 
-
 <ng-container *ngIf="lastWarOfPlayer$ | async as lastWarOfPlayers">
   <ng-container *ngIf="lastWarOfPlayers.length > 0">
     <section class="example">
 
       <div class="container">
+
         <div class="cont">
+          <mat-form-field>
+            <mat-label>Select season</mat-label>
+            <mat-select [formControl]="selectedOption">
+              <mat-option value="currentSeason">Current season</mat-option>
+              <mat-option value="season5">Season 5: 01.01.2024 - 31.03.2024 </mat-option>
+              <mat-option value="season4">Season 4: 01.10.2023 - 31.12.2023</mat-option>
+              <mat-option value="season3">Season 3: 01.07.2023 - 30.09.2023</mat-option>
+              <mat-option value="season2">Season 2: 01.04.2023 - 30.06.2023</mat-option>
+              <mat-option value="season1">Season 1: 01.01.2023 - 31.03.2023</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- <mat-select [(ngModel)]="selectedOption" (ngModelChange)="onSeasonChange($event)">
+            <mat-option value="currentSeason">Current Season</mat-option>
+            <mat-option value="season5">Season 5</mat-option>
+            <mat-option value="season4">Season 4</mat-option>
+            <mat-option value="season3">Season 3</mat-option>
+            <mat-option value="season2">Season 2</mat-option>
+          </mat-select> -->
           <div class="ranking-head">
             <div class="">{{ 'ranking.place' | translate }}</div>
             <div class="ranking-head__playername">{{ 'ranking.player_name' | translate }}</div>
@@ -29,7 +47,13 @@
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)" matTooltip="sort by Frags per War">FpW total:</div>
             </div>
             <div style="display:block;">
-              <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #6: 01-04-2024 - 30-06-2024">s6 Wars<span></span></div>
+              <!-- <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #6: 01-04-2024 - 30-06-2024">s6 Wars<span></span></div> -->
+              <div class="wars" *ngIf="selectedOption.value === 'currentSeason'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #6: 01-04-2024 - 30-06-2024">s6 Wars<span></span></div>
+              <div class="wars" *ngIf="selectedOption.value === 'season5'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #5: 01-03-2024 - 31-03-2024">s5 Wars<span></span></div>
+              <div class="wars" *ngIf="selectedOption.value === 'season4'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #4: 01-10-2023 - 31-12-2023">s4 Wars<span></span></div>
+              <div class="wars" *ngIf="selectedOption.value === 'season3'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #3: 01-07-2023 - 30-09-2023">s3 Wars<span></span></div>
+              <div class="wars" *ngIf="selectedOption.value === 'season2'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #2: 01-04-2023 - 30-06-2023">s2 Wars<span></span></div>
+              <div class="wars" *ngIf="selectedOption.value === 'season1'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #1: 01-01-2023 - 31-03-2023">s1 Wars<span></span></div>
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVar ? sortByWarsAsc(lastWarOfPlayer$) : sortByWarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars">{{ 'ranking.wars' | translate }} total:</div>
             </div>
                 <!-- <ng-container *ngIf="booleanVar; then up; else down"></ng-container>
@@ -142,11 +166,20 @@
                   <div class="item">{{ player.ranking | number: '.2-2' }}</div>
 
                   <div class="item item-block fpw" matTooltip="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
-                    <div matTooltip="Season FpW" *ngIf="!isInfo">{{ player.s6fpw }}</div>
-                    <div matTooltip="Season FpW" *ngIf="isInfo" [ngClass]="{'up-streak-pre': (player.s6fpw > player.fragsperwar), 'draw-streak-pre': (player.s6fpw == player.fragsperwar), 'down-streak-pre': (player.s6fpw < player.fragsperwar)}">{{ player.s6fpw }}</div>
+                    <div matTooltip="Season FpW" *ngIf="!isInfo">{{ getSelectedSeasonFpw(player) }}</div>
+                    <div matTooltip="Season FpW" *ngIf="isInfo" [ngClass]="{
+                      'up-streak-pre': (getSelectedSeasonFpw(player) > player.fragsperwar),
+                      'draw-streak-pre': (getSelectedSeasonFpw(player) == player.fragsperwar),
+                      'down-streak-pre': (getSelectedSeasonFpw(player) < player.fragsperwar)
+                    }">{{ getSelectedSeasonFpw(player) }}</div>
 
-                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s6fpw < player.fragsperwar), 'draw-streak-post': (player.s6fpw == player.fragsperwar), 'down-streak-post': (player.s6fpw > player.fragsperwar)}"> <span matTooltip="Total FpW">{{ player.fragsperwar }}</span></div>
-                </div>
+                    <div class="season-wars" *ngIf="isInfo" [ngClass]="{
+                      'up-streak-post': (getSelectedSeasonFpw(player) < player.fragsperwar),
+                      'draw-streak-post': (getSelectedSeasonFpw(player) == player.fragsperwar),
+                      'down-streak-post': (getSelectedSeasonFpw(player) > player.fragsperwar)
+                    }"> <span matTooltip="Total FpW">{{ player.fragsperwar }}</span></div>
+                  </div>
+
 
                   <!-- <div class="item-block" matTooltip="MAX: {{ player.maxfragsperwar }} MIN: {{ player.minfragsperwar }}">
                     <div matTooltip="Season FpW" *ngIf="!isInfo">{{ player.s1fpw }}</div>
@@ -155,8 +188,16 @@
                     <div class="season-wars" *ngIf="isInfo" [ngClass]="{'up-streak-post': (player.s1fpw < player.fragsperwar), 'draw-streak-post': (player.s1fpw == player.fragsperwar), 'down-streak-post': (player.s1fpw > player.fragsperwar)}"> <span matTooltip="Total FpW">({{ player.fragsperwar }})</span></div>
                   </div> -->
                   <div class="item item-block wars">
-                    <div matTooltip="Season played wars">{{ player.s6wars }}</div>
-                    <div class="season-wars" *ngIf="isInfo"> <span matTooltip="Total played wars">{{ player.wars }}</span></div>
+                    <!-- <div matTooltip="Season played wars">{{ player.s6wars }}</div>
+                    <div class="season-wars" *ngIf="isInfo"> <span matTooltip="Total played wars">{{ player.wars }}</span></div> -->
+                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'currentSeason'">{{ player.s6wars }} </div>
+                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season5'">{{ player.s5wars }} </div>
+                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season4'">{{ player.s4wars }} </div>
+                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season3'">{{ player.s3wars }} </div>
+                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season2'">{{ player.s2wars }} </div>
+                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season1'">{{ player.s1wars }} </div>
+                    <div class="season-wars" *ngIf="isInfo"><span matTooltip="Total played wars">{{ player.wars }}</span> </div>
+
                   </div>
                   <!-- <div class="item-block">
                     <div matTooltip="Season played wars" >{{ player.s1wars }}</div>
@@ -165,7 +206,7 @@
                   <div class="item new">{{ player.lastWarDate }}
                   </div>
                   <div class="item name act">
-                    <div class="act-month" [attr.data-activity]="player.activity" [style.background]="getActivityGradient(player.activity)" matTooltip="{{ player.activity }} wars in last month." matTooltipPosition="before" [ngClass]="{'over80': player.activity > 80}">                      
+                    <div class="act-month" [attr.data-activity]="player.activity" [style.background]="getActivityGradient(player.activity)" matTooltip="{{ player.activity }} wars in last month." matTooltipPosition="before" [ngClass]="{'over80': player.activity > 80}">
                     </div>
                     <div class="act-year" [attr.data-activity]="player.lastyear" [ngClass]="{
                       'green0': player.lastyear == 0,
@@ -177,7 +218,7 @@
                     </div>
                   </div>
                   <div class="chart" *ngIf="showCharts === 'yes'">
-                    <canvas id="{{ 'id-' + player.username }}" width="300" height="150"></canvas>                    
+                    <canvas id="{{ 'id-' + player.username }}" width="300" height="150"></canvas>
                   </div>
                   <div class="chart-name" *ngIf="showCharts === 'yes'">
                     {{player.playername}}
@@ -218,7 +259,7 @@
                   {{ item.infoName }}
                 </option>
               </select>
-            </form>    
+            </form>
             <div class="charts-section">
               <label for="">Show streak:</label>
               <div class="info-charts">
@@ -227,8 +268,8 @@
                 <div>No</div>
                 <input type="radio" id="streakNo" name="streak" value="no" [(ngModel)]="showStreak" (ngModelChange)="showStreakChanged($event)">
               </div>
-            </div> 
-            
+            </div>
+
             <div class="charts-section">
               <label>Show charts:</label>
               <div class="info-charts">
@@ -237,8 +278,8 @@
                 <div>No</div>
                 <input type="radio" id="chartsNo" name="charts" value="no" [(ngModel)]="showCharts" (ngModelChange)="showChartsChanged($event)">
               </div>
-            </div>        
-          </div>     
+            </div>
+          </div>
         </div>
       </div>
       <div class="container-bottom">
@@ -338,7 +379,7 @@
         <div class="down">
           <div class="big-name">Season #6</div>
           <div class="small-date">01.04.2024 - 30.06.2024</div>
-        </div>      
+        </div>
       </div>
       <div class="floating-icon-container">
         <div class="floating-icon" [ngClass]="{ 'expanded': isExpanded }" (click)="togglePanel('first')" matTooltip="Winners by Rank" matTooltipPosition="before">
@@ -364,7 +405,7 @@
             </li>
             <li>
               <a routerLink="/obj-ranking/zielony" class="silver">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,165.58</span></a>
-            </li> 
+            </li>
             <li>
               <a routerLink="/obj-ranking/dim_gr" class="bronze">Dim<img [src]='"assets/images/flags_svg/GR.SVG"'><span>1,163.21</span></a>
             </li>
@@ -375,7 +416,7 @@
           <ol>
             <li>
               <a routerLink="/obj-ranking/zielony" class="gold">lolandiusz<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,128.26</span></a>
-            </li>           
+            </li>
             <li>
               <a routerLink="/obj-ranking/neo" class="silver">don Neo<img [src]='"assets/images/flags_svg/PL.SVG"'><span>1,100.67</span></a>
             </li>

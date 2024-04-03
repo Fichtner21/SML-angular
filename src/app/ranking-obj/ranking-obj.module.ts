@@ -11,11 +11,14 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from "@angular/common/http";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatOptionModule } from "@angular/material/core";
+import { MatSelectModule } from "@angular/material/select";
+
 
 // export function createTranslateLoader(http: HttpClient){
 //   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -31,14 +34,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     RouterModule,
     NgxPaginationModule,
     RankingObjRoutingModule,
-    NgHttpLoaderModule.forRoot(), 
+    NgHttpLoaderModule.forRoot(),
     TranslateModule,
     FontAwesomeModule,
     FormsModule,
-    MatTabsModule,   
-    MatButtonModule, 
+    ReactiveFormsModule,
+    MatTabsModule,
+    MatButtonModule,
     MatTooltipModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   exports: [
     CommonModule,

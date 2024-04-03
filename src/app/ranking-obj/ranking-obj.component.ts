@@ -1,7 +1,7 @@
-import { map, last,toArray, takeLast, reduce, tap, shareReplay } from 'rxjs/operators';
+import { map, last,toArray, takeLast, reduce, tap, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { PlayersApiService } from './../services/players-api.service';
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
@@ -12,6 +12,7 @@ import { parseFloat } from 'core-js/es/number';
 import { RankObjService } from './rank-obj.service';
 import { Chart, ChartOptions } from 'chart.js';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { FormControl } from '@angular/forms';
 
 interface Streak {
   streakName: string; // 'W', 'D' lub 'L'
@@ -32,6 +33,7 @@ export class RankingObjComponent implements OnInit {
   randomAct:string;
   public playersRow: any;
   public lastWarOfPlayer$: any;
+  selectedOption = new FormControl('currentSeason');
   booleanVar = false;
   booleanVarRank = false;
   booleanVarFpW = false;
@@ -53,6 +55,17 @@ export class RankingObjComponent implements OnInit {
   public state_s1_20_ranking$: Observable<any>;
   public state_s1_20_wars$: Observable<any>;
   public state_s4_20$: any;
+  public state_s4_20_matches$: any;
+  public season_31_03_2024_players$: any;
+  public season_31_03_2024_matches$: any;
+  public season_31_12_2023_players$: any;
+  public season_31_12_2023_matches$: any;
+  public season_30_09_2023_players$: any;
+  public season_30_09_2023_matches$: any;
+  public season_30_06_2023_players$: any;
+  public season_30_06_2023_matches$: any;
+  public season_31_03_2023_players$: any;
+  public season_31_03_2023_matches$: any;
 
   minValue = 100;
   maxValue = 2000;
@@ -140,7 +153,7 @@ export class RankingObjComponent implements OnInit {
             rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
           }
           players.push(rowObject);
-        }        
+        }
         // console.log('players', players)
         return players;
       }),
@@ -152,11 +165,79 @@ export class RankingObjComponent implements OnInit {
       }
     )
 
-    // this.playersApiService.getJsonDataConverted('Players').subscribe(data => {
-    //   console.log('Dane z pliku JSON dla arkusza "Players":', data);
-    //   this.state_s4_20$ = data;
-    // }, error => {
-    //   console.error('Błąd:', error);
+    this.playersApiService.getJsonSeason('Players', '../../assets/snapshots/31_03_2024.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Players":', data);
+      this.season_31_03_2024_players$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Match History', '../../assets/snapshots/31_03_2024.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Match History":', data);
+      this.season_31_03_2024_matches$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Players', '../../assets/snapshots/31_12_2023.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Players":', data);
+      this.season_31_12_2023_players$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Match History', '../../assets/snapshots/31_12_2023.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Match History":', data);
+      this.season_31_12_2023_matches$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Players', '../../assets/snapshots/30_09_2023.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Players":', data);
+      this.season_30_09_2023_players$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Match History', '../../assets/snapshots/30_09_2023.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Match History":', data);
+      this.season_30_09_2023_matches$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Players', '../../assets/snapshots/30_06_2023.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Players":', data);
+      this.season_30_06_2023_players$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Match History', '../../assets/snapshots/30_06_2023.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Match History":', data);
+      this.season_30_06_2023_matches$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Players', '../../assets/snapshots/31_03_2023.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Players":', data);
+      this.season_31_03_2023_players$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Match History', '../../assets/snapshots/31_03_2023.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Match History":', data);
+      this.season_31_03_2023_matches$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    // this.selectedOption.valueChanges.subscribe((value: string) => {
+    //   console.log('Wybrana opcja:', value);
+    //   // Tutaj możesz wywołać odpowiednie metody lub funkcje w zależności od wybranej opcji
     // });
 
     this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
@@ -301,83 +382,181 @@ export class RankingObjComponent implements OnInit {
     if (savedValueStreak) {
       this.showStreak = savedValueStreak; // Ustawiamy wartość na wcześniej zapisaną, jeśli istnieje
     }
-    // this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
-    //   map((response: any) => {
-    //     let batchRowValuesHistory = response.values;
-    //     let historyMatches: any[] = [];
-    //     for(let i = 1; i < batchRowValuesHistory.length; i++){
-    //       const rowObject: object = {};
-    //       for(let j = 0; j < batchRowValuesHistory[i].length; j++){
-    //         rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
+
+    // this.lastWarOfPlayer$ = combineLatest([
+    //   this.selectedOption.valueChanges.pipe(
+    //     // Mapowanie wybranej opcji sezonu na strukturę danych gracza
+    //     map(option => {
+    //       // W zależności od wybranej opcji sezonu zwracamy odpowiednie dane
+    //       if (option === 'season5') {
+    //         return this.season_31_03_2024_players$;
+    //       } else if (option === 'season4') {
+    //         return this.season_31_03_2024_players$;
+    //       } else if (option === 'season3') {
+    //         return this.season_31_03_2024_players$;
+    //       } else if (option === 'season2') {
+    //         return this.season_31_03_2024_players$;
+    //       } else {
+    //         // Domyślnie zwracamy dane dla sezonu 6
+    //         return this.playersTest$;
     //       }
-    //       historyMatches.push(rowObject);
-    //     }
+    //     })
+    //   ),
+    //   // Pozostałe strumienie danych potrzebne do lastWarOfPlayers$
+    //   // Możesz dodać je tutaj
+    // ]).pipe(
+    //   // Obsługa danych graczy
+    //   map(([playersData]) => {
+    //     // Tutaj możesz przekształcić dane graczy w odpowiednią strukturę
+    //     // w zależności od wybranego sezonu
+    //     return playersData.map((player: any) => {
+    //       let selectedSeasonData: any;
 
-    //     // Przekształć timestamp na format daty
-    //     historyMatches.forEach((match) => {
-    //       match['timestamp'] = new Date(match['timestamp']);
+    //       // W zależności od wybranej opcji sezonu przypisz odpowiednie dane do selectedSeasonData
+    //       switch (this.selectedOption) {
+    //         case 'season5':
+    //           selectedSeasonData = {
+    //             playername: player.playername,
+    //             username: player.username,
+    //             ranking: parseFloat(player.ranking.replace(/,/g, '')),
+    //             wars: parseFloat(player.s5wars),
+    //             flag: player.nationality,
+    //             strike: player.lastwarpc,
+    //             maxfragsperwar: parseFloat(player.s5fpwmax),
+    //             s1wars: parseFloat(player.s1wars),
+    //             s1fpw: Math.round(player.s1fpw * 100) / 100,
+    //             s2wars: parseFloat(player.s2wars),
+    //             s2fpw: Math.round(player.s2fpw * 100) / 100,
+    //             s3wars: parseFloat(player.s3wars),
+    //             s3fpw: Math.round(player.s3fpw * 100) / 100,
+    //             s4wars: parseFloat(player.s4wars),
+    //             s4fpw: Math.round(player.s4fpw * 100) / 100,
+    //             s5wars: parseFloat(player.s5wars),
+    //             s5fpw: Math.round(player.s5fpw * 100) / 100,
+    //             s6wars: parseFloat(player.s6wars),
+    //             s6fpw: Math.round(player.s6fpw * 100) / 100,
+    //             activity: player.last30days,
+    //             lastyear: player.last365days,
+    //             meeting: player.meeting,
+    //             lastWarDate: new Date(player.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
+    //             fragsperwar: Math.round(player.fpw * 100) / 100,
+    //             inactive: player.active == 'FALSE' ? false : true,
+    //             ban: player.ban == 'TRUE' ? true : false,
+    //             s1wars_win: parseInt(player.s1wars_win),
+    //             s1fpw_win: parseInt(player.s1fpw_win),
+    //             s1ranking_win: parseInt(player.s1ranking_win),
+    //             s2ranking_win: parseInt(player.s2ranking_win),
+    //             s3ranking_win: parseInt(player.s3ranking_win),
+    //             s4ranking_win: parseInt(player.s4ranking_win),
+    //             s5ranking_win: parseInt(player.s5ranking_win),
+    //             lastMatches: [],
+    //             last10ranking: []
+    //           };
+    //           break;
+    //         // Podobnie obsłuż pozostałe przypadki dla innych sezonów
+    //         case 'season4':
+    //           // Tutaj przypisz dane dla sezonu 4 do selectedSeasonData
+    //           break;
+    //         case 'season3':
+    //           // Tutaj przypisz dane dla sezonu 3 do selectedSeasonData
+    //           break;
+    //         case 'season2':
+    //           // Tutaj przypisz dane dla sezonu 2 do selectedSeasonData
+    //           break;
+    //         default:
+    //           // Domyślnie przypisz dane dla sezonu 6 do selectedSeasonData
+    //           selectedSeasonData = {
+    //             // Dane dla sezonu 6
+    //           };
+    //           break;
+    //       }
+
+    //       // Zwróć przekształconą strukturę danych gracza
+    //       return selectedSeasonData;
     //     });
-
-    //     return historyMatches;
-    //   }),
-    //   // Opcjonalnie, jeśli potrzebujesz sortowania meczów wg daty
-    //   map((historyMatches: any[]) => historyMatches.sort((a, b) => a['timestamp'] - b['timestamp'])),
+    //   })
     // );
 
-    // const selectedDate = new Date('1/31/2021 14:29:13');
-
-    // // W tej funkcji filtrujemy mecze, które mają datę wcześniejszą lub równą selectedDate
-    // this.historyMatches$ = this.historyMatches$.pipe(
-    //   map((historyMatches: any[]) => historyMatches.filter(match => match['timestamp'] <= selectedDate))
-    // );
-
-    this.lastWarOfPlayer$ = combineLatest([this.playersTest$, this.historyMatches$]).pipe(
+    this.lastWarOfPlayer$ = this.selectedOption.valueChanges.pipe(
+      startWith('currentSeason'),
+      switchMap(option => {
+        if (option === 'currentSeason') {
+          return combineLatest([this.playersTest$, this.historyMatches$]);
+        } else if (option === 'season5') {
+          return combineLatest([
+            ([this.season_31_03_2024_players$]),
+            ([this.season_31_03_2024_matches$])
+          ]);
+        } else if (option === 'season4') {
+          return combineLatest([
+            ([this.season_31_12_2023_players$]),
+            ([this.season_31_12_2023_matches$])
+          ]);
+        } else if (option === 'season3'){
+          return combineLatest([
+            ([this.season_30_09_2023_players$]),
+            ([this.season_30_09_2023_matches$])
+          ]);
+        } else if (option === 'season2'){
+          return combineLatest([
+            ([this.season_30_06_2023_players$]),
+            ([this.season_30_06_2023_matches$])
+          ]);
+        } else if (option === 'season1'){
+          return combineLatest([
+            ([this.season_31_03_2023_players$]),
+            ([this.season_31_03_2023_matches$])
+          ]);
+        } else {
+          return combineLatest([this.playersTest$, this.historyMatches$])
+        }
+      }),
       map(([v1, v2]) => {
+
         let lastWarDate: any;
         let playerRowArray: any[] = [];
-        let playerMatches = [];
         for( let name of v1){
+          // console.log('name', name)
           // if(name.active == 'FALSE'){
           if(name.active == 'FALSE'){
             continue;
           } else {
             lastWarDate = {
-              username:name.username,
-              playername:name.playername,
-              cup:this.addTitleCup(name.cup1on1edition1),
-              ranking:parseFloat(name.ranking.replace(/,/g,'')),
-              wars:name.warcount,
-              flag:name.nationality,
+              username: name.username,
+              playername: name.playername,
+              cup: this.addTitleCup(name.cup1on1edition1),
+              ranking: parseFloat(name.ranking.replace(/,/g, '')),
+              wars: name.warcount,
+              flag: name.nationality,
               strike: name.lastwarpc,
               maxfragsperwar: name.fpwmax,
               minfragsperwar: name.fpwmin,
-              s1wars: parseFloat(name.s1wars),
-              s1fpw: Math.round(name.s1fpw * 100) / 100,
-              s2wars: parseFloat(name.s2wars),
-              s2fpw: Math.round(name.s2fpw * 100) / 100,
-              s3wars: parseFloat(name.s3wars),
-              s3fpw: Math.round(name.s3fpw * 100) / 100,
-              s4wars: parseFloat(name.s4wars),
-              s4fpw: Math.round(name.s4fpw * 100) / 100,
-              s5wars: parseFloat(name.s5wars),
-              s5fpw: Math.round(name.s5fpw * 100) / 100,
-              s6wars: parseFloat(name.s6wars),
-              s6fpw: Math.round(name.s6fpw * 100) / 100,              
+              s1wars: name.s1wars ? parseFloat(name.s1wars) : '',
+              s1fpw: name.s1fpw ? Math.round(name.s1fpw * 100) / 100 : '',
+              s2wars: name.s2wars ? parseFloat(name.s2wars) : '',
+              s2fpw: name.s2fpw ? Math.round(name.s2fpw * 100) / 100 : '',
+              s3wars: name.s3wars ? parseFloat(name.s3wars) : '',
+              s3fpw: name.s3fpw ? Math.round(name.s3fpw * 100) / 100 : '',
+              s4wars: name.s4wars ? parseFloat(name.s4wars) : '',
+              s4fpw: name.s4fpw ? Math.round(name.s4fpw * 100) / 100 : '',
+              s5wars: name.s5wars ? parseFloat(name.s5wars) : '',
+              s5fpw: name.s5fpw ? Math.round(name.s5fpw * 100) / 100 : '',
+              s6wars: name.s6wars ? parseFloat(name.s6wars) : '',
+              s6fpw: name.s6fpw ? Math.round(name.s6fpw * 100) / 100 : '',
               activity: name.last30days,
               lastyear: name.last365days,
               meeting: name.meeting,
               lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
               fragsperwar: Math.round(name.fpw * 100) / 100,
-              inactive: name.active == 'FALSE' ? false : true,
-              ban: name.ban == 'TRUE' ? true : false,
-              s1wars_win: parseInt(name.s1wars_win),
-              s1fpw_win: parseInt(name.s1fpw_win),
-              s1ranking_win: parseInt(name.s1ranking_win),
-              s2ranking_win: parseInt(name.s2ranking_win),
-              s3ranking_win: parseInt(name.s3ranking_win),
-              s4ranking_win: parseInt(name.s4ranking_win),
-              s5ranking_win: parseInt(name.s5ranking_win),
-              // streak: name.streak,
+              inactive: name.active === 'FALSE' ? false : true,
+              ban: name.ban === 'TRUE' ? true : false,
+              s1wars_win: name.s1wars_win ? parseInt(name.s1wars_win) : undefined,
+              s1fpw_win: name.s1fpw_win ? parseInt(name.s1fpw_win) : undefined,
+              s1ranking_win: name.s1ranking_win ? parseInt(name.s1ranking_win) : undefined,
+              s2ranking_win: name.s2ranking_win ? parseInt(name.s2ranking_win) : undefined,
+              s3ranking_win: name.s3ranking_win ? parseInt(name.s3ranking_win) : undefined,
+              s4ranking_win: name.s4ranking_win ? parseInt(name.s4ranking_win) : undefined,
+              s5ranking_win: name.s5ranking_win ? parseInt(name.s5ranking_win) : undefined,
               winPercentage: this.handleData(this.receivedData),
               streak: this.calculateStreak(name.username, v2),
               donatorS4: name.donate_s4,
@@ -385,7 +564,8 @@ export class RankingObjComponent implements OnInit {
               donatorS6: name.donate_s6,
               lastMatches: [],
               last10ranking: []
-            };                
+            };
+
 
             for (let match of v2.slice().reverse()) { // Odwrócenie listy meczów, aby uzyskać najnowsze mecze jako pierwsze
               let playerParticipated = false; // Zmienna flagowa określająca, czy gracz uczestniczył w tym meczu
@@ -395,13 +575,13 @@ export class RankingObjComponent implements OnInit {
                     // Sprawdzenie, czy gracz uczestniczył w meczu
                     const playerNameField = `t${j}p${i <= 7 ? i : i - 7}name`; // Pole zawierające nazwę gracza
                     const playerPosteloField = `t${j}p${i <= 7 ? i : i - 7}postelo`;
-                    
+
                     if (name.username === match[playerNameField]) {
-                        playerParticipated = true;  
+                        playerParticipated = true;
                         const playerTeamNumber = playerNameField.charAt(1);
                         const playerTeam = `t${playerTeamNumber}roundswon`;
                         const playerTeamOpponent = `t${playerTeamNumber == '1' ? '2': '1'}roundswon`;
-            
+
                         const playerTeamResult = parseInt(match[playerTeam]);
                         const opponentTeamResult = parseInt(match[playerTeamOpponent]);
                         let result;
@@ -411,24 +591,24 @@ export class RankingObjComponent implements OnInit {
                             result = 'L';
                         } else {
                             result = 'D';
-                        }         
+                        }
                         let resultOfMatch;
-                        resultOfMatch = `${playerTeamResult}:${opponentTeamResult}`; 
-            
-                        lastWarDate.lastMatches.unshift({'result': result, 'resultOfMatch': resultOfMatch, 'id': match.idwar, 'time': match.timestamp});                    
-            
+                        resultOfMatch = `${playerTeamResult}:${opponentTeamResult}`;
+
+                        lastWarDate.lastMatches.unshift({'result': result, 'resultOfMatch': resultOfMatch, 'id': match.idwar, 'time': match.timestamp});
+
                         lastWarDate.last10ranking.unshift(parseFloat(parseFloat(match[playerPosteloField]).toFixed(2)))
                         const rankingData = lastWarDate.last10ranking;
                         const minValue = Math.min(...rankingData) - 30; // Najniższa wartość danych pomniejszona o 10
-                        const maxValue = Math.max(...rankingData) + 30; // Najwyższa wartość danych powiększona o 10                    
-                      
+                        const maxValue = Math.max(...rankingData) + 30; // Najwyższa wartość danych powiększona o 10
+
                         const interval = setInterval(() => {
                           const canvasId = `id-${name.username}`;
                           const ctx = document.getElementById(canvasId) as HTMLCanvasElement;
-                        
+
                           if (ctx) {
                             clearInterval(interval); // Zatrzymuje sprawdzanie, gdy canvas jest dostępny
-                          
+
                             const myChart = new Chart(ctx, {
                               type: 'line',
                               data: {
@@ -447,9 +627,7 @@ export class RankingObjComponent implements OnInit {
                                   yAxes: [
                                     {
                                       ticks: {
-                                        beginAtZero: false,
-                                        // min: minValue,
-                                        // max: maxValue
+                                        beginAtZero: false
                                       },
                                     },
                                   ],
@@ -461,16 +639,15 @@ export class RankingObjComponent implements OnInit {
                             });
                           }
                         }, 100); // Sprawdzanie co 100ms
-                        
-                        
+
+
                         if (lastWarDate.lastMatches.length >= 10) {
                             break;
                         }
                     }
                 }
             }
-                     
-             
+
               if (playerParticipated && lastWarDate.lastMatches.length >= 10) {
                   break;
               }
@@ -478,8 +655,8 @@ export class RankingObjComponent implements OnInit {
 
             if(lastWarDate.donatorS4 == 1){
               this.donatorsSeason4.push(lastWarDate)
-            }  
-            
+            }
+
             playerRowArray.push(lastWarDate);
           }
         }
@@ -496,10 +673,170 @@ export class RankingObjComponent implements OnInit {
         console.log('playerRowArray', playerRowArray)
         return playerRowArray;
       }),
-      // tap(data => console.log('players', data))
     );
 
-    // console.log('=>', this.donatorsSeason4);
+    // this.lastWarOfPlayer$ = combineLatest([this.playersTest$, this.historyMatches$]).pipe(
+    //   map(([v1, v2]) => {
+    //     let lastWarDate: any;
+    //     let playerRowArray: any[] = [];
+    //     for( let name of v1){
+    //       // if(name.active == 'FALSE'){
+    //       if(name.active == 'FALSE'){
+    //         continue;
+    //       } else {
+    //         lastWarDate = {
+    //           username:name.username,
+    //           playername:name.playername,
+    //           cup:this.addTitleCup(name.cup1on1edition1),
+    //           ranking:parseFloat(name.ranking.replace(/,/g,'')),
+    //           wars:name.warcount,
+    //           flag:name.nationality,
+    //           strike: name.lastwarpc,
+    //           maxfragsperwar: name.fpwmax,
+    //           minfragsperwar: name.fpwmin,
+    //           s1wars: parseFloat(name.s1wars),
+    //           s1fpw: Math.round(name.s1fpw * 100) / 100,
+    //           s2wars: parseFloat(name.s2wars),
+    //           s2fpw: Math.round(name.s2fpw * 100) / 100,
+    //           s3wars: parseFloat(name.s3wars),
+    //           s3fpw: Math.round(name.s3fpw * 100) / 100,
+    //           s4wars: parseFloat(name.s4wars),
+    //           s4fpw: Math.round(name.s4fpw * 100) / 100,
+    //           s5wars: parseFloat(name.s5wars),
+    //           s5fpw: Math.round(name.s5fpw * 100) / 100,
+    //           s6wars: parseFloat(name.s6wars),
+    //           s6fpw: Math.round(name.s6fpw * 100) / 100,
+    //           activity: name.last30days,
+    //           lastyear: name.last365days,
+    //           meeting: name.meeting,
+    //           lastWarDate: new Date(name.lastwar).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
+    //           fragsperwar: Math.round(name.fpw * 100) / 100,
+    //           inactive: name.active == 'FALSE' ? false : true,
+    //           ban: name.ban == 'TRUE' ? true : false,
+    //           s1wars_win: parseInt(name.s1wars_win),
+    //           s1fpw_win: parseInt(name.s1fpw_win),
+    //           s1ranking_win: parseInt(name.s1ranking_win),
+    //           s2ranking_win: parseInt(name.s2ranking_win),
+    //           s3ranking_win: parseInt(name.s3ranking_win),
+    //           s4ranking_win: parseInt(name.s4ranking_win),
+    //           s5ranking_win: parseInt(name.s5ranking_win),
+    //           // streak: name.streak,
+    //           winPercentage: this.handleData(this.receivedData),
+    //           streak: this.calculateStreak(name.username, v2),
+    //           donatorS4: name.donate_s4,
+    //           donatorS5: name.donate_s5,
+    //           donatorS6: name.donate_s6,
+    //           lastMatches: [],
+    //           last10ranking: []
+    //         };
+
+    //         for (let match of v2.slice().reverse()) { // Odwrócenie listy meczów, aby uzyskać najnowsze mecze jako pierwsze
+    //           let playerParticipated = false; // Zmienna flagowa określająca, czy gracz uczestniczył w tym meczu
+    //           // Iteracja przez graczy w meczu
+    //           for(let j = 1; j <= 2; j++){
+    //             for (let i = 1; i <= 7; i++) {
+    //                 // Sprawdzenie, czy gracz uczestniczył w meczu
+    //                 const playerNameField = `t${j}p${i <= 7 ? i : i - 7}name`; // Pole zawierające nazwę gracza
+    //                 const playerPosteloField = `t${j}p${i <= 7 ? i : i - 7}postelo`;
+
+    //                 if (name.username === match[playerNameField]) {
+    //                     playerParticipated = true;
+    //                     const playerTeamNumber = playerNameField.charAt(1);
+    //                     const playerTeam = `t${playerTeamNumber}roundswon`;
+    //                     const playerTeamOpponent = `t${playerTeamNumber == '1' ? '2': '1'}roundswon`;
+
+    //                     const playerTeamResult = parseInt(match[playerTeam]);
+    //                     const opponentTeamResult = parseInt(match[playerTeamOpponent]);
+    //                     let result;
+    //                     if (playerTeamResult > opponentTeamResult) {
+    //                         result = 'W';
+    //                     } else if (playerTeamResult < opponentTeamResult) {
+    //                         result = 'L';
+    //                     } else {
+    //                         result = 'D';
+    //                     }
+    //                     let resultOfMatch;
+    //                     resultOfMatch = `${playerTeamResult}:${opponentTeamResult}`;
+
+    //                     lastWarDate.lastMatches.unshift({'result': result, 'resultOfMatch': resultOfMatch, 'id': match.idwar, 'time': match.timestamp});
+
+    //                     lastWarDate.last10ranking.unshift(parseFloat(parseFloat(match[playerPosteloField]).toFixed(2)))
+    //                     const rankingData = lastWarDate.last10ranking;
+    //                     const minValue = Math.min(...rankingData) - 30; // Najniższa wartość danych pomniejszona o 10
+    //                     const maxValue = Math.max(...rankingData) + 30; // Najwyższa wartość danych powiększona o 10
+
+    //                     const interval = setInterval(() => {
+    //                       const canvasId = `id-${name.username}`;
+    //                       const ctx = document.getElementById(canvasId) as HTMLCanvasElement;
+
+    //                       if (ctx) {
+    //                         clearInterval(interval); // Zatrzymuje sprawdzanie, gdy canvas jest dostępny
+
+    //                         const myChart = new Chart(ctx, {
+    //                           type: 'line',
+    //                           data: {
+    //                             labels: rankingData.map((_, index) => index === 9 ? "last" : `${rankingData.length - index}`),
+    //                             datasets: [{
+    //                               label: 'Ranking',
+    //                               data: rankingData,
+    //                               fill: false,
+    //                               borderColor: 'rgb(75, 192, 192)',
+    //                               lineTension: 0,
+    //                               yAxisID: 'y-axis-0'
+    //                             }]
+    //                           },
+    //                           options: {
+    //                             scales: {
+    //                               yAxes: [
+    //                                 {
+    //                                   ticks: {
+    //                                     beginAtZero: false
+    //                                   },
+    //                                 },
+    //                               ],
+    //                             },
+    //                             legend: {
+    //                               display: false
+    //                             }
+    //                           }
+    //                         });
+    //                       }
+    //                     }, 100); // Sprawdzanie co 100ms
+
+
+    //                     if (lastWarDate.lastMatches.length >= 10) {
+    //                         break;
+    //                     }
+    //                 }
+    //             }
+    //         }
+
+    //           if (playerParticipated && lastWarDate.lastMatches.length >= 10) {
+    //               break;
+    //           }
+    //         }
+
+    //         if(lastWarDate.donatorS4 == 1){
+    //           this.donatorsSeason4.push(lastWarDate)
+    //         }
+
+    //         playerRowArray.push(lastWarDate);
+    //       }
+    //     }
+
+    //     // console.log('playerRowArray1', playerRowArray[0])
+    //     // console.log('playerRowArray2', playerRowArray[1])
+    //     // console.log('playerRowArray3', playerRowArray[2])
+    //     // console.log('V2', v2[v2.length - 3])
+    //     // console.log('V2', v2[v2.length - 2])
+    //     // console.log('V2', v2[v2.length - 1])
+    //     // this.topThreePlayers = playerRowArray
+    //     // .sort((a, b) => b.wars - a.wars) // Sortowanie graczy według wartości "wars" (malejąco)
+    //     // .slice(0, 3); // Pobranie trzech graczy z najwyższymi wartościami "wars"
+    //     console.log('playerRowArray', playerRowArray)
+    //     return playerRowArray;
+    //   }),
+    // );
 
     if(this.activatedRoute.snapshot.queryParams['sortByWars'] == 'DESC'){
       this.sortByWarsDesc(this.lastWarOfPlayer$);
@@ -903,7 +1240,7 @@ export class RankingObjComponent implements OnInit {
   // getActivityGradient(activity: number): string | SafeStyle {
   //   let gradient: string | SafeStyle;
   //   let percentage = 0;
-  
+
   //   if (activity >= 1 && activity <= 5) {
   //     percentage = ((activity - 1) / 5) * 100;
   //   } else if (activity >= 6 && activity <= 10) {
@@ -922,7 +1259,7 @@ export class RankingObjComponent implements OnInit {
   //     gradient = this.sanitizer.bypassSecurityTrustStyle(`url(${imageUrl})`);
   //     return gradient;
   //   }
-  
+
   //   const color = this.getActivityColor(activity);
   //   gradient = `linear-gradient(to top, ${color} ${percentage}%, gray ${percentage}%)`;
   //   return gradient;
@@ -1213,10 +1550,52 @@ export class RankingObjComponent implements OnInit {
 
   showChartsChanged(value: string) {
     // Zapisujemy nową wartość w localStorage po zmianie wartości radiobuttona
-    localStorage.setItem('showCharts', value);    
+    localStorage.setItem('showCharts', value);
   }
 
-  showStreakChanged(value: string) {   
-    localStorage.setItem('showStreak', value);    
+  showStreakChanged(value: string) {
+    localStorage.setItem('showStreak', value);
+  }
+
+  // getFpwValue(player: any): number {
+  //   switch (this.selectedOption) {
+  //     case 'season5':
+  //       return player.s5fpw;
+  //     case 'season4':
+  //       return player.s4fpw;
+  //     case 'season3':
+  //       return player.s3fpw;
+  //     case 'season2':
+  //       return player.s2fpw;
+  //     case 'season1':
+  //       return player.s1fpw;
+  //     default:
+  //       return player.s6fpw; // Default to s6fpw if no valid option is provided
+  //   }
+  // }
+
+  onSeasonChange(option: any): void {
+    // Aktualizujemy wartość wybranej opcji sezonu
+    this.selectedOption = option;
+  }
+
+  getSelectedSeasonFpw(player: any): number {
+    // Sprawdź wybrany sezon z dropdown i zwróć odpowiednią wartość fpw
+    switch (this.selectedOption.value) {
+      case 'currentSeason':
+        return player.s6fpw;
+      case 'season5':
+        return player.s5fpw;
+      case 'season4':
+        return player.s4fpw;
+      case 'season3':
+        return player.s3fpw;
+      case 'season2':
+        return player.s2fpw;
+      case 'season1':
+        return player.s1fpw;
+      default:
+        return player.s6fpw; // Domyślnie zwracamy wartość s6fpw
+    }
   }
 }

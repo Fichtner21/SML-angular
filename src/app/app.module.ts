@@ -51,6 +51,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RankingObjModule } from './ranking-obj/ranking-obj.module';
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -132,6 +133,7 @@ const customNotifierOptions: NotifierOptions = {
     MatIconModule,
     MatDatepickerModule,
     MatToolbarModule,
+    MatTooltipModule,
     RankingObjModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),

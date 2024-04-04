@@ -13,7 +13,7 @@ import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { faArrowCircleLeft, faArrowCircleRight, faArrowDown, faArrowsDownToPeople, faArrowUp, faFlag, faPaperPlane, faPeopleGroup, faPersonCirclePlus, faStamp, faStar, faStarHalfStroke, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleLeft, faArrowCircleRight, faArrowDown, faArrowsDownToPeople, faArrowUp, faFlag, faPaperPlane, faPeopleGroup, faPersonCirclePlus, faSquareMinus, faStamp, faStar, faStarHalfStroke, faTrash, faUserGroup, faUserMinus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import * as Discord from 'discord.js';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
@@ -81,6 +81,10 @@ export class MixUsComponent implements OnInit {
   starSolid = faStar;
   starEmpty = faStarHalfStroke;
   faFlag = faFlag;
+  squareMinus = faSquareMinus;
+  trash = faTrash;
+  userMinus = faUserMinus;
+  xmark = faXmark;
   mixWay: any = localStorage.getItem('mixway') ? localStorage.getItem('mixway') : '';
   selectedOption: string = "Teams-decide";  
   selectedOption2: string = "";  
@@ -1836,6 +1840,10 @@ getUniqueRandomElementsWithProbability(probabilityMap: Record<string, number>, c
   getRandomElementFromArray(array: any[]): any {
     const randomIndex = Math.floor(Math.random() * array.length);
     return array[randomIndex];
+  }
+
+  removePlayer(index: number): void {
+    this.selectedUsers.splice(index, 1);
   }
 }
 

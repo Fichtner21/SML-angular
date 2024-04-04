@@ -121,10 +121,23 @@
               <div>Experimental - Experimental precision, limit?</div>
             </div>           -->
           </div>    
-          <div class="selected-cont">
+          <!-- <div class="selected-cont">
             <div *ngFor="let player of selectedUsers; let i = index;" class="selected">          
               <div style="display: flex;" class="selectedPlayer">
                 <span class="playername">  {{ i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span> 
+              </div>
+            </div>  
+          </div> -->
+          <div class="selected-cont">
+            <div *ngFor="let player of selectedUsers; let i = index;" class="selected">          
+              <div style="display: flex; align-items:center;" class="selectedPlayer">
+                <span class="playername">{{ i + 1}}. {{player.playername}}</span> 
+                <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
+                <span>({{ player.ranking }})</span>
+                <!-- <button > -->
+                  <!-- <mat-icon aria-label="Remove player">close</mat-icon> -->
+                  <fa-icon [icon]="xmark" (click)="removePlayer(i)" class="minus" matTooltip="Remove player"></fa-icon>
+                <!-- </button> -->
               </div>
             </div>  
           </div>

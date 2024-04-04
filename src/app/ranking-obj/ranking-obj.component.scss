@@ -94,6 +94,74 @@ section {
   }
 }
 
+::ng-deep mat-form-field.cont {
+  box-shadow: none !important;
+  padding-bottom: 0;
+}
+
+::ng-deep mat-form-field .mat-form-field-wrapper {
+  padding-bottom: 5px !important;
+
+  .mat-form-field-underline {
+    bottom: 0 !important;
+  }
+}
+
+::ng-deep mat-form-field .mat-form-field-wrapper .mat-form-field-flex {
+  padding: 0 10px;
+
+  label {
+    color: #ffffc0;
+  }
+}
+
+::ng-deep mat-select span {
+  color: #ffffc0;
+}
+
+::ng-deep mat-option {
+  content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%);
+    background-size: 4px 4px;
+}
+
+::ng-deep mat-option {
+  &:hover {
+    background-color: #40415f !important;
+  }
+}
+
+::ng-deep mat-option span {
+  color: #ffffc8;
+}
+
+::ng-deep .mat-select-panel .mat-option.mat-selected:not(.mat-option-multiple) {
+  background-color: #ffffc8;
+  span {
+    color: #010141;
+  }
+}
+
+::ng-deep mat-option.selected {
+  content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%);
+    background-size: 2px 2px;
+}
+
 .container-bottom {
   margin: 0 auto;
   display: flex;
@@ -257,7 +325,7 @@ a {
   background-color: #40415f;
   transition: .4s all;
   position: relative;
-  
+
   .chart-name {
     position: absolute;
     bottom: 5px;
@@ -301,7 +369,7 @@ a {
   }
 
   .chart {
-    grid-column: 2/3;    
+    grid-column: 2/3;
   }
 
   .playername {
@@ -1027,10 +1095,10 @@ a {
 .over80 {
   background-image: url('../../assets/images/medal_of_hh.png') !important;
   background-size: cover !important;
-  background-repeat: no-repeat;  
+  background-repeat: no-repeat;
 }
 
-.big-name { 
+.big-name {
   margin: 0 auto;
   font-size: 200px;
   background-color: black;
@@ -1045,7 +1113,7 @@ a {
     font-size: 50px;
   }
 }
-.small-date { 
+.small-date {
   margin: 0 auto;
   font-size: 100px;
   background-color: black;
@@ -1162,7 +1230,7 @@ a {
   linear-gradient(90deg, hsl(45, 100%, 5%), hsl(45, 100%, 5%)) !important;
   box-shadow: 10px 0 8px -8px gold;
 
-  
+
   // background-color: darken(#C9B037,15%) !important;
   // &:after {
   //   position: absolute;
@@ -1212,9 +1280,6 @@ a {
     transparent 100px
   ),
   linear-gradient(90deg, hsl(80, 0%, 20%), hsl(80, 0%, 20%)) !important;
-
-
-
 
   // &:after {
   //   position: absolute;
@@ -1286,7 +1351,7 @@ a {
   font-weight: 700;
 
   .seasons {
-    padding: 5px 70px;    
+    padding: 5px 70px;
 
     .rank {
       background-color: hsl(45, 100%, 15%);
@@ -1313,6 +1378,48 @@ a {
 
   @media screen and (max-width: 800px){
     display: none;
+  }
+}
+
+.divider {
+  height: 2px;
+  width: 40px;
+  background-color: #ffffc8;
+  top: 257px;
+  right: 20px;
+  position: fixed;
+  z-index: 6;
+}
+
+.floating-icon-container-more {
+  position: fixed;
+  top: 270px;
+  right: 20px; /* Dystans od prawej krawędzi strony */
+  z-index: 6;
+  // background-color: #ffffc8;
+  border-radius: 20px;
+  background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%);
+  background-size: 4px 4px;
+
+  @media screen and (max-width: 800px){
+    display: none;
+  }
+
+  .winning {
+    border-radius: 5px;
+    padding: 2px;
+    color: #fff;
+    margin-right: 3px;
+    width: 22px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: green;
+  }
+
+  :last-of-type {
+    margin-bottom: 0;
   }
 }
 
@@ -1347,6 +1454,24 @@ a {
   }
 }
 
+.floating-icon-streak {
+  width: 40px; /* Szerokość ikony */
+  height: 40px; /* Wysokość ikony */
+  color: #fff; /* Kolor ikony */
+  border-radius: 50%; /* Zaokrąglenie ikony */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 10px; /* Odstęp między ikonami */
+  transition: .3s all;
+  border: 1px solid #ffffc0;
+
+  &:hover {
+    box-shadow: 0 0 10px;
+  }
+}
+
 .floating-icon.expanded {
   box-shadow: 0 0 10px #00FF00;
 }
@@ -1354,22 +1479,25 @@ a {
   box-shadow: 0 0 10px #00FF00;
 }
 
+.floating-panel::-webkit-scrollbar {
+  display: none; /* Ukryj pasek przewijania */
+}
+
 .floating-panel {
   position: fixed;
   top: 85px;
-  right: 0; /* Początkowa pozycja - panel jest schowany poza prawą krawędzią */
-  // width: 340px;
-  width: 0;
+  right: 0;
+  width: 340px;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto; /* Dodaj pasek przewijania wertykalnego */
+  overflow-x: hidden; /* Ukryj pasek przewijania poziomego */
   background-image: linear-gradient(0deg, rgba(47, 48, 96, .95) 25%, rgba(47, 48, 96, .95) 50%, rgba(64, 65, 95, .95) 50%, rgba(64, 65, 95, .95) 75%, rgba(47, 48, 96, .95) 75%, rgba(47, 48, 96, .95) 100%);
   background-size: 3px 3px;
-  transition: right 0.3s ease-in-out; /* Dodaj animację do right */
+  transition: right 0.3s ease-in-out;
   z-index: 5;
   box-shadow: 0 0 20px #010141;
-  transform: translateX(100%); /* Ukryj panel poza prawą krawędzią */
+  transform: translateX(100%);
   padding-right: 50px;
-  // animation: fadeInOut 0.8s ease-in-out forwards;
 
   h2, h3 {
     color: #ffffc8;
@@ -1382,7 +1510,7 @@ a {
   .content {
     margin-top: 40px;
     padding: 16px;
-    overflow-y: auto; /* Dopuszcza przewijanie wewnątrz panelu, gdy jest za długi */
+    overflow-y:auto; /* Dopuszcza przewijanie wewnątrz panelu, gdy jest za długi */
 
     ol {
       position: relative;
@@ -1755,7 +1883,7 @@ ol {
   box-shadow: 0 0 5px #ffffc8;
   padding: 10px;
   border-radius: 10px;
-  color: #ffffc8;  
+  color: #ffffc8;
 
   @media screen and (max-width: 1024px) {
     display: none;
@@ -1772,7 +1900,7 @@ ol {
     justify-content: space-between;
     align-items: center;
   }
-  
+
   .dolar {
     margin: 0 2px;
   }
@@ -1780,7 +1908,7 @@ ol {
   .donators__num {
     font-size: 22px;
     margin-left: 5px;
-    font-weight: 700;    
+    font-weight: 700;
     color: #00FF00;
   }
 
@@ -1801,7 +1929,7 @@ ol {
   position: relative;
   overflow: hidden;
   border-top: 2px solid green;
-  border-bottom: 2px solid red;  
+  border-bottom: 2px solid red;
 
   &:after {
     position: absolute;
@@ -1813,13 +1941,13 @@ ol {
     color: #1f203c;
     font-weight: 700;
     letter-spacing: 5px;
-    margin-top: -4px;      
+    margin-top: -4px;
   }
 
   &:before {
     background-image: url('/assets/images/9oeCWY.webp');
     width: 100%;
-    height: 20px;    
+    height: 20px;
     background-size: cover;
     background-repeat: repeat;
     position: absolute;
@@ -1835,7 +1963,7 @@ ol {
   position: relative;
   overflow: hidden;
   border-top: 1px solid green;
-  border-bottom: 1px solid red;   
+  border-bottom: 1px solid red;
 
   &:after {
     position: absolute;
@@ -1847,13 +1975,13 @@ ol {
     color: #1f203c;
     font-weight: 700;
     letter-spacing: 5px;
-    margin-top: -4px;      
+    margin-top: -4px;
   }
 
   &:before {
     background-image: url('/assets/images/9oeCWY.webp');
     width: 100%;
-    height: 20px;    
+    height: 20px;
     background-size: cover;
     background-repeat: repeat;
     position: absolute;
@@ -1869,7 +1997,7 @@ ol {
   position: relative;
   overflow: hidden;
   border-top: 2px solid green;
-  border-bottom: 2px solid red;  
+  border-bottom: 2px solid red;
 
   &:after {
     position: absolute;
@@ -1881,13 +2009,13 @@ ol {
     color: #1f203c;
     font-weight: 700;
     letter-spacing: 5px;
-    margin-top: -4px;      
+    margin-top: -4px;
   }
 
   &:before {
     background-image: url('/assets/images/9oeCWY.webp');
     width: 100%;
-    height: 20px;    
+    height: 20px;
     background-size: cover;
     background-repeat: repeat;
     position: absolute;
@@ -1996,7 +2124,7 @@ ol {
 
 //   div {
 //     color: #292b4b !important;
-//   }  
+//   }
 // }
 
 @keyframes fadeIn {

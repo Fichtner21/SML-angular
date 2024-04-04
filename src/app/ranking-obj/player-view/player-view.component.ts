@@ -48,6 +48,7 @@ export class PlayerViewComponent implements OnInit {
   season3wars = 215;
   season4wars = 194; // Zmienna, do której przypiszesz ilość wystąpień
   season5wars: number = 0; // Zmienna, do której przypiszesz ilość wystąpień
+  season6wars: number;
   currentActivePlayers: number = 0; // Zmienna, do której przypiszesz ilość aktywnych graczy
   aaa = [];
   resultCanvas: any;
@@ -75,10 +76,10 @@ export class PlayerViewComponent implements OnInit {
 
   // @Input() playerDetail: any;
   // @Input() expanded: boolean;
-  
+
   public countryCodeMap: CountryCodeMap = {
-    'AF': 'Afghanistan',    
-    'DZ': 'Algeria',    
+    'AF': 'Afghanistan',
+    'DZ': 'Algeria',
     'AL': 'Albania',
     'AD': 'Andorra',
     'AM': 'Armenia',
@@ -134,13 +135,20 @@ export class PlayerViewComponent implements OnInit {
     'CA': 'Canada',
     'MON': 'Gay Paradise',
     'ENG': 'England'
-  };  
+  };
 
   constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef, private router: Router, private datePipe: DatePipe, private rankObjService: RankObjService) {
     // console.log('activatedRoute PlayerView =>', this.activatedRoute);
    }
 
   ngOnInit(): void {
+
+    this.numOfPlayers$ = this.playersApiService.getPlayers('NumPlayers').pipe(
+      map((response: any) => {
+        this.season6wars = response.values[1][3];
+        return this.season6wars;
+      })
+    );
 
     this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
       map((response: any) => {
@@ -155,10 +163,10 @@ export class PlayerViewComponent implements OnInit {
         }
         const startDate = new Date('1/1/2024 0:00:00');
         const endDate = new Date('3/31/2024 23:59');
-  
+
         // Wykonaj filtrowanie dla przedziału dat
         const filteredMatches = this.totalWarsSeason4(historyMatches, startDate, endDate);
-  
+
         // Przypisz ilość wystąpień do zmiennej s5
         // this.season4wars = filteredMatches.length;
         this.season5wars = filteredMatches.length;
@@ -177,12 +185,12 @@ export class PlayerViewComponent implements OnInit {
           }
           players.push(rowObject);
         }
-      
+
         const activePlayers = players.filter(player => player.active === 'TRUE');
 
         // Oblicz ilość aktywnych graczy i przypisz wynik do zmiennej currentActivePlayers
         this.currentActivePlayers = activePlayers.length;
-      
+
         return players;
       }),
     );
@@ -216,11 +224,11 @@ export class PlayerViewComponent implements OnInit {
       })
     );
 
-    this.numOfPlayers$ = this.playersApiService.getPlayers('NumPlayers').pipe(
-      map((response: any) => {
-        return Number(response.values[0][2]);
-      })
-    )    
+    // this.numOfPlayers$ = this.playersApiService.getPlayers('NumPlayers').pipe(
+    //   map((response: any) => {
+    //     return Number(response.values[0][2]);
+    //   })
+    // )
 
     this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$, this.playersTab$, this.inactiveTab$]).pipe(
       map(([player, matches, players, inactives]) => {
@@ -238,6 +246,7 @@ export class PlayerViewComponent implements OnInit {
         let listwars3: any[] = [];
         let listwars4: any[] = [];
         let listwars5: any[] = [];
+        let listwars6: any[] = [];
         let rankings: any[] = [];
         let rankings2: any[] = [];
         let resultPerPlayer: any[] = [];
@@ -256,8 +265,12 @@ export class PlayerViewComponent implements OnInit {
         let s3wars_win: number;
         let s3fpw_win: number;
         let s3ranking_win: number;
+        let s4wars_win: number;
         let s4fpw_win: number;
         let s4ranking_win: number;
+        let s5wars_win: number;
+        let s5fpw_win: number;
+        let s5ranking_win: number;
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);
 
@@ -275,14 +288,11 @@ export class PlayerViewComponent implements OnInit {
         // console.log('foundPlayerArray', foundPlayerArray);
         const matchResultsArray = [];
 
-        
-      
-
         let win = 0;
         let lose = 0;
         let draw = 0;
 
-        foundPlayerArray.forEach(el => {          
+        foundPlayerArray.forEach(el => {
           const numPlayerTeam = Number(this.getKeyByValue(el, player).slice(1,2));
           const numPlayerTeamPosition = Number(this.getKeyByValue(el, player).slice(3,4));
 
@@ -308,8 +318,8 @@ export class PlayerViewComponent implements OnInit {
             draw++;
           }
         });
-        
-        resultPerPlayer.push(win, lose, draw);       
+
+        resultPerPlayer.push(win, lose, draw);
 
         let streak = { streakName: '', streakCount: 0 };  // Inicjalizuj zmienną serii jako obiekt
         let currentResult = '';  // Inicjalizuj bieżący wynik (wygrana, przegrana, remis)
@@ -325,17 +335,17 @@ export class PlayerViewComponent implements OnInit {
         // Iteruj od końca listy meczów, aby znaleźć bieżącą serię
         for (let i = 0; i < lastFiveMatches.length; i++) {
           numPlayerTeam = Number(this.getKeyByValue(lastFiveMatches[i], player).slice(1, 2));
-        
+
           // Odczytaj wynik drużyny, do której należy gracz
           const playerTeamRoundswon = Number(lastFiveMatches[i][`t${numPlayerTeam}roundswon`]);
-        
+
           // Odczytaj wynik przeciwnej drużyny
           const numOpponentTeam = (numPlayerTeam === 1) ? 2 : 1;
           const opponentTeamRoundswon = Number(lastFiveMatches[i][`t${numOpponentTeam}roundswon`]);
-        
+
           // Dodaj mecz do tablicy `aaa`
           this.aaa.push({'time': lastFiveMatches[i].timestamp, 'playerTeam': playerTeamRoundswon, 'opponentTeam': opponentTeamRoundswon});
-          
+
           // Porównaj wyniki i określ bieżący wynik (win/lose/draw)
           if (playerTeamRoundswon > opponentTeamRoundswon) {
             currentResult = 'W';
@@ -344,12 +354,12 @@ export class PlayerViewComponent implements OnInit {
           } else {
             currentResult = 'D';
           }
-        
+
           // Jeśli to pierwszy mecz gracza, zapisz jego wynik
           if (i === 0) {
             firstMatchResult = currentResult;
           }
-        
+
           // Jeśli bieżący wynik jest taki sam jak poprzedni (czyli gracz wygrał, przegrał lub zremisował kolejny mecz), zwiększamy wartość `streakCount`
           if (currentResult === previousResult) {
             streak.streakCount++;
@@ -360,12 +370,12 @@ export class PlayerViewComponent implements OnInit {
             }
             streak.streakCount = 1;
           }
-        
+
           // Aktualizujemy `previousResult` na bieżący wynik
           previousResult = currentResult;
-        }        
-        
-        const mostOftenPlayedFilter = this.mostOftenPlayed.filter(n => n);             
+        }
+
+        const mostOftenPlayedFilter = this.mostOftenPlayed.filter(n => n);
 
         const count = {};
 
@@ -383,7 +393,7 @@ export class PlayerViewComponent implements OnInit {
 
         const sorttedCount = this.publicsortObjectbyValue(count);
         const sorttedCountArr = Object.entries(sorttedCount);
-        const countPlayers = this.get3TopItems(Object.entries(count));        
+        const countPlayers = this.get3TopItems(Object.entries(count));
 
         matches.forEach((el) => {
           if(Object.values(el).includes(player)){
@@ -408,6 +418,8 @@ export class PlayerViewComponent implements OnInit {
             listwars4.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
 
             listwars5.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
+
+            listwars6.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
 
             rankings.push(Math.round(rankHistory * 100) / 100);
             playerArray.push([el.idwar, el.timestamp, fragPerWar]);
@@ -438,9 +450,11 @@ export class PlayerViewComponent implements OnInit {
             s3ranking_win = el.s3ranking_win,
             s4fpw_win = el.s4fpw_win,
             s4ranking_win = el.s4ranking_win,
+            s5fpw_win = el.s5fpw_win,
+            s5ranking_win = el.s5ranking_win,
             active = el.active
           }
-        });        
+        });
 
         let playerCard;
         playerCard = {
@@ -455,17 +469,24 @@ export class PlayerViewComponent implements OnInit {
           debut: timestampArray[0],
           listwars: listwars,
           rankings: rankings,
-          listwars1: this.filterObjects1(listwars1),
-          listwars2: this.filterObjects(listwars2),
-          listwars3: this.filterObjects3(listwars3),
-          listwars4: this.filterObjects4(listwars4),
-          listwars5: this.filterObjects5(listwars5),
+          // listwars1: this.filterObjects1(listwars1),
+          // listwars2: this.filterObjects(listwars2),
+          // listwars3: this.filterObjects3(listwars3),
+          // listwars4: this.filterObjects4(listwars4),
+          // listwars5: this.filterObjects5(listwars5),
+          // listwars6: this.filterObjects6(listwars6),
+          listwars1: this.filterObjectsByDateRange(listwars1, new Date(2023, 0, 1), new Date(2023, 2, 31)), // Styczeń - Marzec 2023
+          listwars2: this.filterObjectsByDateRange(listwars2, new Date(2023, 3, 1), new Date(2023, 5, 30)), // Kwiecień - Czerwiec 2023
+          listwars3: this.filterObjectsByDateRange(listwars3, new Date(2023, 6, 1), new Date(2023, 8, 30)), // Lipiec - Wrzesień 2023
+          listwars4: this.filterObjectsByDateRange(listwars4, new Date(2023, 9, 1), new Date(2023, 11, 31)), // Październik - Grudzień 2023
+          listwars5: this.filterObjectsByDateRange(listwars5, new Date(2024, 0, 1), new Date(2024, 2, 31)), // Styczeń - Marzec 2024
+          listwars6: this.filterObjectsByDateRange(listwars6, new Date(2024, 3, 1), new Date(2024, 5, 30)), // Kwiecień - Czerwiec 2024
           win: win,
           lose: lose,
           draw: draw,
           winPercentage: (win/(win + lose + draw)*100),
           losePercentage: (lose/(win + lose + draw)*100),
-          drawPercentage: (draw/(win + lose + draw)*100),          
+          drawPercentage: (draw/(win + lose + draw)*100),
           resultPerPlayer: resultPerPlayer,
           mostOftenPlayed: sorttedCountArr,
           mostOftenPlayed1: { c: sorttedCountArr[0], n: sorttedCountArr[0]},
@@ -486,18 +507,21 @@ export class PlayerViewComponent implements OnInit {
           s3wars_win: s3wars_win ? s3wars_win : '',
           s3fpw_win: s3fpw_win ? s3fpw_win : '',
           s3ranking_win: s3ranking_win ? s3ranking_win : '',
-          s4wars_win: s3wars_win ? s3wars_win : '',
-          s4fpw_win: s3fpw_win ? s3fpw_win : '',
-          s4ranking_win: s3ranking_win ? s3ranking_win : '',
+          s4wars_win: s4wars_win ? s4wars_win : '',
+          s4fpw_win: s4fpw_win ? s4fpw_win : '',
+          s4ranking_win: s4ranking_win ? s4ranking_win : '',
+          s5wars_win: s5wars_win ? s5wars_win : '',
+          s5fpw_win: s5fpw_win ? s5fpw_win : '',
+          s5ranking_win: s5ranking_win ? s5ranking_win : '',
           streak: streak,
         }
         console.log('playerCard', playerCard);
 
         return playerCard;
-      }),     
-    )    
-  }  
-  
+      }),
+    )
+  }
+
   // onPlayerClick() {
   //   this.rankObjService.setPlayerDetail(this.playerDetail);
   // }
@@ -512,46 +536,53 @@ export class PlayerViewComponent implements OnInit {
     }
   }
 
-  filterObjects1(list) {
-    const startDate = new Date('1/1/2023 0:00:00');
-    const endDate = new Date('3/31/2023 23:59');
-    return list.filter(item => {
-      const timestamp = new Date(item.timestamp);
-      return timestamp > startDate && timestamp < endDate;
-    });
-  }
-  filterObjects(list) {
-    const startDate = new Date('4/1/2023 0:00:00');
-    const endDate = new Date('6/30/2023 23:59');
-    return list.filter(item => {
-      const timestamp = new Date(item.timestamp);
-      return timestamp > startDate && timestamp < endDate;
-    });
-  }
-  filterObjects3(list) {
-    const startDate = new Date('7/1/2023 0:00:00');
-    const endDate = new Date('9/30/2023 23:59');
-    return list.filter(item => {
-      const timestamp = new Date(item.timestamp);
-      return timestamp > startDate && timestamp < endDate;
-    });
-  }
+  // filterObjects1(list) {
+  //   const startDate = new Date('1/1/2023 0:00:00');
+  //   const endDate = new Date('3/31/2023 23:59');
+  //   return list.filter(item => {
+  //     const timestamp = new Date(item.timestamp);
+  //     return timestamp > startDate && timestamp < endDate;
+  //   });
+  // }
+  // filterObjects(list) {
+  //   const startDate = new Date('4/1/2023 0:00:00');
+  //   const endDate = new Date('6/30/2023 23:59');
+  //   return list.filter(item => {
+  //     const timestamp = new Date(item.timestamp);
+  //     return timestamp > startDate && timestamp < endDate;
+  //   });
+  // }
+  // filterObjects3(list) {
+  //   const startDate = new Date('7/1/2023 0:00:00');
+  //   const endDate = new Date('9/30/2023 23:59');
+  //   return list.filter(item => {
+  //     const timestamp = new Date(item.timestamp);
+  //     return timestamp > startDate && timestamp < endDate;
+  //   });
+  // }
 
-  filterObjects4(list) {
-    const startDate = new Date('10/1/2023 0:00:00');
-    const endDate = new Date('12/31/2023 23:59');
-    return list.filter(item => {
-      const timestamp = new Date(item.timestamp);
-      return timestamp > startDate && timestamp < endDate;
-    });
-  }
+  // filterObjects4(list) {
+  //   const startDate = new Date('10/1/2023 0:00:00');
+  //   const endDate = new Date('12/31/2023 23:59');
+  //   return list.filter(item => {
+  //     const timestamp = new Date(item.timestamp);
+  //     return timestamp > startDate && timestamp < endDate;
+  //   });
+  // }
 
-  filterObjects5(list) {
-    const startDate = new Date('1/1/2024 0:00:00');
-    const endDate = new Date('3/31/2024 23:59');
+  // filterObjects5(list) {
+  //   const startDate = new Date('1/1/2024 0:00:00');
+  //   const endDate = new Date('3/31/2024 23:59');
+  //   return list.filter(item => {
+  //     const timestamp = new Date(item.timestamp);
+  //     return timestamp > startDate && timestamp < endDate;
+  //   });
+  // }
+
+  filterObjectsByDateRange(list: any[], startDate: Date, endDate: Date) {
     return list.filter(item => {
-      const timestamp = new Date(item.timestamp);
-      return timestamp > startDate && timestamp < endDate;
+        const timestamp = new Date(item.timestamp);
+        return timestamp > startDate && timestamp < endDate;
     });
   }
 

@@ -6,7 +6,7 @@ import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { fa1, fa2, fa3, faArrowDown, faArrowUp, faCalendarCheck, faCentSign, faChartGantt, faChartSimple, faDollarSign, faMinus, faSuitcaseMedical, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { fa1, fa2, fa3, faArrowDown, faArrowUp, faCalendarCheck, faCentSign, faChartGantt, faChartSimple, faDollarSign, faFire, faInfoCircle, faMinus, faSuitcaseMedical, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { parseFloat } from 'core-js/es/number';
 import { RankObjService } from './rank-obj.service';
@@ -66,6 +66,8 @@ export class RankingObjComponent implements OnInit {
   public season_30_06_2023_matches$: any;
   public season_31_03_2023_players$: any;
   public season_31_03_2023_matches$: any;
+  public season_31_12_2022_players$: any;
+  public season_31_12_2022_matches$: any;
 
   minValue = 100;
   maxValue = 2000;
@@ -84,6 +86,8 @@ export class RankingObjComponent implements OnInit {
   topThreePlayers: any[]
   // expandedPlayerIndexes: number[] = [];
   isRedLineAdded: boolean = true;
+  showStreak: string = 'no';
+  showCharts: string = 'no';
 
   tooltipContent: string = `
     <div>
@@ -120,6 +124,8 @@ export class RankingObjComponent implements OnInit {
   dolar = faDollarSign;
   medic = faSuitcaseMedical;
   cent = faCentSign;
+  fire = faFire;
+  infoCircle = faInfoCircle;
   isExpanded: boolean;
   isSecondPanelExpanded: boolean;
   isThirdPanelExpanded: boolean;
@@ -128,12 +134,13 @@ export class RankingObjComponent implements OnInit {
   isThirdPanelExpandedLeft: boolean;
   matchRow:any;
   showAllPlayers: boolean = false;
-  showCharts: string = 'no';
-  showStreak: string = 'no';
+
   // playerDetail: any;
 
   constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute, private rankObjService: RankObjService, private sanitizer: DomSanitizer) {
     // localStorage.setItem('info', 'less');
+    // this.showStreak = localStorage.getItem('showStreak') === 'yes' ? true : false;
+    // this.showCharts = localStorage.getItem('showCharts') === 'yes' ? true : false;
    }
 
   infos = [
@@ -231,6 +238,20 @@ export class RankingObjComponent implements OnInit {
     this.playersApiService.getJsonSeason('Match History', '../../assets/snapshots/31_03_2023.json').subscribe(data => {
       // console.log('Dane z pliku JSON dla arkusza "Match History":', data);
       this.season_31_03_2023_matches$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Players', '../../assets/snapshots/31_12_2022.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Players":', data);
+      this.season_31_12_2022_players$ = data;
+    }, error => {
+      console.error('Błąd:', error);
+    });
+
+    this.playersApiService.getJsonSeason('Match History', '../../assets/snapshots/31_12_2022.json').subscribe(data => {
+      // console.log('Dane z pliku JSON dla arkusza "Match History":', data);
+      this.season_31_12_2022_matches$ = data;
     }, error => {
       console.error('Błąd:', error);
     });
@@ -507,6 +528,11 @@ export class RankingObjComponent implements OnInit {
             ([this.season_31_03_2023_players$]),
             ([this.season_31_03_2023_matches$])
           ]);
+        } else if (option === 'season9'){
+          return combineLatest([
+            ([this.season_31_12_2022_players$]),
+            ([this.season_31_12_2022_matches$])
+          ]);
         } else {
           return combineLatest([this.playersTest$, this.historyMatches$])
         }
@@ -543,6 +569,8 @@ export class RankingObjComponent implements OnInit {
               s5fpw: name.s5fpw ? Math.round(name.s5fpw * 100) / 100 : '',
               s6wars: name.s6wars ? parseFloat(name.s6wars) : '',
               s6fpw: name.s6fpw ? Math.round(name.s6fpw * 100) / 100 : '',
+              s4_22wars: name.s4_22wars ? name.s4_22wars : '',
+              s4_22fpw: name.s4_22fpw ? name.s4_22fpw : '',
               activity: name.last30days,
               lastyear: name.last365days,
               meeting: name.meeting,
@@ -1594,8 +1622,31 @@ export class RankingObjComponent implements OnInit {
         return player.s2fpw;
       case 'season1':
         return player.s1fpw;
+      case 'season9':
+        return player.s4_22fpw;
       default:
         return player.s6fpw; // Domyślnie zwracamy wartość s6fpw
+    }
+  }
+
+  // toggleShowStreak() {
+  //   // Zmieniamy wartość i zapisujemy ją w localStorage
+  //   this.showStreak = !this.showStreak;
+  //   localStorage.setItem('showStreak', this.showStreak ? 'yes' : 'no');
+  // }
+
+  // toggleShowCharts() {
+  //   // Zmieniamy wartość i zapisujemy ją w localStorage
+  //   this.showCharts = !this.showCharts;
+  //   localStorage.setItem('showCharts', this.showCharts ? 'yes' : 'no');
+  // }
+
+  toggleInfo() {
+    const isInfo = localStorage.getItem('info');
+    if (isInfo === 'more') {
+      localStorage.setItem('info', 'less');
+    } else {
+      localStorage.setItem('info', 'more');
     }
   }
 }

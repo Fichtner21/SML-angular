@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { faMedal } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-seasons',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./seasons.component.scss']
 })
 export class SeasonsComponent implements OnInit {
+  medal = faMedal;
 
   constructor() { }
 

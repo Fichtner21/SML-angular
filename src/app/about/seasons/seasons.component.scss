@@ -8,7 +8,7 @@ section {
   color: #ffffc8;
 
   .about__nav {
-    padding: 20px 10px;        
+    padding: 20px 10px;
     font-size: 20px;
     background-image: linear-gradient(
 0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
@@ -32,10 +32,59 @@ background-size: 4px 4px;
       &:hover {
         color: red;
       }
-    }    
+    }
   }
 
   .season {
+    .classification {
+      .medals {
+        padding-left: 50px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: auto;
+        gap: 10px;
+        max-width: 600px;
+        font-size: 20px;
+
+        div {
+          // display: flex;
+          // justify-content: center;
+
+          a {
+            text-decoration: none;
+            font-size: 20px;
+            color: #ffffc8;
+          }
+        }
+
+        fa-icon {
+          font-size: 22px;
+          padding-bottom: 3px;
+          border-bottom: 2px solid #ffffc8;
+        }
+
+        .gold {
+          color: gold
+        }
+
+        .silver {
+          color: silver;
+        }
+
+        .bronze {
+          color: #AD8A56;
+        }
+      }
+
+      .list {
+        padding-top: 10px;
+
+        .list-no {
+          text-align: end;
+        }
+      }
+    }
+
     >:nth-child(odd){
       border-bottom: 3px solid #C9B037;
     }
@@ -44,7 +93,7 @@ background-size: 4px 4px;
   /* Kolor tła dla parzystych dzieci */
 .seasons:nth-child(even) {
   background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
-  background-size: 4px 4px; 
+  background-size: 4px 4px;
 }
 
 /* Kolor tła dla nieparzystych dzieci */
@@ -64,7 +113,7 @@ background-size: 4px 4px;
       grid-template-columns: 3fr 1fr;
       column-gap: 30px;
 
-      .desc-details {        
+      .desc-details {
 
         img {
           width: 30px;
@@ -83,7 +132,7 @@ background-size: 4px 4px;
         ol li img {
           width: 20px;
         }
-      }      
+      }
     }
 
     h2 {
@@ -103,18 +152,18 @@ background-size: 4px 4px;
 
       &--item {
         h4 {
-          padding: 20px 10px;        
+          padding: 20px 10px;
           font-size: 20px;
           background-image: linear-gradient(
       0deg, rgba(0, 0, 0, 0.8) 25%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 75%, rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0.5) 100%);
       background-size: 4px 4px;
-      
+
         }
 
         ol {
           margin-top: 15px;
           margin-left: 15px;
-         
+
           li {
             margin-bottom: 5px;
 
@@ -160,7 +209,7 @@ background-size: 4px 4px;
       }
     }
 
-    .big-name {       
+    .big-name {
       // bottom: 5%;
       // position: absolute;
       // left: 50%;
@@ -178,12 +227,12 @@ background-size: 4px 4px;
       background-clip: text;
       text-align: center;
       opacity: .3;
-  
+
       @media screen and (max-width: 700px){
         font-size: 50px;
       }
     }
-    
+
   }
 }
 

@@ -2,21 +2,8 @@
 <ng-container *ngIf="lastWarOfPlayer$ | async as lastWarOfPlayers">
   <ng-container *ngIf="lastWarOfPlayers.length > 0">
     <section class="example">
-
       <div class="container">
-
         <div class="cont">
-          <mat-form-field>
-            <mat-label>Select season</mat-label>
-            <mat-select [formControl]="selectedOption">
-              <mat-option value="currentSeason">Current season</mat-option>
-              <mat-option value="season5">Season 5: 01.01.2024 - 31.03.2024 </mat-option>
-              <mat-option value="season4">Season 4: 01.10.2023 - 31.12.2023</mat-option>
-              <mat-option value="season3">Season 3: 01.07.2023 - 30.09.2023</mat-option>
-              <mat-option value="season2">Season 2: 01.04.2023 - 30.06.2023</mat-option>
-              <mat-option value="season1">Season 1: 01.01.2023 - 31.03.2023</mat-option>
-            </mat-select>
-          </mat-form-field>
           <!-- <mat-select [(ngModel)]="selectedOption" (ngModelChange)="onSeasonChange($event)">
             <mat-option value="currentSeason">Current Season</mat-option>
             <mat-option value="season5">Season 5</mat-option>
@@ -190,12 +177,13 @@
                   <div class="item item-block wars">
                     <!-- <div matTooltip="Season played wars">{{ player.s6wars }}</div>
                     <div class="season-wars" *ngIf="isInfo"> <span matTooltip="Total played wars">{{ player.wars }}</span></div> -->
-                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'currentSeason'">{{ player.s6wars }} </div>
+                    <div matTooltip="Season played wars" *ngIf="selectedOption.value === 'currentSeason'">{{ player.s6wars }} </div>
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season5'">{{ player.s5wars }} </div>
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season4'">{{ player.s4wars }} </div>
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season3'">{{ player.s3wars }} </div>
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season2'">{{ player.s2wars }} </div>
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season1'">{{ player.s1wars }} </div>
+                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season9'">{{ player.s4_22wars }} </div>
                     <div class="season-wars" *ngIf="isInfo"><span matTooltip="Total played wars">{{ player.wars }}</span> </div>
 
                   </div>
@@ -281,6 +269,20 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="container" *ngIf="isInfo">
+        <mat-form-field class="cont">
+          <mat-label>Select season</mat-label>
+          <mat-select [formControl]="selectedOption">
+            <mat-option value="currentSeason">Season 6: 01.04.2024 - Current</mat-option>
+            <mat-option value="season5">Season 5: 01.01.2024 - 31.03.2024 </mat-option>
+            <mat-option value="season4">Season 4: 01.10.2023 - 31.12.2023</mat-option>
+            <mat-option value="season3">Season 3: 01.07.2023 - 30.09.2023</mat-option>
+            <mat-option value="season2">Season 2: 01.04.2023 - 30.06.2023</mat-option>
+            <mat-option value="season1">Season 1: 01.01.2023 - 31.03.2023</mat-option>
+            <!-- <mat-option value="season9">Season 9: 01.10.2022 - 31.12.2022</mat-option> -->
+          </mat-select>
+        </mat-form-field>
       </div>
       <div class="container-bottom">
         <!-- <div class="legend">
@@ -394,6 +396,18 @@
           <fa-icon [icon]="chartGantt"></fa-icon>
         </div>
       </div>
+      <!-- <div class="divider"></div>
+      <div class="floating-icon-container-more">
+        <div class="floating-icon" matTooltipPosition="before" matTooltip="Show more info on ranking" (click)="toggleInfo()">
+          <fa-icon [icon]="infoCircle"></fa-icon>
+        </div>
+        <div class="floating-icon" matTooltipPosition="before" matTooltip="Show streak" (click)="toggleShowStreak()">
+         <div class="winning">W</div>
+        </div>
+        <div class="floating-icon" matTooltipPosition="before" matTooltip="Show streak charts" (click)="toggleShowCharts()">
+          <fa-icon [icon]="chartSimple"></fa-icon>
+        </div>
+      </div> -->
 
       <div class="floating-panel first-panel" [ngClass]="{ 'expanded': isExpanded }">
         <div class="content">

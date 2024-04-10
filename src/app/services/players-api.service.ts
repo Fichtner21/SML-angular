@@ -101,6 +101,17 @@ export class PlayersApiService {
       );
   }
 
+  public getPlayerDetails(username: string): Observable<any> {
+    return this.getPlayers('Players').pipe(
+      map((response: any) => {
+        const players = response.values;
+        console.log('players', players)
+        const playerDetails = players.find(player => player.username === username);
+        console.log('playerDetails service', playerDetails)
+        return playerDetails;
+      })
+    );
+  }
 
 public getJsonDataConverted(name: string): Observable<any[]> {
     const filePath = 'assets/snapshots/31_dec_2020.json'; // Ścieżka do pliku JSON

@@ -1,5 +1,3 @@
-
-
 <ng-container *ngIf="playerDetail$ | async as playerDetails;">
   <section [ngClass]="{ 'active': playerDetails.active == true, 'inactive': playerDetails.active == false }">
     <div class="container">
@@ -143,6 +141,86 @@
             </div>
           </div> -->
         </div>
+        <!-- <mat-form-field>
+          <mat-label>Select Player</mat-label>
+          <mat-select [(value)]="selectedPlayer" (selectionChange)="onPlayerSelect($event.target.value)">
+            <mat-option *ngFor="let player of playersTab$ | async" [value]="player">
+              <img src="/assets/images/flags_svg/{{player.nationality}}.SVG" alt="{{ player.nationality }}" width="20" height="auto"> {{ player.playername }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> -->
+
+        <!-- <mat-form-field appearance="fill">
+          <mat-label>Select Player</mat-label>
+          <mat-select (selectionChange)="onPlayerSelect($event.value)">
+            <mat-option *ngFor="let player of playersTab$ | async" [value]="player.username">
+              <img src="/assets/images/flags_svg/{{player.nationality}}.SVG" alt="{{ player.nationality }}" width="20" height="auto">
+              {{ player.playername }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> -->
+        <mat-form-field appearance="fill">
+          <mat-label>Select Player</mat-label>
+          <mat-select (selectionChange)="onPlayerSelect($event.value)">
+            <ng-container *ngFor="let player of playersTab$ | async">
+              <mat-option *ngIf="player.username !== playerCard?.username" [value]="player.username">
+                <img src="/assets/images/flags_svg/{{player.nationality}}.SVG" alt="{{ player.nationality }}" width="20" height="auto">
+                {{ player.playername }}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+<!-- <ng-container *ngIf="booleanVarRank; then upRank; else downRank"></ng-container>
+              <ng-template #upRank>
+                <fa-icon [icon]="arrowUp"></fa-icon>
+              </ng-template>
+              <ng-template #downRank>
+                <fa-icon [icon]="arrowDown"></fa-icon>
+              </ng-template> -->
+        <div *ngIf="selectedPlayer" class="comparePlayers">
+
+          <div class="playerStat playerStat1">
+            <h2>{{ playerDetails.playername }} <img src="/assets/images/flags_svg/{{playerDetails.nationality}}.SVG" alt="{{ playerDetails.nationality }}" width="20" height="auto"></h2>
+            <div class="item">
+                <span>Total wars:</span>
+                <span class="item__value" [ngClass]="{
+                    'green': playerDetails.listwars.length > playerCard?.listwars.length,
+                    'red': playerDetails.listwars.length < playerCard?.listwars.length,
+                    'gray': playerDetails.listwars.length === playerCard?.listwars.length
+                }">
+                    {{ playerDetails.listwars.length}}
+                </span>
+                <span *ngIf="playerDetails.listwars.length !== playerCard?.listwars.length">
+                    ({{ playerDetails.listwars.length > playerCard?.listwars.length ? '+' : '-' }}
+                    {{ playerDetails.listwars.length > playerCard?.listwars.length ?
+                        playerDetails.listwars.length - playerCard?.listwars.length :
+                        playerCard?.listwars.length - playerDetails.listwars.length }})
+                </span>
+            </div>
+        </div>
+        <div class="playerStat playerStat2">
+            <h2>{{ playerCard?.playername }} <img src="/assets/images/flags_svg/{{playerCard?.nationality}}.SVG" alt="{{ playerCard?.nationality }}" width="20" height="auto"></h2>
+            <div class="item">
+                <span>Total wars:</span>
+                <span class="item__value" [ngClass]="{
+                    'green': playerDetails.listwars.length < playerCard?.listwars.length,
+                    'red': playerDetails.listwars.length > playerCard?.listwars.length,
+                    'gray': playerDetails.listwars.length === playerCard?.listwars.length
+                }">
+                    {{ playerCard?.listwars.length }}
+                </span>
+                <span *ngIf="playerDetails.listwars.length !== playerCard?.listwars.length">
+                    ({{ playerDetails.listwars.length < playerCard?.listwars.length ? '+' : '-' }}
+                    {{ playerDetails.listwars.length < playerCard?.listwars.length ?
+                        playerCard?.listwars.length - playerDetails.listwars.length :
+                        playerDetails.listwars.length - playerCard?.listwars.length }})
+                </span>
+            </div>
+        </div>
+
+
+        </div>
+
         <canvas id="canva"></canvas>
         <div *ngIf="playerDetails.listwars.length > 0">
           <div class="chart-info">

@@ -1,15 +1,11 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation   } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { tap, take, map } from 'rxjs/operators';
-import { RankObjService } from '../rank-obj.service';
+import { map, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Players } from '../ranking.model';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { PlayersApiService } from 'src/app/services/players-api.service';
-import { Chart, ChartConfiguration, ChartDataSets, ChartOptions } from 'chart.js';
-import {ThemePalette} from '@angular/material/core';
+import { Chart, ChartOptions } from 'chart.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
-import { DatePipe } from '@angular/common';
-import { clearScreenDown } from 'readline';
 
 interface CountryCodeMap {
   [code: string]: string;
@@ -22,16 +18,16 @@ interface CountryCodeMap {
   encapsulation: ViewEncapsulation.None
 })
 export class PlayerViewComponent implements OnInit {
-  // @Input('tabTitle') title: string;
-  // @Input() active = false;
-  // @Output() dataEvent = new EventEmitter<number>();
-  public player$:Observable<Players>;
+  // public player$:Observable<Players>;
+  public player$:Observable<any>;
   numOfPlayers$: Observable<any>;
   public errorMessage: string;
   public playerView: any;
   public playerDetail$: Observable<any>;
   public historyMatches$: Observable<any>;
   public playerUsername$: Observable<any>;
+  // public playerUsername$ = new BehaviorSubject<string>('');
+  public playerUsernameToCompare$: Observable<any>;
   public playersTab$: Observable<any>;
   public inactiveTab$: Observable<any>;
   canvas: any;
@@ -46,20 +42,21 @@ export class PlayerViewComponent implements OnInit {
   season2wars = 333;
   season3players = 41;
   season3wars = 215;
-  season4wars = 194; // Zmienna, do której przypiszesz ilość wystąpień
-  season5wars: number = 0; // Zmienna, do której przypiszesz ilość wystąpień
+  season4wars = 194;
+  season5wars: number = 0;
   season6wars: number;
-  currentActivePlayers: number = 0; // Zmienna, do której przypiszesz ilość aktywnych graczy
+  currentActivePlayers: number = 0;
   aaa = [];
   resultCanvas: any;
   ctxResult: any;
 
   public dataToChartFrags: any;
   chart: Chart;
-  // public resultPerPlayer = [];
   status: boolean = false;
   mostOftenPlayed = [];
   currentRanking = [];
+  players: any[] = [];
+  // selectedPlayer: any;
 
   totalChartVisible: boolean = true;
   season1ChartVisible: boolean = true;
@@ -74,8 +71,9 @@ export class PlayerViewComponent implements OnInit {
   seasonFrags4ChartVisible: boolean = true;
   seasonFrags5ChartVisible: boolean = true;
 
-  // @Input() playerDetail: any;
-  // @Input() expanded: boolean;
+  playerCard: any;
+  private playerDetailToCompare$ = new BehaviorSubject<any>(null);
+  selectedPlayer: boolean = false;
 
   public countryCodeMap: CountryCodeMap = {
     'AF': 'Afghanistan',
@@ -134,11 +132,13 @@ export class PlayerViewComponent implements OnInit {
     'US': 'United States',
     'CA': 'Canada',
     'MON': 'Gay Paradise',
-    'ENG': 'England'
+    'ENG': 'England',
+    'BR': 'Brasil'
   };
 
-  constructor(private activatedRoute: ActivatedRoute, private playersDetail: RankObjService, private playersApiService: PlayersApiService, private elementRef: ElementRef, private router: Router, private datePipe: DatePipe, private rankObjService: RankObjService) {
-    // console.log('activatedRoute PlayerView =>', this.activatedRoute);
+  currentPlayer: any;
+
+  constructor(private activatedRoute: ActivatedRoute, private playersApiService: PlayersApiService, private router: Router) {
    }
 
   ngOnInit(): void {
@@ -190,7 +190,8 @@ export class PlayerViewComponent implements OnInit {
 
         // Oblicz ilość aktywnych graczy i przypisz wynik do zmiennej currentActivePlayers
         this.currentActivePlayers = activePlayers.length;
-
+        // console.log('PLAYERS', players)
+        this.players = players;
         return players;
       }),
     );
@@ -210,9 +211,9 @@ export class PlayerViewComponent implements OnInit {
       }),
     );
 
-    this.player$ = this.activatedRoute.data.pipe(
-      map(data => data.player)
-    );
+    // this.player$ = this.activatedRoute.data.pipe(
+    //   map(data => data.player)
+    // );
 
     this.playerUsername$ = this.activatedRoute.data.pipe(
       map((data) => {
@@ -223,6 +224,17 @@ export class PlayerViewComponent implements OnInit {
         }
       })
     );
+
+
+    // this.activatedRoute.data.pipe(
+    //   tap((data) => {
+    //     if (data.player == undefined) {
+    //       this.router.navigate(['/obj-inactive/']);
+    //     } else {
+    //       this.playerUsername$.next(data.player.username);
+    //     }
+    //   })
+    // ).subscribe();
 
     // this.numOfPlayers$ = this.playersApiService.getPlayers('NumPlayers').pipe(
     //   map((response: any) => {
@@ -239,7 +251,6 @@ export class PlayerViewComponent implements OnInit {
         let nationality: string;
         let ranking: string;
         let clanHistory: string;
-        let frags: any[] = [];
         let listwars: any[] = [];
         let listwars1: any[] = [];
         let listwars2: any[] = [];
@@ -248,7 +259,6 @@ export class PlayerViewComponent implements OnInit {
         let listwars5: any[] = [];
         let listwars6: any[] = [];
         let rankings: any[] = [];
-        let rankings2: any[] = [];
         let resultPerPlayer: any[] = [];
         let s1wars: string;
         let s1fpw: string;
@@ -273,7 +283,6 @@ export class PlayerViewComponent implements OnInit {
         let s5ranking_win: number;
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);
-
         const fragsPerPlayerArray:any[] = [];
 
         foundPlayerArray.forEach((el) => {
@@ -286,7 +295,6 @@ export class PlayerViewComponent implements OnInit {
         })
 
         // console.log('foundPlayerArray', foundPlayerArray);
-        const matchResultsArray = [];
 
         let win = 0;
         let lose = 0;
@@ -306,7 +314,6 @@ export class PlayerViewComponent implements OnInit {
           }
 
           const numOpponentTeam = (numPlayerTeam === 1) ? 2 : 1;
-
           const numPlayerTeamWon = Number(el[`t${numPlayerTeam}roundswon`]);
           const numOpponentTeamWon = Number(el[`t${numOpponentTeam}roundswon`]);
 
@@ -320,63 +327,7 @@ export class PlayerViewComponent implements OnInit {
         });
 
         resultPerPlayer.push(win, lose, draw);
-
-        let streak = { streakName: '', streakCount: 0 };  // Inicjalizuj zmienną serii jako obiekt
-        let currentResult = '';  // Inicjalizuj bieżący wynik (wygrana, przegrana, remis)
-        let previousResult = '';  // Inicjalizuj zmienną do śledzenia poprzedniego wyniku
-        let stopCounting = false;  // Inicjalizuj zmienną do kontrolowania, czy należy przestać liczyć serię
-
-        let numPlayerTeam;  // Inicjalizuj zmienną numPlayerTeam
-        let firstMatchResult = ''; // Inicjalizuj zmienną do przechowania wyniku pierwszego meczu gracza
-        let secondMatchResult = ''; // Inicjalizuj zmienną do przechowania wyniku drugiego meczu gracza
-        let thirdMatchResult = ''; // Inicjalizuj zmienną do przechowania wyniku trzeciego meczu gracza
-
-        const lastFiveMatches = foundPlayerArray.reverse();
-        // Iteruj od końca listy meczów, aby znaleźć bieżącą serię
-        for (let i = 0; i < lastFiveMatches.length; i++) {
-          numPlayerTeam = Number(this.getKeyByValue(lastFiveMatches[i], player).slice(1, 2));
-
-          // Odczytaj wynik drużyny, do której należy gracz
-          const playerTeamRoundswon = Number(lastFiveMatches[i][`t${numPlayerTeam}roundswon`]);
-
-          // Odczytaj wynik przeciwnej drużyny
-          const numOpponentTeam = (numPlayerTeam === 1) ? 2 : 1;
-          const opponentTeamRoundswon = Number(lastFiveMatches[i][`t${numOpponentTeam}roundswon`]);
-
-          // Dodaj mecz do tablicy `aaa`
-          this.aaa.push({'time': lastFiveMatches[i].timestamp, 'playerTeam': playerTeamRoundswon, 'opponentTeam': opponentTeamRoundswon});
-
-          // Porównaj wyniki i określ bieżący wynik (win/lose/draw)
-          if (playerTeamRoundswon > opponentTeamRoundswon) {
-            currentResult = 'W';
-          } else if (playerTeamRoundswon < opponentTeamRoundswon) {
-            currentResult = 'L';
-          } else {
-            currentResult = 'D';
-          }
-
-          // Jeśli to pierwszy mecz gracza, zapisz jego wynik
-          if (i === 0) {
-            firstMatchResult = currentResult;
-          }
-
-          // Jeśli bieżący wynik jest taki sam jak poprzedni (czyli gracz wygrał, przegrał lub zremisował kolejny mecz), zwiększamy wartość `streakCount`
-          if (currentResult === previousResult) {
-            streak.streakCount++;
-          } else {
-            // Jeśli bieżący wynik jest inny niż poprzedni (gracz zmienił wynik meczu), ustawiamy `streakName` i resetujemy `streakCount`
-            if (streak.streakCount === 0) {
-              streak.streakName = currentResult;
-            }
-            streak.streakCount = 1;
-          }
-
-          // Aktualizujemy `previousResult` na bieżący wynik
-          previousResult = currentResult;
-        }
-
         const mostOftenPlayedFilter = this.mostOftenPlayed.filter(n => n);
-
         const count = {};
 
         for (const element of mostOftenPlayedFilter) {
@@ -393,7 +344,6 @@ export class PlayerViewComponent implements OnInit {
 
         const sorttedCount = this.publicsortObjectbyValue(count);
         const sorttedCountArr = Object.entries(sorttedCount);
-        const countPlayers = this.get3TopItems(Object.entries(count));
 
         matches.forEach((el) => {
           if(Object.values(el).includes(player)){
@@ -469,12 +419,6 @@ export class PlayerViewComponent implements OnInit {
           debut: timestampArray[0],
           listwars: listwars,
           rankings: rankings,
-          // listwars1: this.filterObjects1(listwars1),
-          // listwars2: this.filterObjects(listwars2),
-          // listwars3: this.filterObjects3(listwars3),
-          // listwars4: this.filterObjects4(listwars4),
-          // listwars5: this.filterObjects5(listwars5),
-          // listwars6: this.filterObjects6(listwars6),
           listwars1: this.filterObjectsByDateRange(listwars1, new Date(2023, 0, 1), new Date(2023, 2, 31)), // Styczeń - Marzec 2023
           listwars2: this.filterObjectsByDateRange(listwars2, new Date(2023, 3, 1), new Date(2023, 5, 30)), // Kwiecień - Czerwiec 2023
           listwars3: this.filterObjectsByDateRange(listwars3, new Date(2023, 6, 1), new Date(2023, 8, 30)), // Lipiec - Wrzesień 2023
@@ -512,13 +456,12 @@ export class PlayerViewComponent implements OnInit {
           s4ranking_win: s4ranking_win ? s4ranking_win : '',
           s5wars_win: s5wars_win ? s5wars_win : '',
           s5fpw_win: s5fpw_win ? s5fpw_win : '',
-          s5ranking_win: s5ranking_win ? s5ranking_win : '',
-          streak: streak,
+          s5ranking_win: s5ranking_win ? s5ranking_win : ''
         }
-        console.log('playerCard', playerCard);
-
+        console.log('playerCardNative', playerCard.username)
         return playerCard;
       }),
+      shareReplay(1)
     )
   }
 
@@ -535,49 +478,6 @@ export class PlayerViewComponent implements OnInit {
       return 'draw';
     }
   }
-
-  // filterObjects1(list) {
-  //   const startDate = new Date('1/1/2023 0:00:00');
-  //   const endDate = new Date('3/31/2023 23:59');
-  //   return list.filter(item => {
-  //     const timestamp = new Date(item.timestamp);
-  //     return timestamp > startDate && timestamp < endDate;
-  //   });
-  // }
-  // filterObjects(list) {
-  //   const startDate = new Date('4/1/2023 0:00:00');
-  //   const endDate = new Date('6/30/2023 23:59');
-  //   return list.filter(item => {
-  //     const timestamp = new Date(item.timestamp);
-  //     return timestamp > startDate && timestamp < endDate;
-  //   });
-  // }
-  // filterObjects3(list) {
-  //   const startDate = new Date('7/1/2023 0:00:00');
-  //   const endDate = new Date('9/30/2023 23:59');
-  //   return list.filter(item => {
-  //     const timestamp = new Date(item.timestamp);
-  //     return timestamp > startDate && timestamp < endDate;
-  //   });
-  // }
-
-  // filterObjects4(list) {
-  //   const startDate = new Date('10/1/2023 0:00:00');
-  //   const endDate = new Date('12/31/2023 23:59');
-  //   return list.filter(item => {
-  //     const timestamp = new Date(item.timestamp);
-  //     return timestamp > startDate && timestamp < endDate;
-  //   });
-  // }
-
-  // filterObjects5(list) {
-  //   const startDate = new Date('1/1/2024 0:00:00');
-  //   const endDate = new Date('3/31/2024 23:59');
-  //   return list.filter(item => {
-  //     const timestamp = new Date(item.timestamp);
-  //     return timestamp > startDate && timestamp < endDate;
-  //   });
-  // }
 
   filterObjectsByDateRange(list: any[], startDate: Date, endDate: Date) {
     return list.filter(item => {
@@ -984,6 +884,152 @@ export class PlayerViewComponent implements OnInit {
       plugins: [ChartAnnotation]
     });
   }
+//   public showRankingSeason(player1ListWars: any[], chartId: string, player1Name: string, player2ListWars?: any[], player2Name?: string){
+//     let myChart: Chart; // Deklaracja zmiennej myChart przed użyciem
+
+//     this.canvasRank = document.getElementById(chartId);
+//     if (!this.canvasRank) return;
+//     this.ctxRank = this.canvasRank.getContext('2d');
+
+//     const player1Labels = player1ListWars.map((_, index) => '#' + (index + 1)); // użyj indeksu jako etykiety dla gracza 1
+//     const player1Rankings = player1ListWars.map(obj => obj.ranking);
+
+//     const labels = player2ListWars ?
+//         player2ListWars.map((_, index) => '#' + (index + 1)) :
+//         player1Labels;
+
+//     const datasets = [
+//         {
+//             label: player1Name,
+//             borderColor: '#ffffc0',
+//             lineTension: 0,
+//             order: 1,
+//             data: player1Rankings,
+//             backgroundColor: player1Rankings.map(function(rank, i){
+//                 if(rank === Math.max(...player1Rankings)){
+//                     return 'rgba(11,156,49,0.6)';
+//                 }
+//                 if(rank === Math.min(...player1Rankings)){
+//                     return 'rgba(255,0,0,0.6)';
+//                 }
+//                 // return "rgba(199, 199, 199, 0.1)";
+//             }),
+//             borderWidth: 1
+//         }
+//     ];
+
+//     if (player2ListWars && player2ListWars.length > 0) {
+//         const player2Rankings = player2ListWars.map(obj => obj.ranking);
+
+//         datasets.push({
+//             label: player2Name || 'Player 2',
+//             borderColor: '#ff0000',
+//             lineTension: 0,
+//             order: 2,
+//             data: player2Rankings,
+//             backgroundColor: player2Rankings.map(function(rank, i){
+//                 if(rank === Math.max(...player2Rankings)){
+//                     return 'rgba(11,156,49,0.6)';
+//                 }
+//                 if(rank === Math.min(...player2Rankings)){
+//                     return 'rgba(255,0,0,0.6)';
+//                 }
+//                 // return "rgba(199, 199, 199, 0.1)";
+//             }),
+//             borderWidth: 1
+//         });
+//     }
+
+//     myChart = new Chart(this.ctxRank, {
+//       type: 'line',
+//       data: {
+//           labels: player1Labels.map(i => '#' + i),
+//           datasets: datasets
+//       },
+//       options: {
+//           // Reszta opcji
+//       } as ChartOptions,
+//       plugins: [ChartAnnotation]
+//   });
+// }
+
+
+
+
+  // public showRankingSeason(listwars:any[], chartId: string){
+  //   this.canvasRank = document.getElementById(chartId);
+  //   if (!this.canvasRank ) return;
+  //   this.ctxRank = this.canvasRank.getContext('2d');
+  //   const labels = listwars.map(obj => obj.idwar);
+  //   const rankings = listwars.map(obj => obj.ranking);
+  //   let myChart = new Chart(this.ctxRank, {
+  //     type: 'line',
+  //     data: {
+  //         labels: labels.map(i => '#' + i),
+  //         datasets: [{
+  //             label: 'Ranking',
+  //             borderColor: '#ffffc0',
+  //             lineTension: 0,
+  //             order: 1,
+  //             data: rankings,
+  //             backgroundColor: rankings.map(function(rank, i){
+  //               if(rankings[i] == Math.max.apply(null, rankings)){
+  //                 return 'rgba(11,156,49,0.6)';
+  //               }
+  //               if(rankings[i] == Math.min.apply(null, rankings)){
+  //                 return 'rgba(255,0,0,0.6)';
+  //               }
+  //               // return "rgba(199, 199, 199, 0.1)";
+  //             }),
+  //             borderWidth: 1
+  //         }]
+  //     },
+  //     options: {
+  //       onClick: function(c,i) {
+  //         let e:any;
+  //         e = i[0];
+  //         console.log(e._index)
+  //         var x_value = this.data.labels[e._index];
+  //         var y_value = this.data.datasets[0].data[e._index];
+  //         const toWarLink = x_value.substring(1);
+  //         window.open(`/obj-matches/${toWarLink}`);
+  //         console.log(toWarLink);
+  //         console.log(y_value);
+  //       },
+  //       elements: {
+  //         line: {
+  //           tension: 0,
+  //         },
+  //       },
+  //       annotation: {
+  //         drawTime: 'afterDatasetsDraw',
+  //         annotations: [
+  //           {
+  //             id: 'hline1',
+  //             type: 'line',
+  //             mode: 'horizontal',
+  //             scaleID: 'y-axis-0',
+  //             value: 1000,
+  //             borderColor: 'red',
+  //             borderDash: [10, 5],
+  //             label: {
+  //               backgroundColor: 'red',
+  //               content: '1000pc',
+  //               enabled: true,
+  //             },
+  //           },
+  //         ]
+  //       },
+  //       legend: {
+  //         display: false
+  //       },
+  //       responsive: true,
+
+  //       // display:true
+  //     } as ChartOptions,
+  //     plugins: [ChartAnnotation]
+  //   });
+  // }
 
   toggleChart(chart: string) {
     switch (chart) {
@@ -1043,4 +1089,253 @@ export class PlayerViewComponent implements OnInit {
   public getCountryName(countryCode: string): string | undefined {
     return this.countryCodeMap[countryCode] || 'Unknown Country';
   }
+
+  onPlayerSelected() {
+    // Logowanie szczegółów wybranego gracza po wyborze z dropdown
+    console.log('Selected Player:', this.selectedPlayer);
+  }
+
+
+
+  getPlayerFields(player: any): { key: string, value: any }[] {
+    const fields: { key: string, value: any }[] = [];
+    for (const key in player) {
+      if (Object.prototype.hasOwnProperty.call(player, key)) {
+        fields.push({ key, value: player[key] });
+      }
+    }
+    return fields;
+  }
+
+  onPlayerSelect(player: string) {
+    this.selectedPlayer = true;
+    combineLatest([of(player), this.historyMatches$, this.playersTab$, this.inactiveTab$]).pipe(
+      map(([selectedPlayer, matches, players, inactives]) => {
+        let playerArray: any[] = [];
+        let timestampArray: any[] = [];
+        let playerName: string;
+        let warCount: string;
+        let nationality: string;
+        let ranking: string;
+        let clanHistory: string;
+        let listwars: any[] = [];
+        let listwars1: any[] = [];
+        let listwars2: any[] = [];
+        let listwars3: any[] = [];
+        let listwars4: any[] = [];
+        let listwars5: any[] = [];
+        let listwars6: any[] = [];
+        let rankings: any[] = [];
+        let resultPerPlayer: any[] = [];
+        let s1wars: string;
+        let s1fpw: string;
+        let active: string;
+        let place: string;
+        let ban: string;
+        let banDue: string;
+        let s1wars_win: number;
+        let s1fpw_win: number;
+        let s1ranking_win: number;
+        let s2wars_win: number;
+        let s2fpw_win: number;
+        let s2ranking_win: number;
+        let s3wars_win: number;
+        let s3fpw_win: number;
+        let s3ranking_win: number;
+        let s4wars_win: number;
+        let s4fpw_win: number;
+        let s4ranking_win: number;
+        let s5wars_win: number;
+        let s5fpw_win: number;
+        let s5ranking_win: number;
+
+        const foundPlayerArray = this.filterUsername(selectedPlayer, inactives, matches);
+        const fragsPerPlayerArray: any[] = [];
+
+        foundPlayerArray.forEach((el) => {
+          const destructObjPlayers1 = Object.values(el);
+          destructObjPlayers1.forEach((item: any[], i) => {
+            if (item.includes(selectedPlayer)) {
+              fragsPerPlayerArray.push(Number(destructObjPlayers1[i + 2]));
+            }
+          })
+        })
+
+        // console.log('foundPlayerArray', foundPlayerArray);
+
+        let win = 0;
+        let lose = 0;
+        let draw = 0;
+
+        foundPlayerArray.forEach(el => {
+          const numPlayerTeam = Number(this.getKeyByValue(el, selectedPlayer).slice(1, 2));
+          const numPlayerTeamPosition = Number(this.getKeyByValue(el, selectedPlayer).slice(3, 4));
+
+          for (let i = 1; i < 8; i++) {
+            const restOfTeam = el[`t${numPlayerTeam}p${(i == numPlayerTeamPosition) ? 'continue' : i}name`];
+            if (restOfTeam != (undefined || '')) {
+              this.mostOftenPlayed.push(restOfTeam);
+            }
+          }
+
+          const numOpponentTeam = (numPlayerTeam === 1) ? 2 : 1;
+          const numPlayerTeamWon = Number(el[`t${numPlayerTeam}roundswon`]);
+          const numOpponentTeamWon = Number(el[`t${numOpponentTeam}roundswon`]);
+
+          if (numPlayerTeamWon > numOpponentTeamWon) {
+            win++;
+          } else if (numPlayerTeamWon < numOpponentTeamWon) {
+            lose++;
+          } else {
+            draw++;
+          }
+        });
+
+        resultPerPlayer.push(win, lose, draw);
+        const mostOftenPlayedFilter = this.mostOftenPlayed.filter(n => n);
+        const count = {};
+
+        for (const element of mostOftenPlayedFilter) {
+          if (count[element]) {
+            count[element] += 1;
+          } else {
+            count[element] = 1;
+          }
+        }
+
+        let keys = Object.keys(count);
+
+        keys.sort(function (a, b) { return count[a] - count[b] });
+
+        const sorttedCount = this.publicsortObjectbyValue(count);
+        const sorttedCountArr = Object.entries(sorttedCount);
+
+        matches.forEach((el) => {
+          if (Object.values(el).includes(selectedPlayer)) {
+            const destructObjPlayers1 = Object.values(el);
+            let fragPerWar;
+            let rankHistory;
+            destructObjPlayers1.forEach((item: any[], index) => {
+              if (item.includes(selectedPlayer)) {
+                fragPerWar = Number(destructObjPlayers1[index + 2]);
+                rankHistory = Number(destructObjPlayers1[index + 3]);
+              }
+            });
+
+            listwars.push(Number(el.idwar));
+
+            listwars1.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
+
+            listwars2.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
+
+            listwars3.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
+
+            listwars4.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
+
+            listwars5.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
+
+            listwars6.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
+
+            rankings.push(Math.round(rankHistory * 100) / 100);
+            playerArray.push([el.idwar, el.timestamp, fragPerWar]);
+            timestampArray.push(new Date(el.timestamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }));
+          }
+        });
+
+        players.forEach((el) => {
+          if (el.username === selectedPlayer) {
+            playerName = el.playername;
+            warCount = el.warcount;
+            nationality = el.nationality;
+            ranking = el.ranking;
+            clanHistory = el.clanhistory;
+            s1wars = el.s1wars;
+            s1fpw = el.s1fpw;
+            place = el.place;
+            ban = el.ban;
+            banDue = el.ban_due;
+            s1wars_win = el.s1wars_win,
+              s1fpw_win = el.s1fpw_win,
+              s1ranking_win = el.s1ranking_win,
+              s2wars_win = el.s2wars_win,
+              s2fpw_win = el.s2fpw_win,
+              s2ranking_win = el.s2ranking_win,
+              s3wars_win = el.s3wars_win,
+              s3fpw_win = el.s3fpw_win,
+              s3ranking_win = el.s3ranking_win,
+              s4fpw_win = el.s4fpw_win,
+              s4ranking_win = el.s4ranking_win,
+              s5fpw_win = el.s5fpw_win,
+              s5ranking_win = el.s5ranking_win,
+              active = el.active
+          }
+        });
+
+        let playerCard;
+        playerCard = {
+          username: selectedPlayer,
+          playername: playerName,
+          warcount: warCount,
+          nationality: nationality,
+          ranking: ranking,
+          clanhistory: clanHistory,
+          wars: playerArray,
+          frags: fragsPerPlayerArray,
+          debut: timestampArray[0],
+          listwars: listwars,
+          rankings: rankings,
+          listwars1: this.filterObjectsByDateRange(listwars1, new Date(2023, 0, 1), new Date(2023, 2, 31)), // Styczeń - Marzec 2023
+          listwars2: this.filterObjectsByDateRange(listwars2, new Date(2023, 3, 1), new Date(2023, 5, 30)), // Kwiecień - Czerwiec 2023
+          listwars3: this.filterObjectsByDateRange(listwars3, new Date(2023, 6, 1), new Date(2023, 8, 30)), // Lipiec - Wrzesień 2023
+          listwars4: this.filterObjectsByDateRange(listwars4, new Date(2023, 9, 1), new Date(2023, 11, 31)), // Październik - Grudzień 2023
+          listwars5: this.filterObjectsByDateRange(listwars5, new Date(2024, 0, 1), new Date(2024, 2, 31)), // Styczeń - Marzec 2024
+          listwars6: this.filterObjectsByDateRange(listwars6, new Date(2024, 3, 1), new Date(2024, 5, 30)), // Kwiecień - Czerwiec 2024
+          win: win,
+          lose: lose,
+          draw: draw,
+          winPercentage: (win / (win + lose + draw) * 100),
+          losePercentage: (lose / (win + lose + draw) * 100),
+          drawPercentage: (draw / (win + lose + draw) * 100),
+          resultPerPlayer: resultPerPlayer,
+          mostOftenPlayed: sorttedCountArr,
+          mostOftenPlayed1: { c: sorttedCountArr[0], n: sorttedCountArr[0] },
+          mostOftenPlayed2: { c: sorttedCountArr[1], n: sorttedCountArr[1] },
+          mostOftenPlayed3: { c: sorttedCountArr[2], n: sorttedCountArr[2] },
+          s1wars: s1wars,
+          s1fpw: s1fpw,
+          active: (active == 'FALSE') ? false : true,
+          ban: (ban == 'FALSE') ? false : true,
+          place: place !== '' ? place : '-',
+          banDue: banDue,
+          s1wars_win: s1wars_win ? s1wars_win : '',
+          s1fpw_win: s1fpw_win ? s1fpw : '',
+          s1ranking_win: s1ranking_win ? s1ranking_win : '',
+          s2wars_win: s2wars_win ? s2wars_win : '',
+          s2fpw_win: s2fpw_win ? s2fpw_win : '',
+          s2ranking_win: s2ranking_win ? s2ranking_win : '',
+          s3wars_win: s3wars_win ? s3wars_win : '',
+          s3fpw_win: s3fpw_win ? s3fpw_win : '',
+          s3ranking_win: s3ranking_win ? s3ranking_win : '',
+          s4wars_win: s4wars_win ? s4wars_win : '',
+          s4fpw_win: s4fpw_win ? s4fpw_win : '',
+          s4ranking_win: s4ranking_win ? s4ranking_win : '',
+          s5wars_win: s5wars_win ? s5wars_win : '',
+          s5fpw_win: s5fpw_win ? s5fpw_win : '',
+          s5ranking_win: s5ranking_win ? s5ranking_win : ''
+        }
+        console.log('playerCard', playerCard);
+        this.playerCard = playerCard;
+      }),
+    ).subscribe();
+  }
+
+
+
+ // W ciele klasy lub w metodzie...
+// Subskrybujemy się do strumienia playerDetailToCompare$ i dodajemy console.log
+// this.playerDetailToCompare$.subscribe(playerData => {
+//   console.log('playerDetailToCompare$:', playerData); // Dodajemy console.log dla playerDetailToCompare$
+// });
+
+
 }

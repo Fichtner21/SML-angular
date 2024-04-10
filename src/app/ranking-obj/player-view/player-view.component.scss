@@ -11,7 +11,7 @@
     min-width: 100%;
     background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
     background-image: linear-gradient(0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
-    background-size: 4px 4px;    
+    background-size: 4px 4px;
   }
 
   .status {
@@ -20,7 +20,7 @@
 
     .status-player {
       font-weight: 700;
-      font-size: 22px;      
+      font-size: 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -41,7 +41,7 @@
       }
     }
   }
-  
+
   .big-name {
     margin: 0;
     font-size: 10vw; /* Ustawiamy szerokość czcionki na 10% szerokości okna przeglądarki */
@@ -57,8 +57,8 @@
       font-size: 5vw; /* Dla małych ekranów ustawiamy mniejszą szerokość czcionki */
     }
   }
-  
-  .container {  
+
+  .container {
     padding: 70px 15px 0 15px;
     margin: 0 auto;
     z-index: 999;
@@ -87,7 +87,7 @@
 
     @media screen and (max-width: 640px){
       max-width: 100%;
-    }    
+    }
 
     .details {
       padding-top: 50px;
@@ -98,7 +98,7 @@
       height: auto;
       min-width: 100%;
       color: #ffffc0;
-      z-index: 10;      
+      z-index: 10;
 
       &__wars {
         display: flex;
@@ -119,6 +119,40 @@
           }
         }
       }
+
+      .comparePlayers {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+
+        .playerStat {
+          box-shadow:
+          0 0 5px rgba(47, 48, 96, .95),
+          -10px -10px 5px rgba(47, 48, 96, .95),
+          10px -10px 5px rgba(47, 48, 96, .95),
+          -10px 10px 5px rgba(47, 48, 96, .95),
+          10px 10px 5px rgba(47, 48, 96, .95);
+          padding: 20px;
+
+          h2 {
+            text-align: center;
+            padding: 10px;
+          }
+
+          .item {
+            // background-image: linear-gradient(0deg, #8d8d8f 25%, #7f7f7f 25%, #7f7f7f 50%, #8d8d8f 50%, #8d8d8f 75%, #8d8d8f 75%, #8d8d8f 100%);
+            // background-size: 2px 2px;
+            background-color: #ddd;
+            padding: 5px 10px;
+            color: #2f3060;
+
+            &__value {
+              font-weight: 700;
+              font-size: 20px;
+            }
+          }
+        }
+      }
     }
 
     .statistics {
@@ -128,7 +162,7 @@
       grid-template-rows: auto;
       font-size: 20px;
       color: #ffffc0;
-      font-weight: 700;      
+      font-weight: 700;
 
       @media screen and (max-width: 1024px){
        column-gap: 30px;
@@ -149,7 +183,7 @@
 
         div {
           color: darken(#ffffc8, 20%);
-          span {            
+          span {
             letter-spacing: 2px;
             color: #ffffc8;
           }
@@ -179,7 +213,7 @@
         height: 48px;
         padding: 0 24px;
         cursor: pointer;
-        box-sizing: border-box;        
+        box-sizing: border-box;
         min-width: 160px;
         text-align: center;
         display: inline-flex;
@@ -198,7 +232,7 @@
         height: 48px;
         padding: 0 24px;
         cursor: pointer;
-        box-sizing: border-box;       
+        box-sizing: border-box;
         min-width: 160px;
         text-align: center;
         display: inline-flex;
@@ -212,7 +246,7 @@
           color:#ffff62;
           font-weight: 700;
         }
-        
+
       }
 
       h3 {
@@ -234,7 +268,7 @@
       //     font-weight: 700;
       //   }
       //  .mat-tab-label-active.mat-tab-label-content {
-      //     color: #ffff62;          
+      //     color: #ffff62;
       //   }
       }
     }
@@ -247,7 +281,7 @@
   .info {
     display: flex;
     align-items: center;
-    margin-bottom: 5px;    
+    margin-bottom: 5px;
   }
 
   // .highlight {
@@ -259,7 +293,7 @@
   // }
 
 //   .stat[title]:before {
-//     content: attr(title);    
+//     content: attr(title);
 //     bottom: 5%;
 //     position: absolute;
 //     left: 50%;
@@ -279,20 +313,20 @@
 
 //     @media screen and (max-width: 700px){
 //       font-size: 100px;
-//     }    
+//     }
   // }
 
   .player-flag {
-    overflow: hidden; 
+    overflow: hidden;
     width: 100%;
     // display: flex;
 
     @media screen and (max-width: 768px){
       height: 200px;
     }
-  
+
     .ambilight {
-      // margin: 0 auto; // just to center the box    
+      // margin: 0 auto; // just to center the box
       // padding: 5px; // add some space for the light
       // position: relative; // to keep the .light by the .image
       // display: flex;
@@ -305,16 +339,16 @@
         text-align: center;
         font-size: 30px;
       }
-  
+
       .image-flag {
         // max-width: 100%;
         // height: auto;
         // display: flex;
-        // align-items: flex-end;  
+        // align-items: flex-end;
         // // padding-right: 10px;
         // z-index: 1;
       }
-  
+
       .image-light {
         opacity: 0.75; // change for best results
         // // filter: blur(5px); // change for bigger/smaller shine
@@ -453,7 +487,7 @@ canvas {
       border-radius: 50%;
       opacity: 0.7;
       animation: pulse 1s infinite;
-      box-shadow: 
+      box-shadow:
         0 0 5px #ffffc0,
         -10px -10px 5px #ffffc0,
         10px -10px 5px #ffffc0,
@@ -467,7 +501,7 @@ canvas {
   0% {
     transform: scale(1);
     opacity: 0.7;
-    box-shadow: 
+    box-shadow:
           0 0 5px #ffffc0,
           -10px -10px 5px #ffffc0,
           10px -10px 5px #ffffc0,
@@ -477,7 +511,7 @@ canvas {
   50% {
     transform: scale(1.2);
     opacity: 0.3;
-    box-shadow: 
+    box-shadow:
           0 0 10px #ffffc0,
           -20px -20px 10px #ffffc0,
           20px -20px 10px #ffffc0,
@@ -487,11 +521,23 @@ canvas {
   100% {
     transform: scale(1);
     opacity: 0.7;
-    box-shadow: 
+    box-shadow:
           0 0 5px #ffffc0,
           -10px -10px 5px #ffffc0,
           10px -10px 5px #ffffc0,
           -10px 10px 5px #ffffc0,
           10px 10px 5px #ffffc0;
   }
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+.gray {
+  color: gray;
 }

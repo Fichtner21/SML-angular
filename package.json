@@ -55,6 +55,7 @@
     "google-spreadsheet": "^3.3.0",
     "http-proxy-middleware": "^2.0.6",
     "lodash": "^4.17.21",
+    "mat-select-search": "^1.2.21",
     "ng-google-sheets-db": "^2.0.0",
     "ng-http-loader": "^9.1.0",
     "ng-tournament-tree": "^2.0.2",

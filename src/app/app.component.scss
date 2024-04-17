@@ -113,13 +113,14 @@ nav {
         &:after {
           right: 0px;
           top: 0;
-          content: 'NEW SEASON!';
-          color: red;
+          content: '01.04.2024 - 30.06.2024';
+          color: #ffffc8;
           font-style: italic;
           font-size: 18px;
           font-weight: 700;
           text-shadow: none;
-          margin-left: 3px;
+          margin-left: 5px;
+          opacity: .5;
         }
       }
 
@@ -312,3 +313,4 @@ nav {
   0% { filter: hue-rotate(0deg); }
   100% { filter: hue-rotate(360deg); }
 }
+

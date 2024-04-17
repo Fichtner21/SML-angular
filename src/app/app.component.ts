@@ -47,6 +47,8 @@ export class AppComponent implements OnInit {
   total_wars: any;
   s5_wars: any;
   s6_wars: any;
+  progressValue: number;
+  tooltipText: string;
 
   constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router, private oAuthService: OAuthService) {
     translateService.setDefaultLang(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');
@@ -130,6 +132,14 @@ export class AppComponent implements OnInit {
     // });
 
     // console.log('local =>', localStorage.getItem('lang'));
+    const startDate = new Date('2024-04-01');
+    const endDate = new Date('2024-06-30');
+    const totalDays = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
+    const currentDate = new Date();
+    const daysLeft = Math.floor((endDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
+    this.progressValue = ((totalDays - daysLeft) / totalDays) * 100;
+
+    this.tooltipText = `There are ${daysLeft} days left until the end of the season.`;
   }
 
   logoutTest() {

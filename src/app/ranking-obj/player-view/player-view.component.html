@@ -180,7 +180,7 @@
         <div *ngIf="selectedPlayer" class="comparePlayers">
 
           <div class="playerStat playerStat1">
-            <h2>{{ playerDetails.playername }} <img src="/assets/images/flags_svg/{{playerDetails.nationality}}.SVG" alt="{{ playerDetails.nationality }}" width="20" height="auto"></h2>
+            <h2>{{ playerDetails.playername }} <img src="/assets/images/flags_svg/{{playerDetails?.nationality}}.SVG" alt="{{ playerDetails?.nationality }}" width="20" height="auto"></h2>
             <div class="item">
                 <span>Total wars:</span>
                 <span class="item__value" [ngClass]="{
@@ -197,8 +197,37 @@
                         playerCard?.listwars.length - playerDetails.listwars.length }})
                 </span>
             </div>
-        </div>
-        <div class="playerStat playerStat2">
+            <div *ngFor="let season of [1, 2, 3, 4, 5, 6]; let i = index" class="item">
+              <span>Season {{ i + 1 }}:</span>
+              <span> wars </span>
+              <span class="item__value" [ngClass]="{
+                  'green': playerDetails['listwars' + (i + 1)].length > playerCard['listwars' + (i + 1)].length,
+                  'red': playerDetails['listwars' + (i + 1)].length < playerCard['listwars' + (i + 1)].length,
+                  'gray': playerDetails['listwars' + (i + 1)].length === playerCard['listwars' + (i + 1)].length
+              }">
+                  {{ playerDetails['listwars' + (i + 1)].length }}
+              </span>
+              <span *ngIf="playerDetails['listwars' + (i + 1)].length !== playerCard['listwars' + (i + 1)].length">
+                  ({{ playerDetails['listwars' + (i + 1)].length > playerCard['listwars' + (i + 1)].length ? '+' : '' }}
+                  {{ (playerDetails['listwars' + (i + 1)].length - playerCard['listwars' + (i + 1)].length) }})
+              </span>
+              <span> average frags per war (fpw)</span>
+              <span class="item__value" [ngClass]="{
+                  'green': playerDetails['s' + (i + 1) + 'fpw'] > playerCard['s' + (i + 1) + 'fpw'],
+                  'red': playerDetails['s' + (i + 1) + 'fpw'] < playerCard['s' + (i + 1) + 'fpw'],
+                  'gray': playerDetails['s' + (i + 1) + 'fpw'] === playerCard['s' + (i + 1) + 'fpw']
+              }">
+                  {{ playerDetails['s' + (i + 1) + 'fpw'].toFixed(2) }}
+              </span>
+              <span *ngIf="playerDetails['s' + (i + 1) + 'fpw'] !== playerCard['s' + (i + 1) + 'fpw']">
+                  ({{ playerDetails['s' + (i + 1) + 'fpw'] > playerCard['s' + (i + 1) + 'fpw'] ? '+' : '' }}
+                  {{ (playerDetails['s' + (i + 1) + 'fpw'] - playerCard['s' + (i + 1) + 'fpw']).toFixed(2) }})
+              </span>            
+          </div>
+          
+          
+          </div>
+          <div class="playerStat playerStat2">
             <h2>{{ playerCard?.playername }} <img src="/assets/images/flags_svg/{{playerCard?.nationality}}.SVG" alt="{{ playerCard?.nationality }}" width="20" height="auto"></h2>
             <div class="item">
                 <span>Total wars:</span>
@@ -216,9 +245,41 @@
                         playerDetails.listwars.length - playerCard?.listwars.length }})
                 </span>
             </div>
-        </div>
-
-
+            <div *ngFor="let season of [1, 2, 3, 4, 5, 6]; let i = index" class="item">
+              <span>Season {{ i + 1 }}:</span>
+              <span> wars </span>
+              <span class="item__value" [ngClass]="{
+                  'green': playerDetails['listwars' + (i + 1)].length < playerCard['listwars' + (i + 1)].length,
+                  'red': playerDetails['listwars' + (i + 1)].length > playerCard['listwars' + (i + 1)].length,
+                  'gray': playerDetails['listwars' + (i + 1)].length === playerCard['listwars' + (i + 1)].length
+              }">
+                  {{ playerCard['listwars' + (i + 1)].length }}
+              </span>
+              <span *ngIf="playerDetails['listwars' + (i + 1)].length !== playerCard['listwars' + (i + 1)].length">
+                  ({{ playerDetails['listwars' + (i + 1)].length < playerCard['listwars' + (i + 1)].length ? '+' : '-' }}
+                  {{ (playerDetails['listwars' + (i + 1)].length - playerCard['listwars' + (i + 1)].length) }})
+              </span>
+              <span> average frags per war (fpw)</span>
+              <span class="item__value" [ngClass]="{
+                  'green': playerDetails['s' + (i + 1) + 'fpw'] < playerCard['s' + (i + 1) + 'fpw'],
+                  'red': playerDetails['s' + (i + 1) + 'fpw'] > playerCard['s' + (i + 1) + 'fpw'],
+                  'gray': playerDetails['s' + (i + 1) + 'fpw'] === playerCard['s' + (i + 1) + 'fpw']
+              }">
+                  {{ playerCard['s' + (i + 1) + 'fpw'].toFixed(2) }}
+              </span>
+              <span *ngIf="playerDetails['s' + (i + 1) + 'fpw'] !== playerCard['s' + (i + 1) + 'fpw']">
+                ({{ playerDetails['s' + (i + 1) + 'fpw'] < playerCard['s' + (i + 1) + 'fpw'] ? '+' : '' }}
+                {{ (playerDetails['s' + (i + 1) + 'fpw'] - playerCard['s' + (i + 1) + 'fpw']).toFixed(2) }})
+            </span>
+            
+          </div>
+          
+          
+          
+          
+          
+          
+          </div>
         </div>
 
         <canvas id="canva"></canvas>

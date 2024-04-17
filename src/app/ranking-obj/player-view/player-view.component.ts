@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map, shareReplay, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Players } from '../ranking.model';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { PlayersApiService } from 'src/app/services/players-api.service';
@@ -70,6 +70,7 @@ export class PlayerViewComponent implements OnInit {
   seasonFrags3ChartVisible: boolean = true;
   seasonFrags4ChartVisible: boolean = true;
   seasonFrags5ChartVisible: boolean = true;
+  filteredPlayers: any[] = [];
 
   playerCard: any;
   private playerDetailToCompare$ = new BehaviorSubject<any>(null);
@@ -262,6 +263,11 @@ export class PlayerViewComponent implements OnInit {
         let resultPerPlayer: any[] = [];
         let s1wars: string;
         let s1fpw: string;
+        let s2fpw: string;
+        let s3fpw: string;
+        let s4fpw: string;
+        let s5fpw: string;
+        let s6fpw: string;
         let active: string;
         let place: string;
         let ban: string;
@@ -386,6 +392,11 @@ export class PlayerViewComponent implements OnInit {
             clanHistory = el.clanhistory;
             s1wars = el.s1wars;
             s1fpw = el.s1fpw;
+            s2fpw = el.s2fpw;
+            s3fpw = el.s3fpw;
+            s4fpw = el.s4fpw;
+            s5fpw = el.s5fpw;
+            s6fpw = el.s6fpw;
             place = el.place;
             ban = el.ban;
             banDue = el.ban_due;
@@ -437,7 +448,12 @@ export class PlayerViewComponent implements OnInit {
           mostOftenPlayed2: { c: sorttedCountArr[1], n: sorttedCountArr[1]},
           mostOftenPlayed3: { c: sorttedCountArr[2], n: sorttedCountArr[2]},
           s1wars: s1wars,
-          s1fpw: s1fpw,
+          s1fpw: parseFloat(s1fpw),
+          s2fpw: parseFloat(s2fpw),
+          s3fpw: parseFloat(s3fpw),
+          s4fpw: parseFloat(s4fpw),
+          s5fpw: parseFloat(s5fpw),
+          s6fpw: parseFloat(s6fpw),
           active: (active == 'FALSE') ? false : true,
           ban: (ban == 'FALSE') ? false : true,
           place: place !== '' ? place : '-',
@@ -458,7 +474,7 @@ export class PlayerViewComponent implements OnInit {
           s5fpw_win: s5fpw_win ? s5fpw_win : '',
           s5ranking_win: s5ranking_win ? s5ranking_win : ''
         }
-        console.log('playerCardNative', playerCard.username)
+        console.log('playerCardNative', playerCard)
         return playerCard;
       }),
       shareReplay(1)
@@ -1095,7 +1111,18 @@ export class PlayerViewComponent implements OnInit {
     console.log('Selected Player:', this.selectedPlayer);
   }
 
+  filterPlayers(value: string): void {
+    if (!value) {
+      this.filteredPlayers = [];
+      return;
+    }
 
+    const filterValue = value.toLowerCase();
+    this.playersTab$.pipe(
+      map(players => players.filter(player => player.playername.toLowerCase().includes(filterValue))),
+      startWith([])
+    ).subscribe(filteredPlayers => this.filteredPlayers = filteredPlayers);
+  }
 
   getPlayerFields(player: any): { key: string, value: any }[] {
     const fields: { key: string, value: any }[] = [];
@@ -1129,6 +1156,11 @@ export class PlayerViewComponent implements OnInit {
         let resultPerPlayer: any[] = [];
         let s1wars: string;
         let s1fpw: string;
+        let s2fpw: string;
+        let s3fpw: string;
+        let s4fpw: string;
+        let s5fpw: string;
+        let s6fpw: string;
         let active: string;
         let place: string;
         let ban: string;
@@ -1251,23 +1283,28 @@ export class PlayerViewComponent implements OnInit {
             clanHistory = el.clanhistory;
             s1wars = el.s1wars;
             s1fpw = el.s1fpw;
+            s2fpw = el.s2fpw;
+            s3fpw = el.s3fpw;
+            s4fpw = el.s4fpw;
+            s5fpw = el.s5fpw;
+            s6fpw = el.s6fpw;
             place = el.place;
             ban = el.ban;
             banDue = el.ban_due;
             s1wars_win = el.s1wars_win,
-              s1fpw_win = el.s1fpw_win,
-              s1ranking_win = el.s1ranking_win,
-              s2wars_win = el.s2wars_win,
-              s2fpw_win = el.s2fpw_win,
-              s2ranking_win = el.s2ranking_win,
-              s3wars_win = el.s3wars_win,
-              s3fpw_win = el.s3fpw_win,
-              s3ranking_win = el.s3ranking_win,
-              s4fpw_win = el.s4fpw_win,
-              s4ranking_win = el.s4ranking_win,
-              s5fpw_win = el.s5fpw_win,
-              s5ranking_win = el.s5ranking_win,
-              active = el.active
+            s1fpw_win = el.s1fpw_win,
+            s1ranking_win = el.s1ranking_win,
+            s2wars_win = el.s2wars_win,
+            s2fpw_win = el.s2fpw_win,
+            s2ranking_win = el.s2ranking_win,
+            s3wars_win = el.s3wars_win,
+            s3fpw_win = el.s3fpw_win,
+            s3ranking_win = el.s3ranking_win,
+            s4fpw_win = el.s4fpw_win,
+            s4ranking_win = el.s4ranking_win,
+            s5fpw_win = el.s5fpw_win,
+            s5ranking_win = el.s5ranking_win,
+            active = el.active
           }
         });
 
@@ -1302,7 +1339,12 @@ export class PlayerViewComponent implements OnInit {
           mostOftenPlayed2: { c: sorttedCountArr[1], n: sorttedCountArr[1] },
           mostOftenPlayed3: { c: sorttedCountArr[2], n: sorttedCountArr[2] },
           s1wars: s1wars,
-          s1fpw: s1fpw,
+          s1fpw: parseFloat(s1fpw),
+          s2fpw: parseFloat(s2fpw),
+          s3fpw: parseFloat(s3fpw),
+          s4fpw: parseFloat(s4fpw),
+          s5fpw: parseFloat(s5fpw),
+          s6fpw: parseFloat(s6fpw),
           active: (active == 'FALSE') ? false : true,
           ban: (ban == 'FALSE') ? false : true,
           place: place !== '' ? place : '-',

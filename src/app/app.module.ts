@@ -52,6 +52,7 @@ import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.c
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RankingObjModule } from './ranking-obj/ranking-obj.module';
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -135,6 +136,7 @@ const customNotifierOptions: NotifierOptions = {
     MatToolbarModule,
     MatTooltipModule,
     RankingObjModule,
+    MatProgressBarModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),

@@ -19,11 +19,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 
-
-// export function createTranslateLoader(http: HttpClient){
-//   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
-// }
-
 @NgModule({
   declarations: [
     RankingObjComponent,
@@ -44,7 +39,7 @@ import { MatSelectModule } from "@angular/material/select";
     MatTooltipModule,
     MatCheckboxModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule    
   ],
   exports: [
     CommonModule,

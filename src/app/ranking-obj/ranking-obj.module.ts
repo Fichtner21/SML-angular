@@ -39,7 +39,7 @@ import { MatSelectModule } from "@angular/material/select";
     MatTooltipModule,
     MatCheckboxModule,
     MatOptionModule,
-    MatSelectModule    
+    MatSelectModule
   ],
   exports: [
     CommonModule,

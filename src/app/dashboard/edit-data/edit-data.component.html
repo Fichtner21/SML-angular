@@ -7,25 +7,25 @@
     </nav>
     <div class="container mt-5 edit-player">
       <form [formGroup]="updateSheetForm" (ngSubmit)="onSubmit()">
-        
+
         <mat-form-field class="example-full-width">
           <mat-label>Player Name</mat-label>
           <input matInput placeholder="Player Name" formControlName="playername">
         </mat-form-field>
-       
+
         <mat-form-field class="example-full-width readonly">
           <mat-label>User Name</mat-label>
           <input matInput placeholder="" formControlName="username" readonly>
         </mat-form-field>
-       
-        <mat-form-field class="example-full-width readonly">
+
+        <mat-form-field class="example-full-width">
           <mat-label>Ranking</mat-label>
-          <input matInput placeholder="" formControlName="ranking" readonly>
+          <input matInput placeholder="" formControlName="ranking">
         </mat-form-field>
-        
-        <mat-form-field class="example-full-width readonly">
-          <mat-label>Percentile</mat-label>
-          <input matInput placeholder="" formControlName="percentile" readonly>
+
+        <mat-form-field class="example-full-width">
+          <mat-label>Ban Expiriess</mat-label>
+          <input matInput placeholder="" formControlName="ban_expiriess">
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
@@ -41,18 +41,24 @@
                 {{country.viewValue}}
               </mat-option>
             </mat-select>
-          </mat-form-field>   
-          
+          </mat-form-field>
+
           <!-- <mat-checkbox class="checkbox" formControlName="active" [color]="task.color">Active</mat-checkbox> -->
 
           <mat-checkbox class="checkbox" formControlName="ban" [color]="task.color">Ban</mat-checkbox>
-           
-        </div>  
 
-       
+        </div>
+        <mat-form-field appearance="fill">
+          <mat-label>Ban due</mat-label>
+          <input matInput placeholder="" formControlName="ban_due">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Donator Season 6</mat-label>
+          <input matInput placeholder="" formControlName="donate_s6">
+        </mat-form-field>
         <button mat-raised-button type="submit" color="primary" [disabled]="updateSheetForm.invalid || updateSheetForm.pristine">Submit</button>
-    
       </form>
+
     </div>
   </div>
 </section>

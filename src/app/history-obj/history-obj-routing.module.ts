@@ -7,9 +7,9 @@ import { SinglePlayerResolve } from './single-match/resolver/single-player.resol
 import { SingleMatchComponent } from './single-match/single-match.component';
 
 const routes: Routes = [
-  { 
-    path: '', 
-    component: HistoryObjComponent,    
+  {
+    path: '',
+    component: HistoryObjComponent,
   },
   {
     path: ':idwar',

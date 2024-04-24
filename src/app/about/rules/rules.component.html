@@ -1,34 +1,35 @@
 <section>
-  <app-about-nav></app-about-nav>  
-  <div class="container" *ngIf="rules$ | async as rules"> 
-    <div class="grid" *ngIf="rules.length > 0">     
+<<<<<<< HEAD
+  <app-about-nav></app-about-nav>
+  <div class="container" *ngIf="rules$ | async as rules">
+    <div class="grid" *ngIf="rules.length > 0">
         <div class="match-rules rules">
           <h2 *ngIf="rules.rule_match ? false : true">Match rules</h2>
-          <ng-container *ngFor="let rule of rules; let i = index;">                
+          <ng-container *ngFor="let rule of rules; let i = index;">
             <div *ngIf="rule.rule_match ? true : false">
               <span *ngIf="rule.rule_match ? true : false">{{ i + 1}}. </span>
               {{ rule.rule_match }}
             </div>
-          </ng-container>   
+          </ng-container>
         </div>
         <div class="admin-rules rules">
           <h2 *ngIf="rules.rule_admin ? false : true">Admin rules</h2>
-          <ng-container *ngFor="let rule of rules; let i = index;">                
+          <ng-container *ngFor="let rule of rules; let i = index;">
             <div *ngIf="rule.rule_admin ? true : false">
               <span *ngIf="rule.rule_admin ? true : false">{{ i + 1}}. </span>
               {{ rule.rule_admin }}
             </div>
-          </ng-container>     
+          </ng-container>
         </div>
-        <div class="general-rules rules">          
+        <div class="general-rules rules">
           <h2 *ngIf="rules.rule_general ? false : true">General rules</h2>
-          <ng-container *ngFor="let rule of rules; let i = index;">                
+          <ng-container *ngFor="let rule of rules; let i = index;">
             <div *ngIf="rule.rule_general ? true : false">
               <span *ngIf="rule.rule_general ? true : false">{{ i + 1}}. </span>
               {{ rule.rule_general }}
             </div>
-          </ng-container>              
-        </div>      
+          </ng-container>
+        </div>
     </div>
   </div>
 </section>

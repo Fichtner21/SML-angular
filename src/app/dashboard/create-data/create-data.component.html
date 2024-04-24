@@ -6,7 +6,7 @@
         <mat-label>Player Name</mat-label>
         <input matInput placeholder="Player Name" formControlName="playername" minlength="2">
         <mat-hint *ngIf="playername.errors?.minlength">Name can be min 2 characters long.</mat-hint>
-      </mat-form-field> 
+      </mat-form-field>
       <mat-form-field class="example-full-width readonly">
         <mat-label>User Name</mat-label>
         <input matInput placeholder="" formControlName="username" readonly appSlugTransform>
@@ -15,13 +15,13 @@
         <mat-label>Ranking</mat-label>
         <input matInput placeholder="" formControlName="ranking" readonly>
       </mat-form-field>
-    </div>    
+    </div>
     <div>
       <mat-form-field class="full-width readonly">
         <mat-label>Percentile</mat-label>
         <input matInput placeholder="" formControlName="percentile" readonly>
       </mat-form-field>
-    </div>     
+    </div>
     <div>
       <mat-form-field class="example-full-width edit">
         <mat-label>Clan history</mat-label>
@@ -34,14 +34,14 @@
             {{country.viewValue}}
           </mat-option>
         </mat-select>
-      </mat-form-field>   
+      </mat-form-field>
     </div>
-    <div>    
+    <div>
       <mat-form-field class="full-width readonly">
         <mat-label>War count</mat-label>
         <input matInput placeholder="" formControlName="warcount" readonly>
       </mat-form-field>
-    </div>    
+    </div>
       <div>
         <!-- <mat-checkbox class="checkbox edit" formControlName="active" [color]="task.color">Active</mat-checkbox> -->
         <mat-checkbox class="checkbox edit" formControlName="ban" [color]="task.color">Ban</mat-checkbox>
@@ -105,11 +105,22 @@
           <mat-label>Streak</mat-label>
           <input matInput placeholder="" formControlName="streak" readonly>
         </mat-form-field>
-      </div>     
-      
+      </div>
+
       <!-- <button>Add player</button> -->
       <button mat-raised-button type="submit" color="primary" [disabled]="googleSheetForm.invalid || googleSheetForm.pristine">Submit</button>
     </form>
     <!-- FORM: {{googleSheetForm.value | json}} -->
   </div>
 </section>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ modalHeader }}</h4>
+  </div>
+  <div class="modal-body">
+    {{ errorMessage }}
+  </div>
+  <div class="modal-footer">
+    <button mat-raised-button color="warn" type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+  </div>
+</ng-template>

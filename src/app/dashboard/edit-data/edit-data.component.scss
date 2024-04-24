@@ -1,7 +1,7 @@
 section {
   padding-top: 80px;
   background-image: linear-gradient(0deg, rgba(252, 252, 252, 1) 25%, rgba(245, 245, 245, 1) 25%, rgba(245, 245, 245, 1) 50%, rgba(252, 252, 252, 1) 50%, rgba(252, 252, 252, 1) 75%, rgba(245, 245, 245, 1) 75%, rgba(245, 245, 245, 1) 100%);
-  background-size: 4px 4px;  
+  background-size: 4px 4px;
   min-height: 100%;
 
   .container {
@@ -24,6 +24,13 @@ section {
 
     .checkbox {
       margin-left: 10px;
-    }    
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      gap: 15px;
+      grid-template-rows: auto;
+    }
   }
 }

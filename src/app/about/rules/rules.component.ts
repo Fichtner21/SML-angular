@@ -2,12 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PlayersApiService } from 'src/app/services/players-api.service';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
+export interface Rule {
+  problem_or_ask: string;
+  solution: string;
+  rule: string;
+}
+
 
 @Component({
   selector: 'app-rules',
   templateUrl: './rules.component.html',
   styleUrls: ['./rules.component.scss']
 })
+
 export class RulesComponent implements OnInit {
   public rules$: Observable<any>;
 
@@ -15,7 +24,7 @@ export class RulesComponent implements OnInit {
 
   ngOnInit(): void {
     this.rules$ = this.googleApi.getPlayers('Rules').pipe(
-      map((response: any) => {        
+      map((response: any) => {
         let batchRowValuesHistory = response.values;
         // console.log('batchRowValuesHistory', batchRowValuesHistory)
         let rules: any[] = [];
@@ -26,7 +35,7 @@ export class RulesComponent implements OnInit {
           }
           // console.log('rowObject', rowObject);
           rules.push(rowObject);
-        }        
+        }
         // console.log('rules', rules)
         return rules;
       }),

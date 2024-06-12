@@ -28,6 +28,9 @@ export class CreateDataComponent implements OnInit {
   googleSheetForm: FormGroup;
   slugUsername: BehaviorSubject<any>;
   userWarcount: BehaviorSubject<any>;
+  modalHeader = '';
+  errorMessage = '';
+  @ViewChild('content', { static: false }) content: TemplateRef<any>;
 
   task: Task = {
     name: 'Indeterminate',
@@ -59,12 +62,7 @@ export class CreateDataComponent implements OnInit {
     { value: 'XX', viewValue: 'Unknown' },
   ]
 
-  allFields: any;
-  errorMessage = '';
-  modalHeader = '';
-  @ViewChild('content', { static: false }) content: TemplateRef<any>;
-
-  constructor(private playersApiService: PlayersApiService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient, private oAuthService: OAuthService, private modalService: NgbModal) {
+  constructor(private playersApiService: PlayersApiService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient, private oAuthService: OAuthService, private modalService: NgbModal) { 
     this.googleSheetForm = this.formBuilder.group({
       playername: formBuilder.control('', [Validators.minLength(3), Validators.maxLength(16)]),
       username: formBuilder.control(''),
@@ -87,49 +85,29 @@ export class CreateDataComponent implements OnInit {
       last365days: formBuilder.control(''),
       lastwarpc: formBuilder.control(''),
       s1wars: formBuilder.control(''),
-      s2wars: formBuilder.control(''),
-      s3wars: formBuilder.control(''),
-      s4wars: formBuilder.control(''),
-      s5wars: formBuilder.control(''),
-      s6wars: formBuilder.control(''),
       s1fpw: formBuilder.control(''),
-      s2fpw: formBuilder.control(''),
-      s3fpw: formBuilder.control(''),
-      s4fpw: formBuilder.control(''),
-      s5fpw: formBuilder.control(''),
-      s6fpw: formBuilder.control(''),
       streak: formBuilder.control('')
     })
   }
 
   ngOnInit(): void {
     this.listPlayersComponent();
-
-    this.playersApiService.getPlayers('Players').subscribe({
-      next: (res:any[]) => {
-        this.allFields = res.values[0];
-        console.log('this.allFields', this.allFields)
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    })
-
+   
     setTimeout(() => {
       this.googleSheetForm.patchValue({ name: "abc xyz" });
     }, 2000);
 
     this.googleSheetForm.get("playername").valueChanges.subscribe(val => {
-      this.googleSheetForm.patchValue({ username: val });
-    });
+      this.googleSheetForm.patchValue({ username: val });      
+    });    
 
     this.googleSheetForm.get("username").valueChanges.subscribe(val => {
       this.googleSheetForm.patchValue({warcount: `=LICZ.JEŻELI('Match History'!A:BK, B${this.countPlayers})`});
-      this.googleSheetForm.patchValue({
+      this.googleSheetForm.patchValue({        
         active: `=ORAZ($N${this.countPlayers}<>"no war", $N${this.countPlayers}>=DZIŚ()-30, $M${this.countPlayers}<>PRAWDA)`
       });
-      this.googleSheetForm.patchValue({percentile: `=ROZKŁAD.NORMALNY(C${this.countPlayers},1000,ODCH.STANDARDOWE(Players!$C$2:$C$150)+0.00001,PRAWDA)`});
-      this.googleSheetForm.patchValue({ lastwarpc:
+      this.googleSheetForm.patchValue({percentile: `=ROZKŁAD.NORMALNY(C${this.countPlayers},1000,ODCH.STANDARDOWE(Players!$C$2:$C$150)+0.00001,PRAWDA)`});      
+      this.googleSheetForm.patchValue({ lastwarpc: 
         `=JEŻELI(F${this.countPlayers}=0,0,INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),PODAJ.POZYCJĘ(B${this.countPlayers},INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),0),0)+3)-INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),PODAJ.POZYCJĘ(B${this.countPlayers},INDEKS('Match History'!B:BK,PODAJ.POZYCJĘ(N${this.countPlayers},'Match History'!A:A,0),0),0)+1))`
       })
       this.googleSheetForm.patchValue({ last365days:
@@ -147,64 +125,22 @@ export class CreateDataComponent implements OnInit {
       this.googleSheetForm.patchValue({fpw:
       `=(SUMA.JEŻELI('Match History'!B:B,B${this.countPlayers},'Match History'!D:D)+SUMA.JEŻELI('Match History'!F:F,B${this.countPlayers},'Match History'!H:H)+SUMA.JEŻELI('Match History'!J:J,B${this.countPlayers},'Match History'!L:L)+SUMA.JEŻELI('Match History'!N:N,B${this.countPlayers},'Match History'!P:P)+SUMA.JEŻELI('Match History'!R:R,B${this.countPlayers},'Match History'!T:T)+SUMA.JEŻELI('Match History'!V:V,B${this.countPlayers},'Match History'!X:X)+SUMA.JEŻELI('Match History'!Z:Z,B${this.countPlayers},'Match History'!AB:AB)+SUMA.JEŻELI('Match History'!AD:AD,B${this.countPlayers},'Match History'!AF:AF)+SUMA.JEŻELI('Match History'!AH:AH,B${this.countPlayers},'Match History'!AJ:AJ)+SUMA.JEŻELI('Match History'!AL:AL,B${this.countPlayers},'Match History'!AN:AN)+SUMA.JEŻELI('Match History'!AV:AV,B${this.countPlayers},'Match History'!AX:AX)+SUMA.JEŻELI('Match History'!AZ:AZ,B${this.countPlayers},'Match History'!BB:BB)+SUMA.JEŻELI('Match History'!BD:BD,B${this.countPlayers},'Match History'!BF:BF)+SUMA.JEŻELI('Match History'!BH:BH,B${this.countPlayers},'Match History'!BJ:BJ))/JEŻELI(F${this.countPlayers}=0,1,F${this.countPlayers})`
       });
-      this.googleSheetForm.patchValue({s1wars:
+      this.googleSheetForm.patchValue({s1wars: 
         `=LICZ.WARUNKI('Match History'!B:B,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1), 'Match History'!B:B,B${this.countPlayers},'Match History'!A:A,"<="&DATA(2023,3,31))+LICZ.WARUNKI('Match History'!F:F,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!J:J,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!N:N,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!R:R,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!V:V,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!Z:Z,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!AD:AD,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!AH:AH,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!AL:AL,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!AV:AV,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!AZ:AZ,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!BD:BD,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))+LICZ.WARUNKI('Match History'!BH:BH,B${this.countPlayers},'Match History'!A:A,">="&DATA(2023,1,1))`
       });
       this.googleSheetForm.patchValue({
-        lastwar:
+        lastwar:      
        `=JEŻELI(F${this.countPlayers}=0, "no war", INDEKS('Match History'!A:A, ArrayFormula(MAX(MAX(('Match History'!B:B=${this.countPlayers})*(WIERSZ('Match History'!B:B))),MAX(('Match History'!F:F=${this.countPlayers})*(WIERSZ('Match History'!F:F))),MAX(('Match History'!J:J=${this.countPlayers})*(WIERSZ('Match History'!J:J))),MAX(('Match History'!N:N=${this.countPlayers})*(WIERSZ('Match History'!N:N))),MAX(('Match History'!R:R=${this.countPlayers})*(WIERSZ('Match History'!R:R))),MAX(('Match History'!V:V=${this.countPlayers})*(WIERSZ('Match History'!V:V))),MAX(('Match History'!Z:Z=${this.countPlayers})*(WIERSZ('Match History'!Z:Z))),MAX(('Match History'!AD:AD=${this.countPlayers})*(WIERSZ('Match History'!AD:AD))),MAX(('Match History'!AH:AH=${this.countPlayers})*(WIERSZ('Match History'!AH:AH))),MAX(('Match History'!AL:AL=${this.countPlayers})*(WIERSZ('Match History'!AL:AL))),MAX(('Match History'!AV:AV=${this.countPlayers})*(WIERSZ('Match History'!AV:AV))),MAX(('Match History'!AZ:AZ=${this.countPlayers})*(WIERSZ('Match History'!AZ:AZ))),MAX(('Match History'!BD:BD=${this.countPlayers})*(WIERSZ('Match History'!BD:BD))),MAX(('Match History'!BH:BH=${this.countPlayers})*(WIERSZ('Match History'!BH:BH))))), 1))
        `
       });
       this.googleSheetForm.patchValue({
-        place: `=JEŻELI(ORAZ(L${this.countPlayers}=PRAWDA, M${this.countPlayers}=FAŁSZ), LICZ.JEŻELI($L$2:L${this.countPlayers}, PRAWDA), "")`
-      });
-      this.googleSheetForm.patchValue({
-        s1fpw:
+        s1fpw: 
         `=JEŻELI(U${this.countPlayers}=0,0,(SUMA.WARUNKÓW('Match History'!D:D,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!B:B,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!H:H,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!F:F,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!L:L,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!J:J,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!P:P,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!N:N,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!T:T,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!R:R,${this.countPlayers})
         +SUMA.WARUNKÓW('Match History'!X:X,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!V:V,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!AB:AB,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!Z:Z,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!AF:AF,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!AD:AD,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!AJ:AJ,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!AH:AH,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!AN:AN,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!AL:AL,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!AX:AX,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!AV:AV,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!BB:BB,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!AZ:AZ,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!BF:BF,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!BD:BD,${this.countPlayers})+SUMA.WARUNKÓW('Match History'!BJ:BJ,'Match History'!A:A,">=01/01/2023 00:00",'Match History'!A:A,"<=03/30/2023 23:59",'Match History'!BH:BH,${this.countPlayers}))/U${this.countPlayers})`
-      });
-      this.googleSheetForm.patchValue({
-        s2fpw: this.generateFormulaSeasonFpw.call(this, [2023, 4, 1], [2023, 6, 30], this.countPlayers)
-      });
-      this.googleSheetForm.patchValue({
-        s3fpw: this.generateFormulaSeasonFpw.call(this, [2023, 7, 1], [2023, 9, 30], this.countPlayers)
-      });
-      this.googleSheetForm.patchValue({
-        s4fpw: this.generateFormulaSeasonFpw.call(this, [2023, 10, 1], [2023, 12, 31], this.countPlayers)
-      });
-      this.googleSheetForm.patchValue({
-        s5fpw: this.generateFormulaSeasonFpw.call(this, [2024, 1, 1], [2024, 3, 31], this.countPlayers)
-      });
-      this.googleSheetForm.patchValue({
-        s6fpw: this.generateFormulaSeasonFpw.call(this, [2024, 4, 1], [2024, 6, 30], this.countPlayers)
-      });
-      // For s2wars (2023,4,1) to (2023,6,30)
-      this.googleSheetForm.patchValue({
-        s2wars: this.generateFormulaSeasonWars.call(this, [2023,4,1], [2023,6,30])
-      });
+      })
+    });    
 
-      // For s3wars (2023,7,1) to (2023,9,30)
-      this.googleSheetForm.patchValue({
-        s3wars: this.generateFormulaSeasonWars.call(this, [2023,7,1], [2023,9,30])
-      });
-
-      // For s4wars (2023,10,1) to (2023,12,31)
-      this.googleSheetForm.patchValue({
-        s4wars: this.generateFormulaSeasonWars.call(this, [2023,10,1], [2023,12,31])
-      });
-
-      // For s5wars (2024,1,1) to (2024,3,31)
-      this.googleSheetForm.patchValue({
-        s5wars: this.generateFormulaSeasonWars.call(this, [2024,1,1], [2024,3,31])
-      });
-
-      // For s6wars (2024,4,1) to (2024,6,30)
-      this.googleSheetForm.patchValue({
-        s6wars: this.generateFormulaSeasonWars.call(this, [2024,4,1], [2024,6,30])
-      });
-    });
-
-    this.googleSheetForm.controls['username'].disable();
+    this.googleSheetForm.controls['username'].disable(); 
   }
 
   get playername() {
@@ -212,13 +148,17 @@ export class CreateDataComponent implements OnInit {
   }
 
   onSubmit(){
+    // console.log(this.googleSheetForm.value);
+    // this.googleSheetForm.value.warcount = this.slugUsername;
+    // console.log(this.googleSheetForm.getRawValue());
+    // console.log('this.slugUsername', this.slugUsername);   
     const playername = this.googleSheetForm.value.playername;
     const username = this.googleSheetForm.getRawValue().username;
     const ranking = this.googleSheetForm.value.ranking;
     const percentile = this.googleSheetForm.value.percentile;
     const place = this.googleSheetForm.value.place;
     const warcount = this.googleSheetForm.getRawValue().warcount;
-    const nationality = this.googleSheetForm.value.nationality;
+    const nationality = this.googleSheetForm.value.nationality;    
     const clanhistory = this.googleSheetForm.value.clanhistory;
     const cup1on1edition1 = this.googleSheetForm.value.cup1on1edition1;
     const meeting = this.googleSheetForm.value.meeting;
@@ -233,71 +173,72 @@ export class CreateDataComponent implements OnInit {
     const last365days = this.googleSheetForm.value.last365days;
     const lastwarpc = this.googleSheetForm.value.lastwarpc;
     const s1wars= this.googleSheetForm.value.s1wars;
-    const s2wars = this.googleSheetForm.value.s2wars;
-    const s3wars = this.googleSheetForm.value.s3wars;
-    const s4wars = this.googleSheetForm.value.s4wars;
-    const s5wars = this.googleSheetForm.value.s5wars;
-    const s6wars = this.googleSheetForm.value.s6wars;
+    const s2wars= this.googleSheetForm.value.s2wars;
+    const s3wars= this.googleSheetForm.value.s3wars;
+    const s4wars= this.googleSheetForm.value.s4wars;
+    const s5wars= this.googleSheetForm.value.s5wars;
+    const s6wars= this.googleSheetForm.value.s6wars;
     const s1fpw = this.googleSheetForm.value.s1fpw;
     const s2fpw = this.googleSheetForm.value.s2fpw;
-    const s3fpw = this.googleSheetForm.value.s2fpw;
-    const s4fpw = this.googleSheetForm.value.s2fpw;
-    const s5fpw = this.googleSheetForm.value.s2fpw;
-    const s6fpw = this.googleSheetForm.value.s2fpw;
+    const s3fpw = this.googleSheetForm.value.s3fpw;
+    const s4fpw = this.googleSheetForm.value.s4fpw;
+    const s5fpw = this.googleSheetForm.value.s5fpw;
+    const s6fpw = this.googleSheetForm.value.s6fpw;
     const streak = this.googleSheetForm.value.streak;
 
-    console.log(
-      {
-        'playername': playername,
-        'username': username,
-        'ranking': ranking,
-        'percentile': percentile,
-        's1wars': s1wars,
-        'lastwar': lastwar,
-        'fpw': fpw,
-        'fpwmax': fpwmax,
-        'fpwmin': fpwmin,
-        'last30days': last30days,
-        'last365days': last365days,
-        'nationality': nationality
-      }
-    )
+    // console.log(
+    //   {
+    //     'playername': playername,
+    //     'username': username,
+    //     'ranking': ranking,
+    //     'percentile': percentile,
+    //     's1wars': s1wars,
+    //     'lastwar': lastwar,
+    //     'fpw': fpw,
+    //     'fpwmax': fpwmax,
+    //     'fpwmin': fpwmin,
+    //     'last30days': last30days,
+    //     'last365days': last365days,
+    //     'nationality': nationality
+    //   }
+    // )
 
-    this.playersApiService.createPlayer(environment.SPREADSHEET_ID, "USER_ENTERED", playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s2wars, s3wars, s4wars, s5wars, s6wars, s1fpw, s2fpw, s3fpw, s4fpw, s5fpw, s6fpw, streak).subscribe({
+    const params = {
+      spreadsheetId: environment.SPREADSHEET_ID,
+      range: 'Players',
+      valueInputOption: 'RAW',
+      insertDataOption: 'INSERT_ROWS'
+    }
+
+    const valueRangeBody = {
+      'majorDimension': 'ROWS',
+      'values': [playername, username, percentile, ranking]
+    }   
+    
+    const updates =  {
+      "values": [
+        [playername, username, percentile, ranking]
+      ]
+    } 
+
+    this.playersApiService.createPlayer(environment.SPREADSHEET_ID, "USER_ENTERED", playername, username, ranking, percentile, place, warcount, nationality, clanhistory, cup1on1edition1, meeting, cup3on3, active, ban, lastwar, fpw, fpwmax, fpwmin, last30days, last365days, lastwarpc, s1wars, s2wars, s3wars, s4wars, s5wars, s6wars, s1fpw, s2fpw, s3fpw, s4fpw, s5fpw, s6fpw, streak).subscribe({      
       next: (res) => {
         console.log(res);
+        this.modalHeader = 'SUCCESS'
+          this.errorMessage = 'Teams updated!'
+          this.modalService.open(
+            this.content,
+            {
+              centered: true,
+              windowClass: 'success'
+            }
+          );
         if(res){
           this.router.navigate([`/obj-ranking/${username}`])
-          this.playersApiService.runScriptFunction('sortPlayers').subscribe({
-            next: (res) => {
-              console.log('Ranking update!', res);
-              this.modalHeader = 'SUCCESS';
-              this.errorMessage = 'Ranking update! ' + res;
-              this.modalService.open(
-                this.content,
-                {
-                  centered: true,
-                  windowClass: 'success'
-                }
-              )
-            },
-            error: (err) => {
-              console.error('Ranking update failed!', err);
-              this.modalHeader = 'FAILED';
-              this.errorMessage = 'Ranking not updated! ' + err;
-              this.modalService.open(
-                this.content,
-                {
-                  centered: true,
-                  windowClass: 'success'
-                }
-              )
-            }
-          })
         }
       },
       error: (error) => {
-        console.log('ERROR =>', error.message);
+        console.log('ERROR =>', error.message);        
       }
     })
   }
@@ -305,22 +246,21 @@ export class CreateDataComponent implements OnInit {
   listPlayersComponent() {
     this.playersApiService.getPlayers('Players').subscribe({
       next: (res:any[]) => {
-        this.countPlayers = Number(res.values.length) + 1;
-        // console.log('this.countPlayers', this.countPlayers)
+        this.countPlayers = Number(res.values.length) + 1;  
+        // console.log('this.countPlayers', this.countPlayers)   
       },
       error: (error) => {
         console.log(error);
       }
     })
-  }
-
-  generateFormulaSeasonWars(startDate, endDate) {
-    return `=LICZ.WARUNKI('Match History'!B:B,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}),'Match History'!B:B,B${this.countPlayers},'Match History'!A:A,"<="&DATA(${endDate[0]},${endDate[1]},${endDate[2]}))+LICZ.WARUNKI('Match History'!F:F,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!J:J,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!N:N,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!R:R,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!V:V,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!Z:Z,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!AD:AD,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!AH:AH,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!AL:AL,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!AV:AV,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!AZ:AZ,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!BD:BD,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))+LICZ.WARUNKI('Match History'!BH:BH,B${this.countPlayers},'Match History'!A:A,">="&DATA(${startDate[0]},${startDate[1]},${startDate[2]}))`;
-  }
-
-  generateFormulaSeasonFpw(startDate, endDate, countPlayers) {
-    return `=IF(U${countPlayers}=0, 0, (SUMIFS('Match History'!D:D,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!B:B,${countPlayers})+SUMIFS('Match History'!H:H,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!F:F,${countPlayers})+SUMIFS('Match History'!L:L,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!J:J,${countPlayers})+SUMIFS('Match History'!P:P,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!N:N,${countPlayers})+SUMIFS('Match History'!T:T,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!R:R,${countPlayers})
-          +SUMIFS('Match History'!X:X,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!V:V,${countPlayers})+SUMIFS('Match History'!AB:AB,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!Z:Z,${countPlayers})+SUMIFS('Match History'!AF:AF,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!AD:AD,${countPlayers})+SUMIFS('Match History'!AJ:AJ,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!AH:AH,${countPlayers})+SUMIFS('Match History'!AN:AN,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!AL:AL,${countPlayers})+SUMIFS('Match History'!AX:AX,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!AV:AV,${countPlayers})+SUMIFS('Match History'!BB:BB,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!AZ:AZ,${countPlayers})+SUMIFS('Match History'!BF:BF,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!BD:BD,${countPlayers})+SUMIFS('Match History'!BJ:BJ,'Match History'!A:A,">=${startDate} 00:00",'Match History'!A:A,"<=${endDate} 23:59",'Match History'!BH:BH,${countPlayers}))/U${countPlayers})`;
+    // this.playersApiService.listPlayers().subscribe({
+    //   next: (res:any[]) => {
+    //     this.countPlayers = res.length + 2;      
+    //   },
+    //   error: (error) => {
+    //     console.log(error);
+    //   }
+    // })
   }
 
   public slugify(str:any){
@@ -332,9 +272,11 @@ export class CreateDataComponent implements OnInit {
       .replace(/^-+|-+$/g, '');
   }
 
-  public authHeader() : HttpHeaders {
+  public authHeader() : HttpHeaders { 
     return new HttpHeaders ({
       'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`
     })
   }
+
+  
 }

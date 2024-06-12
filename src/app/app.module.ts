@@ -53,6 +53,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RankingObjModule } from './ranking-obj/ranking-obj.module';
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -137,6 +138,7 @@ const customNotifierOptions: NotifierOptions = {
     MatTooltipModule,
     RankingObjModule,
     MatProgressBarModule,
+    MatDialogModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),

@@ -603,3 +603,30 @@ video {
     }
   }
 }
+
+::ng-deep mat-dialog-container {
+  // background-color: rgba(255, 255, 255, 0.8) !important; /* Biały kolor z 80% przezroczystości */
+  background-image: url('/assets/images/hole.webp') !important;
+
+  .dialog {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, 0px);    
+    color: #fff;
+    text-shadow: 0 0 10px darkgreen;
+    text-align: center;
+
+    h1 {
+      font-size: 72px;
+    }
+
+    h2 {
+      font-size: 32px;
+    }
+
+    h3 {
+      font-size: 26px;
+    }
+  }
+}

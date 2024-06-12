@@ -9,12 +9,15 @@ import { Chart, ChartOptions } from 'chart.js';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
 // import * as pluginAnnotation from 'chartjs-plugin-annotation';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
+
 export class HomeComponent implements OnInit {
   public spinkit = Spinkit;
   idOne$: Observable<idOne[]>;
@@ -38,12 +41,13 @@ export class HomeComponent implements OnInit {
   public addAmatch$: Observable<any>;
   display: boolean = true;
 
-  constructor(private playersApiService: PlayersApiService) {
+  constructor(private playersApiService: PlayersApiService, private dialog: MatDialog) {
     
   }   
 
   ngOnInit(): void { 
     Chart.plugins.register(annotationPlugin);
+    this.openDialogIfBeforeDeadline();
 
     this.teamOneSelection$ = this.playersApiService.getPlayers('TeamSelectionOne').pipe(
       map((response:any) => {
@@ -121,6 +125,7 @@ export class HomeComponent implements OnInit {
         const resValues = response.values;
         resValues.shift();
         const matchesDate = [];
+        
         resValues.forEach((el:any) => {          
           matchesDate.push(new Date(el[0]).toISOString());
         });               
@@ -345,7 +350,18 @@ export class HomeComponent implements OnInit {
     
   } 
 
-  
+  openDialogIfBeforeDeadline(): void {
+    const deadline = new Date('2024-05-29T23:59:59');
+    const now = new Date();
+
+    if (now <= deadline) {
+      this.dialog.open(DialogOverviewExampleDialog, {
+        width: '1200px',
+        height: '620px',
+        panelClass: 'custom-dialog-container'
+      });
+    }
+  }
  
   public addPlayerLink(player:string, obj:any) {
     let convertedPlayer = '';    
@@ -411,5 +427,17 @@ export class HomeComponent implements OnInit {
     });
     return Object.values(groupedDates);
   }
-
+ 
 }
+
+@Component({
+  selector: 'dialog-overview-example-dialog',
+  template: `
+    <div class="dialog">
+    <h1 mat-dialog-title>Today we play!</h1> 
+    <h2>Start from 22:00</h2>
+    <h3>29 May 2024</h3> 
+    </div> 
+  `
+})
+export class DialogOverviewExampleDialog {}

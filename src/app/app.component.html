@@ -20,31 +20,51 @@
       <a routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</a>
       <a routerLink="cup" routerLinkActive="active" (click)="closeMenu()">Cup</a>
       <a routerLink="mix" routerLinkActive="active" class="mix" (click)="closeMenu()">Mix</a>
+      <a routerLink="add-clan-war" routerLinkActive="active" (click)="closeMenu()">Add Clan War</a>
+      <a routerLink="clan-ranking" routerLinkActive="active" (click)="closeMenu()">Clan List</a>
+      <a routerLink="clan-matches" routerLinkActive="active" (click)="closeMenu()">Clan Matches</a>
       <form action="">
         <label for="langChange">{{ 'nav.choose' | translate }}</label>
         <select class="language-select" name="langChange" (ngModelChange)="languageChange($event)" [(ngModel)]="languageCode">
           <option class="language-select" *ngFor='let item of languages' [ngValue]='item.languageCode'>
             {{item.languageName}}</option>
-        </select>
-        <div class="season" matTooltip="1.04.2024 - 30.06.2024">Season #6</div>        
+        </select>        
+        <div class="season" [matTooltip]="dateRange">Season #{{ season }} <span class="seasonDate">{{dateRange}}</span></div>
+        <!-- <div>
+          <h1>Witaj w aplikacji!</h1>
+          <p>Aktualna liczba graczy w WANT TO PLAY: {{ userCount }}</p>
+          
+          <div *ngIf="userCount > 0">
+            <h2>Lista graczy:</h2>
+            <ul>
+              <li *ngFor="let player of players">
+                {{ player.username }} ({{ player.nickname }}) 
+                <span *ngIf="player.additionalInfo0"> - {{ player.additionalInfo0 }}</span>
+                <span *ngIf="player.additionalInfo6"> - {{ player.additionalInfo6 }}</span>
+              </li>
+            </ul>
+          </div>
+        
+          <button (click)="getDiscordUsers()">Odśwież listę graczy</button>
+        </div>       -->
       </form>
       <!-- <mat-progress-bar mode="determinate" [value]="progressValue" [matTooltip]="tooltipText" style="margin-top: 2px;"></mat-progress-bar> -->
     </div>
     <div class="social">
-      <div class="social-panel">
-        <div *ngIf="players$ | async as numOfPlayers">
-          <div *ngIf="numOfPlayers.length > 0">
+      <div *ngIf="numOfPlayers$ | async as numOfMatches" class="social-panel">
+        <!-- <div *ngIf="players$ | async as numOfPlayers">
+          <div *ngIf="numOfPlayers.length > 0"> -->
             <a routerLink="obj-ranking" routerLinkActive="active" matTooltip="ACTIVE PLAYERS">
               <img src="../assets/images/icons/people.png" alt="" class="people">
               {{ num_Players }} <!-- Wyświetlenie liczby graczy -->
             </a>
-          </div>
-        </div>
-        <div *ngIf="numOfPlayers$ | async as numOfMatches">
+          <!-- </div>
+        </div> -->
+        <div>
           <div *ngIf="numOfMatches.length > 0">
             <a routerLink="obj-matches" routerLinkActive="active">
               <img src="../assets/images/icons/avarage.png" alt="">
-              <span class="curr-season" matTooltip="SEASON 6 WARS">{{ s5_wars }}</span> <!-- Wyświetlenie ilości wojen z sezonu 5 -->
+              <span class="curr-season" matTooltip="SEASON 7 WARS">{{ s8_wars }}</span> <!-- Wyświetlenie ilości wojen z sezonu 5 -->
               &middot;&middot;&middot;
               <span class="total-seasons" matTooltip="TOTAL WARS">{{ total_wars }}</span> <!-- Wyświetlenie łącznej liczby wojen -->
             </a>

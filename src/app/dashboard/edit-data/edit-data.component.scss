@@ -31,6 +31,13 @@ section {
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
       gap: 15px;
       grid-template-rows: auto;
+
+      .flag-icon {
+        width: 20px; /* Ustaw szerokość flagi */
+        height: auto; /* Automatyczna wysokość */
+        margin-right: 8px; /* Odstęp między flagą a tekstem */
+        vertical-align: middle; /* Wyrównanie flagi do tekstu */
+      }      
     }
   }
 }

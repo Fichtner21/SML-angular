@@ -1,0 +1,255 @@
+section {
+  padding-top: 100px;
+}
+
+.container {
+  padding: 15px;
+  margin: 0 auto;
+  max-width: 1300px;
+
+  .clans {
+    color: #fff;    
+
+    >:nth-child(even){      
+      background-image:
+    repeating-linear-gradient(
+      45deg,
+      #1f2136 0px,
+      #1f2136 100px,
+      transparent 20px,
+      transparent 200px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #1f2136 0px,
+      #1f2136 100px,
+      transparent 150px,
+      transparent 200px
+    ),
+    linear-gradient(90deg, #2c2f4e, #2c2f4e);
+    }
+
+    >:nth-child(odd){  
+      background-image:
+      repeating-linear-gradient(
+        45deg,
+        #1f203c 0px,
+        #1f203c 200px,
+        transparent 100px,
+        transparent 300px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        #1f203c 0px,
+        #1f203c 200px,
+        transparent 100px,
+        transparent 300px
+      ),
+      linear-gradient(90deg, #292b4b, #292b4b);  
+    }
+  }
+
+  .table-ranking {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px 1fr 1fr 1fr 1fr 1fr 40px 40px; // First row layout
+    grid-auto-rows: auto; // Automatically adjust row height
+    border-bottom: 1px solid #010141;
+
+    .item {
+      padding: 5px 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .clantag {
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .cl, .wa {
+      padding: 0 15px;
+      display: flex !important;
+      align-items: center;
+
+      .item-leader {
+        padding: 5px 3px;
+      }
+    }
+
+    .cl {
+      strong {
+        letter-spacing: 2px;
+      }
+    }
+
+    .wa {
+      strong {
+        font-style: italic;
+      }
+    }
+  
+    // Apply styles to the first ten elements (the first row)
+    > div {
+      // Optional styles for all divs, if needed
+    }
+  
+    // Target the last child (the members div)
+    > div.more-clan, >div.cl, > div.wa {
+      grid-column: 1 / -1; // Make this div span all columns
+      width: 100%; // Ensure it takes full width
+      display: block; // Ensure it behaves as a block element
+      margin-top: 10px; // Optional spacing above, if needed
+      box-sizing: border-box; // Ensure padding/margin don't affect width calculations
+    }
+
+    
+  }
+
+
+  .more-clan {
+    padding: 15px 70px;
+    // border: 1px solid gray;
+    // box-shadow: 0 0 5px gray;
+    position: relative;
+
+    .clanname {
+      position: absolute;
+      font-size: 50px;
+      font-style: italic;
+      opacity: 0.5;
+      bottom: 5px;
+      right: 15px;
+    }
+  }
+
+  .members {
+    padding: 0 15px;
+
+    .member {
+      display: grid;
+      grid-template-columns: 200px 40px 80px 80px 80px 80px;        
+
+      .item-leader {
+        padding: 5px 3px;
+        font-weight: 500;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px solid #010141;
+        // border-right: 1px solid #010141;
+
+        &:not(:last-child) {
+          border-right: 1px solid #010141; /* Prawy border */
+          
+        }
+      }
+
+      .item-name {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        font-weight: 500;
+        border-bottom: 1px solid #010141;
+        border-right: 1px solid #010141;
+      }
+
+      a {
+        text-decoration: none;
+        transition: all 0.3s;
+
+        &:hover {
+          color: red;
+        }
+      }
+      
+      .active {
+        color: green;
+      }
+
+      .inactive {
+        background-image: none;
+        color: gray;
+        opacity: 0.5;
+      }
+    } 
+
+    .member-wa {
+      display: grid;
+      grid-template-columns: 200px 40px 80px 80px 80px 80px 120px;        
+
+      .item-leader {
+        padding: 5px 3px;
+        font-weight: 500;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px solid #010141;
+        // border-right: 1px solid #010141;
+
+        &:not(:last-child) {
+          border-right: 1px solid #010141; /* Prawy border */
+        }
+      }
+
+      .item-name {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        font-weight: 500;
+        border-bottom: 1px solid #010141;
+        border-right: 1px solid #010141;
+      }
+
+      a {
+        text-decoration: none;
+        transition: all 0.3s;
+
+        &:hover {
+          color: red;
+        }
+      }
+      
+      .active {
+        color: green;
+      }
+
+      .inactive {
+        background-image: none;
+        color: gray;
+      }
+    }      
+  }
+  .row-ranking {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px 1fr 1fr 1fr 1fr 1fr 40px 40px; // First row layout
+    grid-auto-rows: auto; // Automatically adjust row height
+    border-bottom: 1px solid #010141;
+
+    .item {
+      padding: 5px 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .clantag {
+      font-weight: 700;
+      font-size: 20px;
+    }
+  }
+}
+
+.streak-up {
+  color: green;
+}
+
+.streak-down {
+  color: red;
+}
+
+.streak-draw {
+  color: gray;
+}

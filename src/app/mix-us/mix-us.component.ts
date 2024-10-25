@@ -1,24 +1,19 @@
-import { Component, OnInit, ViewChild, Renderer2, ElementRef, HostListener  } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators  } from '@angular/forms';
+import { Component, OnInit, Renderer2, ElementRef, HostListener  } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { map, flatMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { PlayersApiService } from '../services/players-api.service';
-// import {MatListModule} from '@angular/material/list';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ThemePalette } from '@angular/material/core';
 import { NotifierService } from 'angular-notifier';
-import { HideRowDirective } from '../hide-row.directive';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
-import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { faArrowCircleLeft, faArrowCircleRight, faArrowDown, faArrowsDownToPeople, faArrowUp, faFlag, faPaperPlane, faPeopleGroup, faPersonCirclePlus, faSquareMinus, faStamp, faStar, faStarHalfStroke, faTrash, faUserGroup, faUserMinus, faXmark } from '@fortawesome/free-solid-svg-icons';
-import * as Discord from 'discord.js';
-import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v10';
-
-
+import { faArrowCircleLeft, faArrowCircleRight, faArrowDown, faArrowUp, faFlag, faPaperPlane, faSquareMinus, faStamp, faStar, faStarHalfStroke, faTrash, faUserGroup, faUserMinus, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { environment } from 'src/environments/environment';
+import { AuthService } from '../services/auth.service';
 
 export interface UserData {
   nr: string;
@@ -179,8 +174,9 @@ export class MixUsComponent implements OnInit {
   isSplitNationalitiesClicked: boolean = false;
   isSplitArrayIntoTwoClicked: boolean = false;
   discordUsersAll: any[] = [];
+  isAuthenticated3: boolean = false;
 
-  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient, public oAuthService: OAuthService, private renderer: Renderer2, private el: ElementRef) {
+  constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient, public oAuthService: OAuthService, private renderer: Renderer2, private el: ElementRef, public authService: AuthService) {
     // const client = new Client({
     //   intents: ['Guilds', 'GuildMembers', 'GuildVoiceStates']
     // });
@@ -196,7 +192,9 @@ export class MixUsComponent implements OnInit {
     // });
 
     // client.login('MTA3NzMzNDUyNDE1NDg3NjAyNg.GLV3pj.RPAovzUTCcezSqvAhRDb3TNTWr6GEr6YzHcbMg'); // podaj swój token dostępowy do bota Discord
-    
+    this.authService.isAuthenticated$.subscribe(authenticated => {
+      this.isAuthenticated3 = authenticated;
+    });
 
     this.players$ = this.googleApi.getPlayers('Players').pipe(
       map((response: any) => {
@@ -275,7 +273,13 @@ export class MixUsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.oAuthService.loadDiscoveryDocumentAndLogin();
+    this.authService.isAuthenticated$.subscribe(authenticated => {
+      console.log('User authenticated:', authenticated);      
+    });
+ 
+  // this.oAuthService.loadDiscoveryDocumentAndLogin();
+
+
     this.route.queryParams.subscribe(params => {
       // this.array1 = params['a1'] ? JSON.parse(params['a1']).map(username => ({username})) : [];
       // this.array2 = params['a2'] ? JSON.parse(params['a2']).map(username => ({username})) : [];
@@ -331,8 +335,20 @@ export class MixUsComponent implements OnInit {
     // this.dataSource = new MatTableDataSource(players)
     // console.log('this.dataSource', this.dataSource)
     // console.log('this.playerRowArray', arr)
+    // setTimeout(() => {
+    //   if(this.playerRowArray.length > 0){
+    //     this.getDiscordUsers()
+    //   }
+    // }, 1500)       
   }
 
+  checkAuthentication() {
+    if (!this.oAuthService.hasValidAccessToken()) {
+      this.oAuthService.initLoginFlow(); // Rozpocznij proces logowania
+    } else {
+      this.authService.isAuthenticatedSubject.next(true);
+    }
+  }
 
   configureOAuth() {      
     const authConfig: AuthConfig = {
@@ -399,7 +415,11 @@ export class MixUsComponent implements OnInit {
   }
 
   getDiscordUsers() {
-    this.http.get<VoiceMember[]>('https://mohsh-ds.herokuapp.com/voice-members').subscribe(
+    console.log('getDiscordUsers()')
+    this.http.get<VoiceMember[]>(
+      // 'https://mohsh-ds.herokuapp.com/voice-members'
+      `${environment.externalApiUrl}voice-members`
+      ).subscribe(
       (members) => {
         console.log('members', members)
         if(members.length === 0){
@@ -407,6 +427,7 @@ export class MixUsComponent implements OnInit {
         } else {
           members.forEach((el: any) => {
             // console.log('el', el);
+            // console.log('this.playerRowArray', this.playerRowArray)
             this.playerRowArray.forEach((player: any) => {
               if ((el.username === player.username || el.username === player.playername || el.nickname === player.username || el.nickname === player.playername) &&
                   !this.selectedUsers.some((u: any) => (u.username === player.username && u.playername === player.playername))
@@ -416,6 +437,7 @@ export class MixUsComponent implements OnInit {
 
                 this.notifier.notify('success', `${player.playername} added!.`);
                 this.selectedUsers.push(player);
+                console.log('this.selectedUsers', this.selectedUsers)
               }
 
             });
@@ -516,7 +538,7 @@ export class MixUsComponent implements OnInit {
       }),
     };
 
-    this.http.post(`https://mohsh-ds.herokuapp.com/move-users-to-channels`, JSON.stringify(payload), httpOptions).subscribe(
+    this.http.post(`${environment.externalApiUrl}move-users-to-channels`, JSON.stringify(payload), httpOptions).subscribe(
       (response) => {
         console.log('Move users to channels success:', response);
       },
@@ -719,7 +741,7 @@ export class MixUsComponent implements OnInit {
     // Połączenie obu tablic w jedną
     const mergedArray = this.array1.concat(this.array2);
 
-    this.http.post<any>('http://localhost:5000/api/save-data', mergedArray).subscribe(response => {
+    this.http.post<any>(`${environment.externalApiUrl}api/save-data`, mergedArray).subscribe(response => {
       console.log('Dane zostały wysłane do backendu', response);
     });
     // Dodaj tablice do URL
@@ -1369,9 +1391,7 @@ export class MixUsComponent implements OnInit {
     const webhookUrl = 'https://discord.com/api/webhooks/1075499431207645284/B0aRKfrobBHm2NKwM8Z6HGdkn0dt17xT3N1ssnXwFbyoNYNjgezteQLYuO5VY33MK2nS';
 
     const arr1 = this.array1;
-    const arr2 = this.array2;
-
-  
+    const arr2 = this.array2;  
 
     let maps: string[] = [];
 
@@ -1499,91 +1519,7 @@ export class MixUsComponent implements OnInit {
     const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;
 
     chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-    chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);
-  //   this.getDiscordUserData().subscribe(
-  //     (data: any) => {
-  //         // console.log('Dane użytkowników z Discorda:', data);
-
-  //         this.discordUsersAll = data;
-
-  //         // Konwersja obiektu this.discordUsersAll na tablicę
-  //         const discordUsersArray = Object.values(this.discordUsersAll);
-  //         console.log('discordUsersArray', discordUsersArray)
-
-  //         // Tworzenie listy nazw użytkowników z arr1 i arr2        
-
-  //         // Przygotowanie tablic z nazwami użytkowników
-  //         const arr1Usernames = arr1.map(user => [user.playername, user.username.toLowerCase()]).reduce((acc, val) => acc.concat(val), []);
-  //         const arr2Usernames = arr2.map(user => [user.playername, user.username.toLowerCase()]).reduce((acc, val) => acc.concat(val), []);
-  //         console.log('arr1Usernames', arr1Usernames)
-  //         console.log('arr2Usernames', arr2Usernames)
-
-  //         // Sprawdzenie, czy nazwy użytkowników z Discorda znajdują się w arr1 i arr2
-  //         const matchingUsersArr1 = discordUsersArray.filter(user =>
-  //           arr1Usernames.includes(user.username) || arr1Usernames.includes(user.playername) || 
-  //           arr2Usernames.includes(user.username) || arr2Usernames.includes(user.playername)
-  //         );
-  //         console.log('matchingUsersArr1', matchingUsersArr1)
-          
-
-  //         // Rozdzielenie użytkowników zgodnych z arr1 i arr2
-  //         const matchingUsersArr1Arr = matchingUsersArr1.filter(user => {
-  //           const lowerCaseUsername = user.username;
-  //           const lowerCaseNickname = user.nickname;
-  //           return arr1Usernames.includes(lowerCaseUsername) || arr1Usernames.includes(lowerCaseNickname);
-  //       });
-  //         console.log('matchingUsersArr1Arr', matchingUsersArr1Arr)
-  //         const matchingUsersArr2Arr = matchingUsersArr1.filter(user => {
-  //           const lowerCaseUsername = user.username;
-  //           const lowerCaseNickname = user.nickname;
-  //           return arr2Usernames.includes(lowerCaseUsername) || arr2Usernames.includes(lowerCaseNickname);
-  //       });
-  //         console.log('matchingUsersArr2Arr', matchingUsersArr2Arr)
-
-  //         const mentionArr1 = matchingUsersArr1Arr.map(user => `<@${user.username}>`).join(' ');
-  //         console.log('mentionArr1', mentionArr1)
-
-  //         const mentionArr2 = matchingUsersArr2Arr.map(user => `<@${user.username}>`).join(' ');
-  //         console.log('mentionArr2', mentionArr2)
-
-  //         // Tworzenie treści wiadomości z wzmiankowaniami
-  //         let messageContent = '';
-  //         messageContent += `**NEXT MATCH**, (${mixWay}) created: ${formattedDate}\n`;
-  //         messageContent += "----------\n";
-  //         messageContent += `MAPS: ${maps.join(', ')} (${this.selectedOption})\n`;
-  //         messageContent += "----------\n";
-  //         messageContent += `TEAM 1: ${t1p1name} ${t1p2name} ${t1p3name} ${t1p4name} ${t1p5name} ${t1p6name} ${t1p7name}\n`;
-  //         messageContent += `TEAM 1 Chance for win: ${chanceOfWinTeamTwoShow} %\n`;
-  //         messageContent += "----------\n";
-  //         messageContent += `TEAM 2: ${t2p1name} ${t2p2name} ${t2p3name} ${t2p4name} ${t2p5name} ${t2p6name} ${t2p7name}\n`;
-  //         messageContent += `TEAM 2 Chance for win: ${chanceOfWinTeamOneShow} %\n`;
-  //         messageContent += "----------\n";
-  //         messageContent += `SS MAKER: **${highestRankingPlayer}** ${funnyOneLiners[Math.floor(Math.random() * funnyOneLiners.length)]}\n`;
-  //         messageContent += "----------\n";
-  //         messageContent += "Good Luck & Have Fun!";
-          
-  //         // Dodanie wzmianek do treści wiadomości
-  //         messageContent += `\n\n${mentionArr1}\n\n${mentionArr2}`;
-  //         // console.log('messageContent', messageContent)
-  //         // Wysyłanie wiadomości na Discord
-  //         const payload = { 
-  //           content: messageContent 
-  //         };
-  //         this.http.post(webhookUrl, payload).subscribe({
-  //             next: (res) => {
-  //                 console.log('Wiadomość wysłana pomyślnie na Discorda!');
-  //                 this.notifier.notify('success', "Teams Send successful!")
-  //             },
-  //             error: (err) => {
-  //                 console.error('Coś poszło nie tak:', err);
-  //                 this.notifier.notify('error', 'Something went wrong')
-  //             }
-  //         });
-  //     },
-  //     error => {
-  //         console.error('Błąd pobierania danych z Discorda:', error);
-  //     }
-  // );
+    chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);  
     
     this.nextMatch += "**NEXT MATCH**, (" + mixWay + ") created: " + formattedDate + "\n";
     this.nextMatch += "----------" + "\n";
@@ -1650,7 +1586,7 @@ export class MixUsComponent implements OnInit {
 
 
   getDiscordUserData(){
-    return this.http.get('http://localhost:5000/discord-users')
+    return this.http.get(`${environment.externalApiUrl}discord-users`)
   }
 
   sendMessageRcon() {
@@ -1658,7 +1594,7 @@ export class MixUsComponent implements OnInit {
     const interwalMillis = this.interval * 1000;
     // Wyślij wiadomość do serwera Node.js
     this.http
-      .post('http://localhost:5000/send-message-to-node', 
+      .post(`${environment.externalApiUrl}/send-message-to-node`, 
       { 
         // message: this.nextMatch, 
         message1: this.nextMatchOne,

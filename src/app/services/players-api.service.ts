@@ -1,10 +1,10 @@
-import { BehaviorSubject, combineLatest, from, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Sheet } from '../models/sheet.model';
 import { environment } from 'src/environments/environment';
-import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
-import { catchError, map, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { OAuthService } from 'angular-oauth2-oidc';
+import { map, switchMap } from 'rxjs/operators';
 
 const SCRIPT_ID = 'AKfycbw1UM_u6MgkD_a9P2yHtUdhCkz5kxBX-BuVDCA8tXQ';
 const ENDPOINT = `https://script.googleapis.com/v1/scripts/${SCRIPT_ID}:run`;
@@ -33,6 +33,7 @@ export class PlayersApiService {
   private playersData: any;
   private historyMatchesSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   historyMatches$: Observable<any> = this.historyMatchesSubject.asObservable();
+  getHistoryMatchesClans: any;
 
   constructor(private http: HttpClient, private readonly oAuthService: OAuthService) {}
 
@@ -100,6 +101,89 @@ export class PlayersApiService {
       `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
       );
   }
+
+  public getPlayersDetails(): Observable<any[]> {
+    // this.oAuthService.setupAutomaticSilentRefresh();
+    return this.http.get<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Players?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
+      ).pipe(map(
+        response => {
+          const players = response.values.slice(1);
+          return players.map((player) => ({            
+            playername: player[0], //playername
+            username: player[1], //username
+            elo: player[2], //ranking
+            placemix: player[4], //place
+            mixwars: player[5], //warcount
+            flag: player[6], //nationality
+            active: player[11], //active
+            ban: player[12], //ban
+            fpw: player[14]  //fpw          
+          }))
+        })
+      );
+  }
+
+  public getClans(): Observable<any> {
+    return this.http.get<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Clans?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
+    );
+  }
+  
+  public getMatchHistoryClans(): Observable<any> {
+    return this.http.get<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Match+History+Clans?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
+    );
+  }
+
+  public getMatchHistoryClans2(): Observable<any[]> {
+    return this.http.get<any>('https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Match+History+Clans?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU').pipe(
+      map(response => {
+        // Skip the header row and return matches only
+        const matches = response.values.slice(1);
+        return matches.map((match, index) => ({
+          id: index + 1,
+          timestamp: match[0],
+          clan1: match[1],
+          clan2: match[2],
+          clan1score: match[3],
+          clan2score: match[4],
+          preelo1clan: match[5],
+          postelo1clan: match[6],
+          preelo2clan: match[7],
+          postelo2clan: match[8],
+          clan1players: match.slice(9, 16), // Clan 1 players
+          clan2players: match.slice(16, 23) // Clan 2 players
+        }));
+      })
+    );
+  }
+  
+  // New method to get specific clan details
+  public getClanDetails(clanName: string): Observable<any> {
+    return this.http.get<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Clans?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
+    ).pipe(
+      map(response => {
+        const clans = response.values.slice(1); // Skip header
+        const clanDetails = clans.find(clan => clan[0] === clanName); // Assuming clan name is in the first column
+        return clanDetails ? {
+          clan: clanDetails[0],
+          elo: clanDetails[1],
+          clantag: clanDetails[2],
+          win: clanDetails[3],
+          loss: clanDetails[4],
+          draw: clanDetails[5],
+          streak: clanDetails[6],
+          clan_image: clanDetails[7]
+        } : null; // Return null if clan not found
+      })
+    );
+  }
+
+  // public getUserTwo(): Observable<any> {
+  //   return this.http.get<any>('https://reqres.in/api/users/2');
+  // }
 
   public getPlayerDetails(username: string): Observable<any> {
     return this.getPlayers('Players').pipe(
@@ -255,24 +339,52 @@ public getJsonSeason(name: string, path: string): Observable<any[]> {
   //   return playerSheet;
   // }
 
-  public updatePlayerNEW(playerName: any, uname: string, ranking: any, clanHistory: any, nationality: any, ban: boolean, banDue: string, banExpires: string, donateS6: any) {
+  // public updatePlayerNEW(playerName: any, uname: string, ranking: any, clanHistory: any, nationality: any, ban: boolean, banDue: string, banExpires: string, donateS6: any) {
+  //   return this.getPlayers('Players').pipe(
+  //     switchMap((res: any) => {
+  //       const source = res.values;
+  //       const row = source.find((row: any) => row[1] === uname); // Szukamy wiersza po unikatowym identyfikatorze (uname)
+  //       if (row) {
+  //         const rowIndex = source.indexOf(row); // Indeks wiersza (numeracja od 0)
+  //         const updatedRow = [...row]; // Tworzymy kopię wiersza, który chcemy zaktualizować
+  //         // Ustawiamy wartości dla pól, które chcemy zaktualizować
+  //         updatedRow[0] = playerName;
+  //         updatedRow[2] = ranking;
+  //         updatedRow[7] = clanHistory;
+  //         updatedRow[6] = nationality;
+  //         updatedRow[12] = ban;
+  //         updatedRow[33] = banDue; // Kolumna AH
+  //         updatedRow[34] = banExpires; // Kolumna AI
+  //         updatedRow[52] = donateS6; // Kolumna BA
+
+  //         const values = [updatedRow];
+  //         return this.http.put<any>(
+  //           `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Players!A${rowIndex + 1}:BR${rowIndex + 1}?valueInputOption=USER_ENTERED`,
+  //           { values },
+  //           { headers: this.authHeader() }
+  //         );
+  //       } else {
+  //         throw new Error(`Player with username '${uname}' not found.`);
+  //       }
+  //     })
+  //   );
+  // }
+
+  public updatePlayerNEW(username: string, formData: any) {
     return this.getPlayers('Players').pipe(
       switchMap((res: any) => {
         const source = res.values;
-        const row = source.find((row: any) => row[1] === uname); // Szukamy wiersza po unikatowym identyfikatorze (uname)
+        const row = source.find((row: any) => row[1] === username); // Find row by username
+  
         if (row) {
-          const rowIndex = source.indexOf(row); // Indeks wiersza (numeracja od 0)
-          const updatedRow = [...row]; // Tworzymy kopię wiersza, który chcemy zaktualizować
-          // Ustawiamy wartości dla pól, które chcemy zaktualizować
-          updatedRow[0] = playerName;
-          updatedRow[2] = ranking;
-          updatedRow[7] = clanHistory;
-          updatedRow[6] = nationality;
-          updatedRow[12] = ban;
-          updatedRow[33] = banDue; // Kolumna AH
-          updatedRow[34] = banExpires; // Kolumna AI
-          updatedRow[52] = donateS6; // Kolumna BA
-
+          const rowIndex = source.indexOf(row);
+          const updatedRow = [...row];
+  
+          // Update the row based on the form data
+          Object.keys(formData).forEach((key, index) => {
+            updatedRow[index] = formData[key]; // Map form data to correct column index
+          });
+  
           const values = [updatedRow];
           return this.http.put<any>(
             `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Players!A${rowIndex + 1}:BR${rowIndex + 1}?valueInputOption=USER_ENTERED`,
@@ -280,11 +392,12 @@ public getJsonSeason(name: string, path: string): Observable<any[]> {
             { headers: this.authHeader() }
           );
         } else {
-          throw new Error(`Player with username '${uname}' not found.`);
+          throw new Error(`Player with username '${username}' not found.`);
         }
       })
     );
   }
+  
 
 
   public authHeader() : HttpHeaders {

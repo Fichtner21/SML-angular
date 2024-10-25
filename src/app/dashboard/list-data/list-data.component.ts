@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlayersApiService } from 'src/app/services/players-api.service';
 
 @Component({
   selector: 'app-list-data',
   templateUrl: './list-data.component.html',
-  styleUrls: ['./list-data.component.scss']
+  styleUrls: ['./list-data.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ListDataComponent implements OnInit {
   data: any = [];

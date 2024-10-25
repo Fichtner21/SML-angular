@@ -588,11 +588,13 @@ video {
 @media screen and (min-width:1310px){
   .monthActivity {
     position: absolute;
-    bottom: 0;
+    bottom: 50px;
     z-index: 3;
     display: flex;
     justify-content: center;
     min-width: 100%;
+    width: 1300px;
+    height: 280px;
 
     h1 {
       font-size: 20px;

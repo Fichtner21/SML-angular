@@ -29,8 +29,8 @@
           <td class="flag"><img [src]='"assets/images/flags_svg/" + datum.nationality + ".SVG"'></td>
           <td>{{datum.active}}</td>
           <td>{{datum.ban}}</td>
-          <td (click)="editSheet(datum.username)"><button mat-raised-button color="accent" class="btn btn-secondary">Edit</button></td>  
-          <td (click)="deleteSheet(datum.username)"><button class="btn btn-danger" mat-raised-button color="warn">Delete</button></td>
+          <td (click)="editSheet(datum.username)"><button mat-raised-button color="accent" class="btn btn-secondary btn-edit">Edit</button></td>  
+          <td (click)="deleteSheet(datum.username)"><button class="btn btn-danger btn-delete" mat-raised-button color="warn">Delete</button></td>
         </tr>
       </tbody>
     </table>    

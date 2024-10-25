@@ -48,12 +48,18 @@ import { HideRowDirective } from './hide-row.directive';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RankingObjModule } from './ranking-obj/ranking-obj.module';
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AddClanMatchComponent } from './add-clan-match/add-clan-match.component';
+import { ClanListComponent } from './clan-list/clan-list.component';
+import { ChallengeModalComponent } from './shared/challenge-modal/challenge-modal.component';
+import { ClanMatchesListComponent } from './clan-matches-list/clan-matches-list.component';
+import { ClanDetailComponent } from './clan-detail/clan-detail.component';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -106,7 +112,7 @@ const customNotifierOptions: NotifierOptions = {
     AppComponent,
     HomeComponent,
     DateFormatPipePipe,
-    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent
   ],
   imports: [
     CommonModule,
@@ -138,7 +144,8 @@ const customNotifierOptions: NotifierOptions = {
     MatTooltipModule,
     RankingObjModule,
     MatProgressBarModule,
-    MatDialogModule,
+    MatPaginatorModule,
+    MatDialogModule,   
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),
@@ -159,6 +166,7 @@ const customNotifierOptions: NotifierOptions = {
   AuthGuard,
   OAuthService,
   UrlHelperService,
+ 
   // {
   //   provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true
   // },

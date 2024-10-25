@@ -1,0 +1,201 @@
+<section>
+<mat-table [dataSource]="clans" class="mat-elevation-z8" matSort>
+
+  <!-- Ranking Column -->
+  <ng-container matColumnDef="ranking">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Ranking </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.ranking}} </mat-cell>
+  </ng-container>
+
+  <!-- Clan Column -->
+  <ng-container matColumnDef="clan">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Clan </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.clan}} </mat-cell>
+  </ng-container>
+
+  <!-- Elo Column -->
+  <ng-container matColumnDef="elo">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Elo </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.elo}} </mat-cell>
+  </ng-container>
+
+  <!-- Clantag Column -->
+  <ng-container matColumnDef="clantag">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Clan Tag </mat-header-cell>
+    <mat-cell *matCellDef="let element"><a href="/clan/{{element.clan}}">{{element.clantag}}</a></mat-cell>
+  </ng-container>
+
+  <!-- Clan Leader (CL) Column -->
+  <ng-container matColumnDef="cl">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Clan Leader </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.cl}} </mat-cell>
+  </ng-container>
+
+  <!-- WhatsApp Contact (WA) Column -->
+  <ng-container matColumnDef="wa">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> WA Contact </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.wa}} </mat-cell>
+  </ng-container>
+
+  <!-- Clan Image Column -->
+  <ng-container matColumnDef="clan_image">
+    <mat-header-cell *matHeaderCellDef> Image </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <img [src]='"assets/images/" + element.clan_image + ".png"' alt="{{element.clan}}" [style.width.px]="80" *ngIf="element.clan_image"/>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Clan Flag Column -->
+  <ng-container matColumnDef="flag">
+    <mat-header-cell *matHeaderCellDef> Flag </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <img [src]='"assets/images/flags_svg/" + element.flag + ".SVG"' [style.width.px]="20">
+    </mat-cell>
+  </ng-container>
+
+  <!-- Wins Column -->
+  <ng-container matColumnDef="win">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Wins </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.win}} </mat-cell>
+  </ng-container>
+
+  <!-- Losses Column -->
+  <ng-container matColumnDef="loss">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Losses </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.loss}} </mat-cell>
+  </ng-container>
+
+  <!-- Draws Column -->
+  <ng-container matColumnDef="draw">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Draws </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.draw}} </mat-cell>
+  </ng-container>
+
+  <!-- Streak Column -->
+  <ng-container matColumnDef="streak">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Streak </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.streak}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="challenge">
+    <mat-header-cell *matHeaderCellDef> Challenge </mat-header-cell>
+    <mat-cell *matCellDef="let clan">
+      <button mat-raised-button color="primary" (click)="openChallengeModal(clan)">Challenge</button>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Table Header and Row Definitions -->
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <!-- Add ngStyle here to apply background image -->
+  <mat-row *matRowDef="let row; columns: displayedColumns;" 
+    [ngStyle]="{'background-image': 'url(assets/images/' + row.clan_image + '.png)', 'background-size': 'cover'}">
+  </mat-row>
+
+</mat-table>
+
+  <div class="container">
+    <div class="table-ranking" style="background-color: burlywood;">
+      <div class="item">Place</div>
+      <div class="item">Clan</div>
+      <div class="item"></div>
+      <div class="item">ELO</div>
+      <div class="item">Wins</div>
+      <div class="item">Losses</div>
+      <div class="item">Draws</div>
+      <div class="item">Streak</div>
+      <div class="item"></div>
+      <div class="item"></div>
+    </div>
+    <hr>
+    <div class="clans">
+      <ng-container *ngFor="let clan of clans; let i = index;">        
+        <div class="row-ranking" (click)="toggleClanDetails(i)">
+          <div class="item">{{ i + 1}}</div>
+          <div class="item clantag">{{ clan.clantag }}</div>
+          <div class="item">
+            <img [src]='"assets/images/flags_svg/" + clan.flag + ".SVG"' [style.width.px]="30">
+          </div>
+          <div class="item">{{ clan.elo }}</div>
+          <div class="item">{{ clan.win }}</div>
+          <div class="item">{{ clan.loss }}</div>
+          <div class="item">{{ clan.draw }}</div>
+          <div class="item" [ngClass]="{'streak-up': clan.streak.streakType == 'W', 'streak-down': clan.streak.streakType == 'L', 'streak-draw': clan.streak.streakType == 'D'}">{{ clan.streak.streakCount }}{{ clan.streak.streakType }}</div>
+          <div class="item">{{ clan.last30days }}</div>
+          <div class="item">{{ clan.last365days }}</div>
+        </div>
+        <div class="more-clan" *ngIf="expandedClanIndex === i">
+          <div class="members">
+            <div class="member">
+              <div class=""></div>
+              <div class=""></div>
+              <div class="item-leader">MIX ELO</div>
+              <div class="item-leader">MIX Wars</div>
+              <div class="item-leader">MIX Place</div>
+              <div class="item-leader">MIX FpW</div>
+            </div>              
+          </div>
+          <div class="members">
+            <strong>CLAN LEADER:</strong> 
+            <div class="member">
+              <div class="item-name">
+                <a href="/obj-ranking/{{ clan.cl.username }}" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}">
+                  {{ clan.clantag }} {{ clan.cl.playername }}</a>
+              </div> 
+              <div class="item-leader">
+                <img [src]='"assets/images/flags_svg/" + clan.cl.flag + ".SVG"' [style.width.px]="20">
+              </div> 
+              <div class="item-leader" title="Current mix ELO">{{clan.cl.elo}} </div> 
+              <div class="item-leader" title="War count">{{ clan.cl.mixwars }}</div> 
+              <div class="item-leader" title="Current place in MIX">{{ clan.cl.placemix }}</div>
+              <div class="item-leader" title="Avarage Frags per War in MIX">{{ clan.cl.fpw }}</div>
+            </div>           
+          </div>          
+          <div class="members">
+            <strong>WAR ARRANGER:</strong>
+            <div class="member-wa">
+              <div class="item-name">
+                <a href="/obj-ranking/{{ clan.wa.username }}" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}">{{ clan.clantag }} {{ clan.wa.playername }}</a>
+              </div> 
+              <div class="item-leader">
+                <img [src]='"assets/images/flags_svg/" + clan.wa.flag + ".SVG"' [style.width.px]="20">
+              </div> 
+              <div class="item-leader" title="Current mix ELO">{{clan.wa.elo}}</div>
+              <div class="item-leader" title="War count">{{ clan.wa.mixwars }}</div>
+              <div class="item-leader" title="Current place in MIX">{{ clan.wa.placemix }}</div> 
+              <div class="item-leader" title="Avarage Frags per War in MIX">{{ clan.wa.fpw }}</div>
+              <div class="item-leader">
+                <button mat-raised-button color="primary" (click)="openChallengeModal(clan)">Challenge</button>
+              </div>
+            </div>
+          </div>
+          <div class="members">
+            CLAN MEMBERS:
+            <div *ngFor="let member of clan.members" class="member">    
+              <div class="item-name">
+                <a href="/obj-ranking/{{ member.username }}" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">{{ clan.clantag }} {{ member.playername }}</a>
+              </div>
+              <div class="item-leader">
+                <img [src]='"assets/images/flags_svg/" + member.flag + ".SVG"' [style.width.px]="20">
+              </div>
+              <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                <span title="Obj ranking" title="Current mix ELO">{{member.elo}} </span>
+              </div>
+              <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                <span title="War count">{{ member.mixwars }}</span>
+              </div>
+              <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                <span title="Current place in MIX">{{ member.placemix }} </span>
+              </div>
+              <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                <span title="Avarage Frags per War in MIX">{{ member.fpw }}</span>
+              </div>     
+            </div>
+          </div>
+          <div class="clanname">
+            {{ clan.clantag }}
+          </div>
+        </div> 
+      </ng-container>
+    </div>
+  </div>
+</section>

@@ -15,7 +15,7 @@ interface CountryCodeMap {
   selector: 'app-player-view',
   templateUrl: './player-view.component.html',
   styleUrls: ['./player-view.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  // encapsulation: ViewEncapsulation.None
 })
 export class PlayerViewComponent implements OnInit {
   // public player$:Observable<Players>;
@@ -45,6 +45,8 @@ export class PlayerViewComponent implements OnInit {
   season4wars = 194;
   season5wars: number = 0;
   season6wars: number;
+  season7wars: number;
+  season8wars: number;
   currentActivePlayers: number = 0;
   aaa = [];
   resultCanvas: any;
@@ -138,6 +140,7 @@ export class PlayerViewComponent implements OnInit {
   };
 
   currentPlayer: any;
+  Math = Math; 
 
   constructor(private activatedRoute: ActivatedRoute, private playersApiService: PlayersApiService, private router: Router) {
    }
@@ -146,8 +149,8 @@ export class PlayerViewComponent implements OnInit {
 
     this.numOfPlayers$ = this.playersApiService.getPlayers('NumPlayers').pipe(
       map((response: any) => {
-        this.season6wars = response.values[1][3];
-        return this.season6wars;
+        this.season8wars = response.values[1][5];
+        return this.season8wars;
       })
     );
 
@@ -259,6 +262,8 @@ export class PlayerViewComponent implements OnInit {
         let listwars4: any[] = [];
         let listwars5: any[] = [];
         let listwars6: any[] = [];
+        let listwars7: any[] = [];
+        let listwars8: any[] = [];
         let rankings: any[] = [];
         let resultPerPlayer: any[] = [];
         let s1wars: string;
@@ -268,6 +273,8 @@ export class PlayerViewComponent implements OnInit {
         let s4fpw: string;
         let s5fpw: string;
         let s6fpw: string;
+        let s7fpw: string;
+        let s8fpw: string;
         let active: string;
         let place: string;
         let ban: string;
@@ -287,6 +294,12 @@ export class PlayerViewComponent implements OnInit {
         let s5wars_win: number;
         let s5fpw_win: number;
         let s5ranking_win: number;
+        let s6wars_win: number;
+        let s6fpw_win: number;
+        let s6ranking_win: number;
+        let s7wars_win: number;
+        let s7fpw_win: number;
+        let s7ranking_win: number;
 
         const foundPlayerArray = this.filterUsername(player, inactives, matches);
         const fragsPerPlayerArray:any[] = [];
@@ -377,6 +390,10 @@ export class PlayerViewComponent implements OnInit {
 
             listwars6.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
 
+            listwars7.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
+
+            listwars8.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
+
             rankings.push(Math.round(rankHistory * 100) / 100);
             playerArray.push([el.idwar, el.timestamp, fragPerWar]);
             timestampArray.push(new Date(el.timestamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }));
@@ -397,6 +414,8 @@ export class PlayerViewComponent implements OnInit {
             s4fpw = el.s4fpw;
             s5fpw = el.s5fpw;
             s6fpw = el.s6fpw;
+            s7fpw = el.s7fpw;
+            s8fpw = el.s8fpw;
             place = el.place;
             ban = el.ban;
             banDue = el.ban_due;
@@ -413,6 +432,10 @@ export class PlayerViewComponent implements OnInit {
             s4ranking_win = el.s4ranking_win,
             s5fpw_win = el.s5fpw_win,
             s5ranking_win = el.s5ranking_win,
+            s6fpw_win = el.s6fpw_win,
+            s6ranking_win = el.s6ranking_win,
+            s7fpw_win = el.s7fpw_win,
+            s7ranking_win = el.s7ranking_win,
             active = el.active
           }
         });
@@ -436,6 +459,8 @@ export class PlayerViewComponent implements OnInit {
           listwars4: this.filterObjectsByDateRange(listwars4, new Date(2023, 9, 1), new Date(2023, 11, 31)), // Październik - Grudzień 2023
           listwars5: this.filterObjectsByDateRange(listwars5, new Date(2024, 0, 1), new Date(2024, 2, 31)), // Styczeń - Marzec 2024
           listwars6: this.filterObjectsByDateRange(listwars6, new Date(2024, 3, 1), new Date(2024, 5, 30)), // Kwiecień - Czerwiec 2024
+          listwars7: this.filterObjectsByDateRange(listwars7, new Date(2024, 6, 1), new Date(2024, 8, 31)), // Lipiec - Wrzesień 2024
+          listwars8: this.filterObjectsByDateRange(listwars8, new Date(2024, 9, 1), new Date(2024, 11, 31)), // Październik - Grudzień 2024
           win: win,
           lose: lose,
           draw: draw,
@@ -454,6 +479,8 @@ export class PlayerViewComponent implements OnInit {
           s4fpw: parseFloat(s4fpw),
           s5fpw: parseFloat(s5fpw),
           s6fpw: parseFloat(s6fpw),
+          s7fpw: parseFloat(s7fpw),
+          s8fpw: parseFloat(s8fpw),
           active: (active == 'FALSE') ? false : true,
           ban: (ban == 'FALSE') ? false : true,
           place: place !== '' ? place : '-',
@@ -472,9 +499,15 @@ export class PlayerViewComponent implements OnInit {
           s4ranking_win: s4ranking_win ? s4ranking_win : '',
           s5wars_win: s5wars_win ? s5wars_win : '',
           s5fpw_win: s5fpw_win ? s5fpw_win : '',
-          s5ranking_win: s5ranking_win ? s5ranking_win : ''
+          s5ranking_win: s5ranking_win ? s5ranking_win : '',
+          s6wars_win: s6wars_win ? s6wars_win : '',
+          s6fpw_win: s6fpw_win ? s6fpw_win : '',
+          s6ranking_win: s6ranking_win ? s6ranking_win : '',
+          s7wars_win: s7wars_win ? s7wars_win : '',
+          s7fpw_win: s7fpw_win ? s7fpw_win : '',
+          s7ranking_win: s7ranking_win ? s7ranking_win : ''
         }
-        console.log('playerCardNative', playerCard)
+        // console.log('playerCardNative', playerCard.listwars7)
         return playerCard;
       }),
       shareReplay(1)
@@ -900,152 +933,6 @@ export class PlayerViewComponent implements OnInit {
       plugins: [ChartAnnotation]
     });
   }
-//   public showRankingSeason(player1ListWars: any[], chartId: string, player1Name: string, player2ListWars?: any[], player2Name?: string){
-//     let myChart: Chart; // Deklaracja zmiennej myChart przed użyciem
-
-//     this.canvasRank = document.getElementById(chartId);
-//     if (!this.canvasRank) return;
-//     this.ctxRank = this.canvasRank.getContext('2d');
-
-//     const player1Labels = player1ListWars.map((_, index) => '#' + (index + 1)); // użyj indeksu jako etykiety dla gracza 1
-//     const player1Rankings = player1ListWars.map(obj => obj.ranking);
-
-//     const labels = player2ListWars ?
-//         player2ListWars.map((_, index) => '#' + (index + 1)) :
-//         player1Labels;
-
-//     const datasets = [
-//         {
-//             label: player1Name,
-//             borderColor: '#ffffc0',
-//             lineTension: 0,
-//             order: 1,
-//             data: player1Rankings,
-//             backgroundColor: player1Rankings.map(function(rank, i){
-//                 if(rank === Math.max(...player1Rankings)){
-//                     return 'rgba(11,156,49,0.6)';
-//                 }
-//                 if(rank === Math.min(...player1Rankings)){
-//                     return 'rgba(255,0,0,0.6)';
-//                 }
-//                 // return "rgba(199, 199, 199, 0.1)";
-//             }),
-//             borderWidth: 1
-//         }
-//     ];
-
-//     if (player2ListWars && player2ListWars.length > 0) {
-//         const player2Rankings = player2ListWars.map(obj => obj.ranking);
-
-//         datasets.push({
-//             label: player2Name || 'Player 2',
-//             borderColor: '#ff0000',
-//             lineTension: 0,
-//             order: 2,
-//             data: player2Rankings,
-//             backgroundColor: player2Rankings.map(function(rank, i){
-//                 if(rank === Math.max(...player2Rankings)){
-//                     return 'rgba(11,156,49,0.6)';
-//                 }
-//                 if(rank === Math.min(...player2Rankings)){
-//                     return 'rgba(255,0,0,0.6)';
-//                 }
-//                 // return "rgba(199, 199, 199, 0.1)";
-//             }),
-//             borderWidth: 1
-//         });
-//     }
-
-//     myChart = new Chart(this.ctxRank, {
-//       type: 'line',
-//       data: {
-//           labels: player1Labels.map(i => '#' + i),
-//           datasets: datasets
-//       },
-//       options: {
-//           // Reszta opcji
-//       } as ChartOptions,
-//       plugins: [ChartAnnotation]
-//   });
-// }
-
-
-
-
-  // public showRankingSeason(listwars:any[], chartId: string){
-  //   this.canvasRank = document.getElementById(chartId);
-  //   if (!this.canvasRank ) return;
-  //   this.ctxRank = this.canvasRank.getContext('2d');
-  //   const labels = listwars.map(obj => obj.idwar);
-  //   const rankings = listwars.map(obj => obj.ranking);
-  //   let myChart = new Chart(this.ctxRank, {
-  //     type: 'line',
-  //     data: {
-  //         labels: labels.map(i => '#' + i),
-  //         datasets: [{
-  //             label: 'Ranking',
-  //             borderColor: '#ffffc0',
-  //             lineTension: 0,
-  //             order: 1,
-  //             data: rankings,
-  //             backgroundColor: rankings.map(function(rank, i){
-  //               if(rankings[i] == Math.max.apply(null, rankings)){
-  //                 return 'rgba(11,156,49,0.6)';
-  //               }
-  //               if(rankings[i] == Math.min.apply(null, rankings)){
-  //                 return 'rgba(255,0,0,0.6)';
-  //               }
-  //               // return "rgba(199, 199, 199, 0.1)";
-  //             }),
-  //             borderWidth: 1
-  //         }]
-  //     },
-  //     options: {
-  //       onClick: function(c,i) {
-  //         let e:any;
-  //         e = i[0];
-  //         console.log(e._index)
-  //         var x_value = this.data.labels[e._index];
-  //         var y_value = this.data.datasets[0].data[e._index];
-  //         const toWarLink = x_value.substring(1);
-  //         window.open(`/obj-matches/${toWarLink}`);
-  //         console.log(toWarLink);
-  //         console.log(y_value);
-  //       },
-  //       elements: {
-  //         line: {
-  //           tension: 0,
-  //         },
-  //       },
-  //       annotation: {
-  //         drawTime: 'afterDatasetsDraw',
-  //         annotations: [
-  //           {
-  //             id: 'hline1',
-  //             type: 'line',
-  //             mode: 'horizontal',
-  //             scaleID: 'y-axis-0',
-  //             value: 1000,
-  //             borderColor: 'red',
-  //             borderDash: [10, 5],
-  //             label: {
-  //               backgroundColor: 'red',
-  //               content: '1000pc',
-  //               enabled: true,
-  //             },
-  //           },
-  //         ]
-  //       },
-  //       legend: {
-  //         display: false
-  //       },
-  //       responsive: true,
-
-  //       // display:true
-  //     } as ChartOptions,
-  //     plugins: [ChartAnnotation]
-  //   });
-  // }
 
   toggleChart(chart: string) {
     switch (chart) {
@@ -1152,6 +1039,8 @@ export class PlayerViewComponent implements OnInit {
         let listwars4: any[] = [];
         let listwars5: any[] = [];
         let listwars6: any[] = [];
+        let listwars7: any[] = [];
+        let listwars8: any[] = [];
         let rankings: any[] = [];
         let resultPerPlayer: any[] = [];
         let s1wars: string;
@@ -1161,6 +1050,8 @@ export class PlayerViewComponent implements OnInit {
         let s4fpw: string;
         let s5fpw: string;
         let s6fpw: string;
+        let s7fpw: string;
+        let s8fpw: string;
         let active: string;
         let place: string;
         let ban: string;
@@ -1180,6 +1071,12 @@ export class PlayerViewComponent implements OnInit {
         let s5wars_win: number;
         let s5fpw_win: number;
         let s5ranking_win: number;
+        let s6wars_win: number;
+        let s6fpw_win: number;
+        let s6ranking_win: number;
+        let s7wars_win: number;
+        let s7fpw_win: number;
+        let s7ranking_win: number;
 
         const foundPlayerArray = this.filterUsername(selectedPlayer, inactives, matches);
         const fragsPerPlayerArray: any[] = [];
@@ -1268,6 +1165,10 @@ export class PlayerViewComponent implements OnInit {
 
             listwars6.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
 
+            listwars7.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
+
+            listwars8.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
+
             rankings.push(Math.round(rankHistory * 100) / 100);
             playerArray.push([el.idwar, el.timestamp, fragPerWar]);
             timestampArray.push(new Date(el.timestamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }));
@@ -1288,6 +1189,8 @@ export class PlayerViewComponent implements OnInit {
             s4fpw = el.s4fpw;
             s5fpw = el.s5fpw;
             s6fpw = el.s6fpw;
+            s7fpw = el.s7fpw;
+            s8fpw = el.s8fpw;
             place = el.place;
             ban = el.ban;
             banDue = el.ban_due;
@@ -1304,6 +1207,10 @@ export class PlayerViewComponent implements OnInit {
             s4ranking_win = el.s4ranking_win,
             s5fpw_win = el.s5fpw_win,
             s5ranking_win = el.s5ranking_win,
+            s6fpw_win = el.s6fpw_win,
+            s6ranking_win = el.s6ranking_win,
+            s7fpw_win = el.s7fpw_win,
+            s7ranking_win = el.s7ranking_win,
             active = el.active
           }
         });
@@ -1327,6 +1234,8 @@ export class PlayerViewComponent implements OnInit {
           listwars4: this.filterObjectsByDateRange(listwars4, new Date(2023, 9, 1), new Date(2023, 11, 31)), // Październik - Grudzień 2023
           listwars5: this.filterObjectsByDateRange(listwars5, new Date(2024, 0, 1), new Date(2024, 2, 31)), // Styczeń - Marzec 2024
           listwars6: this.filterObjectsByDateRange(listwars6, new Date(2024, 3, 1), new Date(2024, 5, 30)), // Kwiecień - Czerwiec 2024
+          listwars7: this.filterObjectsByDateRange(listwars7, new Date(2024, 6, 1), new Date(2024, 8, 31)), // Lipiec - Wrzesień 2024
+          listwars8: this.filterObjectsByDateRange(listwars8, new Date(2024, 9, 1), new Date(2024, 11, 31)), // Październik - Grudzień 2024
           win: win,
           lose: lose,
           draw: draw,
@@ -1345,6 +1254,8 @@ export class PlayerViewComponent implements OnInit {
           s4fpw: parseFloat(s4fpw),
           s5fpw: parseFloat(s5fpw),
           s6fpw: parseFloat(s6fpw),
+          s7fpw: parseFloat(s7fpw),
+          s8fpw: parseFloat(s7fpw),
           active: (active == 'FALSE') ? false : true,
           ban: (ban == 'FALSE') ? false : true,
           place: place !== '' ? place : '-',
@@ -1363,21 +1274,22 @@ export class PlayerViewComponent implements OnInit {
           s4ranking_win: s4ranking_win ? s4ranking_win : '',
           s5wars_win: s5wars_win ? s5wars_win : '',
           s5fpw_win: s5fpw_win ? s5fpw_win : '',
-          s5ranking_win: s5ranking_win ? s5ranking_win : ''
+          s5ranking_win: s5ranking_win ? s5ranking_win : '',
+          s6wars_win: s6wars_win ? s6wars_win : '',
+          s6fpw_win: s6fpw_win ? s6fpw_win : '',
+          s6ranking_win: s6ranking_win ? s6ranking_win : '',
+          s7wars_win: s7wars_win ? s7wars_win : '',
+          s7fpw_win: s7fpw_win ? s7fpw_win : '',
+          s7ranking_win: s7ranking_win ? s7ranking_win : ''
         }
-        console.log('playerCard', playerCard);
+        // console.log('playerCard', playerCard.listwars7);
         this.playerCard = playerCard;
       }),
     ).subscribe();
   }
 
-
-
- // W ciele klasy lub w metodzie...
 // Subskrybujemy się do strumienia playerDetailToCompare$ i dodajemy console.log
 // this.playerDetailToCompare$.subscribe(playerData => {
 //   console.log('playerDetailToCompare$:', playerData); // Dodajemy console.log dla playerDetailToCompare$
 // });
-
-
 }

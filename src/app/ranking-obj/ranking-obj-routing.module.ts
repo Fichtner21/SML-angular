@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { RankingObjComponent } from './ranking-obj.component';
 import { PlayerViewComponent } from './player-view/player-view.component';
 import { PlayerViewResolve } from './player-view/resolver/player-view.resolver';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const routes: Routes = [
   {
@@ -18,7 +19,8 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}]
 })
 
 export class RankingObjRoutingModule {}

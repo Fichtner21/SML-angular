@@ -209,10 +209,29 @@
                <img src="/assets/images/g_chat.png" alt="">
             </div>
                        
-            <div class="single-btn">
+            <!-- <div class="single-btn">
               <button mat-raised-button color="accent" class="lp" (click)="getDiscordUsers()" [disabled]="!isAuthenticated()">Get from Discord <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowDown"></fa-icon></button>
               <div>Get players from WANT TO PLAY channel.</div>
-            </div>            
+            </div>             -->
+            <div class="single-btn">
+              <button mat-raised-button color="accent" class="lp" 
+                      (click)="getDiscordUsers()" 
+                      [disabled]="!(authService.isAuthenticated$ | async)">
+                Get from Discord <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowDown"></fa-icon>
+              </button>
+              
+              <div *ngIf="!(authService.isAuthenticated$ | async)">
+                <button mat-raised-button color="primary" (click)="authService.login()">
+                  Log in with Google
+                </button>
+                <p>You need to log in to access this feature.</p>
+              </div>
+            
+              <div *ngIf="authService.isAuthenticated$ | async">
+                <p>Welcome back!</p>
+                <button mat-raised-button color="warn" (click)="authService.logout()">Logout</button>
+              </div>
+            </div>
             <!-- <div class="single-btn">
               <button mat-raised-button color="accent" class="lp" (click)="sendToVoiceChannels()" [disabled]="!isAuthenticated()">Send to Voice Channels <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowUp"></fa-icon></button>
               <div>Send players to TEAM 1 and TEAM 2 voice channels.</div>

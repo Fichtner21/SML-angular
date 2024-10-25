@@ -17,6 +17,19 @@ import { AuthService } from './auth.service';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { faEuro, faHome, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { faPaypal } from '@fortawesome/free-brands-svg-icons';
+import { HttpClient } from '@angular/common/http';
+import { NotifierService } from 'angular-notifier';
+import { SeasonService } from './services/season.service';
+import { PlayerService } from './services/player.service';
+
+interface VoiceMember {
+  id: string;
+  username: string;
+  nickname: string;
+  additionalInfo0?: string; // Wartość z indeksu 0
+  additionalInfo1?: string; // Wartość z indeksu 1
+  additionalInfo6?: string; // Wartość z indeksu 6
+}
 
 @Component({
   selector: 'app-root',
@@ -47,10 +60,18 @@ export class AppComponent implements OnInit {
   total_wars: any;
   s5_wars: any;
   s6_wars: any;
+  s7_wars: any;
+  s8_wars: any;
   progressValue: number;
   tooltipText: string;
+  public userCount: number = 0;
+  public players: VoiceMember[] = []; // Lista graczy
+  public playersData: any[] = []; // Przechowywanie przetworzonych danych
+  season!: number;
+  dateRange!: string;
+  playerDetails: any;
 
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router, private oAuthService: OAuthService) {
+  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router, private oAuthService: OAuthService, private http: HttpClient, private notifier: NotifierService, private seasonService: SeasonService, private playerService: PlayerService) {
     translateService.setDefaultLang(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');
   }
 
@@ -60,6 +81,12 @@ export class AppComponent implements OnInit {
   ]
 
   ngOnInit(): void {
+    // this.getDiscordUsers();
+    // this.getPlayersData();
+    const seasonInfo = this.seasonService.getSeason();
+    this.season = seasonInfo.season;
+    this.dateRange = seasonInfo.dateRange;
+   
     // this.translateService.setDefaultLang('en');
 
     // this.lang.valueChanges.subscribe((lang) => {
@@ -88,6 +115,8 @@ export class AppComponent implements OnInit {
       map((response: any) => {
         this.s5_wars = response.values[1][2];
         this.s6_wars = response.values[1][3];
+        this.s7_wars = response.values[1][4];
+        this.s8_wars = response.values[1][5];
         this.total_wars = response.values[1][1];
         this.num_Players = response.values[1][0];
 
@@ -95,50 +124,18 @@ export class AppComponent implements OnInit {
       })
     );
 
-
-    this.players$ = this.playersApiService.getPlayers('Players').pipe(
-      map((response: any) => {
-        return response.values;
-      })
-    )
-
-    // this.matches$ = this.playersApiService.getPlayers('Match+History').pipe(
-    //   map((response: any) => {
-    //     // console.log(response.values);
-    //     const resValues = response.values;
-    //     resValues.shift();
-    //     const matchesDate = [];
-    //     const startDate = new Date('2024-01-01T00:00:00Z');
-    //     const endDate = new Date('2024-03-31T23:59:59Z');
-
-    //     resValues.forEach((el: any) => {
-    //       const matchDate = new Date(el[0]).toISOString();
-    //       matchesDate.push(matchDate);
-
-    //       // Sprawdzamy, czy data meczu mieści się w zakresie
-    //       const matchDateTime = new Date(matchDate).getTime();
-    //       if (matchDateTime >= startDate.getTime() && matchDateTime <= endDate.getTime()) {
-    //         this.numberOfMatches++;
-    //       }
-    //     });
-
+    // this.players$ = this.playersApiService.getPlayers('Players').pipe(
+    //   map((response: any) => {       
     //     return response.values;
     //   })
-    // );
-
-    // this.playersApiService.getHistoryMatches().subscribe(matches => {
-    //   this.matches$ = matches;
-    //   console.log('matches', matches)
-    // });
-
-    // console.log('local =>', localStorage.getItem('lang'));
-    const startDate = new Date('2024-04-01');
-    const endDate = new Date('2024-06-30');
+    // )
+   
+    const startDate = new Date('2024-07-01');
+    const endDate = new Date('2024-09-30');
     const totalDays = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24));
     const currentDate = new Date();
     const daysLeft = Math.floor((endDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
     this.progressValue = ((totalDays - daysLeft) / totalDays) * 100;
-
     this.tooltipText = `There are ${daysLeft} days left until the end of the season.`;
   }
 
@@ -177,5 +174,103 @@ export class AppComponent implements OnInit {
     localStorage.removeItem('is_admin');
     this.router.navigate(['/']);
     return true;
+  }
+
+  // getDiscordUsers() {
+  //   this.http.get<VoiceMember[]>(`${environment.externalApiUrl}voice-members`).subscribe(
+  //     (members) => {
+  //       this.userCount = members.length; // Aktualizacja liczby użytkowników
+  //       this.players = members; // Przechowywanie listy graczy
+  //       console.log('this.players', this.players)
+  //       this.playerService.loadPlayers().subscribe(() => {
+  //         const playerDetails = this.playerService.addPlayerLink('illusion');
+  //         console.log('Player Details:', playerDetails); // Should show player details
+  //       });
+  //       if (this.userCount === 0) {
+  //         this.notifier.notify('warning', 'WANT TO PLAY is empty.');
+  //       } else {
+  //         this.notifier.notify('success', `${this.userCount} users are currently in the WANT TO PLAY channel.`);
+  //       }
+  //     },
+  //     (err) => {
+  //       this.notifier.notify('error', 'Import Players from Discord failed.');
+  //     }
+  //   );
+  // }
+  // getDiscordUsers() {
+  //   this.http.get<VoiceMember[]>(`${environment.externalApiUrl}voice-members`).subscribe(
+  //     (members) => {
+  //       this.userCount = members.length; // Update user count
+  //       console.log('Discord Members:', members); // Log Discord members
+        
+  //       // Store the list of players
+  //       this.players = members; 
+  //       console.log('this.players', this.players);
+  
+  //       // Load players from your service
+  //       this.playerService.loadPlayers().subscribe(() => {
+  //         // Get all players matching the Discord members
+  //         const matchedPlayers = this.getMatchedPlayers(members);
+  //         console.log('Matched Players:', matchedPlayers); // Log matched players
+          
+  //         if (matchedPlayers.length === 0) {
+  //           this.notifier.notify('warning', 'No matching players found.');
+  //         } else {
+  //           const playerDetails = matchedPlayers.map(player => 
+  //             `Player Name: ${player.playername}, `
+  //           ); 
+  
+  //           this.notifier.notify('success', `Current users in the WANT TO PLAY channel: ${playerDetails}`);
+  //         }
+  //       });
+        
+  //       if (this.userCount === 0) {
+  //         this.notifier.notify('warning', 'WANT TO PLAY is empty.');
+  //       }
+  //     },
+  //     (err) => {
+  //       this.notifier.notify('error', 'Import Players from Discord failed.');
+  //     }
+  //   );
+  // }
+  
+  // Helper method to find matched players
+  private getMatchedPlayers(members: VoiceMember[]): any[] {
+    return members.reduce((acc: any[], member: VoiceMember) => {
+      const foundPlayer = this.playerService.addPlayerLink(member.nickname || member.username);
+      if (foundPlayer) {
+        acc.push(foundPlayer); // Add matched player to the accumulator
+      }
+      return acc;
+    }, []);
+  }
+
+  // getPlayersData() {
+  //   this.playersApiService.getPlayers('Players').pipe(
+  //     map((response: any) => {       
+  //       return response.values.map((item: any[]) => ({
+  //         index0: item[0], // Wartość z indeksu 0
+  //         index1: item[1],
+  //         index6: item[6]  // Wartość z indeksu 6
+  //       }));
+  //     })
+  //   ).subscribe((data) => {
+  //     this.playersData = data; // Przechowywanie przetworzonych danych
+  //     // console.log('DATA', data)
+  //     this.updatePlayersWithData();
+  //   });
+  // }
+
+  updatePlayersWithData() {
+    this.players.forEach(player => {
+      console.log('player', player)
+      const matchingData = this.playersData.find(data => data.index1 === player.nickname || player.username);
+      console.log('matchingData', matchingData)
+      if (matchingData) {
+        player.additionalInfo0 = matchingData.index0; // Wartość z indeksu 0
+        player.additionalInfo1 = matchingData.index1; // Wartość z indeksu 1
+        player.additionalInfo6 = matchingData.index6; // Wartość z indeksu 6
+      }
+    });
   }
 }

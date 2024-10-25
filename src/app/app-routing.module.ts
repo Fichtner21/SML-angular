@@ -5,6 +5,10 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { MixUsComponent } from './mix-us/mix-us.component';
+import { AddClanMatchComponent } from './add-clan-match/add-clan-match.component';
+import { ClanListComponent } from './clan-list/clan-list.component';
+import { ClanMatchesListComponent } from './clan-matches-list/clan-matches-list.component';
+import { ClanDetailComponent } from './clan-detail/clan-detail.component';
 
 const routes: Routes = [{
   path: '',
@@ -38,6 +42,22 @@ const routes: Routes = [{
 {
   path: 'mix',
   component: MixUsComponent  
+},
+{ 
+  path: 'add-clan-war',
+  component: AddClanMatchComponent
+},
+{ 
+  path: 'clan-ranking',
+  component: ClanListComponent
+},
+{
+  path: 'clan-matches',
+  component: ClanMatchesListComponent
+},
+{ 
+  path: 'clan/:clan', 
+  component: ClanDetailComponent 
 },
 { 
   path: 'login' , 

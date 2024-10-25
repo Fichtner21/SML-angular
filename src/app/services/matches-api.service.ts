@@ -1,13 +1,18 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatchesApiService {
+  private apiUrl = 'https://script.googleapis.com/v1/scripts/AKfycbycrwWgZRkLq3GXhdFHyCNnVUrb8QtPMSueAAyLSU-p_rTzLJL4MUaPQo4bjt6atkbI:run';
+  headers:any;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private readonly oAuthService: OAuthService) { 
+    this.headers = new HttpHeaders().set('Authorization', `Bearer ${this.oAuthService.getAccessToken()}`)
+  }
 
   public getMatches(name:string): Observable<any>{
     return this.http.get<any>(`https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`);
@@ -50,5 +55,24 @@ export class MatchesApiService {
       findLastTimeStamp = 'No match';
     }
     return newTimestampElem;
+  }
+
+  public authHeader(): HttpHeaders {
+    // const token = this.oAuthService.getAccessToken(); // Uzyskaj aktualny token
+    // if (!token) {
+    //   console.error('Token dostępu nie jest dostępny. Użytkownik może nie być zalogowany.');
+    // }
+    return new HttpHeaders({
+      'Authorization': `Bearer ${this.oAuthService.getAccessToken()}`, // Przekaż token w nagłówku
+      'Content-Type': 'application/json'
+    });
+  }
+
+  addClanMatch(matchData: any) {
+    const body = {
+      function: 'doPost',
+      parameters: [matchData]
+    }
+    return this.http.post(this.apiUrl, body, {headers: this.authHeader()});
   }
 }

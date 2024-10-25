@@ -17,6 +17,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
+
 export interface UserInfo {
   info: {
     at_hash: string,
@@ -89,7 +90,8 @@ export const authCodeFlowConfig: AuthConfig = {
   // maybe help with CORS?
   oidc: true,
 
-  showDebugInformation: true
+  showDebugInformation: true,
+  
 }
 
 @Component({
@@ -291,9 +293,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   playerRowArray2: any[] = []; // Tablica graczy
   playerList: string[] = []; // Lista nazw graczy do walidacji
 
-  constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, public oAuthService: OAuthService, private formBuilder: FormBuilder,notifierService: NotifierService, private modalService: NgbModal, public dialog: MatDialog) {
-
-  //
+  constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, public oAuthService: OAuthService, private formBuilder: FormBuilder,notifierService: NotifierService, private modalService: NgbModal, public dialog: MatDialog) {  
     // confiure oauth2 service
     oAuthService.configure(authCodeFlowConfig);
     // manually configure a logout url, because googles discovery document does not provide it
@@ -331,7 +331,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
           //   this.userProfile = profile;
           // });
         }
-
       })
     });
 
@@ -908,7 +907,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // }
 
   sendMessageToDiscord() {
-    this.http.post('http://localhost:5000/send-message-to-discord2', { message: this.message })
+    this.http.post(`${environment.externalApiUrl}send-message-to-discord2`, { message: this.message })
       .subscribe(
         response => console.log('Wiadomość została wysłana na Discorda'),
         error => console.error('Wystąpił błąd podczas wysyłania wiadomości', error)
@@ -1731,7 +1730,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.nextMatch = nextMatch;
   }
 
-
   getExtraRandomMaps(mapArray: string[], count: number, probabilities: {[key: string]: number}): string[] {
     const selectedMaps: string[] = [];
     const availableMaps: string[] = [];
@@ -1775,7 +1773,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   sendMessageRcon() {
     // Wyślij wiadomość do serwera Node.js
     this.http
-      .post('http://localhost:5000/send-message-to-node', { message: this.messageRcon })
+      .post(`${environment.externalApiUrl}send-message-to-node`, { message: this.messageRcon })
       .subscribe(
         (response) => {
           console.log('Wiadomość została wysłana do serwera Node.js');

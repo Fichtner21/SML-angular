@@ -1,0 +1,31 @@
+<p>Clan Matches</p>
+<div class="match-list">
+  <div *ngFor="let match of paginatedMatches" class="match-card">
+    <div class="match-card__date">
+      <h3>{{ match.timestamp }}</h3>
+      <p><strong>ID: {{match.id}}</strong></p>
+    </div>
+    <div class="match-card__team">
+      <p><strong>Clan 1:</strong> {{ match.clan1 }} (Score: {{ match.clan1score }})</p>
+      <p><strong>Pre ELO Clan 1:</strong> {{ match.preelo1clan }}</p>
+      <p><strong>Post ELO Clan 1:</strong> {{ match.postelo1clan }}</p>
+      <div *ngFor="let player of match.clan1players">
+        <div *ngIf="player !== ''">{{ player }}</div>
+      </div> 
+    </div>
+    <div class="match-card__team">
+      <p><strong>Clan 2:</strong> {{ match.clan2 }} (Score: {{ match.clan2score }})</p>
+      <p><strong>Pre ELO Clan 2:</strong> {{ match.preelo2clan }}</p>
+      <p><strong>Post ELO Clan 2:</strong> {{ match.postelo2clan }}</p>
+      <div *ngFor="let player of match.clan2players">
+        <div *ngIf="player !== ''">{{ player }}</div>
+      </div>      
+    </div>
+  </div>
+</div>
+
+<mat-paginator 
+  [length]="matches.length"
+  [pageSize]="pageSize"
+  (page)="changePage($event)">
+</mat-paginator>

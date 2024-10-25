@@ -1,17 +1,15 @@
-import { map, last,toArray, takeLast, reduce, tap, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { PlayersApiService } from './../services/players-api.service';
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fa1, fa2, fa3, faArrowDown, faArrowUp, faCalendarCheck, faCentSign, faChartGantt, faChartSimple, faDollarSign, faFire, faInfoCircle, faMinus, faSuitcaseMedical, faTrophy } from '@fortawesome/free-solid-svg-icons';
-import { OAuthService } from 'angular-oauth2-oidc';
 import { parseFloat } from 'core-js/es/number';
 import { RankObjService } from './rank-obj.service';
-import { Chart, ChartOptions } from 'chart.js';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { Chart } from 'chart.js';
 import { FormControl } from '@angular/forms';
 
 interface Streak {
@@ -109,8 +107,6 @@ export class RankingObjComponent implements OnInit {
   @Output() ranking:EventEmitter<any> = new EventEmitter();
 
   currentInfo: any = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';
-  // infoCode = localStorage.getItem('info') ? localStorage.getItem('info') : 'more';
-
   arrowUp = faArrowUp;
   arrowDown = faArrowDown;
   arrowMinus = faMinus;
@@ -134,6 +130,8 @@ export class RankingObjComponent implements OnInit {
   isThirdPanelExpandedLeft: boolean;
   matchRow:any;
   showAllPlayers: boolean = false;
+  season8 = { name: 'Season #8', startDate: '01.10.2024', endDate: '31.12.2024' };
+  season7 = { name: 'Season #7', startDate: '01.07.2024', endDate: '30.09.2024' };
   season6 = { name: 'Season #6', startDate: '01.04.2024', endDate: '30.06.2024' };
   season5 = { name: 'Season #5', startDate: '01.01.2024', endDate: '31.03.2024' };
   season4 = { name: 'Season #4', startDate: '01.10.2023', endDate: '31.12.2023' };
@@ -141,9 +139,7 @@ export class RankingObjComponent implements OnInit {
   season2 = { name: 'Season #2', startDate: '01.04.2023', endDate: '30.06.2023' };
   season1 = { name: 'Season #1', startDate: '01.01.2023', endDate: '31.03.2023' };
   
-  // playerDetail: any;
-
-  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute, private rankObjService: RankObjService, private sanitizer: DomSanitizer) {
+  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute, private rankObjService: RankObjService) {
     // localStorage.setItem('info', 'less');
     // this.showStreak = localStorage.getItem('showStreak') === 'yes' ? true : false;
     // this.showCharts = localStorage.getItem('showCharts') === 'yes' ? true : false;
@@ -165,12 +161,13 @@ export class RankingObjComponent implements OnInit {
             rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
           }
           players.push(rowObject);
-        }
-        // console.log('players', players)
+        }     
+        // console.log('Players', players)   
         return players;
-      }),
-      // shareReplay(1)
+      }),     
     );
+
+    // this.playersApiService.getUserTwo().pipe(map((res: any) => console.log('RES', res))).subscribe()
 
     this.playersTest$.subscribe(data => {
       this.options = data;
@@ -200,26 +197,15 @@ export class RankingObjComponent implements OnInit {
 
     this.lastMatch$.pipe(
       map((match) => {
-        const sumPreeloTeam1 = [
-          (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) +
-          (Number(match.t1p2preelo) ? Number(match.t1p2preelo) : 0) +
-          (Number(match.t1p3preelo) ? Number(match.t1p3preelo) : 0) +
-          (Number(match.t1p4preelo) ? Number(match.t1p4preelo) : 0) +
-          (Number(match.t1p5preelo) ? Number(match.t1p5preelo) : 0) +
-          (Number(match.t1p6preelo) ? Number(match.t1p6preelo) : 0) +
-          (Number(match.t1p7preelo) ? Number(match.t1p7preelo) : 0)
-        ].reduce(this.addPreelo, 0);
-
-        const sumPreeloTeam2 = [
-          (Number(match.t2p1preelo) ? Number(match.t2p1preelo) : 0) +
-          (Number(match.t2p2preelo) ? Number(match.t2p2preelo) : 0) +
-          (Number(match.t2p3preelo) ? Number(match.t2p3preelo) : 0) +
-          (Number(match.t2p4preelo) ? Number(match.t2p4preelo) : 0) +
-          (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) +
-          (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) +
-          (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0)
-        ].reduce(this.addPreelo, 0);
-
+        const calculateSumPreelo = (teamPrefix: string) => {
+          return Array.from({ length: 7 }, (_, i) => 
+            Number(match[`${teamPrefix}p${i + 1}preelo`]) || 0
+          ).reduce(this.addPreelo, 0);
+        };
+    
+        const sumPreeloTeam1 = calculateSumPreelo('t1');
+        const sumPreeloTeam2 = calculateSumPreelo('t2');
+    
         this.matchRow = {
           timestamp: match.timestamp,
           idwar: match.idwar,
@@ -229,82 +215,135 @@ export class RankingObjComponent implements OnInit {
           info: match.info,
           t1preelo: sumPreeloTeam1,
           t2preelo: sumPreeloTeam2,
-          t1chance: Number(this.calculateChance(sumPreeloTeam1,sumPreeloTeam2)[0].toFixed(2)),
-          t2chance: Number(this.calculateChance(sumPreeloTeam1,sumPreeloTeam2)[1].toFixed(2)),
-          t1p1playername: this.addPlayerLink(match.t1p1name, this.options),
-          t1p1username: match.t1p1name,
-          t1p1preelo: match.t1p1preelo,
-          t1p1score: match.t1p1score,
-          t1p1postelo: match.t1p1postelo,
-          t1p2playername: this.addPlayerLink(match.t1p2name, this.options),
-          t1p2username: match.t1p2name,
-          t1p2preelo: match.t1p2preelo,
-          t1p2score: match.t1p2score,
-          t1p2postelo: match.t1p2postelo,
-          t1p3playername: this.addPlayerLink(match.t1p3name, this.options),
-          t1p3username: match.t1p3name,
-          t1p3preelo: match.t1p3preelo,
-          t1p3score: match.t1p3score,
-          t1p3postelo: match.t1p3postelo,
-          t1p4playername: this.addPlayerLink(match.t1p4name, this.options),
-          t1p4username: match.t1p4name,
-          t1p4preelo: match.t1p4preelo,
-          t1p4score: match.t1p4score,
-          t1p4postelo: match.t1p4postelo,
-          t1p5playername: this.addPlayerLink(match.t1p5name, this.options),
-          t1p5username: match.t1p5name,
-          t1p5preelo: match.t1p5preelo,
-          t1p5score: match.t1p5score,
-          t1p5postelo: match.t1p5postelo,
-          t1p6playername: this.addPlayerLink(match.t1p6name, this.options),
-          t1p6username: match.t1p6name,
-          t1p6preelo: match.t1p6preelo,
-          t1p6score: match.t1p6score,
-          t1p6postelo: match.t1p6postelo,
-          t1p7playername: this.addPlayerLink(match.t1p7name, this.options),
-          t1p7username: match.t1p7name,
-          t1p7preelo: match.t1p7preelo,
-          t1p7score: match.t1p7score,
-          t1p7postelo: match.t1p7postelo,
-          t2p1playername: this.addPlayerLink(match.t2p1name, this.options),
-          t2p1username: match.t2p1name,
-          t2p1preelo: match.t2p1preelo,
-          t2p1score: match.t2p1score,
-          t2p1postelo: match.t2p1postelo,
-          t2p2playername: this.addPlayerLink(match.t2p2name, this.options),
-          t2p2username: match.t2p2name,
-          t2p2preelo: match.t2p2preelo,
-          t2p2score: match.t2p2score,
-          t2p2postelo: match.t2p2postelo,
-          t2p3playername: this.addPlayerLink(match.t2p3name, this.options),
-          t2p3username: match.t2p3name,
-          t2p3preelo: match.t2p3preelo,
-          t2p3score: match.t2p3score,
-          t2p3postelo: match.t2p3postelo,
-          t2p4playername: this.addPlayerLink(match.t2p4name, this.options),
-          t2p4username: match.t2p4name,
-          t2p4preelo: match.t2p4preelo,
-          t2p4score: match.t2p4score,
-          t2p4postelo: match.t2p4postelo,
-          t2p5playername: this.addPlayerLink(match.t2p5name, this.options),
-          t2p5username: match.t2p5name,
-          t2p5preelo: match.t2p5preelo,
-          t2p5score: match.t2p5score,
-          t2p5postelo: match.t2p5postelo,
-          t2p6playername: this.addPlayerLink(match.t2p6name, this.options),
-          t2p6username: match.t2p6name,
-          t2p6preelo: match.t2p6preelo,
-          t2p6score: match.t2p6score,
-          t2p6postelo: match.t2p6postelo,
-          t2p7playername: this.addPlayerLink(match.t2p7name, this.options),
-          t2p7username: match.t2p7name,
-          t2p7preelo: match.t2p7preelo,
-          t2p7score: match.t2p7score,
-          t2p7postelo: match.t2p7postelo,
+          t1chance: Number(this.calculateChance(sumPreeloTeam1, sumPreeloTeam2)[0].toFixed(2)),
+          t2chance: Number(this.calculateChance(sumPreeloTeam1, sumPreeloTeam2)[1].toFixed(2)),
+        };
+    
+        for (let i = 1; i <= 7; i++) {
+          this.matchRow[`t1p${i}playername`] = this.addPlayerLink(match[`t1p${i}name`], this.options);
+          this.matchRow[`t1p${i}username`] = match[`t1p${i}name`];
+          this.matchRow[`t1p${i}preelo`] = match[`t1p${i}preelo`];
+          this.matchRow[`t1p${i}score`] = match[`t1p${i}score`];
+          this.matchRow[`t1p${i}postelo`] = match[`t1p${i}postelo`];
+    
+          this.matchRow[`t2p${i}playername`] = this.addPlayerLink(match[`t2p${i}name`], this.options);
+          this.matchRow[`t2p${i}username`] = match[`t2p${i}name`];
+          this.matchRow[`t2p${i}preelo`] = match[`t2p${i}preelo`];
+          this.matchRow[`t2p${i}score`] = match[`t2p${i}score`];
+          this.matchRow[`t2p${i}postelo`] = match[`t2p${i}postelo`];
         }
+    
         return this.matchRow;
       })
     ).subscribe();
+
+    // this.lastMatch$.pipe(
+    //   map((match) => {
+    //     const sumPreeloTeam1 = [
+    //       (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) +
+    //       (Number(match.t1p2preelo) ? Number(match.t1p2preelo) : 0) +
+    //       (Number(match.t1p3preelo) ? Number(match.t1p3preelo) : 0) +
+    //       (Number(match.t1p4preelo) ? Number(match.t1p4preelo) : 0) +
+    //       (Number(match.t1p5preelo) ? Number(match.t1p5preelo) : 0) +
+    //       (Number(match.t1p6preelo) ? Number(match.t1p6preelo) : 0) +
+    //       (Number(match.t1p7preelo) ? Number(match.t1p7preelo) : 0)
+    //     ].reduce(this.addPreelo, 0);
+
+    //     const sumPreeloTeam2 = [
+    //       (Number(match.t2p1preelo) ? Number(match.t2p1preelo) : 0) +
+    //       (Number(match.t2p2preelo) ? Number(match.t2p2preelo) : 0) +
+    //       (Number(match.t2p3preelo) ? Number(match.t2p3preelo) : 0) +
+    //       (Number(match.t2p4preelo) ? Number(match.t2p4preelo) : 0) +
+    //       (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) +
+    //       (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) +
+    //       (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0)
+    //     ].reduce(this.addPreelo, 0);
+
+    //     this.matchRow = {
+    //       timestamp: match.timestamp,
+    //       idwar: match.idwar,
+    //       t1roundswon: match.t1roundswon,
+    //       t2roundswon: match.t2roundswon,
+    //       video: match.video,
+    //       info: match.info,
+    //       t1preelo: sumPreeloTeam1,
+    //       t2preelo: sumPreeloTeam2,
+    //       t1chance: Number(this.calculateChance(sumPreeloTeam1,sumPreeloTeam2)[0].toFixed(2)),
+    //       t2chance: Number(this.calculateChance(sumPreeloTeam1,sumPreeloTeam2)[1].toFixed(2)),
+    //       t1p1playername: this.addPlayerLink(match.t1p1name, this.options),
+    //       t1p1username: match.t1p1name,
+    //       t1p1preelo: match.t1p1preelo,
+    //       t1p1score: match.t1p1score,
+    //       t1p1postelo: match.t1p1postelo,
+    //       t1p2playername: this.addPlayerLink(match.t1p2name, this.options),
+    //       t1p2username: match.t1p2name,
+    //       t1p2preelo: match.t1p2preelo,
+    //       t1p2score: match.t1p2score,
+    //       t1p2postelo: match.t1p2postelo,
+    //       t1p3playername: this.addPlayerLink(match.t1p3name, this.options),
+    //       t1p3username: match.t1p3name,
+    //       t1p3preelo: match.t1p3preelo,
+    //       t1p3score: match.t1p3score,
+    //       t1p3postelo: match.t1p3postelo,
+    //       t1p4playername: this.addPlayerLink(match.t1p4name, this.options),
+    //       t1p4username: match.t1p4name,
+    //       t1p4preelo: match.t1p4preelo,
+    //       t1p4score: match.t1p4score,
+    //       t1p4postelo: match.t1p4postelo,
+    //       t1p5playername: this.addPlayerLink(match.t1p5name, this.options),
+    //       t1p5username: match.t1p5name,
+    //       t1p5preelo: match.t1p5preelo,
+    //       t1p5score: match.t1p5score,
+    //       t1p5postelo: match.t1p5postelo,
+    //       t1p6playername: this.addPlayerLink(match.t1p6name, this.options),
+    //       t1p6username: match.t1p6name,
+    //       t1p6preelo: match.t1p6preelo,
+    //       t1p6score: match.t1p6score,
+    //       t1p6postelo: match.t1p6postelo,
+    //       t1p7playername: this.addPlayerLink(match.t1p7name, this.options),
+    //       t1p7username: match.t1p7name,
+    //       t1p7preelo: match.t1p7preelo,
+    //       t1p7score: match.t1p7score,
+    //       t1p7postelo: match.t1p7postelo,
+    //       t2p1playername: this.addPlayerLink(match.t2p1name, this.options),
+    //       t2p1username: match.t2p1name,
+    //       t2p1preelo: match.t2p1preelo,
+    //       t2p1score: match.t2p1score,
+    //       t2p1postelo: match.t2p1postelo,
+    //       t2p2playername: this.addPlayerLink(match.t2p2name, this.options),
+    //       t2p2username: match.t2p2name,
+    //       t2p2preelo: match.t2p2preelo,
+    //       t2p2score: match.t2p2score,
+    //       t2p2postelo: match.t2p2postelo,
+    //       t2p3playername: this.addPlayerLink(match.t2p3name, this.options),
+    //       t2p3username: match.t2p3name,
+    //       t2p3preelo: match.t2p3preelo,
+    //       t2p3score: match.t2p3score,
+    //       t2p3postelo: match.t2p3postelo,
+    //       t2p4playername: this.addPlayerLink(match.t2p4name, this.options),
+    //       t2p4username: match.t2p4name,
+    //       t2p4preelo: match.t2p4preelo,
+    //       t2p4score: match.t2p4score,
+    //       t2p4postelo: match.t2p4postelo,
+    //       t2p5playername: this.addPlayerLink(match.t2p5name, this.options),
+    //       t2p5username: match.t2p5name,
+    //       t2p5preelo: match.t2p5preelo,
+    //       t2p5score: match.t2p5score,
+    //       t2p5postelo: match.t2p5postelo,
+    //       t2p6playername: this.addPlayerLink(match.t2p6name, this.options),
+    //       t2p6username: match.t2p6name,
+    //       t2p6preelo: match.t2p6preelo,
+    //       t2p6score: match.t2p6score,
+    //       t2p6postelo: match.t2p6postelo,
+    //       t2p7playername: this.addPlayerLink(match.t2p7name, this.options),
+    //       t2p7username: match.t2p7name,
+    //       t2p7preelo: match.t2p7preelo,
+    //       t2p7score: match.t2p7score,
+    //       t2p7postelo: match.t2p7postelo,
+    //     }
+    //     return this.matchRow;
+    //   })
+    // ).subscribe();
 
     const storedInfo = localStorage.getItem('info');
     this.infoCode = storedInfo ? storedInfo : 'less';
@@ -324,6 +363,10 @@ export class RankingObjComponent implements OnInit {
       switchMap(option => {
         if (option === 'currentSeason') {
           return combineLatest([this.playersTest$, this.historyMatches$]);
+        } else if (option === 'season7'){
+          return this.loadSeasonData('30_09_2024')
+        } else if (option === 'season6'){
+          return this.loadSeasonData('30_06_2024');
         } else if (option === 'season5') {
           return this.loadSeasonData('31_03_2024');
         } else if (option === 'season4') {
@@ -341,7 +384,6 @@ export class RankingObjComponent implements OnInit {
         }
       }),
       map(([v1, v2]) => {
-
         let lastWarDate: any;
         let playerRowArray: any[] = [];
         for( let name of v1){
@@ -372,6 +414,10 @@ export class RankingObjComponent implements OnInit {
               s5fpw: name.s5fpw ? Math.round(name.s5fpw * 100) / 100 : '',
               s6wars: name.s6wars ? parseFloat(name.s6wars) : '',
               s6fpw: name.s6fpw ? Math.round(name.s6fpw * 100) / 100 : '',
+              s7wars: name.s7wars ? parseFloat(name.s7wars) : '',
+              s8wars: name.s8wars ? parseFloat(name.s8wars) : '',
+              s7fpw: name.s7fpw ? Math.round(name.s7fpw * 100) / 100 : '',
+              s8fpw: name.s8fpw ? Math.round(name.s8fpw * 100) / 100 : '',
               s4_22wars: name.s4_22wars ? name.s4_22wars : '',
               s4_22fpw: name.s4_22fpw ? name.s4_22fpw : '',
               activity: name.last30days,
@@ -388,11 +434,15 @@ export class RankingObjComponent implements OnInit {
               s3ranking_win: name.s3ranking_win ? parseInt(name.s3ranking_win) : undefined,
               s4ranking_win: name.s4ranking_win ? parseInt(name.s4ranking_win) : undefined,
               s5ranking_win: name.s5ranking_win ? parseInt(name.s5ranking_win) : undefined,
+              s6ranking_win: name.s6ranking_win ? parseInt(name.s6ranking_win) : undefined,
+              s7ranking_win: name.s7ranking_win ? parseInt(name.s7ranking_win) : undefined,
               winPercentage: this.handleData(this.receivedData),
               streak: this.calculateStreak(name.username, v2),
               donatorS4: name.donate_s4,
               donatorS5: name.donate_s5,
               donatorS6: name.donate_s6,
+              donatorS7: name.donate_s7,
+              donatorS8: name.donate_s8,
               lastMatches: [],
               last10ranking: []
             };
@@ -542,18 +592,7 @@ export class RankingObjComponent implements OnInit {
 
     const thirdPanelStorageValueLeft = localStorage.getItem('thirdPanelStateLeft');
     this.isThirdPanelExpandedLeft = thirdPanelStorageValueLeft === 'expand';
-  }
-
-  // getPlayerDetailsForPlayer(username: string) {
-  //   this.rankObjService.getPlayerDetail().subscribe(playerDetail => {
-  //     this.playerDetail = playerDetail;
-
-  //     // Sprawdź, czy username się zgadza
-  //     if (this.playerDetail.username === username) {
-  //       console.log('Player Detail:', this.playerDetail);
-  //     }
-  //   });
-  // }
+  }  
 
   infoChange($event){
     this.currentInfo = $event;
@@ -636,121 +675,121 @@ export class RankingObjComponent implements OnInit {
     return cupInfoTitle;
   }
 
-  public smallStrike2(name, obj) {
-    const firstFromEnd = this.rankHistory2(name, obj).slice(-1)[0];
-    // console.log('name2', name, 'secondFromEnd', firstFromEnd);
-    const secondFromEnd = this.rankHistory2(name, obj).slice(-2)[0];
-    // console.log('name2', name, 'secondFromEnd', secondFromEnd);
-    const countingPoints = firstFromEnd - secondFromEnd;
+  // public smallStrike2(name, obj) {
+  //   const firstFromEnd = this.rankHistory2(name, obj).slice(-1)[0];
+  //   // console.log('name2', name, 'secondFromEnd', firstFromEnd);
+  //   const secondFromEnd = this.rankHistory2(name, obj).slice(-2)[0];
+  //   // console.log('name2', name, 'secondFromEnd', secondFromEnd);
+  //   const countingPoints = firstFromEnd - secondFromEnd;
 
-    let littleStrike2 = 0;
-    if (firstFromEnd > secondFromEnd) {
-      littleStrike2 = Math.round(countingPoints * 100) / 100;
-    } else if (firstFromEnd < secondFromEnd) {
-      littleStrike2 = Math.round(countingPoints * 100) / 100;
-    } else {
-      littleStrike2 = Math.round(countingPoints * 100) / 100;
-    }
+  //   let littleStrike2 = 0;
+  //   if (firstFromEnd > secondFromEnd) {
+  //     littleStrike2 = Math.round(countingPoints * 100) / 100;
+  //   } else if (firstFromEnd < secondFromEnd) {
+  //     littleStrike2 = Math.round(countingPoints * 100) / 100;
+  //   } else {
+  //     littleStrike2 = Math.round(countingPoints * 100) / 100;
+  //   }
 
-    return littleStrike2;
-  }
+  //   return littleStrike2;
+  // }
 
-  public longestWinning(arr, n) {
-    let max = 1;
-    let len = 1;
+  // public longestWinning(arr, n) {
+  //   let max = 1;
+  //   let len = 1;
 
-    for (let i = 1; i < n; i++) {
-      if (arr[i] > arr[i - 1]) {
-        len++;
-      } else {
-        if (max < len) {
-          max = len;
-        }
-        len = 1;
-      }
-    }
+  //   for (let i = 1; i < n; i++) {
+  //     if (arr[i] > arr[i - 1]) {
+  //       len++;
+  //     } else {
+  //       if (max < len) {
+  //         max = len;
+  //       }
+  //       len = 1;
+  //     }
+  //   }
 
-    if (max < len) {
-      max = len;
-    }
-    return max;
-  }
-
-  //need to refactor
-  public destructObjRanks2(obj, arr) {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const objInArr = obj[key];
-        for (const key2 in objInArr) {
-          if (objInArr.hasOwnProperty(key2)) {
-            const elemOfObj = objInArr[key2];
-            arr.push(elemOfObj);
-          }
-        }
-      }
-    }
-  }
+  //   if (max < len) {
+  //     max = len;
+  //   }
+  //   return max;
+  // }
 
   //need to refactor
-  public getIndexesRanks2(arr, val) {
-    const indexes = [];
-    let i = -1;
-    while ((i = arr.indexOf(val, i + 1)) !== -1) {
-      indexes.push(i + 4); // postELO
-    }
-    return indexes;
-  }
+  // public destructObjRanks2(obj, arr) {
+  //   for (const key in obj) {
+  //     if (obj.hasOwnProperty(key)) {
+  //       const objInArr = obj[key];
+  //       for (const key2 in objInArr) {
+  //         if (objInArr.hasOwnProperty(key2)) {
+  //           const elemOfObj = objInArr[key2];
+  //           arr.push(elemOfObj);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   //need to refactor
-  public ranksAllStrikes2(username, ind, arrIn, arrOut) {
-    if (arrIn.includes(username)) {
-      arrIn.forEach(function (el, index) {
-        index += 1;
-        ind.forEach(function (founded, i) {
-          if (Number(index) === Number(founded)) {
-            const foundedStreak = Number(el).toFixed(2);
-            arrOut.push(Number(foundedStreak));
-          }
-        });
-      });
-    }
-  }
+  // public getIndexesRanks2(arr, val) {
+  //   const indexes = [];
+  //   let i = -1;
+  //   while ((i = arr.indexOf(val, i + 1)) !== -1) {
+  //     indexes.push(i + 4); // postELO
+  //   }
+  //   return indexes;
+  // }
 
   //need to refactor
-  public rankHistory2(name, obj) {
-    const arrNameRanks2 = [];
-    this.destructObjRanks2(obj, arrNameRanks2);
-    const indexesRanksName2 = this.getIndexesRanks2(arrNameRanks2, name);
-    const nameRanksOut2 = [];
-    this.ranksAllStrikes2(name, indexesRanksName2, arrNameRanks2, nameRanksOut2);
-    nameRanksOut2.unshift(1000);
-    return nameRanksOut2;
-  }
+  // public ranksAllStrikes2(username, ind, arrIn, arrOut) {
+  //   if (arrIn.includes(username)) {
+  //     arrIn.forEach(function (el, index) {
+  //       index += 1;
+  //       ind.forEach(function (founded, i) {
+  //         if (Number(index) === Number(founded)) {
+  //           const foundedStreak = Number(el).toFixed(2);
+  //           arrOut.push(Number(foundedStreak));
+  //         }
+  //       });
+  //     });
+  //   }
+  // }
 
-  public pastYearActivity(name:string, obj:any){
-    const resultObject = this.filterUsername(name, obj);
-    const warDates = [];
+  //need to refactor
+  // public rankHistory2(name, obj) {
+  //   const arrNameRanks2 = [];
+  //   this.destructObjRanks2(obj, arrNameRanks2);
+  //   const indexesRanksName2 = this.getIndexesRanks2(arrNameRanks2, name);
+  //   const nameRanksOut2 = [];
+  //   this.ranksAllStrikes2(name, indexesRanksName2, arrNameRanks2, nameRanksOut2);
+  //   nameRanksOut2.unshift(1000);
+  //   return nameRanksOut2;
+  // }
 
-    const todayUnix = Date.now();
-    const lastYearEvent = new Date(new Date().setDate(new Date().getDate() - 365));
-    const resultLastYear = Date.parse(lastYearEvent.toDateString());
-    const unixYearArr = [];
+  // public pastYearActivity(name:string, obj:any){
+  //   const resultObject = this.filterUsername(name, obj);
+  //   const warDates = [];
 
-     resultObject.forEach((elem) => {
-      const newTimestampElem = elem.timestamp;
-      const elWar = Date.parse(newTimestampElem);
-      let lastYearActivity;
+  //   const todayUnix = Date.now();
+  //   const lastYearEvent = new Date(new Date().setDate(new Date().getDate() - 365));
+  //   const resultLastYear = Date.parse(lastYearEvent.toDateString());
+  //   const unixYearArr = [];
 
-      if(elWar > resultLastYear && elWar < todayUnix){
-        lastYearActivity += elWar;
-        // new Date(elWar).toLocaleDateString('pl-PL', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'});
-        // console.log('lastMonthActivity: ', lastMonthActivity);
-        unixYearArr.push(lastYearActivity);
-      }
-    });
+  //    resultObject.forEach((elem) => {
+  //     const newTimestampElem = elem.timestamp;
+  //     const elWar = Date.parse(newTimestampElem);
+  //     let lastYearActivity;
 
-    return unixYearArr.length;
-  }
+  //     if(elWar > resultLastYear && elWar < todayUnix){
+  //       lastYearActivity += elWar;
+  //       // new Date(elWar).toLocaleDateString('pl-PL', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'});
+  //       // console.log('lastMonthActivity: ', lastMonthActivity);
+  //       unixYearArr.push(lastYearActivity);
+  //     }
+  //   });
+
+  //   return unixYearArr.length;
+  // }
 
   //SORTING
   public sortByWarsDesc(res:Observable<any>){
@@ -827,7 +866,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s6wars) - parseFloat(a.s6wars))
+        res => res.sort((a:any,b:any) => parseFloat(b.s8wars) - parseFloat(a.s8wars))
       )
     )
   }
@@ -838,7 +877,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s6wars) - parseFloat(b.s6wars))
+        res => res.sort((a:any,b:any) => parseFloat(a.s8wars) - parseFloat(b.s8wars))
       )
     )
   }
@@ -848,7 +887,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s6fpw) - parseFloat(a.s6fpw))
+        res => res.sort((a:any,b:any) => parseFloat(b.s8fpw) - parseFloat(a.s8fpw))
       )
     )
   }
@@ -859,7 +898,7 @@ export class RankingObjComponent implements OnInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s6fpw) - parseFloat(b.s6fpw))
+        res => res.sort((a:any,b:any) => parseFloat(a.s8fpw) - parseFloat(b.s8fpw))
       )
     )
   }
@@ -1161,27 +1200,36 @@ export class RankingObjComponent implements OnInit {
 
     return arrChance;
   }
-  public floorPrecised(number, precision) {
+  public floorPrecised(number:number, precision:number) {
     const power = Math.pow(10, precision);
     return Math.floor(number * power) / power;
   }
-  public ceilPrecised(number, precision) {
+  public ceilPrecised(number:number, precision) {
     const power = Math.pow(10, precision);
     return Math.ceil(number * power) / power;
   }
 
-  public addPlayerLink(player:string, obj:any) {
-    let convertedPlayer = '';
-    obj.forEach((el:any) => {
-      if (player === el.username) {
-        convertedPlayer = el.playername;
-      } else if (player === '') {
-        // console.log('N/A player');
-      } else {
-        // console.log('Something went wrong.');
-      }
-    });
-    return convertedPlayer;
+  //OLD VERSION
+  // public addPlayerLink(player:string, obj:any) {
+  //   let convertedPlayer = '';
+  //   obj.forEach((el:any) => {
+  //     if (player === el.username) {
+  //       convertedPlayer = el.playername;
+  //     } else if (player === '') {
+  //       // console.log('N/A player');
+  //     } else {
+  //       // console.log('Something went wrong.');
+  //     }
+  //   });
+  //   return convertedPlayer;
+  // }
+
+  public addPlayerLink(player: string, obj: any[]): string {
+    if (player === '') {
+      return ''; 
+    }  
+    const foundPlayer = obj.find((el: any) => player === el.username);    
+    return foundPlayer ? foundPlayer.playername : ''; 
   }
 
   public addPreelo(accumulator:any, a:any) {
@@ -1225,23 +1273,6 @@ export class RankingObjComponent implements OnInit {
     localStorage.setItem('showStreak', value);
   }
 
-  // getFpwValue(player: any): number {
-  //   switch (this.selectedOption) {
-  //     case 'season5':
-  //       return player.s5fpw;
-  //     case 'season4':
-  //       return player.s4fpw;
-  //     case 'season3':
-  //       return player.s3fpw;
-  //     case 'season2':
-  //       return player.s2fpw;
-  //     case 'season1':
-  //       return player.s1fpw;
-  //     default:
-  //       return player.s6fpw; // Default to s6fpw if no valid option is provided
-  //   }
-  // }
-
   onSeasonChange(option: any): void {
     // Aktualizujemy wartość wybranej opcji sezonu
     this.selectedOption = option;
@@ -1251,6 +1282,10 @@ export class RankingObjComponent implements OnInit {
     // Sprawdź wybrany sezon z dropdown i zwróć odpowiednią wartość fpw
     switch (this.selectedOption.value) {
       case 'currentSeason':
+        return player.s8fpw;
+      case 'season7':
+        return player.s7fpw;
+      case 'season6':
         return player.s6fpw;
       case 'season5':
         return player.s5fpw;
@@ -1265,7 +1300,7 @@ export class RankingObjComponent implements OnInit {
       case 'season9':
         return player.s4_22fpw;
       default:
-        return player.s6fpw; // Domyślnie zwracamy wartość s6fpw
+        return player.s8fpw; // Domyślnie zwracamy wartość s8fpw
     }
   }
 

@@ -49,21 +49,21 @@ export class HomeComponent implements OnInit {
     Chart.plugins.register(annotationPlugin);
     this.openDialogIfBeforeDeadline();
 
-    this.teamOneSelection$ = this.playersApiService.getPlayers('TeamSelectionOne').pipe(
-      map((response:any) => {
-        let batchRowValues = response.values;
-        let players: any[] = [];
-        for(let i = 1; i < batchRowValues.length; i++){
-          const rowObject: object = {};
-          for(let j = 0; j < batchRowValues[i].length; j++){
-            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
-          }
-          players.push(rowObject);
-        }
+    // this.teamOneSelection$ = this.playersApiService.getPlayers('TeamSelectionOne').pipe(
+    //   map((response:any) => {
+    //     let batchRowValues = response.values;
+    //     let players: any[] = [];
+    //     for(let i = 1; i < batchRowValues.length; i++){
+    //       const rowObject: object = {};
+    //       for(let j = 0; j < batchRowValues[i].length; j++){
+    //         rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+    //       }
+    //       players.push(rowObject);
+    //     }
         
-        return players;
-      })
-    );
+    //     return players;
+    //   })
+    // );
  
     this.playersTest$ = this.playersApiService.getPlayers('Players').pipe(
       map((response: any) => {        
@@ -81,41 +81,41 @@ export class HomeComponent implements OnInit {
       }),
     ); 
 
-    this.teamSelections$ = combineLatest([this.playersTest$, this.teamOneSelection$]).pipe(
-      map(([players, selection]) => {
-        let selected;
-        let selectedArray: any[] = [];
+    // this.teamSelections$ = combineLatest([this.playersTest$, this.teamOneSelection$]).pipe(
+    //   map(([players, selection]) => {
+    //     let selected;
+    //     let selectedArray: any[] = [];
 
-        for(let name of selection){
-          selected = {
-            t1playername: this.addPlayerLink(name.Team1Players, players),         
-            t1username: name.Team1Players,
-            t1preelo: name.ELO1 != '#N/A' ? name.ELO1 : '',            
-            t2playername: this.addPlayerLink(name.Team2Players, players),           
-            t2username: name.Team2Players,
-            t2preelo: name.ELO2 != '#N/A' ? name.ELO2 : '',            
-          };
+    //     for(let name of selection){
+    //       selected = {
+    //         t1playername: this.addPlayerLink(name.Team1Players, players),         
+    //         t1username: name.Team1Players,
+    //         t1preelo: name.ELO1 != '#N/A' ? name.ELO1 : '',            
+    //         t2playername: this.addPlayerLink(name.Team2Players, players),           
+    //         t2username: name.Team2Players,
+    //         t2preelo: name.ELO2 != '#N/A' ? name.ELO2 : '',            
+    //       };
           
-          selectedArray.push(selected);                        
-        }
+    //       selectedArray.push(selected);                        
+    //     }
 
-        const chanceFutureTeamOne = parseInt(selectedArray[selectedArray.length -1].t1preelo.replace(/,/g,''), 10);           
-        const chanceFutureTeamTwo = parseInt(selectedArray[selectedArray.length -1].t2preelo.replace(/,/g,''), 10);                  
+    //     const chanceFutureTeamOne = parseInt(selectedArray[selectedArray.length -1].t1preelo.replace(/,/g,''), 10);           
+    //     const chanceFutureTeamTwo = parseInt(selectedArray[selectedArray.length -1].t2preelo.replace(/,/g,''), 10);                  
 
-        const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne - chanceFutureTeamTwo) / 400)) * 100;       
-        const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;
+    //     const chanceOfWinTeamOne = 1 / (1 + 10 ** ((chanceFutureTeamOne - chanceFutureTeamTwo) / 400)) * 100;       
+    //     const chanceOfWinTeamTwo = 1 / (1 + 10 ** ((chanceFutureTeamTwo - chanceFutureTeamOne) / 400)) * 100;
 
-        this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
-        this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);       
+    //     this.chanceOfWinTeamOneShow = this.floorPrecised(chanceOfWinTeamOne, 2);
+    //     this.chanceOfWinTeamTwoShow = this.ceilPrecised(chanceOfWinTeamTwo, 2);       
 
-        this.teamOneCumulative = selectedArray[selectedArray.length -1].t1preelo;
-        this.teamTwoCumulative = selectedArray[selectedArray.length -1].t2preelo;
+    //     this.teamOneCumulative = selectedArray[selectedArray.length -1].t1preelo;
+    //     this.teamTwoCumulative = selectedArray[selectedArray.length -1].t2preelo;
         
-        selectedArray.pop()
-        return selectedArray;           
-      })
+    //     selectedArray.pop()
+    //     return selectedArray;           
+    //   })
       
-    )  
+    // )  
     
     const videos = ['1','2','3','4','5'];
     this.randomVideo = videos[Math.floor(Math.random()*videos.length)];

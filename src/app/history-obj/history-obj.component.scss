@@ -16,7 +16,8 @@ section {
   grid-template-columns: 0.3fr 1fr 1fr;
   grid-template-rows: auto;
   gap: 15px;
-  color: #ffffc8;
+  // color: #ffffc8;
+  color: #fff;
   margin-bottom: 15px;
   box-shadow: 0 0 10px #010141;
 
@@ -57,11 +58,13 @@ section {
     gap: 0 10px;
     padding-bottom: 5px;
     margin-bottom: 5px;
-    border-bottom: 3px solid #ffffc8;
+    // border-bottom: 3px solid #ffffc8;
+    border-bottom: 3px solid lightgray;
     background-image: linear-gradient(
       0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
           background-size: 4px 4px;
-    color: #ffffc8;
+    // color: #ffffc8;
+    color: #fff;
     font-weight: 700;
   }
 
@@ -73,11 +76,13 @@ section {
     gap: 0 10px;
     padding-bottom: 5px;
     margin-bottom: 5px;
-    border-bottom: 3px solid #ffffc8;
+    // border-bottom: 3px solid #ffffc8;
+    border-bottom: 3px solid lightgray;
     background-image: linear-gradient(
       0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
           background-size: 4px 4px;
-    color: #ffffc8;
+    // color: #ffffc8;
+    color: #fff;
     font-weight: 700;
   }
 
@@ -228,13 +233,41 @@ section {
 }
 
 a {
-  color: #ffffc0;
+  color: #fff;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  // padding: 10px; // Dodaj padding, aby tekst nie nachodził na trapez
+
+  &:hover {
+    text-decoration: underline;
+  }
+  // // Pseudo-element dla trapezu
+  // &::after {
+  //   content: '';
+  //   position: absolute;
+  //   bottom: 0; // Ustawienie poniżej linku
+  //   left: -8px;
+  //   height: 5px; // Wysokość trapezu
+  //   width: 0;
+  //   background-color: lightgray;
+  //   clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+  //   // transform: scaleY(0); // Początkowe ukrycie trapezu
+  //   transition: transform 0.3s ease; // Płynna animacja
+  //   z-index: 0; // Umieść trapez za linkiem
+  // }
+
+  // &:hover::after {
+  //   // transform: scaleY(1); // Pokaż trapez po najechaniu
+  //   width: 100%;
+  // }
 }
 
 .preelo-info {
   padding-top: 5px;
   margin-top: 5px;
-  border-top: 3px solid #ffffc0;
+  // border-top: 3px solid #ffffc0;
+  border-top: 3px solid lightgray;
   background-image: linear-gradient(
       0deg, #40415f 25%, #2f3060 25%, #2f3060 50%, #40415f 50%, #40415f 75%, #2f3060 75%, #2f3060 100%);
           background-size: 4px 4px;

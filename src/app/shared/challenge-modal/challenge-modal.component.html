@@ -1,6 +1,7 @@
 <h2 mat-dialog-title>Challenge Clan</h2>
 <mat-dialog-content>
   <p>You are challenging: <strong>{{ data.challengedClan.clan }}</strong></p>
+  
   <mat-form-field>
     <mat-label>Select the challenging clan</mat-label>
     <mat-select [(ngModel)]="selectedChallenger">
@@ -9,7 +10,20 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <div>
+    <mat-checkbox (change)="toggleAll($event.checked)">Select All</mat-checkbox>
+  </div>
+
+  <div *ngFor="let format of allFormats">
+    <mat-checkbox 
+      [checked]="isFormatSelected(format)" 
+      (change)="toggleFormat(format)">
+      {{ format }}
+    </mat-checkbox>
+  </div>
 </mat-dialog-content>
+
 <mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancel</button>
   <button mat-button (click)="onSubmit()">Challenge</button>

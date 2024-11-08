@@ -7,6 +7,10 @@ section {
   padding-top: 80px;
   position: relative;
 
+  @media screen and (max-width: 1050px){
+    padding-top: 180px;
+  }
+
   &:before {
     content: '';
     position: absolute;
@@ -60,37 +64,7 @@ section {
           }
         }
       }
-    }
-
-    // @media screen and (min-width: 1295px){
-    //   .info {
-    //     position: absolute;
-    //     top: 50px;
-    //     right: -250px;
-    //     padding: 20px;
-    //     border: 3px dashed red;
-    //     background-color: #40415f;
-    //     color: #ffffc0;
-    //     max-width: 200px;
-
-    //     &:before {
-    //       position: absolute;
-    //       top: -62px;
-    //       width: 2px;
-    //       background-color: red;
-    //       height: 62px;
-    //       content: '';
-    //       left: 50%;
-    //       right: 50%;
-    //     }
-
-    //     .info-title {
-    //       font-weight: 700;
-    //       font-style: italic;
-    //       margin-bottom: 5px;
-    //     }
-    //   }
-    // }
+    }   
   }
 }
 

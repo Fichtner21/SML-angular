@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CreateDataComponent } from './create-data/create-data.component';
 import { EditDataComponent } from './edit-data/edit-data.component';
 import { ListDataComponent } from './list-data/list-data.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { SlugTransformDirective } from '../about/slug-transform.directive';
@@ -21,6 +21,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AddClanComponent } from './add-clan/add-clan.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { EditClanComponent } from './edit-clan/edit-clan.component';
 
 
 @NgModule({
@@ -28,7 +31,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     CreateDataComponent,
     EditDataComponent,
     ListDataComponent,
-    SlugTransformDirective
+    SlugTransformDirective,
+    AddClanComponent,
+    EditClanComponent
   ],
   imports: [
     CommonModule,
@@ -46,7 +51,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     FontAwesomeModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatDialogModule
+    MatDialogModule,
+    MatAutocompleteModule,
+    FormsModule    
    ],
   exports: [
     CommonModule,

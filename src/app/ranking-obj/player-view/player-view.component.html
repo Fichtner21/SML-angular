@@ -215,7 +215,7 @@
                             playerCard?.listwars.length - playerDetails.listwars.length }})
                       </span>
                     </div>
-                    <div *ngFor="let season of [1, 2, 3, 4, 5, 6, 7]; let i = index" class="item">
+                    <div *ngFor="let season of [1, 2, 3, 4, 5, 6, 7, 8]; let i = index" class="item">
                       <span>Season {{ i + 1 }}:</span>
                       <span> wars </span>
                       <span class="item__value" [ngClass]="{
@@ -259,7 +259,7 @@
                         ({{ playerDetails.listwars.length < playerCard?.listwars.length ? '+' : '-' }}{{ Math.abs(playerDetails.listwars.length - playerCard?.listwars.length) }})
                       </span>
                     </div>
-                    <div *ngFor="let season of [1, 2, 3, 4, 5, 6, 7]; let i = index" class="item">
+                    <div *ngFor="let season of [1, 2, 3, 4, 5, 6, 7, 8]; let i = index" class="item">
                       <span>Season {{ i + 1 }}:</span>
                       <span> wars </span>
                       <span class="item__value" [ngClass]="{

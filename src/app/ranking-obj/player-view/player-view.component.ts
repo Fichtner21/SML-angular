@@ -200,20 +200,20 @@ export class PlayerViewComponent implements OnInit {
       }),
     );
 
-    this.inactiveTab$ = this.playersApiService.getPlayers('Inactive').pipe(
-      map((response: any) => {
-        let batchRowValues = response.values;
-        let players: any[] = [];
-        for(let i = 1; i < batchRowValues.length; i++){
-          const rowObject: object = {};
-          for(let j = 0; j < batchRowValues[i].length; j++){
-            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
-          }
-          players.push(rowObject);
-        }
-        return players;
-      }),
-    );
+    // this.inactiveTab$ = this.playersApiService.getPlayers('Inactive').pipe(
+    //   map((response: any) => {
+    //     let batchRowValues = response.values;
+    //     let players: any[] = [];
+    //     for(let i = 1; i < batchRowValues.length; i++){
+    //       const rowObject: object = {};
+    //       for(let j = 0; j < batchRowValues[i].length; j++){
+    //         rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+    //       }
+    //       players.push(rowObject);
+    //     }
+    //     return players;
+    //   }),
+    // );
 
     // this.player$ = this.activatedRoute.data.pipe(
     //   map(data => data.player)
@@ -246,8 +246,8 @@ export class PlayerViewComponent implements OnInit {
     //   })
     // )
 
-    this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$, this.playersTab$, this.inactiveTab$]).pipe(
-      map(([player, matches, players, inactives]) => {
+    this.playerDetail$ = combineLatest([this.playerUsername$, this.historyMatches$, this.playersTab$]).pipe(
+      map(([player, matches, players]) => {
         let playerArray: any[] = [];
         let timestampArray: any[] = [];
         let playerName: string;
@@ -301,7 +301,7 @@ export class PlayerViewComponent implements OnInit {
         let s7fpw_win: number;
         let s7ranking_win: number;
 
-        const foundPlayerArray = this.filterUsername(player, inactives, matches);
+        const foundPlayerArray = this.filterUsername(player, matches);
         const fragsPerPlayerArray:any[] = [];
 
         foundPlayerArray.forEach((el) => {
@@ -507,7 +507,7 @@ export class PlayerViewComponent implements OnInit {
           s7fpw_win: s7fpw_win ? s7fpw_win : '',
           s7ranking_win: s7ranking_win ? s7ranking_win : ''
         }
-        // console.log('playerCardNative', playerCard.listwars7)
+        console.log('playerCardNative', playerCard)
         return playerCard;
       }),
       shareReplay(1)
@@ -560,7 +560,7 @@ export class PlayerViewComponent implements OnInit {
     return Object.keys(object).find(key => object[key] === value);
   }
 
-  private filterUsername(name:string, inactive:string, matches:any[]){
+  private filterUsername(name:string, matches:any[]){
     return matches.filter(m => {
       return Object.values(m).includes(name);
     })
@@ -1023,8 +1023,8 @@ export class PlayerViewComponent implements OnInit {
 
   onPlayerSelect(player: string) {
     this.selectedPlayer = true;
-    combineLatest([of(player), this.historyMatches$, this.playersTab$, this.inactiveTab$]).pipe(
-      map(([selectedPlayer, matches, players, inactives]) => {
+    combineLatest([of(player), this.historyMatches$, this.playersTab$]).pipe(
+      map(([selectedPlayer, matches, players]) => {
         let playerArray: any[] = [];
         let timestampArray: any[] = [];
         let playerName: string;
@@ -1078,7 +1078,7 @@ export class PlayerViewComponent implements OnInit {
         let s7fpw_win: number;
         let s7ranking_win: number;
 
-        const foundPlayerArray = this.filterUsername(selectedPlayer, inactives, matches);
+        const foundPlayerArray = this.filterUsername(selectedPlayer, matches);
         const fragsPerPlayerArray: any[] = [];
 
         foundPlayerArray.forEach((el) => {
@@ -1282,7 +1282,7 @@ export class PlayerViewComponent implements OnInit {
           s7fpw_win: s7fpw_win ? s7fpw_win : '',
           s7ranking_win: s7ranking_win ? s7ranking_win : ''
         }
-        // console.log('playerCard', playerCard.listwars7);
+        console.log('playerCard', playerCard);
         this.playerCard = playerCard;
       }),
     ).subscribe();

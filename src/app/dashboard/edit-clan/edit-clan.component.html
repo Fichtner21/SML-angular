@@ -1,0 +1,68 @@
+<p>edit-clan works!</p>
+<div>
+  <h2>Edit Clan</h2>
+
+  <!-- Lista klanów do wyboru -->
+  <div *ngFor="let clan of clans" class="clan-item" (click)="onSelectClan(clan)">
+    {{ clan.clan }}
+  </div>
+
+  <!-- Formularz edycji wybranego klanu -->
+  <div *ngIf="selectedClan">
+    <form [formGroup]="editClanForm" (ngSubmit)="onSubmit()">
+      
+      <mat-form-field>
+        <mat-label>Clan</mat-label>
+        <input matInput formControlName="clan" required />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Clan Tag</mat-label>
+        <input matInput formControlName="clantag" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>CL</mat-label>
+        <input matInput formControlName="cl" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>WA</mat-label>
+        <input matInput formControlName="wa" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Clan Image</mat-label>
+        <input matInput formControlName="clan_image" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Flag</mat-label>
+        <input matInput formControlName="flag" />
+      </mat-form-field>
+
+      <!-- Członkowie klanu -->
+      <mat-form-field>
+        <mat-label>Members</mat-label>
+        <textarea matInput formControlName="members"></textarea>
+      </mat-form-field>
+
+      <!-- Dodaj/usuń członka -->
+      <mat-form-field>
+        <mat-label>Add Member</mat-label>
+        <mat-select (selectionChange)="addMember($event.value)">
+          <mat-option *ngFor="let player of allPlayers" [value]="player.username">
+            {{ player.playername }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div *ngFor="let member of (editClanForm.value.members || '').split(',')">
+        {{ member.trim() }}
+        <button type="button" (click)="removeMember(member)">Remove</button>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit">Save Changes</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,102 @@
+<p></p>
+<form [formGroup]="addClanForm" (ngSubmit)="onSubmit()">
+  
+  <mat-form-field>
+    <mat-label>Clan Name</mat-label>
+    <input matInput formControlName="clan" required />
+    <mat-error *ngIf="addClanForm.get('clan')?.invalid">Clan name is required.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Clan Tag</mat-label>
+    <input matInput formControlName="clantag" required />
+    <mat-error *ngIf="addClanForm.get('clantag')?.invalid">Clan tag is required.</mat-error>
+  </mat-form-field>
+
+   <!-- CL Field -->
+   <mat-form-field>
+    <mat-label>CL</mat-label>
+    <mat-select formControlName="cl" required>
+      <!-- Placeholder option -->
+      <mat-option value="" disabled>Choose a CL</mat-option>
+      
+      <!-- Dynamic list of players -->
+      <mat-option *ngFor="let player of filteredPlayersMembers" [value]="player.username" [disabled]="player.disabled">
+        {{ player.playername }}
+      </mat-option>
+    </mat-select>
+  
+    <mat-error *ngIf="addClanForm.get('cl')?.invalid">CL is required.</mat-error>
+  </mat-form-field>
+
+   <!-- WA Field -->
+   <mat-form-field>
+    <mat-label>WA</mat-label>
+    <mat-select formControlName="wa" required>
+      <!-- Placeholder option -->
+      <mat-option value="" disabled>Choose a WA</mat-option>
+      
+      <!-- Dynamic list of players -->
+      <mat-option *ngFor="let player of filteredPlayersMembers" [value]="player.username" [disabled]="player.disabled">
+        {{ player.playername }}
+      </mat-option>
+    </mat-select>
+  
+    <mat-error *ngIf="addClanForm.get('wa')?.invalid">WA is required.</mat-error>
+  </mat-form-field>
+  
+
+   <!-- Other Fields -->
+   <mat-form-field>
+     <mat-label>Clan Image</mat-label>
+     <input matInput formControlName="clan_image" required />
+     <mat-error *ngIf="addClanForm.get('clan_image')?.invalid">Image URL is required.</mat-error>
+   </mat-form-field>
+
+   <mat-form-field>
+     <mat-label>Flag</mat-label>
+     <input matInput formControlName="flag" required />
+     <mat-error *ngIf="addClanForm.get('flag')?.invalid">Flag is required.</mat-error>
+     <mat-hint>Add 2 letters code i.e: PL</mat-hint>
+   </mat-form-field>
+
+ <!-- Members Selection -->
+<mat-form-field>
+  <mat-label>Members</mat-label>
+  <mat-select multiple (selectionChange)="updateMembers()" #membersSelect placeholder="Search players">    
+
+    <!-- Display the count of selected members -->
+    <mat-select-trigger>
+      {{ getSelectedMembersCount() }} selected
+    </mat-select-trigger>
+
+    <!-- Search Filter -->
+    <input matInput placeholder="Search players" [formControl]="playerSearchControl" />
+
+    <!-- List of Players -->
+    <mat-option 
+      *ngFor="let player of filteredPlayersMembers" 
+      [value]="player.username" 
+      [disabled]="player.disabled"> <!-- Disable if already in two clans -->
+      {{ player.playername }}
+    </mat-option>
+
+  </mat-select>
+
+  <!-- Error message for members -->
+  <span *ngIf="addClanForm.get('members')?.invalid && addClanForm.get('members').touched">
+    At least one member must be selected.
+  </span>
+</mat-form-field>
+
+
+   <!-- Submit Button -->
+   <button mat-raised-button color="primary" type="submit" [disabled]="addClanForm.invalid">
+     Add Clan
+   </button>
+
+   <!-- Success/Error Messages -->
+   <div *ngIf="addSuccessMessage">{{ addSuccessMessage }}</div>
+   <div *ngIf="addErrorMessage">{{ addErrorMessage }}</div>
+
+</form>

@@ -4,18 +4,26 @@
     <div class="main-grid">
       <div class="grid span5">
         <mat-card class="span3 menage">
-          <button mat-raised-button color="primary" routerLink="/dashboard/create-player"><span>Create player</span> <fa-icon [icon]="userPlusIcon"></fa-icon></button>
-          <div>
-
-          </div>
+          <button mat-raised-button color="primary" routerLink="/dashboard/create-player" style="margin-right: 10px;"><span>Create player</span> <fa-icon [icon]="userPlusIcon"></fa-icon></button>
+          <button mat-raised-button color="primary" routerLink="/dashboard/add-clan"><span>Create clan</span> <fa-icon [icon]="addclan"></fa-icon>+</button>          
         </mat-card>
         <mat-card class="span3 menage">
-          <button mat-raised-button color="primary" routerLink="/dashboard/list-players"><span>List players</span> <fa-icon [icon]="usersIcon"></fa-icon></button>
+          <button mat-raised-button color="primary" routerLink="/dashboard/list-players" style="margin-right: 10px;"><span>List players</span> <fa-icon [icon]="usersIcon"></fa-icon></button>
+          <button mat-raised-button color="primary" routerLink="/dashboard/list-clans"><span>List clans</span> <fa-icon [icon]="usersIcon"></fa-icon><fa-icon [icon]="usersIcon"></fa-icon></button>
         </mat-card>
         <mat-card class="span1 menage logout">
           <button mat-raised-button color="primary" *ngIf="!oAuthService.hasValidAccessToken()" (click)="loginTest()"><span>Login</span> <fa-icon [icon]="doorOpen"></fa-icon></button>
 
           <button mat-raised-button color="primary" *ngIf="oAuthService.hasValidAccessToken()" (click)="logoutTest()"><span>Logout</span>from <fa-icon [icon]="google"></fa-icon></button>
+        </mat-card>
+
+        <mat-card class="span3 menage">
+          <button mat-raised-button color="primary" routerLink="/add-clan-war" style="text-decoration: none; color: #fff;">Add Clan War <mat-icon>add_box</mat-icon></button>
+        </mat-card>
+
+        <mat-card class="span3 menage">
+          <button mat-raised-button color="primary" routerLink="/update-elo" style="text-decoration: none; color: #fff;">Add MIX War 	<mat-icon>add</mat-icon></button>
+          <button (click)="loginDiscord()">Login with Discord</button>
         </mat-card>
 
         <mat-card class="team match span3">

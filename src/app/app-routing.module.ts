@@ -9,6 +9,9 @@ import { AddClanMatchComponent } from './add-clan-match/add-clan-match.component
 import { ClanListComponent } from './clan-list/clan-list.component';
 import { ClanMatchesListComponent } from './clan-matches-list/clan-matches-list.component';
 import { ClanDetailComponent } from './clan-detail/clan-detail.component';
+import { UpdateEloComponent } from './update-elo/update-elo.component';
+import { DiscordAuthGuard } from './discord-auth.guard';
+import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 
 const routes: Routes = [{
   path: '',
@@ -59,6 +62,11 @@ const routes: Routes = [{
   path: 'clan/:clan', 
   component: ClanDetailComponent 
 },
+{
+  path: 'update-elo',
+  component: UpdateEloComponent,
+  canActivate: [DiscordAuthGuard]
+},
 { 
   path: 'login' , 
   component: LoginComponent
@@ -66,6 +74,10 @@ const routes: Routes = [{
 { 
   path: 'logout', 
   component: LogoutComponent 
+},
+{
+  path: 'discord-callback',
+  component: AuthCallbackComponent
 },
 {
   path: 'home',

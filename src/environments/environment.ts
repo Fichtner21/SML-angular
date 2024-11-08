@@ -13,6 +13,8 @@ export const environment = {
     messagingSenderId: '719531931759',
     measurementId: 'G-7WB1MRGPB5',
   },
+  externalApiUrl: 'https://mohsh-discord.onrender.com/',
+  localApiUrl: 'http://localhost:5000/',
   production: false,
   CONNECTION_URL: 'https://sheet.best/api/sheets/d58b442c-790c-4e5b-a033-bf718908baa0',
   SPREADSHEET_ID: '1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo',

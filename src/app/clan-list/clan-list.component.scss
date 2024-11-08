@@ -1,12 +1,36 @@
 section {
-  padding-top: 100px;
+  // background-color: #010141;
+  background-image: url('/assets/images/9oeCWY.webp');
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  padding-top: 80px;
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%);
+    background-size: 4px 4px;
+  }
 }
 
 .container {
   padding: 15px;
   margin: 0 auto;
   max-width: 1300px;
-
+  position: relative;
+ 
+  .cont {
+    box-shadow: 0 20px 20px #010141;
+  }
+ 
   .clans {
     color: #fff;    
 
@@ -51,7 +75,7 @@ section {
 
   .table-ranking {
     display: grid;
-    grid-template-columns: 40px 1fr 40px 1fr 1fr 1fr 1fr 1fr 40px 40px; // First row layout
+    grid-template-columns: 60px 1fr 40px 1fr 1fr 1fr 1fr 1fr 40px 40px; // First row layout
     grid-auto-rows: auto; // Automatically adjust row height
     border-bottom: 1px solid #010141;
 
@@ -65,7 +89,7 @@ section {
 
     .clantag {
       font-weight: 700;
-      font-size: 20px;
+      font-size: 16px;
     }
 
     .cl, .wa {
@@ -102,11 +126,8 @@ section {
       display: block; // Ensure it behaves as a block element
       margin-top: 10px; // Optional spacing above, if needed
       box-sizing: border-box; // Ensure padding/margin don't affect width calculations
-    }
-
-    
+    }    
   }
-
 
   .more-clan {
     padding: 15px 70px;
@@ -223,23 +244,46 @@ section {
   }
   .row-ranking {
     display: grid;
-    grid-template-columns: 40px 1fr 40px 1fr 1fr 1fr 1fr 1fr 40px 40px; // First row layout
+    grid-template-columns: 60px 1fr 40px 1fr 1fr 1fr 1fr 1fr 40px 40px; // First row layout
     grid-auto-rows: auto; // Automatically adjust row height
     border-bottom: 1px solid #010141;
+    transition: background-image .3s;
 
-    .item {
-      padding: 5px 3px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
+    &:hover {
+      background-image: linear-gradient(0deg, rgba(64, 65, 95, .5) 25%, rgba(47, 48, 96, .5) 25%, rgba(47, 48, 96, .5) 50%, rgba(64, 65, 95, .5) 50%, rgba(64, 65, 95, .5) 75%, rgba(47, 48, 96, .5) 75%, rgba(47, 48, 96, .5) 100%) !important;
+      background-size: 4px 4px;    
+      cursor: pointer;
+
+      .clantag {
+        color: red; // Zmiana koloru podczas hover
+        transition: color .3s; // Upewnij się, że właściwość jest określona
+      }
     }
 
     .clantag {
       font-weight: 700;
-      font-size: 20px;
+      font-size: 18px;
+      transition: color .3s; // Dodaj tutaj również
     }
-  }
+
+    .item {
+      padding: 7px 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      transition: all .3;
+
+      .diff {
+        display: inline-block;
+        margin: 0 7px;
+      }
+
+      .pc {
+        font-style: italic;
+      }
+    }
+}
 }
 
 .streak-up {
@@ -252,4 +296,16 @@ section {
 
 .streak-draw {
   color: gray;
+}
+
+.positive-diff {
+  color: green; /* Przykładowy kolor dla dodatniej różnicy */
+}
+
+.zero-diff {
+  color: gray; /* Przykładowy kolor dla zerowej różnicy */
+}
+
+.negative-diff {
+  color: red; /* Przykładowy kolor dla ujemnej różnicy */
 }

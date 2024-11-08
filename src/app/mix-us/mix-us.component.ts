@@ -414,43 +414,83 @@ export class MixUsComponent implements OnInit {
     // });
   }
 
+  // getDiscordUsers() {
+  //   console.log('getDiscordUsers()')
+  //   this.http.get<VoiceMember[]>(
+  //     // 'https://mohsh-ds.herokuapp.com/voice-members'
+  //     `${environment.externalApiUrl}voice-members`
+  //     ).subscribe(
+  //     (members) => {
+  //       console.log('members', members)
+  //       if(members.length === 0){
+  //         this.notifier.notify('warning', 'WANT TO PLAY is empty.');
+  //       } else {
+  //         members.forEach((el: any) => {
+  //           // console.log('el', el);
+  //           // console.log('this.playerRowArray', this.playerRowArray)
+  //           this.playerRowArray.forEach((player: any) => {
+  //             if ((el.username === player.username || el.username === player.playername || el.nickname === player.username || el.nickname === player.playername) &&
+  //                 !this.selectedUsers.some((u: any) => (u.username === player.username && u.playername === player.playername))
+  //             ) {
+  //               player.id = el.id;
+  //               // player.nickname = el.nickname;// Dodajemy pole id z obiektu el do obiektu player
+
+  //               this.notifier.notify('success', `${player.playername} added!.`);
+  //               this.selectedUsers.push(player);
+  //               console.log('this.selectedUsers', this.selectedUsers)
+  //             }
+
+  //           });
+  //         });
+  //         // this.notifier.notify('success', 'Players from Discord Imported successful');
+  //         // console.log('this SELECTED USERS:', this.selectedUsers)
+  //       }
+  //     },
+  //     (err) => {
+  //       this.notifier.notify('error', 'Import Players from Discord failed.');
+  //     }
+  //   );
+  // }
+
   getDiscordUsers() {
-    console.log('getDiscordUsers()')
-    this.http.get<VoiceMember[]>(
-      // 'https://mohsh-ds.herokuapp.com/voice-members'
-      `${environment.externalApiUrl}voice-members`
-      ).subscribe(
-      (members) => {
-        console.log('members', members)
-        if(members.length === 0){
-          this.notifier.notify('warning', 'WANT TO PLAY is empty.');
-        } else {
-          members.forEach((el: any) => {
-            // console.log('el', el);
-            // console.log('this.playerRowArray', this.playerRowArray)
-            this.playerRowArray.forEach((player: any) => {
-              if ((el.username === player.username || el.username === player.playername || el.nickname === player.username || el.nickname === player.playername) &&
-                  !this.selectedUsers.some((u: any) => (u.username === player.username && u.playername === player.playername))
-              ) {
-                player.id = el.id;
-                // player.nickname = el.nickname;// Dodajemy pole id z obiektu el do obiektu player
-
-                this.notifier.notify('success', `${player.playername} added!.`);
-                this.selectedUsers.push(player);
-                console.log('this.selectedUsers', this.selectedUsers)
-              }
-
-            });
+    console.log('getDiscordUsers()');
+  
+    this.http.get<VoiceMember[]>(`${environment.externalApiUrl}voice-members`)
+      .subscribe(
+        (members) => {
+          console.log('members', members);
+  
+          if (members.length === 0) {
+            this.notifier.notify('warning', 'WANT TO PLAY is empty.');
+            return;
+          }
+  
+          // Tworzymy mapę dla `playerRowArray` z username i playername jako kluczami
+          const playerMap = new Map<string, any>();
+          this.playerRowArray.forEach((player: any) => {
+            playerMap.set(player.username, player);
+            playerMap.set(player.playername, player);
           });
-          // this.notifier.notify('success', 'Players from Discord Imported successful');
-          // console.log('this SELECTED USERS:', this.selectedUsers)
+  
+          // Przetwarzamy `members` raz, aby sprawdzić, czy należy dodać gracza
+          members.forEach((el) => {
+            const player = playerMap.get(el.username) || playerMap.get(el.nickname);
+  
+            if (player && !this.selectedUsers.some((u: any) => u.username === player.username && u.playername === player.playername)) {
+              player.id = el.id; // Przypisujemy `id` z Discorda
+              this.notifier.notify('success', `${player.playername} added!.`);
+              this.selectedUsers.push(player);
+            }
+          });
+  
+          console.log('this.selectedUsers', this.selectedUsers);
+        },
+        (err) => {
+          this.notifier.notify('error', 'Import Players from Discord failed.');
         }
-      },
-      (err) => {
-        this.notifier.notify('error', 'Import Players from Discord failed.');
-      }
-    );
+      );
   }
+  
 
   // sendToVoiceChannels(){
   //   const newArray1 = this.array1.map((obj: any) => {

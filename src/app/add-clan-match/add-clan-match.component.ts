@@ -69,6 +69,7 @@ export class AddClanMatchComponent implements OnInit {
 
   // Filtruj graczy dla Clan 1
     this.clanForm.get('selectedClan1')!.valueChanges.subscribe(selectedClan1 => {
+      console.log('selectedClan1', selectedClan1)
       this.filteredPlayersClan1$ = this.players$.pipe(
         map(players => players.filter(player => player.clan.split(', ').includes(selectedClan1)))
       );
@@ -85,6 +86,7 @@ export class AddClanMatchComponent implements OnInit {
    // Funkcja obsługująca zaznaczanie graczy w checkboxach
    onCheckBoxChange(event: any, controlName: string, player: any): void {
     const selectedPlayers = this.clanForm.get(controlName)!.value as string[];
+    console.log('selectedPlayers', selectedPlayers)
     if (event.checked) {
       // Dodaj gracza, jeśli został zaznaczony
       selectedPlayers.push(player.username);

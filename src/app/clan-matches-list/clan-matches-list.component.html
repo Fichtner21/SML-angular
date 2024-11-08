@@ -1,31 +1,81 @@
-<p>Clan Matches</p>
-<div class="match-list">
-  <div *ngFor="let match of paginatedMatches" class="match-card">
-    <div class="match-card__date">
-      <h3>{{ match.timestamp }}</h3>
-      <p><strong>ID: {{match.id}}</strong></p>
-    </div>
-    <div class="match-card__team">
-      <p><strong>Clan 1:</strong> {{ match.clan1 }} (Score: {{ match.clan1score }})</p>
-      <p><strong>Pre ELO Clan 1:</strong> {{ match.preelo1clan }}</p>
-      <p><strong>Post ELO Clan 1:</strong> {{ match.postelo1clan }}</p>
-      <div *ngFor="let player of match.clan1players">
-        <div *ngIf="player !== ''">{{ player }}</div>
-      </div> 
-    </div>
-    <div class="match-card__team">
-      <p><strong>Clan 2:</strong> {{ match.clan2 }} (Score: {{ match.clan2score }})</p>
-      <p><strong>Pre ELO Clan 2:</strong> {{ match.preelo2clan }}</p>
-      <p><strong>Post ELO Clan 2:</strong> {{ match.postelo2clan }}</p>
-      <div *ngFor="let player of match.clan2players">
-        <div *ngIf="player !== ''">{{ player }}</div>
-      </div>      
+<section>
+  <div class="container">
+    <div class="cont">
+      <div class="match-list">
+        <div *ngFor="let match of paginatedMatches" class="match-card">
+          <div class="match-card__date">
+            <h3>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</h3>
+            <p><strong>#{{ match.id }}</strong></p>
+          </div>
+          <div class="match-card__team">
+            <div class="clantag">
+              <a href="/clan/{{getClanDetails(match.clan1).clan}}">{{ getClanDetails(match.clan1).clantag }}</a>
+            </div>
+            <div class="score"><span>Rounds:</span> {{ match.clan1score }}</div>
+            <div class="elos">
+              <div>Pre ELO: <span>{{ match.preelo1clan }}</span></div>
+              <div class="diff" [ngClass]="{
+                'teamFavorite': match.postelo1clan - match.preelo1clan > 0,
+                'teamWithoutFavorite': match.postelo1clan - match.preelo1clan == 0,
+                'teamNotFavorite': match.postelo1clan - match.preelo1clan < 0
+              }"><span *ngIf="match.postelo1clan - match.preelo1clan > 0">+</span>{{ match.postelo1clan - match.preelo1clan }} pc</div>
+              <div>Post ELO: <span>{{ match.postelo1clan }}</span></div>
+            </div>            
+            <h3>Line up:</h3>
+            <div class="players">
+              <div *ngFor="let player of match.clan1players">
+                <div *ngIf="player !== ''">                
+                  <p *ngIf="getPlayerDetails(player)">
+                    <a href="/obj-ranking/{{getPlayerDetails(player).username}}">{{ getPlayerDetails(player).playername }}</a> <img [src]='"assets/images/flags_svg/" + getPlayerDetails(player).nationality + ".SVG"' [width]="20">                 
+                  </p>
+                </div>
+              </div> 
+            </div>
+            <div class="chance" [ngClass]="{ 'teamFavorite': (match.preelo1clan < match.preelo2clan), 'teamNotFavorite': (match.preelo2clan < match.preelo1clan), 'teamWithoutFavorite': (match.preelo2clan == match.preelo1clan) }">              
+              Chance per win {{ match.chance2team | number: '1.2-2' }}%
+            </div>
+          </div>
+          <div class="match-card__team">
+            <div class="clantag">
+              <a href="/clan/{{getClanDetails(match.clan2).clan}}">{{ getClanDetails(match.clan2).clantag }}</a>
+            </div> 
+            <div class="score"><span>Rounds:</span> {{ match.clan2score }}</div>
+            <div class="elos">
+              <div>Pre ELO: <span>{{ match.preelo2clan }}</span></div>
+              <div class="diff" [ngClass]="{
+                'teamFavorite': match.postelo2clan - match.preelo2clan > 0,
+                'teamWithoutFavorite': match.postelo2clan - match.preelo2clan == 0,
+                'teamNotFavorite': match.postelo2clan - match.preelo2clan < 0
+              }"><span *ngIf="match.postelo2clan - match.preelo2clan > 0">+</span>{{ match.postelo2clan - match.preelo2clan }} pc</div>
+              <div>Post ELO: <span>{{ match.postelo2clan }}</span></div>
+            </div> 
+            <h3>Line up:</h3>
+            <div class="players">
+              <div *ngFor="let player of match.clan2players">
+                <div *ngIf="player !== ''">                
+                  <p *ngIf="getPlayerDetails(player)">
+                    <a href="/obj-ranking/{{getPlayerDetails(player).username}}">{{ getPlayerDetails(player).playername }}</a>  <img [src]='"assets/images/flags_svg/" + getPlayerDetails(player).nationality + ".SVG"' [width]="20">             
+                  </p>
+                </div>
+              </div>   
+            </div> 
+            <div class="chance" [ngClass]="{ 'teamFavorite': (match.preelo1clan > match.preelo2clan), 'teamNotFavorite': (match.preelo2clan > match.preelo1clan), 'teamWithoutFavorite': (match.preelo2clan == match.preelo1clan) }">
+              Chance per win {{ match.chance1team | number: '1.2-2' }}%
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <mat-paginator 
+        [length]="matches.length"
+        [pageSize]="pageSize"
+        (page)="changePage($event)">
+      </mat-paginator>
     </div>
   </div>
-</div>
+</section>
 
-<mat-paginator 
-  [length]="matches.length"
-  [pageSize]="pageSize"
-  (page)="changePage($event)">
-</mat-paginator>
+
+
+
+

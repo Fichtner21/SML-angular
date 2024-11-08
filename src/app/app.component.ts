@@ -245,6 +245,10 @@ export class AppComponent implements OnInit {
     }, []);
   }
 
+  isActive(route: string): boolean {
+    return this.router.url.includes(route);
+  }
+
   // getPlayersData() {
   //   this.playersApiService.getPlayers('Players').pipe(
   //     map((response: any) => {       

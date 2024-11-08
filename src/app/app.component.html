@@ -2,7 +2,7 @@
   <div class="mobile">
     <a href="/">
       <img src="../assets/images/sh_icon.png" alt="" class="mobile-icon">
-    </a>
+    </a>    
     <div id="hamburger" (click)="toggleMenu()">
       <svg viewBox="0 0 100 80" width="40" height="30" fill="#ffffc8">
         <rect width="100" height="10"></rect>
@@ -13,16 +13,51 @@
   </div>
   <div class="nav" id="nav" [ngClass]="{'block_class': isMenuOpen}">
     <div class="menu">
-      <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()"><img class="home_icon" src="assets/images/sh_icon.png"></a>
-      <a routerLink="obj-ranking" routerLinkActive="active" (click)="closeMenu()">Ranking OBJ</a>
-      <a routerLink="obj-matches" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.matches_obj' | translate }}</a>
-      <a routerLink="obj-inactive" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.inactive_obj' | translate }}</a>
-      <a routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</a>
-      <a routerLink="cup" routerLinkActive="active" (click)="closeMenu()">Cup</a>
-      <a routerLink="mix" routerLinkActive="active" class="mix" (click)="closeMenu()">Mix</a>
-      <a routerLink="add-clan-war" routerLinkActive="active" (click)="closeMenu()">Add Clan War</a>
-      <a routerLink="clan-ranking" routerLinkActive="active" (click)="closeMenu()">Clan List</a>
-      <a routerLink="clan-matches" routerLinkActive="active" (click)="closeMenu()">Clan Matches</a>
+      <div class="over-menu">
+        <div>
+          <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()"><img class="home_icon" src="assets/images/sh_icon.png"></a>
+        </div>
+        <div class="menu-nav">
+          <button mat-button [matMenuTriggerFor]="menu">
+            <span [ngClass]="{'active': isActive('obj-ranking') || isActive('clan-ranking')}">Ranking</span>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item class="custom-ranking-mix" routerLink="obj-ranking" (click)="closeMenu()">Ranking MIX</button>
+            <button mat-menu-item class="custom-ranking-clans" routerLink="clan-ranking" (click)="closeMenu()">Ranking Clans</button>
+          </mat-menu>
+        
+          <button mat-button [matMenuTriggerFor]="matches">
+            <span [ngClass]="{'active': isActive('obj-matches') || isActive('clan-matches')}">Matches</span>
+          </button>
+          <mat-menu #matches="matMenu">
+            <button mat-menu-item class="custom-ranking-mix" routerLink="obj-matches" (click)="closeMenu()">{{ 'nav.matches_obj' | translate }}</button>
+            <button mat-menu-item class="custom-ranking-mix" routerLink="clan-matches" (click)="closeMenu()">Matches Clans</button>
+          </mat-menu>
+          <button mat-button routerLink="obj-inactive" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.inactive_obj' | translate }}</button>
+          <button mat-button routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</button>
+          <!-- <div class="menu-item">
+            <a routerLink="obj-ranking" routerLinkActive="active" (click)="closeMenu()">Ranking MIX</a>
+            <a routerLink="clan-ranking" routerLinkActive="active" (click)="closeMenu()">Ranking Clans</a>
+          </div> -->
+          <!-- <div class="menu-item">
+            <a routerLink="obj-matches" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.matches_obj' | translate }}</a>
+            <a routerLink="clan-matches" routerLinkActive="active" (click)="closeMenu()">Matches Clans</a>
+          </div>           -->
+          <!-- <div class="menu-item">
+            <a routerLink="obj-inactive" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.inactive_obj' | translate }}</a>
+            
+          </div> -->
+          <!-- <div>
+            <a routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</a>
+          </div> -->
+          <!-- <div>
+            <a routerLink="cup" routerLinkActive="active" (click)="closeMenu()">Cup</a>
+          </div> -->
+          
+            <a routerLink="mix" routerLinkActive="active" class="mix" (click)="closeMenu()">Mix</a>
+          
+        </div>
+      </div>
       <form action="">
         <label for="langChange">{{ 'nav.choose' | translate }}</label>
         <select class="language-select" name="langChange" (ngModelChange)="languageChange($event)" [(ngModel)]="languageCode">

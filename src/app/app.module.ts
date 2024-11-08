@@ -60,6 +60,11 @@ import { ClanListComponent } from './clan-list/clan-list.component';
 import { ChallengeModalComponent } from './shared/challenge-modal/challenge-modal.component';
 import { ClanMatchesListComponent } from './clan-matches-list/clan-matches-list.component';
 import { ClanDetailComponent } from './clan-detail/clan-detail.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatListModule } from '@angular/material/list';
+import { UpdateEloComponent } from './update-elo/update-elo.component';
+import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
+
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -112,7 +117,7 @@ const customNotifierOptions: NotifierOptions = {
     AppComponent,
     HomeComponent,
     DateFormatPipePipe,
-    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent, UpdateEloComponent, AuthCallbackComponent
   ],
   imports: [
     CommonModule,
@@ -139,12 +144,14 @@ const customNotifierOptions: NotifierOptions = {
     MatCheckboxModule,
     MatRadioModule,
     MatIconModule,
+    MatMenuModule,
     MatDatepickerModule,
     MatToolbarModule,
     MatTooltipModule,
     RankingObjModule,
     MatProgressBarModule,
     MatPaginatorModule,
+    MatListModule,
     MatDialogModule,   
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),

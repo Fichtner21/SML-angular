@@ -16,6 +16,7 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { AuthService } from '../services/auth.service';
 
 
 export interface UserInfo {
@@ -113,6 +114,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   stamp = faStamp;
   shareFromSquare = faShareFromSquare;
   google = faGoogle;
+  addclan = faUsers;
   gmail = 'https://gmail.googleapis.com';
   errorMessage = '';
   modalHeader = '';
@@ -293,7 +295,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   playerRowArray2: any[] = []; // Tablica graczy
   playerList: string[] = []; // Lista nazw graczy do walidacji
 
-  constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, public oAuthService: OAuthService, private formBuilder: FormBuilder,notifierService: NotifierService, private modalService: NgbModal, public dialog: MatDialog) {  
+  constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, public oAuthService: OAuthService, private formBuilder: FormBuilder,notifierService: NotifierService, private modalService: NgbModal, public dialog: MatDialog, private authService: AuthService) {  
     // confiure oauth2 service
     oAuthService.configure(authCodeFlowConfig);
     // manually configure a logout url, because googles discovery document does not provide it
@@ -1860,6 +1862,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.scoresTwoTeams();
       }
     });
+  }
+
+  loginDiscord(): void {
+    this.authService.loginWithDiscord(); // Call the login method from AuthService
   }
 
   ngOnDestroy() {

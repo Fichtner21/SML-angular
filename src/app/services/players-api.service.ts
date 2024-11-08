@@ -1,10 +1,10 @@
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Sheet } from '../models/sheet.model';
 import { environment } from 'src/environments/environment';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 const SCRIPT_ID = 'AKfycbw1UM_u6MgkD_a9P2yHtUdhCkz5kxBX-BuVDCA8tXQ';
 const ENDPOINT = `https://script.googleapis.com/v1/scripts/${SCRIPT_ID}:run`;
@@ -102,6 +102,25 @@ export class PlayersApiService {
       );
   }
 
+  public getPlayersFinal(name: string): Observable<any> {
+    return this.http.get<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
+    ).pipe(map(
+      (response: any) => {
+        let batchRowValues = response.values;      
+        let players: any[] = [];
+        for(let i = 1; i < batchRowValues.length; i++){
+          const rowObject: object = {};
+          for(let j = 0; j < batchRowValues[i].length; j++){
+            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+          }
+        players.push(rowObject);
+      }
+      return players;
+      } 
+    ))
+  }      
+
   public getPlayersDetails(): Observable<any[]> {
     // this.oAuthService.setupAutomaticSilentRefresh();
     return this.http.get<any>(
@@ -188,16 +207,44 @@ export class PlayersApiService {
   public getPlayerDetails(username: string): Observable<any> {
     return this.getPlayers('Players').pipe(
       map((response: any) => {
-        const players = response.values;
-        console.log('players', players)
-        const playerDetails = players.find(player => player.username === username);
-        console.log('playerDetails service', playerDetails)
+        const players = response.values;        
+        const playerDetails = players.find(player => player.username === username);       
         return playerDetails;
       })
     );
   }
 
-public getJsonDataConverted(name: string): Observable<any[]> {
+  getPlayerDetailsByUsername(username: string): Observable<any> {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Players?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`;
+    
+    return this.http.get<any>(url).pipe(
+      map(response => {
+        const rows = response.values;
+        if (!rows || rows.length < 2) {
+          console.error('Brak danych w zakładce Players lub brak nagłówków');
+          return null;
+        }
+
+        const headers = rows[0]; // Pobranie nagłówków z pierwszego wiersza
+        const playerRow = rows.find(row => row[0] === username); // Szukanie gracza po username
+
+        if (!playerRow) {
+          console.error(`Gracz o username ${username} nie został znaleziony.`);
+          return null;
+        }
+
+        // Tworzenie obiektu gracza z kluczami odpowiadającymi nagłówkom
+        const playerData: any = {};
+        headers.forEach((header, index) => {
+          playerData[header] = playerRow[index] || null; // Jeśli brak wartości, ustaw na null
+        });
+
+        return playerData;
+      })
+    );
+  }
+
+  public getJsonDataConverted(name: string): Observable<any[]> {
     const filePath = 'assets/snapshots/31_dec_2020.json'; // Ścieżka do pliku JSON
 
     return this.http.get<any>(filePath).pipe(
@@ -398,7 +445,128 @@ public getJsonSeason(name: string, path: string): Observable<any[]> {
     );
   }
   
+  // public createClan(
+  //   spreadsheetId: string,
+  //   valueInputOption: string,
+  //   clan: string, 
+  //   clantag: string, 
+  //   cl: string, 
+  //   wa: string, 
+  //   clan_image: string, 
+  //   flag: string,
+  //   last30days: string
+  // ): Observable<any> {
+  //   const defaultElo = 1000;
+      
+  
+  //   return this.http.post<any>(
+  //     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Clans:append?valueInputOption=${valueInputOption}`,
+  //     {
+  //       "values": [
+  //         [
+  //           clan,          // Nazwa klanu
+  //           defaultElo,    // Elo (wartość domyślna)
+  //           clantag,       // Tag klanu
+  //           cl,            // Clan Leader
+  //           wa,            // War Arranger
+  //           clan_image,    // URL zdjęcia klanu
+  //           flag,          // Flaga
+  //           last30days,
+  //           "",            // last30days (zostawiamy puste - formuła w Google Sheets)
+  //           "",            // last365days (formuła w Google Sheets)
+  //           "",            // win (formuła)
+  //           "",            // loss (formuła)
+  //           "",            // draw (formuła)
+  //           "",            // streak (formuła)
+  //           ""             // preelo (formuła)
+  //         ]
+  //       ]
+  //     },
+  //     { headers: this.authHeader() }
+  //   );
+  // }
+  
 
+// ...
+
+public createClan(
+  spreadsheetId: string,
+  valueInputOption: string,
+  clan: string, 
+  clantag: string, 
+  cl: string, 
+  wa: string, 
+  clan_image: string, 
+  flag: string,
+  last30days: string,
+  last365days: string,
+  win: string,
+  loss: string,
+  draw: string,
+  members: string,
+  preelo: string,
+  totalwars: string
+): Observable<any> {
+  const defaultElo = 1000;
+
+  return this.http.post<any>(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Clans:append?valueInputOption=${valueInputOption}`, {
+      "values": [
+          [
+              clan,          // Nazwa klanu
+              defaultElo,    // Elo (wartość domyślna)
+              clantag,       // Tag klanu
+              cl,            // Clan Leader
+              wa,            // War Arranger
+              clan_image,    // URL zdjęcia klanu
+              flag,          // Flaga
+              last30days,
+              last365days,            // last30days (zostawiamy puste - formuła w Google Sheets)
+              win,            // last365days (formuła w Google Sheets)
+              loss,            // win (formuła)
+              draw,            // loss (formuła)
+              members,            // draw (formuła)
+              preelo,            // streak (formuła)
+              totalwars             // preelo (formuła)
+          ]
+      ]
+  }, { headers: this.authHeader() });
+}
+
+updateClanMembers(spreadsheetId: string, sheetName: string, clanName: string, members: string): Observable<any> {
+  const range = `${sheetName}!A:M`;
+
+  return this.http.get<any>(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`)
+      .pipe(
+          switchMap(response => {
+              const rows = response.values;
+              const rowIndex = rows.findIndex(row => row[0] === clanName);
+
+              if (rowIndex === -1) {
+                  throw new Error(`Clan "${clanName}" not found`);
+              }
+
+              const updateRange = `${sheetName}!M${rowIndex + 1}`;
+
+              return this.http.put(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${updateRange}?valueInputOption=USER_ENTERED`, {
+                  range: updateRange,
+                  majorDimension: 'ROWS',
+                  values: [[members]]
+              }, { headers: this.authHeader() });
+          })
+      );
+}
+
+
+updateClanField(sheetName: string, clanName: string, fieldName: string, newValue: string): Observable<any> {
+  const body = {
+      sheetName,
+      clanName,
+      fieldName,
+      newValue
+  };
+
+  return this.http.post(`/update-clan-field`, body);
+}
 
   public authHeader() : HttpHeaders {
     return new HttpHeaders ({
@@ -480,36 +648,7 @@ public getJsonSeason(name: string, path: string): Observable<any[]> {
   }
 
   updateCell(spreadsheetId: string, sheetName: string, cellRange: string, t1p1name: string, t1p2name: string, t1p3name: string, t1p4name: string, t1p5name: string, t1p6name: string, t1p7name: string){
-    const accessToken = this.oAuthService.getAccessToken();
-    // const body = {
-    //   "value": [[value]]
-    // };
-    // const accessToken = this.oAuthService.getAccessToken();
-    // const httpOptions = {
-    //   headers: new HttpHeaders({
-    //     'Authorization': `Bearer ${accessToken}`,
-    //     'Content-Type': 'application/json'
-    //   })
-    // };
-
-    // const payload = {
-    //   "values": [
-    //     [t1p1name],[t1p2name], [t1p3name], [t1p4name], [t1p5name], [t1p6name], [t1p7name]
-    //   ]
-    // }
-
-    // return this.http.put<any>(
-    //   `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`,
-    //   // {
-    //   //   "values":
-    //   //   [[t1p1name],[t1p2name], [t1p3name], [t1p4name], [t1p5name], [t1p6name], [t1p7name]]
-    //   // },
-    //   payload,
-    //   httpOptions
-    //   // {
-    //   //   headers: headers
-    //   // }
-    // );
+    const accessToken = this.oAuthService.getAccessToken();    
     const httpOptions = {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${accessToken}`,
@@ -527,9 +666,236 @@ public getJsonSeason(name: string, path: string): Observable<any[]> {
      return this.http.put<any>(
       url, data, httpOptions
     );
-
   }
 
+  // updatePlayerClan(spreadsheetId: string, sheetName: string, username: string, clanName: string) {
+  //   const accessToken = this.oAuthService.getAccessToken();
+  //   const httpOptions = {
+  //     headers: new HttpHeaders({
+  //       'Authorization': `Bearer ${accessToken}`,
+  //       'Content-Type': 'application/json'
+  //     })
+  //   };
+  
+  //   // Najpierw pobierz wszystkie dane z zakładki Players, aby znaleźć odpowiedni wiersz
+  //   const urlGet = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A:H`;
+  //   return this.http.get<any>(urlGet, httpOptions).pipe(
+  //     switchMap(response => {
+  //       const playersData = response.values;
+  //       const rowIndex = playersData.findIndex(row => row[1] === username); // Zakładając, że username jest w kolumnie B (index 1)
+  
+  //       if (rowIndex !== -1) {
+  //         const currentClans = playersData[rowIndex][7] || ""; // Pobierz aktualne klany z kolumny H (index 7)
+  //         const clanList = currentClans ? currentClans.split(',').map(clan => clan.trim()) : [];
+  
+  //         // Jeśli gracz jest już w dwóch klanach, nie dodawaj nowego klanu
+  //         if (clanList.length >= 2) {
+  //           console.warn(`Player ${username} is already in two clans: ${currentClans}`);
+  //           return of(null); // lub inna obsługa błędu
+  //         }
+  
+  //         // Dodaj nowy klan do listy (jeśli lista jest pusta, dodaj bez przecinka)
+  //         const updatedClans = clanList.length === 0 ? clanName : `${currentClans}, ${clanName}`;
+  
+  //         const cellRange = `H${rowIndex + 1}`; // Kolumna H dla wybranego wiersza
+  //         const urlUpdate = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`;
+          
+  //         const data = {
+  //           values: [[updatedClans]]
+  //         };
+  
+  //         return this.http.put<any>(urlUpdate, data, httpOptions);
+  //       } else {
+  //         console.error(`Player with username ${username} not found`);
+  //         return of(null); // lub inna obsługa błędu
+  //       }
+  //     })
+  //   );
+  // }
+
+ 
+  
+
+  // updateClan(rowIndex: number, clanData: any): Observable<any> {
+  //   const accessToken = this.oAuthService.getAccessToken();
+  //   const httpOptions = {
+  //     headers: new HttpHeaders({
+  //       'Authorization': `Bearer ${accessToken}`,
+  //       'Content-Type': 'application/json'
+  //     })
+  //   };
+  
+  //   // Zakres dla wybranego wiersza (od A do G)
+  //   const cellRange = `A${rowIndex}:G${rowIndex}`;
+  //   const url = `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Clans!${cellRange}`;
+  
+  //   // Najpierw pobieramy obecne wartości
+  //   return this.http.get<any>(url, httpOptions).pipe(
+  //     map(response => {
+  //       const currentValues = response.values[0];
+        
+  //       // Tylko te pola, które się zmieniły
+  //       const updatedValues = [
+  //         clanData.clan || currentValues[0],         // Pole 'clan'
+  //         '',                                        // Puste pole (zajęte na stałe)
+  //         clanData.clantag || currentValues[2],      // Pole 'clantag'
+  //         clanData.cl || currentValues[3],           // Pole 'cl'
+  //         clanData.wa || currentValues[4],           // Pole 'wa'
+  //         clanData.clan_image || currentValues[5],   // Pole 'clan_image'
+  //         clanData.flag || currentValues[6]          // Pole 'flag'
+  //       ];
+  
+  //       // Jeśli nie zmieniono żadnego pola, zwracamy obecne dane bez wysyłania
+  //       if (updatedValues.every((val, i) => val === currentValues[i])) {
+  //         return { status: 'no_change' };
+  //       }
+  
+  //       // Wyślij zaktualizowane dane
+  //       return this.http.put<any>(`${url}?valueInputOption=USER_ENTERED`, { values: [updatedValues] }, httpOptions);
+  //     })
+  //   );
+  // }
+
+  // updateClan(rowIndex: number, clanData: any): Observable<any> {
+  //   const accessToken = this.oAuthService.getAccessToken();
+  //   const httpOptions = {
+  //     headers: new HttpHeaders({
+  //       'Authorization': `Bearer ${accessToken}`,
+  //       'Content-Type': 'application/json'
+  //     })
+  //   };
+  
+  //   // Zakres dla wybranego wiersza (od A do M)
+  //   const cellRange = `A${rowIndex}:M${rowIndex}`;
+  //   const url = `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Clans!${cellRange}`;
+  
+  //   // Najpierw pobieramy obecne wartości
+  //   return this.http.get<any>(url, httpOptions).pipe(
+  //     map(response => {
+  //       const currentValues = response.values[0];
+  
+  //       // Tylko te pola, które się zmieniły
+  //       const updatedValues = [
+  //         clanData.clan || currentValues[0],         // Pole 'clan'
+  //         '',                                        // Puste pole (zajęte na stałe)
+  //         clanData.clantag || currentValues[2],      // Pole 'clantag'
+  //         clanData.cl || currentValues[3],           // Pole 'cl'
+  //         clanData.wa || currentValues[4],           // Pole 'wa'
+  //         clanData.clan_image || currentValues[5],   // Pole 'clan_image'
+  //         clanData.flag || currentValues[6],          // Pole 'flag'
+  //         currentValues[7],                          // Zachowaj obecne pole (np. preelo) - kolumna H
+  //         currentValues[8],                          // Zachowaj obecne pole (np. postelo) - kolumna I
+  //         currentValues[9],                          // Zachowaj obecne pole (np. totalwars) - kolumna J
+  //         currentValues[10],                         // Zachowaj obecne pole (np. win) - kolumna K
+  //         currentValues[11],                         // Zachowaj obecne pole (np. loss) - kolumna L
+  //         clanData.members || currentValues[12]     // Uaktualnienie pola 'members' (kolumna M)
+  //       ];
+  
+  //       // Jeśli nie zmieniono żadnego pola, zwracamy obecne dane bez wysyłania
+  //       if (updatedValues.every((val, i) => val === currentValues[i])) {
+  //         return { status: 'no_change' };
+  //       }
+  
+  //       // Wyślij zaktualizowane dane
+  //       return this.http.put<any>(`${url}?valueInputOption=USER_ENTERED`, { values: [updatedValues] }, httpOptions);
+  //     })
+  //   );
+  // }
+
+  updateClan(rowIndex: number, clanData: any): Observable<any> {
+    const accessToken = this.oAuthService.getAccessToken();
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      })
+    };
+
+    const cellRange = `A${rowIndex}:M${rowIndex}`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${environment.SPREADSHEET_ID}/values/Clans!${cellRange}`;
+
+    return this.http.get<any>(url, httpOptions).pipe(
+      switchMap(response => {
+        const currentValues = response.values[0];
+
+        const updatedValues = [
+          clanData.clan || currentValues[0],         // 'clan'
+          clanData.elo || currentValues[1],         // Stałe puste pole
+          clanData.clantag || currentValues[2],      // 'clantag'
+          clanData.cl || currentValues[3],           // 'cl'
+          clanData.wa || currentValues[4],           // 'wa'
+          clanData.clan_image || currentValues[5],   // 'clan_image'
+          clanData.flag || currentValues[6],         // 'flag'
+          currentValues[7],                          // Pomijanie kolumny H
+          currentValues[8],                          // Pomijanie kolumny I
+          currentValues[9],                          // Pomijanie kolumny J
+          currentValues[10],                         // Pomijanie kolumny K
+          currentValues[11],                         // Pomijanie kolumny L
+          clanData.members || currentValues[12]      // Aktualizacja 'members' w kolumnie M
+        ];
+
+        if (updatedValues.every((val, i) => val === currentValues[i])) {
+          return of({ status: 'no_change' });
+        }
+
+        return this.http.put<any>(`${url}?valueInputOption=USER_ENTERED`, { values: [updatedValues] }, httpOptions);
+      })
+    );
+  }
+  
+  updatePlayerClan(spreadsheetId: string, sheetName: string, username: string, clanName: string, action: 'add' | 'remove') {
+    const accessToken = this.oAuthService.getAccessToken();
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      })
+    };
+  
+    const urlGet = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A:H`;
+    return this.http.get<any>(urlGet, httpOptions).pipe(
+      switchMap(response => {
+        const playersData = response.values;
+        const rowIndex = playersData.findIndex(row => row[1] === username); // Zakładając, że username jest w kolumnie B (index 1)
+  
+        if (rowIndex !== -1) {
+          const currentClans = playersData[rowIndex][7] || ""; // Pobierz aktualne klany z kolumny H (index 7)
+          const clanList = currentClans ? currentClans.split(',').map(clan => clan.trim()) : [];
+  
+          // Logika dodawania lub usuwania klanu
+          if (action === 'add') {
+            if (clanList.length >= 2) {
+              console.warn(`Player ${username} is already in two clans: ${currentClans}`);
+              return of(null); // lub inna obsługa błędu
+            }
+            if (!clanList.includes(clanName)) {
+              clanList.push(clanName); // Dodaj klan
+            }
+          } else if (action === 'remove') {
+            const index = clanList.indexOf(clanName);
+            if (index > -1) {
+              clanList.splice(index, 1); // Usuń klan
+            }
+          }
+  
+          const updatedClans = clanList.join(', '); // Połącz klany w jeden string
+          const cellRange = `H${rowIndex + 1}`; // Kolumna H dla wybranego wiersza
+          const urlUpdate = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`;
+  
+          const data = {
+            values: [[updatedClans]]
+          };
+  
+          return this.http.put<any>(urlUpdate, data, httpOptions);
+        } else {
+          console.error(`Player with username ${username} not found`);
+          return of(null); // lub inna obsługa błędu
+        }
+      })
+    );
+  }
+  
+  
   updateRoundsWon(spreadsheetId: string, sheetName: string, cellRange: string, roundsWon: string){
     return this.http.put<any>(
       `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${cellRange}?valueInputOption=USER_ENTERED`,

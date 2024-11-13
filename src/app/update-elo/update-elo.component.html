@@ -1,4 +1,31 @@
 <section>
+  <!-- <div class="user">
+    {{ userDataDiscord | json }}
+    <img [src]="avatarUrl" alt="" width="50">
+    
+  </div> -->
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let player of mergedData">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <img [src]="getAvatarUrl(player)" alt="{{ player.playername }}'s avatar" class="avatar" />
+          {{ player.playername }}
+        </mat-panel-title>
+        <mat-panel-description>
+          Click to toggle player details
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+  
+      <ul>
+        <li>
+          <p>Username: {{ player.username }}</p>
+          <p>Ranking: {{ player.ranking }}</p>
+          <p>Role: {{ player.role }}</p>
+          <!-- Dodaj inne pola, które chcesz wyświetlić -->
+        </li>
+      </ul>
+    </mat-expansion-panel>
+  </mat-accordion>
   <div class="container">
     <!-- <form [formGroup]="updateEloForm" (ngSubmit)="updateElo()">
       <div class="teams">
@@ -203,12 +230,25 @@
             <!-- Przycisk dodawania wszystkich graczy do formularza -->
             <div class="addToForm">
               <button mat-raised-button type="button" class="submit" color="accent" (click)="addAllPlayersToForm(mixes)">Add to Form</button> 
-            </div>
+            </div>            
           </div>
         </div>        
       </div>
     </div>
+    <div class="role">
+      Logged as <span>{{ role }}.</span>
+    </div>
+    <div *ngIf="userData">
+      <h2>Witaj, {{ userData.username }}!</h2>
+      <p>Twoja rola: 
+        <span *ngFor="let role of userRolesElo; let last = last">
+          {{ rolesMap[role] || 'Nieznana rola' }} 
+          <span *ngIf="!last">, </span> <!-- Only add a comma if it's not the last item -->
+        </span>
+      </p>
+    </div>
   </div>
   <notifier-container></notifier-container>
 </section>
-
+<!-- <ng-http-loader>    
+</ng-http-loader> -->

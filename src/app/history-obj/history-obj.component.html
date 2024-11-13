@@ -4,7 +4,7 @@
     <ng-container *ngIf="historyObj$ | async as historyObj">
       <ng-container *ngIf="historyObj.length > 0">
         <div>
-          <div *ngFor="let i = index; let match of historyObj | paginate: {itemsPerPage: 20, currentPage: p}">
+          <div *ngFor="let i = index; let match of historyObj | paginate: {itemsPerPage: 20, currentPage: p}; trackBy: trackByFn">
             <div class="match-row" id="match-{{match.idwar}}">
               <div class="match-row__date">
                 <div>{{ match.timestamp | date:'dd.MM.yyyy HH:mm' }}</div>
@@ -12,6 +12,10 @@
                 <!-- <div style="padding: 10px; color: red; border: 2px solid red;">aa {{ match.comments }}</div> -->
                 <div *ngIf="match.video.length > 0">
                   <img src="../../assets/images/icons/video.svg" alt="" class="video-icon">
+                </div>
+                <div *ngIf="match.contributor && match.contributor.name">
+                  Added by: <br>
+                  {{ match.contributor.name }}
                 </div>
                 <!-- <app-single-match (commentsEmitter)="onChildComments($event)"></app-single-match> -->
                 <!-- <app-single-match [comments]="comments$ | async" (lengthEmitter)="updateComments($event)"></app-single-match>                 -->

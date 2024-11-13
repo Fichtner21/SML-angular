@@ -22,6 +22,9 @@ export class AuthService {
   public isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private readonly tokenKey = 'discordToken';
+  private apiUrl = 'http://localhost:5000';
+  private userRoles: string[] = [];
+  private userData: any = null; // Przechowuj dane użytkownika
   
   constructor(private oAuthService: OAuthService, private http: HttpClient, private router: Router) {
     oAuthService.configure(authCodeFlowConfig);
@@ -68,7 +71,27 @@ export class AuthService {
     }
   }
 
-  
+  getUserRoles(userId: string, guildId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/discord/user-roles`, {
+      params: { userId, guildId }
+    });
+  } 
+
+  setUserRoles(roles: string[]): void {
+    this.userRoles = roles; // Ustaw role użytkownika
+  }
+
+  getUserRoles2(): string[] {
+    return this.userRoles; // Zwróć role użytkownika
+  }
+
+  setUserData(data: any): void {
+    this.userData = data; // Ustaw dane użytkownika
+  }
+
+  getUserData(): any {
+    return this.userData; // Zwróć dane użytkownika
+  }
 
   logout2(): void {
     localStorage.removeItem(this.tokenKey);
@@ -90,14 +113,19 @@ export class AuthService {
   // Method to initiate login with Discord
   loginWithDiscord(): void {
     const redirectUri = encodeURIComponent('http://localhost:5000/auth/discord/callback');
-    const clientId = '1304093864877096970'; // Replace with your Discord client ID
+    //AUTH
+    // const clientId = '1304093864877096970'; // Replace with your Discord client ID
+    //NEXT
+    const clientId = '1077334524154876026'; // Replace with your Discord client ID
     const scope = 'identify guilds';
-    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('http://localhost:4500/discord-callback')}&response_type=code&scope=identify%20guilds`;
+    // const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('http://localhost:4500/discord-callback')}&response_type=code&scope=identify%20guilds`;
+    const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('http://localhost:4500/discord-callback')}&response_type=code&scope=identify%20guilds%20guilds.members.read
+    `
     
     window.location.href = discordAuthUrl; // Redirect to Discord's OAuth page
   }
 
-
+  
  
  
 }

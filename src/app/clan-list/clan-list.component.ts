@@ -79,7 +79,7 @@ export class ClanListComponent implements OnInit {
           // Dodaj dodatkowe informacje o graczu, jeśli nazwa się zgadza
           const enrichedMembers = filteredMembers.map(member => {
             const playerDetails = this.players.find(player => player.username === member);
-            console.log('playerDetails', playerDetails)
+            // console.log('playerDetails', playerDetails)
             return {
               name: member,              
               playername: playerDetails?.playername || null, // Dodaj playername
@@ -129,7 +129,7 @@ export class ClanListComponent implements OnInit {
             streak: streak, // Obliczona seria
             members: enrichedMembers,  // Przekształcenie stringa na tablicę 
             diff: Number(clan[1]) - Number(clan[13]), 
-            totalwars: clan[14]          
+            totalwars: Number(clan[14])          
           };
         });
         this.filterClans();
@@ -145,7 +145,7 @@ export class ClanListComponent implements OnInit {
     });
   }  
   filterClans(): void {
-    this.filteredClans = this.clans.filter(clan => clan.totalwars >= 0);
+    this.filteredClans = this.clans.filter((clan:any) => clan.totalwars >= 0);    
   }  
   
   calculateStreak(clanName: string, matchHistory: any[]): StreakInfo | string {

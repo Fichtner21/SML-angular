@@ -49,6 +49,7 @@ export class HistoryObjComponent implements OnInit  {
   public comments$: any;
 
   public historyObj$: any;
+  public historyObj2$: any;
   chanceOfWinTeamOneShow: any;
   chanceOfWinTeamTwoShow: any;
   length: number = 0;
@@ -169,7 +170,7 @@ export class HistoryObjComponent implements OnInit  {
     //   this.warsAndComments$ = newArray;
     //   console.log(this.warsAndComments$)
     // });
-
+   
     this.historyObj$ = combineLatest([this.playersTab$, this.matchesTab$]).pipe(
       map(([players, matches]) => {
         let matchRow;
@@ -297,11 +298,8 @@ export class HistoryObjComponent implements OnInit  {
             t2p7score: match.t2p7score,
             t2p7postelo: match.t2p7postelo,
             t2p7rank: match.t2p7rank,
-            comments: this.valueFromSafeSubscriber
-
-            // comments: this.commentsService.getCommentsForMatch(match.idwar, '_').valueChanges().subscribe(comments => {
-            //   comments.length;
-            // })
+            comments: this.valueFromSafeSubscriber,
+            contributor: this.addPlayerLink(match.contributor, players, '')            
           }
 
           const newObj = {
@@ -365,6 +363,9 @@ export class HistoryObjComponent implements OnInit  {
 
       // tap(x => console.log('xx', x))
     )
+   
+    // Rendering without trackBy: 0.013916015625 ms
+    // Rendering with trackBy: 0.026123046875 ms
 
     // const commentsRef = this.getCommentsForMatch('100');
 
@@ -491,11 +492,16 @@ export class HistoryObjComponent implements OnInit  {
   //   })
   // }
 
+  trackByFn(index: number, item: any): any {
+    return item.idwar; // Zakładając, że idwar jest unikalnym identyfikatorem dla każdego meczu
+  }
+
   public addPlayerLink(player:string, obj:any, obj2:any) {
     let convertedPlayer = {};
     obj.forEach((el:any) => {
       if (player === el.username) {
         convertedPlayer = {
+          username: el.username,
           name: el.playername,
           flag: el.nationality,
           active: el.active,

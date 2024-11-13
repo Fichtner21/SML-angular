@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -87,9 +87,22 @@ export class UpdateEloComponent implements OnInit {
         }
   last10mixes: any[] = [];    
   last10mixesApi = environment.externalApiUrl + 'last-10-matches';
-  private apiUrl = 'https://script.googleapis.com/v1/scripts/AKfycbxg8BwZNZ5np5HqMFDEpjfTAShR4syBl11ys5qw-tcjJBtmhVmopWgU-xIbFnxIrFh9:run';
+  private apiUrl = 'https://script.googleapis.com/v1/scripts/AKfycbze1jAvHhZwaHX6Hwnz3Vz1p8SYafuHgkuVWEw_OQBDNWFsIHHsnpJ_zCdo72xQAsI:run';
+  userRoles: string[] = [];
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private readonly oAuthService: OAuthService, private notifier: NotifierService, private authService: AuthService, private router: Router) {
+  rolesMap: { [key: string]: string } = {
+    '1059920877044629614': 'OWNER',
+    '716736352359809095': 'admin',
+    '915354110302249011': 'League players'
+  };
+
+  role: string;
+  userDataString: any;
+  userDataDiscord: any;
+  avatarUrl: string | null = null;
+  mergedData: any[] = [];
+
+  constructor(private fb: FormBuilder, private http: HttpClient, private readonly oAuthService: OAuthService, private notifier: NotifierService, public authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {
     // this.updateEloForm = this.fb.group({
     //   teamOnePlayers: this.fb.array([
     //     this.createPlayerFormGroup()
@@ -106,15 +119,105 @@ export class UpdateEloComponent implements OnInit {
       teamOneRoundsWon: [0],
       teamTwoRoundsWon: [0]
     });
+    
   }
 
   ngOnInit() {
     this.getPlayersFinal('Players').subscribe(data => {
       this.players = data;
+      
+      this.mergeData();
     });
 
     this.getLast10Mixes()
+    
+    this.getToken().subscribe(token => {
+      this.authService.saveToken(token); // Zapisz token w localStorage
+    });
+
+    const userId = '649159865213780006'; // Wstaw user ID użytkownika
+    const guildId = '716723661909786690'; // Wstaw ID serwera
    
+    this.userDataString = localStorage.getItem('userData');
+    this.userDataDiscord = this.userDataString ? JSON.parse(this.userDataString) : null;
+    
+    console.log('userData', this.userDataDiscord)
+    if (this.userDataDiscord) {
+      const userId = this.userDataDiscord.id;
+      const avatarId = this.userDataDiscord.avatar;
+      // Przyjmujemy, że format jest PNG; możesz również dodać logikę do obsługi innych formatów
+      this.avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png`;
+    }
+
+    this.authService.getUserRoles(this.userDataDiscord.id, guildId).subscribe({
+      next: (response) => {
+        this.userRoles = response.roles;
+        console.log('Role użytkownika:', this.userRoles);
+        console.log('ROLES NAME', this.getRoleNames())
+        console.log('response', response)
+        this.role = this.getRoleNames()[0];
+        // Ustaw role i dane użytkownika w AuthService
+        this.authService.setUserRoles(this.userRoles);
+        // this.authService.setUserData(response.user); // Ustaw dane użytkownika
+        // console.log('USER DATA', this.authService.getUserData())
+      },
+      error: (error) => {
+        console.error('Błąd podczas pobierania ról użytkownika:', error);
+        if (error.status === 404) {
+          alert('Guild lub użytkownik nie istnieje.');
+        } else {
+          alert('Wystąpił błąd podczas pobierania ról.');
+        }
+      }
+    });
+    this.cdr.detectChanges();
+  }
+
+  mergeData(): void {
+    if (this.userDataDiscord && this.players.length > 0) {
+      this.mergedData = this.players.map(player => {
+        // Sprawdzanie, czy username lub playername pasuje do userDataDiscord
+        if (player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name || player.username === this.userDataDiscord.global_name || player.playername === this.userDataDiscord.username) {
+          // Tworzenie nowego obiektu z połączonymi danymi
+          const mergedPlayer = { ...player, ...this.userDataDiscord, usernameurl: player.username, role: this.role }; // Scalanie obiektów
+  
+          // Dodanie usernameDiscord, jeśli oba obiekty mają pole username
+          if (player.username === this.userDataDiscord.username) {
+            mergedPlayer.usernameDiscord = player.username; // Ustawienie usernameDiscord
+          }
+          console.log('mergedPlayer', mergedPlayer)
+          return mergedPlayer; // Zwróć scalony obiekt
+        }
+        return player; // Zwróć oryginalny obiekt, jeśli nie ma dopasowania
+      }).filter(player => player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name); // Filtruj tylko dopasowane obiekty
+    }
+  }
+
+  getAvatarUrl(player: any): string {
+    const avatarId = player.avatar; // Zakładając, że avatar jest częścią obiektu gracza
+    const userId = player.id; // Zakładając, że id jest częścią obiektu gracza
+    return avatarId ? `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png` : ''; // Zwróć URL avatara lub pusty string
+  }
+
+  // getToken powinno zwracać Observable<string>
+  getToken(): Observable<string> {
+    return this.http.get<any>(`http://localhost:5000/get-token`).pipe(
+      map(response => response) // Załóżmy, że token jest w polu `token` w odpowiedzi
+    );
+  }
+
+  getRoleNames(): string[] {
+    return this.userRoles.map(role => this.rolesMap[role]);
+  }
+
+   // Getter for user data
+   get userData() {
+    return this.authService.getUserData(); // Return user data from AuthService
+  }
+
+  // Getter for user roles
+  get userRolesElo() {
+    return this.authService.getUserRoles2(); // Return user roles from AuthService
   }
 
   getLast10Mixes() {
@@ -291,7 +394,8 @@ export class UpdateEloComponent implements OnInit {
         roundsWon: formValue.teamTwoRoundsWon
       },
       responsibilityFactor: 22,
-      outperformThreshold: 12
+      outperformThreshold: 12,
+      contributor: this.userDataDiscord.global_name ? this.userDataDiscord.global_name : ''
     };
   
     const body = {

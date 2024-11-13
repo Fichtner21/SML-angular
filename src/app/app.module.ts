@@ -64,7 +64,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
 import { UpdateEloComponent } from './update-elo/update-elo.component';
 import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
-
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -140,6 +140,7 @@ const customNotifierOptions: NotifierOptions = {
     ReactiveFormsModule,
     MatInputModule,
     MatTableModule,
+    MatExpansionModule,
     MatSelectModule,
     MatCheckboxModule,
     MatRadioModule,

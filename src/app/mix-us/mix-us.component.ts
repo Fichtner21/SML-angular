@@ -153,10 +153,10 @@ export class MixUsComponent implements OnInit {
   selection = new SelectionModel<UserData>(true, []);
   discordUsers: any[] = [];
 
-  public token = 'MTA3NzMzNDUyNDE1NDg3NjAyNg.GPu56_.K2yc18WltOIP9N-pHOp-WKPCDya5kmOLYyuIJY';
+  
   public channelId = '851888778409672756';
 
-  private discordToken = 'MTA3NzIyOTg4Njk3MzkzNTcwNw.G8qWP1.nc7-rGU3BotFxISS8JKT2Eh9ESp_HSS9ePp5VU';
+ 
   private baseUrl = 'http://localhost:3000';
 
   users: any[];

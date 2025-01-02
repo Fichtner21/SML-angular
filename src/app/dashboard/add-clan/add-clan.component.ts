@@ -115,94 +115,7 @@ export class AddClanComponent implements OnInit {
     this.filteredPlayersMembers = this.players.filter(player => 
       player.playername.toLowerCase().includes(filterValue)
     );
-  }
-
-  // onSubmit(): void {
-  //   if (this.addClanForm.valid) {
-  //     const { clan, clantag, cl, wa, clan_image, flag } = this.addClanForm.value;
-
-  //     // Join selected members into a comma-separated string
-  //     const selectedMembersString = this.membersSelect.value.join(', '); 
-
-  //     // Submit data to Google Sheets
-  //     this.clanService.createClan(
-  //       environment.SPREADSHEET_ID,
-  //       'USER_ENTERED',
-  //       clan,
-  //       clantag,
-  //       cl,
-  //       wa,
-  //       clan_image,
-  //       flag,
-  //       this.addClanForm.value.last30days,
-  //       this.addClanForm.value.last365days,
-  //       this.addClanForm.value.win,
-  //       this.addClanForm.value.loss,
-  //       this.addClanForm.value.draw,
-  //       selectedMembersString, // Use the joined string of selected members
-  //       this.addClanForm.value.preelo, // Include preelo formula if necessary
-  //       this.addClanForm.value.totalwars
-  //     ).subscribe({
-  //       next: (response) => {
-  //         console.log('Clan added:', response);
-  //         // Reset form and provide feedback
-  //         this.addClanForm.reset();
-  //         // Optionally refresh data here
-  //       },
-  //       error: (error) => {
-  //         console.error('Error adding clan:', error);
-  //         // Handle error feedback here if needed
-  //       }
-  //     });
-  //   }
-  // }
-
-  // onSubmit(): void {
-  //   if (this.addClanForm.valid) {
-  //     const { clan, clantag, cl, wa, clan_image, flag } = this.addClanForm.value;
-  
-  //     // Join selected members into a comma-separated string
-  //     const selectedMembersString = this.membersSelect.value.join(', '); 
-  
-  //     // Submit data to Google Sheets
-  //     this.clanService.createClan(
-  //       environment.SPREADSHEET_ID,
-  //       'USER_ENTERED',
-  //       clan,
-  //       clantag,
-  //       cl,
-  //       wa,
-  //       clan_image,
-  //       flag,
-  //       this.addClanForm.value.last30days,
-  //       this.addClanForm.value.last365days,
-  //       this.addClanForm.value.win,
-  //       this.addClanForm.value.loss,
-  //       this.addClanForm.value.draw,
-  //       selectedMembersString,
-  //       this.addClanForm.value.preelo,
-  //       this.addClanForm.value.totalwars
-  //     ).subscribe({
-  //       next: (response) => {
-  //         console.log('Clan added:', response);
-  
-  //         // Uaktualnij pole "clan" dla każdego wybranego gracza
-  //         this.membersSelect.value.forEach((username: string) => {
-  //           this.clanService.updatePlayerClan(environment.SPREADSHEET_ID, 'Players', username, clan, 'add').subscribe({
-  //             next: (res) => console.log(`Updated clan for ${username}`, res),
-  //             error: (err) => console.error(`Failed to update clan for ${username}`, err)
-  //           });
-  //         });
-  
-  //         // Reset form and provide feedback
-  //         this.addClanForm.reset();
-  //       },
-  //       error: (error) => {
-  //         console.error('Error adding clan:', error);
-  //       }
-  //     });
-  //   }
-  // }  
+  } 
 
   onSubmit(): void {
     if (this.addClanForm.valid) {
@@ -265,8 +178,7 @@ export class AddClanComponent implements OnInit {
             }
         });
     }
-}
-
+  }
 
   public getSelectedMembersCount(): number {
     return this.membersSelect?.value?.length || 0; // Use value instead of selectedOptions
@@ -277,8 +189,6 @@ export class AddClanComponent implements OnInit {
     console.log('this.membersSelect.value', this.membersSelect.value)
     console.log('this.membersSelect.value.selected', this.membersSelect.value.selected)
     const selectedMembers = this.membersSelect.value.map(option => option);
-    console.log('Updated members:', selectedMembers);
-    
-    // Perform any additional logic with selected members...
+    console.log('Updated members:', selectedMembers); 
   }
 }

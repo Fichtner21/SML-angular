@@ -79,7 +79,8 @@ export const authCodeFlowConfig: AuthConfig = {
 
   // URL of the SPA to redirect the user to after login
   // redirectUri: window.location.origin,
-  redirectUri: window.location.origin + '/dashboard',
+  // redirectUri: window.location.origin + '/dashboard',
+  redirectUri: window.location.origin,
 
   // The SPA's id. The SPA is registerd with this id at the auth-server
   // clientId: 'server.code',
@@ -294,6 +295,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   playerRowArray2: any[] = []; // Tablica graczy
   playerList: string[] = []; // Lista nazw graczy do walidacji
+
+  users: any[] = [];
+  loading: boolean = true;
+  error: string | null = null;
 
   constructor(private readonly googleApi: PlayersApiService, private http: HttpClient, public oAuthService: OAuthService, private formBuilder: FormBuilder,notifierService: NotifierService, private modalService: NgbModal, public dialog: MatDialog, private authService: AuthService) {  
     // confiure oauth2 service
@@ -510,6 +515,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
       return isMatch;
     }
+
+    this.googleApi.getDiscordUsers().subscribe({
+      next: (data) => {
+        this.users = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Nie udało się załadować danych użytkowników.';
+        this.loading = false;
+        console.error(err);
+      }
+    });
 
     // console.log('PERMUTATION:', this.splitPermutations([1000,1001,1002,1003,1004,1005,1009,1010, 1023,1023]))
 

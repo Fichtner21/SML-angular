@@ -1,12 +1,17 @@
 <section>
   <form [formGroup]="clanForm" (ngSubmit)="onSubmit()">
     <h1>Add Clan War</h1>
-    <div class="clans">      
-      <div>        
-        <mat-form-field>          
+    <div class="clans">
+      <div>
+        <mat-form-field>
           <mat-label>Clan 1</mat-label>
-          <mat-select formControlName="selectedClan1">
-            <mat-option *ngFor="let clan of clans$ | async" [value]="clan.clan">{{ clan.clantag }} ({{clan.elo}}) <img [src]='"assets/images/flags_svg/" + clan.flag + ".SVG"' [style.width.px]="20"></mat-option>
+          <mat-select 
+            formControlName="selectedClan1" 
+            (selectionChange)="onClan1Change($event.value)">
+            <mat-option *ngFor="let clan of filteredClans$ | async" [value]="clan.clan">
+              {{ clan.clantag }} ({{ clan.elo }})
+              <img [src]='"assets/images/flags_svg/" + clan.flag + ".SVG"' [style.width.px]="20">
+            </mat-option>
           </mat-select>
           <mat-error *ngIf="clanForm.get('selectedClan1')?.hasError('required')">
             Clan 1 is required
@@ -14,12 +19,15 @@
         </mat-form-field>
         <div formGroupName="selectedPlayersClan1" class="clan-players">
           <mat-label><strong>Players for Clan 1</strong></mat-label>
-          <mat-checkbox *ngFor="let player of filteredPlayersClan1$ | async" [value]="player.username" (change)="onCheckBoxChange($event, 'selectedPlayersClan1', player)">
+          <mat-checkbox 
+            *ngFor="let player of filteredPlayersClan1$ | async" 
+            [value]="player.username" 
+            (change)="onCheckBoxChange($event, 'selectedPlayersClan1', player)">
             <span [ngClass]="{'inactive': player.active === 'FALSE'}">
               {{ player.playername }}
             </span>
             <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"' [style.width.px]="20">
-          </mat-checkbox>          
+          </mat-checkbox>
         </div>
         <mat-form-field>
           <mat-label>Score Clan 1</mat-label>
@@ -33,7 +41,10 @@
         <mat-form-field>
           <mat-label>Clan 2</mat-label>
           <mat-select formControlName="selectedClan2">
-            <mat-option *ngFor="let clan of clans$ | async" [value]="clan.clan">{{ clan.clantag }} ({{clan.elo}}) <img [src]='"assets/images/flags_svg/" + clan.flag + ".SVG"' [style.width.px]="20"></mat-option>
+            <mat-option *ngFor="let clan of filteredClansAll$ | async" [value]="clan.clan">
+              {{ clan.clantag }} ({{ clan.elo }})
+              <img [src]='"assets/images/flags_svg/" + clan.flag + ".SVG"' [style.width.px]="20">
+            </mat-option>
           </mat-select>
           <mat-error *ngIf="clanForm.get('selectedClan2')?.hasError('required')">
             Clan 2 is required
@@ -41,10 +52,14 @@
         </mat-form-field>
         <div formGroupName="selectedPlayersClan2" class="clan-players">
           <mat-label><strong>Players for Clan 2</strong></mat-label>
-          <mat-checkbox *ngFor="let player of filteredPlayersClan2$ | async" [value]="player.username" (change)="onCheckBoxChange($event, 'selectedPlayersClan2', player)">
+          <mat-checkbox 
+            *ngFor="let player of filteredPlayersClan2$ | async" 
+            [value]="player.username" 
+            (change)="onCheckBoxChange($event, 'selectedPlayersClan2', player)">
             <span [ngClass]="{'inactive': player.active === 'FALSE'}">
               {{ player.playername }}
-            </span><img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"' [style.width.px]="20">
+            </span>
+            <img [src]='"assets/images/flags_svg/" + player.nationality + ".SVG"' [style.width.px]="20">
           </mat-checkbox>
         </div>
         <mat-form-field>
@@ -56,6 +71,7 @@
         </mat-form-field>
       </div>
     </div>
+    
     <button mat-raised-button color="primary" type="submit">Submit</button>
      <!-- Success Message -->
     <div *ngIf="isSuccess" class="success-message overlay">

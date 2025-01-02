@@ -1,0 +1,16 @@
+<div class="overlay" *ngIf="isVisible">
+  <div class="overlay-content">
+    <button mat-icon-button class="close-btn" (click)="closeOverlay()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2>{{ title }}</h2>
+    <img [src]="imageSrc" alt="Overlay Image" *ngIf="imageSrc" width="300">
+    <p>Collected: <span class="collected">{{ collectedAmount$ | async | number : '1.0-2' }}</span> / {{ targetAmount }} <span>&#8364;</span></p>
+    <div class="button-group">
+      <a *ngFor="let link of links" [href]="link.url" target="_blank">
+        <button mat-raised-button [color]="link.color">{{ link.label }}</button>
+      </a>
+    </div>
+  </div>
+</div>
+

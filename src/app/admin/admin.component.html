@@ -1,0 +1,43 @@
+<p>admin works!</p>
+<table>
+  <thead>
+    <tr>
+      <th>Player Name</th>
+      <th>Username</th>
+      <th>Ranking</th>
+      <th>Clan</th>
+      <th>Discord Username</th>
+      <th>Discord Global Name</th>
+      <th>Discord Roles</th>
+      <th>Joined At</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Wyświetlanie połączonych danych -->
+    <tr *ngFor="let player of (playersWithDiscordInfo$ | async); let i = index" [ngClass]="{'even-row': i % 2 === 0, 'odd-row': i % 2 !== 0}">
+      <td>{{ player.playername }}</td>
+      <td>{{ player.username }}</td>
+      <td>{{ player.ranking }}</td>
+      <td>{{ player.clan }}</td>
+      <td>{{ player.discordUser?.user.username || 'N/A' }}</td>
+      <td>{{ player.discordUser?.user.global_name || 'N/A' }}</td>
+      <td>
+        <ul>
+          <li *ngFor="let role of player.discordUser?.roles || []" [style.color]="'#' + role.color.toString(16).padStart(6, '0')">
+            {{ role.name }}
+          </li>
+        </ul>
+      </td>
+      <td>{{ player.discordUser?.joined_at | date: 'short' || 'N/A' }}</td>
+      <td>
+        {{ player.discordUser ? 'Connected' : 'No Discord Match' }}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<ng-template #loading>
+  <p>Loading...</p>
+</ng-template>

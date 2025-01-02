@@ -65,6 +65,12 @@ import { MatListModule } from '@angular/material/list';
 import { UpdateEloComponent } from './update-elo/update-elo.component';
 import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { DiscordLoginDialogComponent } from './shared/discord-login-dialog/discord-login-dialog.component';
+import { LoginModalComponent } from './shared/login-modal/login-modal.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AdminComponent } from './admin/admin.component';
+import { ConfirmUpdateEloComponent } from './shared/confirm-update-elo/confirm-update-elo.component';
+import { CdkTableModule } from '@angular/cdk/table'; 
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -117,7 +123,7 @@ const customNotifierOptions: NotifierOptions = {
     AppComponent,
     HomeComponent,
     DateFormatPipePipe,
-    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent, UpdateEloComponent, AuthCallbackComponent
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent, UpdateEloComponent, AuthCallbackComponent, DiscordLoginDialogComponent, LoginModalComponent, AdminComponent, ConfirmUpdateEloComponent
   ],
   imports: [
     CommonModule,
@@ -145,7 +151,9 @@ const customNotifierOptions: NotifierOptions = {
     MatCheckboxModule,
     MatRadioModule,
     MatIconModule,
+    CdkTableModule,
     MatMenuModule,
+    MatSnackBarModule,
     MatDatepickerModule,
     MatToolbarModule,
     MatTooltipModule,
@@ -153,7 +161,7 @@ const customNotifierOptions: NotifierOptions = {
     MatProgressBarModule,
     MatPaginatorModule,
     MatListModule,
-    MatDialogModule,   
+    MatDialogModule,      
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),
@@ -190,4 +198,18 @@ const customNotifierOptions: NotifierOptions = {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(private oauthService: OAuthService){
+    this.oauthService.configure({
+      clientId: '326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com',
+      redirectUri: window.location.origin,
+      responseType: 'token id_token',
+      scope: 'openid profile email',
+      issuer: 'https://accounts.google.com',
+      strictDiscoveryDocumentValidation: false,
+      showDebugInformation: true
+    });
+
+    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+  }
+}

@@ -10,6 +10,7 @@ import * as ChartAnnotation from 'chartjs-plugin-annotation';
 // import * as pluginAnnotation from 'chartjs-plugin-annotation';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -40,14 +41,18 @@ export class HomeComponent implements OnInit {
   public teamSelections$: Observable<any>; 
   public addAmatch$: Observable<any>;
   display: boolean = true;
+  user: any;
 
-  constructor(private playersApiService: PlayersApiService, private dialog: MatDialog) {
+  constructor(private playersApiService: PlayersApiService, private dialog: MatDialog, private authService: AuthService) {
     
   }   
 
   ngOnInit(): void { 
     Chart.plugins.register(annotationPlugin);
-    this.openDialogIfBeforeDeadline();
+    // this.openDialogIfBeforeDeadline();
+    this.user = this.authService.getUserDataGoogle();
+    console.log('User:', this.user.email_verified);
+    
 
     // this.teamOneSelection$ = this.playersApiService.getPlayers('TeamSelectionOne').pipe(
     //   map((response:any) => {

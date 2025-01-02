@@ -175,6 +175,7 @@ export class MixUsComponent implements OnInit {
   isSplitArrayIntoTwoClicked: boolean = false;
   discordUsersAll: any[] = [];
   isAuthenticated3: boolean = false;
+  isLoggedIn: boolean;
 
   constructor(private googleApi: PlayersApiService, private formBuilder: FormBuilder, private notifier: NotifierService, private oauthService: OAuthService, private router: Router, private route: ActivatedRoute, private http: HttpClient, public oAuthService: OAuthService, private renderer: Renderer2, private el: ElementRef, public authService: AuthService) {
     // const client = new Client({
@@ -195,6 +196,8 @@ export class MixUsComponent implements OnInit {
     this.authService.isAuthenticated$.subscribe(authenticated => {
       this.isAuthenticated3 = authenticated;
     });
+
+    // this.isLoggedIn = this.authService.isLoggedInGoogle();
 
     this.players$ = this.googleApi.getPlayers('Players').pipe(
       map((response: any) => {
@@ -278,7 +281,10 @@ export class MixUsComponent implements OnInit {
     });
  
   // this.oAuthService.loadDiscoveryDocumentAndLogin();
-
+    this.authService.loggedIn$.subscribe(loggedIn => {
+      this.isLoggedIn = loggedIn;
+      console.log('loggedIn', loggedIn)
+    });
 
     this.route.queryParams.subscribe(params => {
       // this.array1 = params['a1'] ? JSON.parse(params['a1']).map(username => ({username})) : [];
@@ -386,6 +392,8 @@ export class MixUsComponent implements OnInit {
     }
     // console.log('this.selectedUsers', this.selectedUsers)
   }
+
+ 
 
   // sum(numbers){
   //   let sum = 0;

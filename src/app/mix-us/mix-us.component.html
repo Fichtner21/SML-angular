@@ -216,7 +216,7 @@
             <div class="single-btn">
               <button mat-raised-button color="accent" class="lp" 
                       (click)="getDiscordUsers()" 
-                      [disabled]="!(authService.isAuthenticated$ | async)">
+                      [disabled]="!isLoggedIn">
                 Get from Discord <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowDown"></fa-icon>
               </button>
               

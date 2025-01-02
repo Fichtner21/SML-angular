@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{ isLoggedIn ? 'You are logged.' : 'Login' }}</h1>
+<p *ngIf="!isLoggedIn">Login with Google is required to put MIX score from war or add Clan war.</p>
+<div mat-dialog-actions>  
+  <button mat-button (click)="isLoggedIn ? logout() : login()">
+    {{ isLoggedIn ? 'Logout' : 'Login' }}
+  </button>
+  <button mat-button color="warn" (click)="close()">Reject</button>
+</div>

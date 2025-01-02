@@ -14,6 +14,7 @@ const ENDPOINT = `https://script.googleapis.com/v1/scripts/${SCRIPT_ID}:run`;
   providedIn: 'root'
 })
 export class PlayersApiService {
+ 
   gmail = 'https://gmail.googleapis.com'
   // userProfileSubject = new Subject<UserInfo>()
 
@@ -137,7 +138,8 @@ export class PlayersApiService {
             flag: player[6], //nationality
             active: player[11], //active
             ban: player[12], //ban
-            fpw: player[14]  //fpw          
+            fpw: player[14],  //fpw  
+            clanwars: player[73]        
           }))
         })
       );
@@ -146,13 +148,13 @@ export class PlayersApiService {
   public getClans(): Observable<any> {
     return this.http.get<any>(
       `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Clans?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
-    );
+    )
   }
   
   public getMatchHistoryClans(): Observable<any> {
     return this.http.get<any>(
       `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Match+History+Clans?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
-    );
+    )
   }
 
   public getMatchHistoryClans2(): Observable<any[]> {
@@ -956,6 +958,31 @@ updateClanField(sheetName: string, clanName: string, fieldName: string, newValue
     });
     return this.http.get(`${this.apiUrl}/guilds/${guildId}/members`, { headers });
   }
+
+  getPlayersFinalShort(name: string): Observable<any> {
+    return this.http.get<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/${name}?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
+    ).pipe(
+      map(response => {
+        let batchRowValues = response.values;
+        let players: any[] = [];
+        for (let i = 1; i < batchRowValues.length; i++) {
+          const rowObject: any = {};
+          for (let j = 0; j < batchRowValues[i].length; j++) {
+            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+          }
+          players.push(rowObject);
+        }
+        // Zwróć tylko wymagane pola: username, playername, nationality
+        return players.map(player => ({
+          username: player['username'],  // Zmienna w zależności od Twoich danych
+          playername: player['playername'],  // Zmienna w zależności od Twoich danych
+          nationality: player['nationality']  // Zmienna w zależności od Twoich danych
+        }));
+      })
+    );
+  }
+  
   // getPlayersFromDiscord(): Promise<any>{
 
 
@@ -1012,5 +1039,9 @@ updateClanField(sheetName: string, clanName: string, fieldName: string, newValue
     // Arkusz z historią zmian ma dane o zmianach w polu "effectiveFormat", które zawiera datę
     const changes = sheet.data[0].rowData?.map((row: any) => row.values?.[0]?.effectiveFormat?.numberFormat?.pattern);
     return changes?.some((change: any) => change.includes(selectedDate)) || false;
+  }
+
+  getDiscordUsers(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:5000/get-discord-users');
   }
 }

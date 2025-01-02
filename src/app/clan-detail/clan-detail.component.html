@@ -1,13 +1,14 @@
-<p>clan-detail works!</p>
-<div *ngIf="clan">
-  <h1>{{ clan.clan }}</h1>
-  <p><strong>Ranking:</strong> {{ clan.ranking }}</p>
-  <p><strong>ELO:</strong> {{ clan.elo }}</p>
-  <p><strong>Clan Tag:</strong> {{ clan.clantag }}</p>
-  <p><strong>Wins:</strong> {{ clan.win }}</p>
-  <p><strong>Losses:</strong> {{ clan.loss }}</p>
-  <p><strong>Draws:</strong> {{ clan.draw }}</p>
-  <p><strong>Streak:</strong> {{ clan.streak }}</p>
-  <img [src]="clan.clan_image" alt="Clan Image">
-  <!-- Add more fields as needed -->
-</div>
+<section>
+  <div *ngIf="clan">
+    <h1>{{ clan.clan }}</h1>
+    <p><strong>Ranking:</strong> {{ clan.ranking }}</p>
+    <p><strong>ELO:</strong> {{ clan.elo }}</p>
+    <p><strong>Clan Tag:</strong> {{ clan.clantag }}</p>
+    <!-- <p><strong>Wins:</strong> {{ clan.win }}</p>
+    <p><strong>Losses:</strong> {{ clan.loss }}</p>
+    <p><strong>Draws:</strong> {{ clan.draw }}</p>
+    <p><strong>Streak:</strong> {{ clan.streak }}</p> -->
+    <img [src]="clan.clan_image" alt="Clan Image">
+    <!-- Add more fields as needed -->
+  </div>
+</section>

@@ -1,26 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
-
-import { GoogleSheetsDbService } from 'ng-google-sheets-db';
-
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { PlayersApiService } from './services/players-api.service';
-import { Players } from './ranking-obj/ranking.model';
 import { TranslateService } from '@ngx-translate/core';
-import { FormControl } from '@angular/forms';
-import { getLocaleEraNames } from '@angular/common';
-import * as Chart from 'chart.js';
 import { Router } from '@angular/router';
-
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { faEuro, faHome, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { faPaypal } from '@fortawesome/free-brands-svg-icons';
 import { HttpClient } from '@angular/common/http';
-import { NotifierService } from 'angular-notifier';
 import { SeasonService } from './services/season.service';
 import { PlayerService } from './services/player.service';
+import { LoginModalComponent } from './shared/login-modal/login-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 interface VoiceMember {
   id: string;
@@ -36,7 +29,7 @@ interface VoiceMember {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy  {
   parentRanking: any;
   title = 'SH MIX';
   players$: Observable<any>;
@@ -62,17 +55,41 @@ export class AppComponent implements OnInit {
   s6_wars: any;
   s7_wars: any;
   s8_wars: any;
+  total_clans: any;
+  total_clanwars: any;
   progressValue: number;
   tooltipText: string;
   public userCount: number = 0;
-  public players: VoiceMember[] = []; // Lista graczy
+  // public players: VoiceMember[] = []; // Lista graczy
   public playersData: any[] = []; // Przechowywanie przetworzonych danych
   season!: number;
   dateRange!: string;
   playerDetails: any;
 
-  constructor(private GoogleSheetsDbService: GoogleSheetsDbService, private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router, private oAuthService: OAuthService, private http: HttpClient, private notifier: NotifierService, private seasonService: SeasonService, private playerService: PlayerService) {
+  //DISCORD
+  isUserLoggedIn = false;
+  private loginSubscription: Subscription;
+  userRoles: string[] = [];
+  rolesMap: { [key: string]: string } = {
+    '1059920877044629614': 'OWNER',
+    '716736352359809095': 'admin',
+    '915354110302249011': 'League player',
+    '1161215729421525082': 'New player',
+    '1161596242225283083': 'Friend'
+  };
+  role: any;
+  userDataString: any;
+  userDataDiscord: any;
+  avatarUrl: string | null = null;
+  mergedData: any[] = [];
+  players: any[] = [];
+  mergedDataPlayer: any;
+  isLoggedIn: boolean;
+  roleDisplay: any;
+
+  constructor(private playersApiService: PlayersApiService, private translateService: TranslateService, public _authService: AuthService, private router: Router, private oAuthService: OAuthService, private seasonService: SeasonService, private playerService: PlayerService, private authService: AuthService, private cdr: ChangeDetectorRef, private http: HttpClient, private dialog: MatDialog) {
     translateService.setDefaultLang(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');
+    this.isLoggedIn = this.authService.isLoggedInGoogle();
   }
 
   languages = [
@@ -81,12 +98,63 @@ export class AppComponent implements OnInit {
   ]
 
   ngOnInit(): void {
-    // this.getDiscordUsers();
-    // this.getPlayersData();
     const seasonInfo = this.seasonService.getSeason();
     this.season = seasonInfo.season;
     this.dateRange = seasonInfo.dateRange;
+    this.loginSubscription = this.authService.loginStatus$.subscribe(
+      (status) => {
+        this.isUserLoggedIn = status;
+        // console.log('status', status)
+
+        if(status === true){
+      const guildId = '716723661909786690'; // Wstaw ID serwera
    
+    this.userDataString = localStorage.getItem('userData');
+    this.userDataDiscord = this.userDataString ? JSON.parse(this.userDataString) : null;
+    
+    // console.log('userData', this.userDataDiscord)
+    if (this.userDataDiscord) {
+      const userId = this.userDataDiscord.id;
+      const avatarId = this.userDataDiscord.avatar;
+      // Przyjmujemy, że format jest PNG; możesz również dodać logikę do obsługi innych formatów
+      this.avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png`;
+    }   
+
+    
+
+    this.authService.getUserRoles3().subscribe({
+      next: (response) => {
+        if (Array.isArray(response.roles)) {
+          this.userRoles = response.roles; // Pobierz tablicę ról
+          this.role = this.getRoleNames(); // Ustal rolę do wyświetlenia
+          this.roleDisplay = this.getDisplayRole(this.userRoles); // Ustal rolę do wyświetlenia
+        } else {
+          console.error('Błąd: Pobierane role nie są tablicą.', response);
+          this.userRoles = [];
+          this.role = 'Guest'; // Ustaw domyślną rolę
+        }
+        this.playersApiService.getPlayersFinal('Players').subscribe(data => {
+          this.players = data;      
+          this.mergeData();
+        });
+        this.cdr.detectChanges();
+        // console.log('Role użytkownika:', this.userRoles);
+      },
+      error: (err) => {
+        console.error('Błąd podczas pobierania ról użytkownika:', err);
+      }
+    });    
+
+         
+        }
+      }
+    );
+    
+    this.cdr.detectChanges();
+
+    this.authService.loggedIn$.subscribe(loggedIn => {
+      this.isLoggedIn = loggedIn;
+    });
     // this.translateService.setDefaultLang('en');
 
     // this.lang.valueChanges.subscribe((lang) => {
@@ -122,13 +190,7 @@ export class AppComponent implements OnInit {
 
         return response.values;
       })
-    );
-
-    // this.players$ = this.playersApiService.getPlayers('Players').pipe(
-    //   map((response: any) => {       
-    //     return response.values;
-    //   })
-    // )
+    );   
    
     const startDate = new Date('2024-07-01');
     const endDate = new Date('2024-09-30');
@@ -144,6 +206,24 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  onLoginClick(): void {
+    if (this.isLoggedIn) {
+      // Wylogowanie
+      this.authService.logout();
+    } else {
+      // Otworzenie login modal
+      this.dialog.open(LoginModalComponent, {
+        width: '400px',
+        disableClose: false
+      }).afterClosed().subscribe(loggedIn => {
+        if (loggedIn) {
+          this.authService.setLoggedIn(true);  // Po zalogowaniu ustawienie statusu
+          console.log('User logged in');
+        }
+      });
+    }
+  }  
+ 
   languageChange($event) {
     // debugger;
     this.currentLanguage = $event;
@@ -174,6 +254,72 @@ export class AppComponent implements OnInit {
     localStorage.removeItem('is_admin');
     this.router.navigate(['/']);
     return true;
+  }
+
+  loginDiscord(): void {
+    this.authService.loginWithDiscord(); // Call the login method from AuthService
+  }
+
+  checkLoginStatus(): void {
+    this.isUserLoggedIn = this.authService.isLoggedIn();
+    this.cdr.detectChanges();
+  }
+
+  logoutDiscord(): void {
+    this.authService.logout2();
+    this.checkLoginStatus(); // Update login status after logout
+  }
+
+  mergeData(): any {
+    if (this.userDataDiscord && this.players.length > 0) {
+      this.mergedData = this.players.map(player => {
+        // Sprawdzanie, czy username lub playername pasuje do userDataDiscord
+        
+        if (player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name || player.username === this.userDataDiscord.global_name || player.playername === this.userDataDiscord.username || player.discord_id === this.userDataDiscord.id) {
+          // Tworzenie nowego obiektu z połączonymi danymi
+          const mergedPlayer = { ...player, ...this.userDataDiscord, usernameurl: player.username, role: this.role, clansh: player.clan, displayRole: this.roleDisplay}; // Scalanie obiektów
+  
+          // Dodanie usernameDiscord, jeśli oba obiekty mają pole username
+          if (player.username === this.userDataDiscord.username) {
+            mergedPlayer.usernameDiscord = player.username; // Ustawienie usernameDiscord
+          }
+          // console.log('mergedPlayer', mergedPlayer)
+          this.mergedDataPlayer = mergedPlayer; // Zwróć scalony obiekt
+          // console.log(this.mergedDataPlayer)
+        }
+        return player; // Zwróć oryginalny obiekt, jeśli nie ma dopasowania
+      }).filter(player => player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name); // Filtruj tylko dopasowane obiekty
+      this.cdr.detectChanges();
+    }
+  }
+
+  getAvatarUrl(player: any): string {
+    const avatarId = player?.avatar; // Zakładając, że avatar jest częścią obiektu gracza
+    const userId = player?.id; // Zakładając, że id jest częścią obiektu gracza
+  
+    if (avatarId) {
+      return `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png`; // Zwróć URL avatara
+    } else {
+      return 'assets/images/medal_of_hh.png'; // Zwróć domyślny obrazek
+    }
+  }
+  
+  // getToken powinno zwracać Observable<string>
+  getToken(): Observable<string> {
+    return this.http.get<any>(`${environment.externalApiUrl}get-token`).pipe(
+      map(response => response) // Załóżmy, że token jest w polu `token` w odpowiedzi
+    );
+  }
+
+  // getRoleNames(): string[] {
+  //   return this.userRoles.map(role => this.rolesMap[role]);
+  // }
+
+  getRoleNames(): string[] {
+    // Użyj bezpiecznego dostępu do mapowania ról
+    return Array.isArray(this.userRoles)
+      ? this.userRoles.map(role => this.rolesMap[role] || 'Unknown role')
+      : [];
   }
 
   // getDiscordUsers() {
@@ -233,6 +379,28 @@ export class AppComponent implements OnInit {
   //     }
   //   );
   // }
+
+  getDisplayRole(roles: string[]): string {
+    // Priorytet ról od najwyższej do najniższej
+    const rolePriority = [
+      { id: '1059920877044629614', displayRole: 'OWNER' },
+      { id: '716736352359809095', displayRole: 'admin' },
+      { id: '915354110302249011', displayRole: 'League player' },
+      { id: '1161215729421525082', displayRole: 'New player' },
+      { id: '1161596242225283083', displayRole: 'Friend' },
+    ];
+  
+    // Znajdź najwyższą rolę użytkownika
+    for (const role of rolePriority) {
+      if (roles.includes(role.id)) {
+        return role.displayRole;
+      }
+    }
+  
+    // Jeśli użytkownik nie ma żadnej z wymienionych ról
+    return 'Guest';
+  }
+  
   
   // Helper method to find matched players
   private getMatchedPlayers(members: VoiceMember[]): any[] {
@@ -267,9 +435,9 @@ export class AppComponent implements OnInit {
 
   updatePlayersWithData() {
     this.players.forEach(player => {
-      console.log('player', player)
+      // console.log('player', player)
       const matchingData = this.playersData.find(data => data.index1 === player.nickname || player.username);
-      console.log('matchingData', matchingData)
+      // console.log('matchingData', matchingData)
       if (matchingData) {
         player.additionalInfo0 = matchingData.index0; // Wartość z indeksu 0
         player.additionalInfo1 = matchingData.index1; // Wartość z indeksu 1
@@ -277,4 +445,13 @@ export class AppComponent implements OnInit {
       }
     });
   }
+
+  ngOnDestroy(): void {
+    // Unsubscribe to avoid memory leaks
+    if (this.loginSubscription) {
+      this.loginSubscription.unsubscribe();
+    }
+  }
 }
+
+

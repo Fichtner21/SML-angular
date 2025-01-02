@@ -24,6 +24,10 @@
           <mat-menu #menu="matMenu">
             <button mat-menu-item class="custom-ranking-mix" routerLink="obj-ranking" (click)="closeMenu()">Ranking MIX</button>
             <button mat-menu-item class="custom-ranking-clans" routerLink="clan-ranking" (click)="closeMenu()">Ranking Clans</button>
+            <!-- <button mat-raised-button color="primary" routerLink="/add-clan-war" class="add">Add Clan War <mat-icon>add_box</mat-icon></button>
+            <button mat-raised-button color="primary" routerLink="/update-elo">
+              Add MIX War <mat-icon>group_add</mat-icon>
+            </button>  -->
           </mat-menu>
         
           <button mat-button [matMenuTriggerFor]="matches">
@@ -34,28 +38,9 @@
             <button mat-menu-item class="custom-ranking-mix" routerLink="clan-matches" (click)="closeMenu()">Matches Clans</button>
           </mat-menu>
           <button mat-button routerLink="obj-inactive" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.inactive_obj' | translate }}</button>
-          <button mat-button routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</button>
-          <!-- <div class="menu-item">
-            <a routerLink="obj-ranking" routerLinkActive="active" (click)="closeMenu()">Ranking MIX</a>
-            <a routerLink="clan-ranking" routerLinkActive="active" (click)="closeMenu()">Ranking Clans</a>
-          </div> -->
-          <!-- <div class="menu-item">
-            <a routerLink="obj-matches" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.matches_obj' | translate }}</a>
-            <a routerLink="clan-matches" routerLinkActive="active" (click)="closeMenu()">Matches Clans</a>
-          </div>           -->
-          <!-- <div class="menu-item">
-            <a routerLink="obj-inactive" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.inactive_obj' | translate }}</a>
-            
-          </div> -->
-          <!-- <div>
-            <a routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</a>
-          </div> -->
-          <!-- <div>
-            <a routerLink="cup" routerLinkActive="active" (click)="closeMenu()">Cup</a>
-          </div> -->
+          <button mat-button routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</button>        
           
-            <a routerLink="mix" routerLinkActive="active" class="mix" (click)="closeMenu()">Mix</a>
-          
+            <a routerLink="mix" routerLinkActive="active" class="mix" (click)="closeMenu()">Mix</a>          
         </div>
       </div>
       <form action="">
@@ -99,17 +84,84 @@
           <div *ngIf="numOfMatches.length > 0">
             <a routerLink="obj-matches" routerLinkActive="active">
               <img src="../assets/images/icons/avarage.png" alt="">
-              <span class="curr-season" matTooltip="SEASON 7 WARS">{{ s8_wars }}</span> <!-- Wyświetlenie ilości wojen z sezonu 5 -->
+              <span class="curr-season" matTooltip="SEASON 8 WARS">{{ s8_wars }}</span> <!-- Wyświetlenie ilości wojen z sezonu 5 -->
               &middot;&middot;&middot;
               <span class="total-seasons" matTooltip="TOTAL WARS">{{ total_wars }}</span> <!-- Wyświetlenie łącznej liczby wojen -->
             </a>
           </div>
         </div>
-
-        <a href="https://discord.gg/DB5PybFPhC" target="_blank" matTooltip="DISCORD" class="disco">
-          <img src="assets/images/icons/discord.svg" alt="">
-          <div>DISCORD</div>
-        </a>
+        <button mat-button (click)="onLoginClick()">
+          <mat-icon *ngIf="isLoggedIn" matTooltip="You are logged in.">lock_open</mat-icon>
+          <span *ngIf="isLoggedIn">Logout</span>
+        
+          <mat-icon *ngIf="!isLoggedIn" matTooltip="Click to login with Google.">lock</mat-icon>
+          <span *ngIf="!isLoggedIn">Login</span>
+        </button>
+        
+        <button mat-button [matMenuTriggerFor]="menuDiscord">          
+          <div *ngIf="!isUserLoggedIn" class="discord-btn">
+            <div>DISCORD</div>
+            <img src="assets/images/icons/discord.svg" alt="">
+          </div>
+          <div *ngIf="isUserLoggedIn" class="userLogged">
+            <img [src]="getAvatarUrl(mergedDataPlayer)" alt="avatar" class="avatar"/>
+            <div [ngClass]="{
+              'owner': mergedDataPlayer?.displayRole === 'OWNER',
+              'admin': mergedDataPlayer?.displayRole === 'admin',
+              'league': mergedDataPlayer?.displayRole === 'League player',
+              'friend': mergedDataPlayer?.displayRole === 'Friend'
+              }">
+              {{ mergedDataPlayer?.playername }} ({{ mergedDataPlayer?.displayRole }})
+            </div>                    
+          </div>
+        </button>
+        <mat-menu #menuDiscord="matMenu" class="discord-cont">
+          <button href="https://discord.gg/DB5PybFPhC" target="_blank" matTooltip="DISCORD" class="disco" mat-raised-button>
+            <mat-icon style="margin-right: 5px;">visibility</mat-icon>
+            <img src="assets/images/icons/discord.svg" alt="">
+            <div>Visit DISCORD</div>
+          </button>
+          
+          <!-- Conditionally show login or logout button -->
+          <button *ngIf="!isUserLoggedIn" (click)="loginDiscord()" class="disco-btn" mat-raised-button>
+            <mat-icon>exit_to_app</mat-icon>
+            <img src="assets/images/icons/discord.svg" alt="">
+            <div>Login with DISCORD</div>
+          </button>
+          <button *ngIf="isUserLoggedIn" (click)="logoutDiscord()" class="disco-btn" mat-raised-button>            
+            <img src="assets/images/icons/discord.svg" alt="">
+            <mat-icon>logout</mat-icon>
+            <div>Logout from DISCORD</div>
+          </button>
+          <div *ngIf="isUserLoggedIn">
+            <button mat-raised-button color="accent" routerLink="/add-clan-war" class="add">
+              Add Clan War <mat-icon>add_box</mat-icon>
+            </button>
+            <button mat-raised-button color="primary" routerLink="/update-elo" class="add_mix">
+              Add MIX War <mat-icon>group_add</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="isUserLoggedIn" class="quick">
+            <h3>Profile info:</h3>
+            <div>
+              <span style="margin-right: 5px;">{{ mergedDataPlayer?.playername }}</span>
+              <img src="../assets/images/flags_svg/{{mergedDataPlayer?.nationality}}.SVG" alt="" width="20">
+            </div>
+            <div>
+              Status: <span>{{ mergedDataPlayer?.active === 'TRUE' ? 'Active' : 'Inactive' }}</span>
+            </div>
+            <div>
+              Mix rank: <span>{{ mergedDataPlayer?.ranking }}</span>
+            </div>
+            <div>
+              Last 30 days wars: <span>{{ mergedDataPlayer?.last30days }}</span>
+            </div>
+            <div>
+              Last 365 days wars: <span>{{ mergedDataPlayer?.last365days }}</span>
+            </div>
+          </div>
+        </mat-menu>
+        
 
         <!-- <div class="donation">
 
@@ -123,38 +175,19 @@
         <a href="https://www.paypal.com/donate/?hosted_button_id=K5HHU9LGEWULS" target="_blank" matTooltip="Donate with PayPal" class="donation">
           <span>Donate with</span> <fa-icon [icon]="paypal"></fa-icon>
         </a>
-        <a routerLink="dashboard" routerLinkActive="active" matTooltip="Dashboard">
+        <!-- <a routerLink="dashboard" routerLinkActive="active" matTooltip="Dashboard">
           <fa-icon [icon]="home"></fa-icon>
-        </a>
-        <div *ngIf="_authService.loggedIn()">
-          <!-- <a class="navbar-brand" href="">EventsHub</a> -->
-
-          <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button> -->
-
+        </a> -->
+        <!-- <div *ngIf="_authService.loggedIn()">
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link" routerLink="/" rouetrLinkActive="active">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" routerLink="/users"  *ngIf="isAdmin" rouetrLinkActive="active">Users</a>
-              </li>
-            </ul> -->
-
             <ul class="navbar-nav">
-
               <a class="nav-link"  routerLink="/login" *ngIf="!_authService.loggedIn()" rouetrLinkActive="active">Login</a>
               <a class="nav-link" style="cursor:pointer" *ngIf="_authService.loggedIn()" (click)="logoutUser(); logoutTest();">{{ 'about.logout' | translate }}</a>
             </ul>
           </div>
-        </div>
+        </div> -->
       </div>
-
     </div>
-
   </div>
 </nav>
 

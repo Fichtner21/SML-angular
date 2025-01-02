@@ -9,7 +9,7 @@
           </div>
           <div class="match-card__team">
             <div class="clantag">
-              <a href="/clan/{{getClanDetails(match.clan1).clan}}">{{ getClanDetails(match.clan1).clantag }}</a>
+              <a href="/clan/{{getClanDetails(match.clan1).clan}}" disabled>{{ getClanDetails(match.clan1).clantag }}</a>
             </div>
             <div class="score"><span>Rounds:</span> {{ match.clan1score }}</div>
             <div class="elos">
@@ -19,7 +19,7 @@
                 'teamWithoutFavorite': match.postelo1clan - match.preelo1clan == 0,
                 'teamNotFavorite': match.postelo1clan - match.preelo1clan < 0
               }"><span *ngIf="match.postelo1clan - match.preelo1clan > 0">+</span>{{ match.postelo1clan - match.preelo1clan }} pc</div>
-              <div>Post ELO: <span>{{ match.postelo1clan }}</span></div>
+              <div>Current ELO: <span>{{ match.postelo1clan }}</span></div>
             </div>            
             <h3>Line up:</h3>
             <div class="players">
@@ -37,7 +37,7 @@
           </div>
           <div class="match-card__team">
             <div class="clantag">
-              <a href="/clan/{{getClanDetails(match.clan2).clan}}">{{ getClanDetails(match.clan2).clantag }}</a>
+              <a href="/clan/{{getClanDetails(match.clan2).clan}}" disabled>{{ getClanDetails(match.clan2).clantag }}</a>
             </div> 
             <div class="score"><span>Rounds:</span> {{ match.clan2score }}</div>
             <div class="elos">
@@ -47,7 +47,7 @@
                 'teamWithoutFavorite': match.postelo2clan - match.preelo2clan == 0,
                 'teamNotFavorite': match.postelo2clan - match.preelo2clan < 0
               }"><span *ngIf="match.postelo2clan - match.preelo2clan > 0">+</span>{{ match.postelo2clan - match.preelo2clan }} pc</div>
-              <div>Post ELO: <span>{{ match.postelo2clan }}</span></div>
+              <div>Current ELO: <span>{{ match.postelo2clan }}</span></div>
             </div> 
             <h3>Line up:</h3>
             <div class="players">
@@ -74,7 +74,8 @@
     </div>
   </div>
 </section>
-
+<ng-http-loader>
+</ng-http-loader>
 
 
 

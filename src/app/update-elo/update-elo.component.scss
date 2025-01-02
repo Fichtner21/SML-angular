@@ -198,3 +198,63 @@ section {
     color: #ffb703;
   }
 }
+
+.loading-message {
+  padding: 50px;
+  background-color: #fff;
+  color: gray;
+  font-size: 18px;
+  border-radius: 10px;
+}
+
+.unauthorized-message {
+  background-color: #fff;
+  padding: 50px;
+  border-radius: 10px;
+
+  .denied {
+    color: red;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }  
+}
+
+.owner {
+  color: #ffb703;
+}
+
+.league-player {
+  color: #3ba561;
+}
+
+.friend {
+  color: #b2c9ef;
+}
+
+.admin {
+  color: #ed4245;
+}
+
+.hint {
+  background-color: #fff;
+  border-radius: 10px;
+  align-items: center;
+  display: flex;
+  padding: 20px;
+  margin-top: 15px;
+}
+
+:ng-deep mat-label {
+  color: #000 !important;
+}
+
+.success-snackbar {
+  background-color: #4caf50;  /* Zielony */
+  color: white;
+}
+
+/* Styl dla powiadomienia o błędzie */
+.error-snackbar {
+  background-color: #f44336;  /* Czerwony */
+  color: white;
+}

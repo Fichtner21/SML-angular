@@ -1,6 +1,6 @@
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { PlayersApiService } from './../services/players-api.service';
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Players } from './ranking.model';
 import { Spinkit } from 'ng-http-loader';
@@ -8,7 +8,6 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fa1, fa2, fa3, faArrowDown, faArrowUp, faCalendarCheck, faCentSign, faChartGantt, faChartSimple, faDollarSign, faFire, faInfoCircle, faMinus, faSuitcaseMedical, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { parseFloat } from 'core-js/es/number';
-import { RankObjService } from './rank-obj.service';
 import { Chart } from 'chart.js';
 import { FormControl } from '@angular/forms';
 
@@ -22,7 +21,7 @@ interface Streak {
   templateUrl: './ranking-obj.component.html',
   styleUrls: ['./ranking-obj.component.scss']
 })
-export class RankingObjComponent implements OnInit {
+export class RankingObjComponent implements OnInit, AfterViewInit {
   @Input() playersData: any;
   receivedData: number;
   public spinkit = Spinkit;
@@ -41,6 +40,8 @@ export class RankingObjComponent implements OnInit {
   showInactivePlayersOnly$ = new BehaviorSubject<boolean>(false);
   showActivePlayersOnly: boolean = true;
   infoCode: string;
+  private startTime: number;
+  private endTime: number;
 
   @ViewChild('shIcon') shIcon!: ElementRef;
   @ViewChild('blackOverlay') blackOverlay!: ElementRef;
@@ -139,11 +140,7 @@ export class RankingObjComponent implements OnInit {
   season2 = { name: 'Season #2', startDate: '01.04.2023', endDate: '30.06.2023' };
   season1 = { name: 'Season #1', startDate: '01.01.2023', endDate: '31.03.2023' };
   
-  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute, private rankObjService: RankObjService) {
-    // localStorage.setItem('info', 'less');
-    // this.showStreak = localStorage.getItem('showStreak') === 'yes' ? true : false;
-    // this.showCharts = localStorage.getItem('showCharts') === 'yes' ? true : false;
-   }
+  constructor(private playersApiService: PlayersApiService, public datepipe: DatePipe, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   infos = [
     { 'infoCode': 'less', 'infoName': 'Less' },
@@ -151,20 +148,27 @@ export class RankingObjComponent implements OnInit {
   ]
 
   ngOnInit(): void {
-    this.playersTest$ = this.playersApiService.getPlayers('Players').pipe(
-      map((response: any) => {
-        let batchRowValues = response.values;
-        let players: any[] = [];
-        for(let i = 1; i < batchRowValues.length; i++){
-          const rowObject: object = {};
-          for(let j = 0; j < batchRowValues[i].length; j++){
-            rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
-          }
-          players.push(rowObject);
-        }     
-        // console.log('Players', players)   
-        return players;
-      }),     
+    this.startTime = performance.now();
+    console.log('Komponent inicjowany...');
+
+    // this.playersTest$ = this.playersApiService.getPlayers('Players').pipe(
+    //   map((response: any) => {
+    //     let batchRowValues = response.values;
+    //     let players: any[] = [];
+    //     for(let i = 1; i < batchRowValues.length; i++){
+    //       const rowObject: object = {};
+    //       for(let j = 0; j < batchRowValues[i].length; j++){
+    //         rowObject[batchRowValues[0][j]] = batchRowValues[i][j];
+    //       }
+    //       players.push(rowObject);
+    //     }     
+    //     // console.log('Players', players)   
+    //     return players;
+    //   }),     
+    // );
+
+    this.playersTest$ = this.playersApiService.getPlayersFinal('Players').pipe(
+      shareReplay(1)
     );
 
     // this.playersApiService.getUserTwo().pipe(map((res: any) => console.log('RES', res))).subscribe()
@@ -174,91 +178,40 @@ export class RankingObjComponent implements OnInit {
       }
     )
     
-    this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
-      map((response: any) => {
-        let batchRowValuesHistory = response.values;
-        let historyMatches: any[] = [];
-        for(let i = 1; i < batchRowValuesHistory.length; i++){
-          const rowObject: object = {};
-          for(let j = 0; j < batchRowValuesHistory[i].length; j++){
-            rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
-          }
-          historyMatches.push(rowObject);
-        }
-        this.playersApiService.setHistoryMatches(historyMatches);
-        return historyMatches;
-      }),
-      // shareReplay(1)
-    );
+    // this.historyMatches$ = this.playersApiService.getPlayers('Match+History').pipe(
+    //   map((response: any) => {
+    //     let batchRowValuesHistory = response.values;
+    //     let historyMatches: any[] = [];
+    //     for(let i = 1; i < batchRowValuesHistory.length; i++){
+    //       const rowObject: object = {};
+    //       for(let j = 0; j < batchRowValuesHistory[i].length; j++){
+    //         rowObject[batchRowValuesHistory[0][j]] = batchRowValuesHistory[i][j];
+    //       }
+    //       historyMatches.push(rowObject);
+    //     }
+    //     this.playersApiService.setHistoryMatches(historyMatches);
+    //     return historyMatches;
+    //   }),
+    //   // shareReplay(1)
+    // );
 
-    this.lastMatch$ = this.historyMatches$.pipe(
-      map(array => array[array.length - 1])
-    );
+    this.historyMatches$ = this.playersApiService.getPlayersFinal('Match+History')
 
-    this.lastMatch$.pipe(
-      map((match) => {
-        const calculateSumPreelo = (teamPrefix: string) => {
-          return Array.from({ length: 7 }, (_, i) => 
-            Number(match[`${teamPrefix}p${i + 1}preelo`]) || 0
-          ).reduce(this.addPreelo, 0);
-        };
-    
-        const sumPreeloTeam1 = calculateSumPreelo('t1');
-        const sumPreeloTeam2 = calculateSumPreelo('t2');
-    
-        this.matchRow = {
-          timestamp: match.timestamp,
-          idwar: match.idwar,
-          t1roundswon: match.t1roundswon,
-          t2roundswon: match.t2roundswon,
-          video: match.video,
-          info: match.info,
-          t1preelo: sumPreeloTeam1,
-          t2preelo: sumPreeloTeam2,
-          t1chance: Number(this.calculateChance(sumPreeloTeam1, sumPreeloTeam2)[0].toFixed(2)),
-          t2chance: Number(this.calculateChance(sumPreeloTeam1, sumPreeloTeam2)[1].toFixed(2)),
-        };
-    
-        for (let i = 1; i <= 7; i++) {
-          this.matchRow[`t1p${i}playername`] = this.addPlayerLink(match[`t1p${i}name`], this.options);
-          this.matchRow[`t1p${i}username`] = match[`t1p${i}name`];
-          this.matchRow[`t1p${i}preelo`] = match[`t1p${i}preelo`];
-          this.matchRow[`t1p${i}score`] = match[`t1p${i}score`];
-          this.matchRow[`t1p${i}postelo`] = match[`t1p${i}postelo`];
-    
-          this.matchRow[`t2p${i}playername`] = this.addPlayerLink(match[`t2p${i}name`], this.options);
-          this.matchRow[`t2p${i}username`] = match[`t2p${i}name`];
-          this.matchRow[`t2p${i}preelo`] = match[`t2p${i}preelo`];
-          this.matchRow[`t2p${i}score`] = match[`t2p${i}score`];
-          this.matchRow[`t2p${i}postelo`] = match[`t2p${i}postelo`];
-        }
-    
-        return this.matchRow;
-      })
-    ).subscribe();
+    // this.lastMatch$ = this.historyMatches$.pipe(
+    //   map(array => array[array.length - 1])
+    // );
 
     // this.lastMatch$.pipe(
     //   map((match) => {
-    //     const sumPreeloTeam1 = [
-    //       (Number(match.t1p1preelo) ? Number(match.t1p1preelo) : 0) +
-    //       (Number(match.t1p2preelo) ? Number(match.t1p2preelo) : 0) +
-    //       (Number(match.t1p3preelo) ? Number(match.t1p3preelo) : 0) +
-    //       (Number(match.t1p4preelo) ? Number(match.t1p4preelo) : 0) +
-    //       (Number(match.t1p5preelo) ? Number(match.t1p5preelo) : 0) +
-    //       (Number(match.t1p6preelo) ? Number(match.t1p6preelo) : 0) +
-    //       (Number(match.t1p7preelo) ? Number(match.t1p7preelo) : 0)
-    //     ].reduce(this.addPreelo, 0);
-
-    //     const sumPreeloTeam2 = [
-    //       (Number(match.t2p1preelo) ? Number(match.t2p1preelo) : 0) +
-    //       (Number(match.t2p2preelo) ? Number(match.t2p2preelo) : 0) +
-    //       (Number(match.t2p3preelo) ? Number(match.t2p3preelo) : 0) +
-    //       (Number(match.t2p4preelo) ? Number(match.t2p4preelo) : 0) +
-    //       (Number(match.t2p5preelo) ? Number(match.t2p5preelo) : 0) +
-    //       (Number(match.t2p6preelo) ? Number(match.t2p6preelo) : 0) +
-    //       (Number(match.t2p7preelo) ? Number(match.t2p7preelo) : 0)
-    //     ].reduce(this.addPreelo, 0);
-
+    //     const calculateSumPreelo = (teamPrefix: string) => {
+    //       return Array.from({ length: 7 }, (_, i) => 
+    //         Number(match[`${teamPrefix}p${i + 1}preelo`]) || 0
+    //       ).reduce(this.addPreelo, 0);
+    //     };
+    
+    //     const sumPreeloTeam1 = calculateSumPreelo('t1');
+    //     const sumPreeloTeam2 = calculateSumPreelo('t2');
+    
     //     this.matchRow = {
     //       timestamp: match.timestamp,
     //       idwar: match.idwar,
@@ -268,79 +221,24 @@ export class RankingObjComponent implements OnInit {
     //       info: match.info,
     //       t1preelo: sumPreeloTeam1,
     //       t2preelo: sumPreeloTeam2,
-    //       t1chance: Number(this.calculateChance(sumPreeloTeam1,sumPreeloTeam2)[0].toFixed(2)),
-    //       t2chance: Number(this.calculateChance(sumPreeloTeam1,sumPreeloTeam2)[1].toFixed(2)),
-    //       t1p1playername: this.addPlayerLink(match.t1p1name, this.options),
-    //       t1p1username: match.t1p1name,
-    //       t1p1preelo: match.t1p1preelo,
-    //       t1p1score: match.t1p1score,
-    //       t1p1postelo: match.t1p1postelo,
-    //       t1p2playername: this.addPlayerLink(match.t1p2name, this.options),
-    //       t1p2username: match.t1p2name,
-    //       t1p2preelo: match.t1p2preelo,
-    //       t1p2score: match.t1p2score,
-    //       t1p2postelo: match.t1p2postelo,
-    //       t1p3playername: this.addPlayerLink(match.t1p3name, this.options),
-    //       t1p3username: match.t1p3name,
-    //       t1p3preelo: match.t1p3preelo,
-    //       t1p3score: match.t1p3score,
-    //       t1p3postelo: match.t1p3postelo,
-    //       t1p4playername: this.addPlayerLink(match.t1p4name, this.options),
-    //       t1p4username: match.t1p4name,
-    //       t1p4preelo: match.t1p4preelo,
-    //       t1p4score: match.t1p4score,
-    //       t1p4postelo: match.t1p4postelo,
-    //       t1p5playername: this.addPlayerLink(match.t1p5name, this.options),
-    //       t1p5username: match.t1p5name,
-    //       t1p5preelo: match.t1p5preelo,
-    //       t1p5score: match.t1p5score,
-    //       t1p5postelo: match.t1p5postelo,
-    //       t1p6playername: this.addPlayerLink(match.t1p6name, this.options),
-    //       t1p6username: match.t1p6name,
-    //       t1p6preelo: match.t1p6preelo,
-    //       t1p6score: match.t1p6score,
-    //       t1p6postelo: match.t1p6postelo,
-    //       t1p7playername: this.addPlayerLink(match.t1p7name, this.options),
-    //       t1p7username: match.t1p7name,
-    //       t1p7preelo: match.t1p7preelo,
-    //       t1p7score: match.t1p7score,
-    //       t1p7postelo: match.t1p7postelo,
-    //       t2p1playername: this.addPlayerLink(match.t2p1name, this.options),
-    //       t2p1username: match.t2p1name,
-    //       t2p1preelo: match.t2p1preelo,
-    //       t2p1score: match.t2p1score,
-    //       t2p1postelo: match.t2p1postelo,
-    //       t2p2playername: this.addPlayerLink(match.t2p2name, this.options),
-    //       t2p2username: match.t2p2name,
-    //       t2p2preelo: match.t2p2preelo,
-    //       t2p2score: match.t2p2score,
-    //       t2p2postelo: match.t2p2postelo,
-    //       t2p3playername: this.addPlayerLink(match.t2p3name, this.options),
-    //       t2p3username: match.t2p3name,
-    //       t2p3preelo: match.t2p3preelo,
-    //       t2p3score: match.t2p3score,
-    //       t2p3postelo: match.t2p3postelo,
-    //       t2p4playername: this.addPlayerLink(match.t2p4name, this.options),
-    //       t2p4username: match.t2p4name,
-    //       t2p4preelo: match.t2p4preelo,
-    //       t2p4score: match.t2p4score,
-    //       t2p4postelo: match.t2p4postelo,
-    //       t2p5playername: this.addPlayerLink(match.t2p5name, this.options),
-    //       t2p5username: match.t2p5name,
-    //       t2p5preelo: match.t2p5preelo,
-    //       t2p5score: match.t2p5score,
-    //       t2p5postelo: match.t2p5postelo,
-    //       t2p6playername: this.addPlayerLink(match.t2p6name, this.options),
-    //       t2p6username: match.t2p6name,
-    //       t2p6preelo: match.t2p6preelo,
-    //       t2p6score: match.t2p6score,
-    //       t2p6postelo: match.t2p6postelo,
-    //       t2p7playername: this.addPlayerLink(match.t2p7name, this.options),
-    //       t2p7username: match.t2p7name,
-    //       t2p7preelo: match.t2p7preelo,
-    //       t2p7score: match.t2p7score,
-    //       t2p7postelo: match.t2p7postelo,
+    //       t1chance: Number(this.calculateChance(sumPreeloTeam1, sumPreeloTeam2)[0].toFixed(2)),
+    //       t2chance: Number(this.calculateChance(sumPreeloTeam1, sumPreeloTeam2)[1].toFixed(2)),
+    //     };
+    
+    //     for (let i = 1; i <= 7; i++) {
+    //       this.matchRow[`t1p${i}playername`] = this.addPlayerLink(match[`t1p${i}name`], this.options);
+    //       this.matchRow[`t1p${i}username`] = match[`t1p${i}name`];
+    //       this.matchRow[`t1p${i}preelo`] = match[`t1p${i}preelo`];
+    //       this.matchRow[`t1p${i}score`] = match[`t1p${i}score`];
+    //       this.matchRow[`t1p${i}postelo`] = match[`t1p${i}postelo`];
+    
+    //       this.matchRow[`t2p${i}playername`] = this.addPlayerLink(match[`t2p${i}name`], this.options);
+    //       this.matchRow[`t2p${i}username`] = match[`t2p${i}name`];
+    //       this.matchRow[`t2p${i}preelo`] = match[`t2p${i}preelo`];
+    //       this.matchRow[`t2p${i}score`] = match[`t2p${i}score`];
+    //       this.matchRow[`t2p${i}postelo`] = match[`t2p${i}postelo`];
     //     }
+    
     //     return this.matchRow;
     //   })
     // ).subscribe();
@@ -386,10 +284,8 @@ export class RankingObjComponent implements OnInit {
       map(([v1, v2]) => {
         let lastWarDate: any;
         let playerRowArray: any[] = [];
-        for( let name of v1){
-          // console.log('name', name)
-          // if(name.active == 'FALSE'){
-          if(name.active == 'FALSE'){
+        for( let name of v1){          
+          if(name.active == 'FALSE'){          
             continue;
           } else {
             lastWarDate = {
@@ -594,6 +490,13 @@ export class RankingObjComponent implements OnInit {
     this.isThirdPanelExpandedLeft = thirdPanelStorageValueLeft === 'expand';
   }  
 
+  ngAfterViewInit(): void {
+    // Zakończenie pomiaru po zakończeniu renderowania widoku
+    this.endTime = performance.now();
+    const loadingTime = this.endTime - this.startTime;
+    console.log(`Czas ładowania komponentu: ${loadingTime.toFixed(2)} ms`);
+  }
+
   infoChange($event){
     this.currentInfo = $event;
     localStorage.setItem('info', this.currentInfo);
@@ -612,47 +515,6 @@ export class RankingObjComponent implements OnInit {
     return matches.filter(m => {
       return Object.values(m).includes(name);
      })
-  }
-
-  public searchPlayerActivity(name:string, obj:any){
-    const resultObject = this.filterUsername(name, obj);
-    const todayUnix = Date.now();
-    const lastMonthEvent = new Date(new Date().setDate(new Date().getDate() - 30));
-    const resultLastMonth = Date.parse(lastMonthEvent.toDateString());
-    const unixArr = [];
-
-    resultObject.forEach((elem) => {
-      const newTimestampElem = elem.timestamp;
-      const elWar = Date.parse(newTimestampElem);
-      let lastMonthActivity;
-
-      if(elWar > resultLastMonth && elWar < todayUnix){
-        lastMonthActivity += elWar;
-        unixArr.push(lastMonthActivity);
-      }
-    });
-
-    return unixArr.length;
-  }
-
-  public findPlayerLastWar(name:string, obj:object) {
-    const findeLastWar:any = Object.values(obj)
-      .filter((item) => JSON.stringify(item).includes(name))
-      .pop();
-    // const findeLastWar = obj.filter((item) => JSON.stringify(item).includes(name)).pop();
-    let findLastTimeStamp = '';
-    let newTimestampElem = '';
-    if (findeLastWar) {
-      findLastTimeStamp = findeLastWar.timestamp;
-      newTimestampElem = new Date(findLastTimeStamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-    } else if (findeLastWar === 'undefined') {
-      findLastTimeStamp = 'No match';
-    } else if (findeLastWar === null) {
-      findLastTimeStamp = 'No match';
-    } else {
-      findLastTimeStamp = 'No match';
-    }
-    return newTimestampElem;
   }
 
   public addTitleCup(int:string) {
@@ -674,123 +536,7 @@ export class RankingObjComponent implements OnInit {
     }
     return cupInfoTitle;
   }
-
-  // public smallStrike2(name, obj) {
-  //   const firstFromEnd = this.rankHistory2(name, obj).slice(-1)[0];
-  //   // console.log('name2', name, 'secondFromEnd', firstFromEnd);
-  //   const secondFromEnd = this.rankHistory2(name, obj).slice(-2)[0];
-  //   // console.log('name2', name, 'secondFromEnd', secondFromEnd);
-  //   const countingPoints = firstFromEnd - secondFromEnd;
-
-  //   let littleStrike2 = 0;
-  //   if (firstFromEnd > secondFromEnd) {
-  //     littleStrike2 = Math.round(countingPoints * 100) / 100;
-  //   } else if (firstFromEnd < secondFromEnd) {
-  //     littleStrike2 = Math.round(countingPoints * 100) / 100;
-  //   } else {
-  //     littleStrike2 = Math.round(countingPoints * 100) / 100;
-  //   }
-
-  //   return littleStrike2;
-  // }
-
-  // public longestWinning(arr, n) {
-  //   let max = 1;
-  //   let len = 1;
-
-  //   for (let i = 1; i < n; i++) {
-  //     if (arr[i] > arr[i - 1]) {
-  //       len++;
-  //     } else {
-  //       if (max < len) {
-  //         max = len;
-  //       }
-  //       len = 1;
-  //     }
-  //   }
-
-  //   if (max < len) {
-  //     max = len;
-  //   }
-  //   return max;
-  // }
-
-  //need to refactor
-  // public destructObjRanks2(obj, arr) {
-  //   for (const key in obj) {
-  //     if (obj.hasOwnProperty(key)) {
-  //       const objInArr = obj[key];
-  //       for (const key2 in objInArr) {
-  //         if (objInArr.hasOwnProperty(key2)) {
-  //           const elemOfObj = objInArr[key2];
-  //           arr.push(elemOfObj);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
-  //need to refactor
-  // public getIndexesRanks2(arr, val) {
-  //   const indexes = [];
-  //   let i = -1;
-  //   while ((i = arr.indexOf(val, i + 1)) !== -1) {
-  //     indexes.push(i + 4); // postELO
-  //   }
-  //   return indexes;
-  // }
-
-  //need to refactor
-  // public ranksAllStrikes2(username, ind, arrIn, arrOut) {
-  //   if (arrIn.includes(username)) {
-  //     arrIn.forEach(function (el, index) {
-  //       index += 1;
-  //       ind.forEach(function (founded, i) {
-  //         if (Number(index) === Number(founded)) {
-  //           const foundedStreak = Number(el).toFixed(2);
-  //           arrOut.push(Number(foundedStreak));
-  //         }
-  //       });
-  //     });
-  //   }
-  // }
-
-  //need to refactor
-  // public rankHistory2(name, obj) {
-  //   const arrNameRanks2 = [];
-  //   this.destructObjRanks2(obj, arrNameRanks2);
-  //   const indexesRanksName2 = this.getIndexesRanks2(arrNameRanks2, name);
-  //   const nameRanksOut2 = [];
-  //   this.ranksAllStrikes2(name, indexesRanksName2, arrNameRanks2, nameRanksOut2);
-  //   nameRanksOut2.unshift(1000);
-  //   return nameRanksOut2;
-  // }
-
-  // public pastYearActivity(name:string, obj:any){
-  //   const resultObject = this.filterUsername(name, obj);
-  //   const warDates = [];
-
-  //   const todayUnix = Date.now();
-  //   const lastYearEvent = new Date(new Date().setDate(new Date().getDate() - 365));
-  //   const resultLastYear = Date.parse(lastYearEvent.toDateString());
-  //   const unixYearArr = [];
-
-  //    resultObject.forEach((elem) => {
-  //     const newTimestampElem = elem.timestamp;
-  //     const elWar = Date.parse(newTimestampElem);
-  //     let lastYearActivity;
-
-  //     if(elWar > resultLastYear && elWar < todayUnix){
-  //       lastYearActivity += elWar;
-  //       // new Date(elWar).toLocaleDateString('pl-PL', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'});
-  //       // console.log('lastMonthActivity: ', lastMonthActivity);
-  //       unixYearArr.push(lastYearActivity);
-  //     }
-  //   });
-
-  //   return unixYearArr.length;
-  // }
-
+  
   //SORTING
   public sortByWarsDesc(res:Observable<any>){
     this.booleanVar = !this.booleanVar;
@@ -942,47 +688,7 @@ export class RankingObjComponent implements OnInit {
     }
     const color = this.getActivityColor(activity);
     return `linear-gradient(to top, ${color} ${percentage}%, gray ${percentage}%)`;
-  }
-
-  // getActivityGradient(activity: number): string | SafeStyle {
-  //   let gradient: string | SafeStyle;
-  //   let percentage = 0;
-
-  //   if (activity >= 1 && activity <= 5) {
-  //     percentage = ((activity - 1) / 5) * 100;
-  //   } else if (activity >= 6 && activity <= 10) {
-  //     percentage = ((activity - 6) / 5) * 100;
-  //   } else if (activity >= 11 && activity <= 20) {
-  //     percentage = ((activity - 11) / 10) * 100;
-  //   } else if (activity >= 21 && activity <= 40) {
-  //     percentage = ((activity - 21) / 20) * 100;
-  //   } else if (activity >= 41 && activity <= 60) {
-  //     percentage = ((activity - 41) / 20) * 100;
-  //   } else if (activity >= 61 && activity <= 90) {
-  //     percentage = ((activity - 61) / 30) * 100;
-  //   } else if (activity > 90) {
-  //     // Utwórz gradient z obrazkiem medalu
-  //     const imageUrl = '/assets/images/medal_of_hh.png';
-  //     gradient = this.sanitizer.bypassSecurityTrustStyle(`url(${imageUrl})`);
-  //     return gradient;
-  //   }
-
-  //   const color = this.getActivityColor(activity);
-  //   gradient = `linear-gradient(to top, ${color} ${percentage}%, gray ${percentage}%)`;
-  //   return gradient;
-  // }
-
-  // getPercentage(value: number): number {
-  //   if (value >= this.brownMinValue && value <= this.brownMaxValue) {
-  //     return ((value - this.brownMinValue) / (this.brownMaxValue - this.brownMinValue)) * 100;
-  //   } else if (value >= this.silverMinValue && value <= this.silverMaxValue) {
-  //     return ((value - this.silverMinValue) / (this.silverMaxValue - this.silverMinValue)) * 100;
-  //   } else if (value >= this.goldMinValue && value <= this.goldMaxValue) {
-  //     return ((value - this.goldMinValue) / (this.goldMaxValue - this.goldMinValue)) * 100;
-  //   } else {
-  //     return 0;
-  //   }
-  // }
+  }  
 
   getPercentage(value: number): number {
     if (value >= this.brownMinValue && value <= this.brownMaxValue) {
@@ -1019,64 +725,7 @@ export class RankingObjComponent implements OnInit {
   showPlayerData(player: any) {
     console.log("Player Data:", player);
   }
-
-  // toggleExpansion(index: number) {
-  //   if (this.expandedPlayerIndexes.includes(index)) {
-  //     this.expandedPlayerIndexes = this.expandedPlayerIndexes.filter(i => i !== index);
-  //   } else {
-  //     this.expandedPlayerIndexes.push(index);
-  //   }
-  // }
-
-  // calculateStreak(username: string, historyMatches: any[]): number {
-  //   let currentStreak = 0;
-  //   let currentTeam = ''; // 't1' or 't2'
-
-  //   for (let i = 0; i < historyMatches.length; i++) {
-  //     const match = historyMatches[i];
-  //     let foundInTeam = '';
-  //     let roundsWonByTeam;
-  //     let roundsWonByOpponent;
-
-  //     for (let teamIndex = 1; teamIndex <= 2; teamIndex++) {
-  //       for (let playerIndex = 1; playerIndex <= 7; playerIndex++) {
-  //         const playerNameKey = `t${teamIndex}p${playerIndex}name`;
-
-  //         if (match[playerNameKey] === username) {
-  //           foundInTeam = `t${teamIndex}`;
-  //           break;
-  //         }
-  //       }
-
-  //       if (foundInTeam) {
-  //         break;
-  //       }
-  //     }
-
-  //     if (foundInTeam) {
-  //       const teamKey = foundInTeam;
-  //       roundsWonByTeam = parseInt(match[`${teamKey}roundswon`]);
-  //       roundsWonByOpponent = parseInt(match[`${teamKey === 't1' ? 't2' : 't1'}roundswon`]);
-
-  //       if (currentTeam !== teamKey) {
-  //         currentStreak = roundsWonByTeam > roundsWonByOpponent ? 1 : -1;
-  //         currentTeam = teamKey;
-  //       } else {
-  //         if (roundsWonByTeam > roundsWonByOpponent) {
-  //           currentStreak++;
-  //         } else {
-  //           currentStreak--;
-  //         }
-  //       }
-  //       // Continue searching for more matches to determine the streak
-  //     }
-
-  //     // this.aaa.push({'time': historyMatches[i].timestamp, 'playerTeam': roundsWonByTeam, 'opponentTeam': roundsWonByOpponent});
-  //   }
-  //   // console.log('THIS.aaa', this.aaa)
-  //   debugger;
-  //   return currentStreak;
-  // }
+ 
   calculateStreak(username: string, historyMatches: any[]): Streak {
     let currentStreak = 0;
     let streakName = '';
@@ -1200,29 +849,16 @@ export class RankingObjComponent implements OnInit {
 
     return arrChance;
   }
+
   public floorPrecised(number:number, precision:number) {
     const power = Math.pow(10, precision);
     return Math.floor(number * power) / power;
   }
+
   public ceilPrecised(number:number, precision) {
     const power = Math.pow(10, precision);
     return Math.ceil(number * power) / power;
-  }
-
-  //OLD VERSION
-  // public addPlayerLink(player:string, obj:any) {
-  //   let convertedPlayer = '';
-  //   obj.forEach((el:any) => {
-  //     if (player === el.username) {
-  //       convertedPlayer = el.playername;
-  //     } else if (player === '') {
-  //       // console.log('N/A player');
-  //     } else {
-  //       // console.log('Something went wrong.');
-  //     }
-  //   });
-  //   return convertedPlayer;
-  // }
+  } 
 
   public addPlayerLink(player: string, obj: any[]): string {
     if (player === '') {
@@ -1303,19 +939,7 @@ export class RankingObjComponent implements OnInit {
         return player.s8fpw; // Domyślnie zwracamy wartość s8fpw
     }
   }
-
-  // toggleShowStreak() {
-  //   // Zmieniamy wartość i zapisujemy ją w localStorage
-  //   this.showStreak = !this.showStreak;
-  //   localStorage.setItem('showStreak', this.showStreak ? 'yes' : 'no');
-  // }
-
-  // toggleShowCharts() {
-  //   // Zmieniamy wartość i zapisujemy ją w localStorage
-  //   this.showCharts = !this.showCharts;
-  //   localStorage.setItem('showCharts', this.showCharts ? 'yes' : 'no');
-  // }
-
+ 
   toggleInfo() {
     const isInfo = localStorage.getItem('info');
     if (isInfo === 'more') {

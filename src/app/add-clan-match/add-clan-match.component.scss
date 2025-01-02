@@ -87,3 +87,7 @@ form {
   text-align: center; /* Center the text */
   z-index: 15; /* Ensure it's above the overlay */
 }
+
+::ng-deep mat-label {
+  color: #000 !important;
+}

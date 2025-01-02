@@ -184,24 +184,7 @@ export class CreateDataComponent implements OnInit {
     const s4fpw = this.googleSheetForm.value.s4fpw;
     const s5fpw = this.googleSheetForm.value.s5fpw;
     const s6fpw = this.googleSheetForm.value.s6fpw;
-    const streak = this.googleSheetForm.value.streak;
-
-    // console.log(
-    //   {
-    //     'playername': playername,
-    //     'username': username,
-    //     'ranking': ranking,
-    //     'percentile': percentile,
-    //     's1wars': s1wars,
-    //     'lastwar': lastwar,
-    //     'fpw': fpw,
-    //     'fpwmax': fpwmax,
-    //     'fpwmin': fpwmin,
-    //     'last30days': last30days,
-    //     'last365days': last365days,
-    //     'nationality': nationality
-    //   }
-    // )
+    const streak = this.googleSheetForm.value.streak; 
 
     const params = {
       spreadsheetId: environment.SPREADSHEET_ID,

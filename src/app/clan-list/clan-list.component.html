@@ -1,5 +1,5 @@
 <section>
-  <div class="container">
+  <div class="container">   
     <div class="cont">
       <div class="table-ranking" style="background-color: #2f3060; color: #fff; font-size: 18px;">
         <div class="item">Place</div>
@@ -15,120 +15,279 @@
       </div>
       <hr>
       <div class="clans">
-        <ng-container *ngFor="let clan of filteredClans; let i = index;">        
-          <div class="row-ranking" (click)="toggleClanDetails(i)">
-            <div class="item">{{ i + 1}}</div>
-            <div class="item clantag">{{ clan.clantag }}</div>
-            <div class="item">
-              <img [src]='"assets/images/flags_svg/" + clan.flag + ".SVG"' [style.width.px]="20">
-            </div>
-            <div class="item">{{ clan.elo }} <span class="diff" [ngClass]="{
-              'positive-diff': clan.diff > 0,
-              'zero-diff': clan.diff === 0,
-              'negative-diff': clan.diff < 0
-            }"><span *ngIf="clan.diff > 0">+</span>{{clan.diff}} <sub class="pc">pc</sub></span>
-            <ng-container *ngIf="clan.diff > 0">
-              <fa-icon [icon]="arrowUp" [ngClass]="{
+        <ng-container *ngIf="filteredClans$ | async as filteredClans">
+          <ng-container *ngFor="let clan of filteredClans; let i = index;">                   
+            <div class="row-ranking" (click)="toggleClanDetails(i)">
+              <div class="item">{{ i + 1}}</div>
+              <div class="item clantag" matTooltip="{{clan.clanname}} clan.">{{ clan.clantag }}</div>
+              <div class="item">
+                <img [src]='"assets/images/flags_svg/" + clan.flag + ".SVG"' [style.width.px]="20">
+              </div>
+              <div class="item">{{ clan.elo }} <span class="diff" [ngClass]="{
                 'positive-diff': clan.diff > 0,
                 'zero-diff': clan.diff === 0,
                 'negative-diff': clan.diff < 0
-              }"></fa-icon>
-            </ng-container>
-            <ng-container *ngIf="clan.diff < 0">
-              <fa-icon [icon]="arrowDown" [ngClass]="{
-                'positive-diff': clan.diff > 0,
-                'zero-diff': clan.diff === 0,
-                'negative-diff': clan.diff < 0
-              }"></fa-icon>
-            </ng-container>
-            <ng-container *ngIf="clan.diff == 0">
-              <fa-icon [icon]="arrowMinus" [ngClass]="{
-                'positive-diff': clan.diff > 0,
-                'zero-diff': clan.diff === 0,
-                'negative-diff': clan.diff < 0
-              }"></fa-icon>
-            </ng-container></div>
-            <div class="item">{{ clan.win }}</div>
-            <div class="item">{{ clan.loss }}</div>
-            <div class="item">{{ clan.draw }}</div>
-            <div class="item" [ngClass]="{'streak-up': clan.streak.streakType == 'W', 'streak-down': clan.streak.streakType == 'L', 'streak-draw': clan.streak.streakType == 'D'}">{{ clan.streak.streakCount }}{{ clan.streak.streakType }}</div>
-            <div class="item">{{ clan.last30days }}</div>
-            <div class="item">{{ clan.last365days }}</div>
-          </div>
-          <div class="more-clan" *ngIf="expandedClanIndex === i">
-            <div class="members">
-              <div class="member">
-                <div class=""></div>
-                <div class=""></div>
-                <div class="item-leader">MIX ELO</div>
-                <div class="item-leader">MIX Wars</div>
-                <div class="item-leader">MIX Place</div>
-                <div class="item-leader">MIX FpW</div>
-              </div>              
-            </div>
-            <div class="members">
-              <strong>CLAN LEADER:</strong> 
-              <div class="member">
-                <div class="item-name">
-                  <a href="/obj-ranking/{{ clan.cl.username }}" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}">
-                    {{ clan.clantag }} {{ clan.cl.playername }}</a>
-                </div> 
-                <div class="item-leader">
-                  <img [src]='"assets/images/flags_svg/" + clan.cl.flag + ".SVG"' [style.width.px]="20">
-                </div> 
-                <div class="item-leader" title="Current mix ELO">{{clan.cl.elo}} </div> 
-                <div class="item-leader" title="War count">{{ clan.cl.mixwars }}</div> 
-                <div class="item-leader" title="Current place in MIX">{{ clan.cl.placemix }}</div>
-                <div class="item-leader" title="Avarage Frags per War in MIX">{{ clan.cl.fpw }}</div>
+              }"><span *ngIf="clan.diff > 0">+</span>{{clan.diff}} <sub class="pc">pc</sub></span>
+              <ng-container *ngIf="clan.diff > 0">
+                <fa-icon [icon]="arrowUp" [ngClass]="{
+                  'positive-diff': clan.diff > 0,
+                  'zero-diff': clan.diff === 0,
+                  'negative-diff': clan.diff < 0
+                }"></fa-icon>
+              </ng-container>
+              <ng-container *ngIf="clan.diff < 0">
+                <fa-icon [icon]="arrowDown" [ngClass]="{
+                  'positive-diff': clan.diff > 0,
+                  'zero-diff': clan.diff === 0,
+                  'negative-diff': clan.diff < 0
+                }"></fa-icon>
+              </ng-container>
+              <ng-container *ngIf="clan.diff == 0">
+                <fa-icon [icon]="arrowMinus" [ngClass]="{
+                  'positive-diff': clan.diff > 0,
+                  'zero-diff': clan.diff === 0,
+                  'negative-diff': clan.diff < 0
+                }"></fa-icon>
+              </ng-container></div>
+              <div class="item">{{ clan.win }}</div>
+              <div class="item">{{ clan.loss }}</div>
+              <div class="item">{{ clan.draw }}</div>
+              <div class="item" [ngClass]="{'streak-up': clan.streak.streakType == 'W', 'streak-down': clan.streak.streakType == 'L', 'streak-draw': clan.streak.streakType == 'D'}">{{ clan.streak.streakCount }}{{ clan.streak.streakType }}</div>
+              <div class="item">
+                <div 
+                class="act" 
+                [style.background]="getActivityGradient(clan.last30days)" 
+                matTooltip="{{ clan.last30days }} wars in the last 30 days." 
+                matTooltipPosition="above">
+                </div>
               </div>           
-            </div>          
-            <div class="members">
-              <strong>WAR ARRANGER:</strong>
-              <div class="member-wa">
-                <div class="item-name">
-                  <a href="/obj-ranking/{{ clan.wa.username }}" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}">{{ clan.clantag }} {{ clan.wa.playername }}</a>
-                </div> 
-                <div class="item-leader">
-                  <img [src]='"assets/images/flags_svg/" + clan.wa.flag + ".SVG"' [style.width.px]="20">
-                </div> 
-                <div class="item-leader" title="Current mix ELO">{{clan.wa.elo}}</div>
-                <div class="item-leader" title="War count">{{ clan.wa.mixwars }}</div>
-                <div class="item-leader" title="Current place in MIX">{{ clan.wa.placemix }}</div> 
-                <div class="item-leader" title="Avarage Frags per War in MIX">{{ clan.wa.fpw }}</div>
-                <div class="item-leader">
-                  <button mat-raised-button color="primary" (click)="openChallengeModal(clan)">Challenge</button>
+              <div class="item">
+                <div 
+                class="act" 
+                [style.background]="getActivityGradient(clan.last365days)" 
+                matTooltip="{{ clan.last365days }} wars in the last year." 
+                matTooltipPosition="above">
                 </div>
               </div>
             </div>
-            <div class="members">
-              CLAN MEMBERS:
-              <div *ngFor="let member of clan.members" class="member">    
-                <div class="item-name">
-                  <a href="/obj-ranking/{{ member.username }}" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">{{ clan.clantag }} {{ member.playername }}</a>
+            <div class="more-clan" *ngIf="expandedClanIndex === i">
+              <div class="members">
+                <div class="member">
+                  <div class=""></div>
+                  <div class=""></div>
+                  <div class="item-leader">MIX ELO</div>
+                  <div class="item-leader">MIX Wars</div>
+                  <div class="item-leader">MIX Place</div>
+                  <div class="item-leader">MIX FpW</div>
+                  <div class="item-leader">Clan Wars</div>
+                </div>              
+              </div>
+              <div class="members">
+                <strong>CLAN LEADER:</strong> 
+                <div class="member">
+                  <div class="item-name">
+                    <a href="/obj-ranking/{{ clan.cl.username }}" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}">
+                      {{ clan.clantag }} {{ clan.cl.playername }}</a>
+                  </div> 
+                  <div class="item-leader">
+                    <img [src]='"assets/images/flags_svg/" + clan.cl.flag + ".SVG"' [style.width.px]="20">
+                  </div> 
+                  <div class="item-leader" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}" title="Current mix ELO">{{clan.cl.elo}} </div> 
+                  <div class="item-leader" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}" title="War count">{{ clan.cl.mixwars }}</div> 
+                  <div class="item-leader" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}" title="Current place in MIX">{{ clan.cl.placemix }}</div>
+                  <div class="item-leader" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}" title="Avarage Frags per War in MIX">{{ clan.cl.fpw }}</div>
+                  <div class="item-leader" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}" title="Total Clan wars">{{ clan.cl.clanwars }}</div>
+                </div>           
+              </div>          
+              <div class="members">
+                <strong>WAR ARRANGER:</strong>
+                <div class="member-wa">
+                  <div class="item-name">
+                    <a href="/obj-ranking/{{ clan.wa.username }}" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}">{{ clan.clantag }} {{ clan.wa.playername }}</a>
+                  </div> 
+                  <div class="item-leader">
+                    <img [src]='"assets/images/flags_svg/" + clan.wa.flag + ".SVG"' [style.width.px]="20">
+                  </div> 
+                  <div class="item-leader" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}" title="Current mix ELO">{{clan.wa.elo}}</div>
+                  <div class="item-leader" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}" title="War count">{{ clan.wa.mixwars }}</div>
+                  <div class="item-leader" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}" title="Current place in MIX">{{ clan.wa.placemix }}</div> 
+                  <div class="item-leader" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}" title="Avarage Frags per War in MIX">{{ clan.wa.fpw }}</div>
+                  <div class="item-leader" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}" title="Total Clan wars">{{ clan.wa.clanwars }}</div>
+                  <div class="item-leader">
+                    <button mat-raised-button color="primary" (click)="openChallengeModal(clan)" disabled>Challenge</button>
+                  </div>
                 </div>
-                <div class="item-leader">
-                  <img [src]='"assets/images/flags_svg/" + member.flag + ".SVG"' [style.width.px]="20">
+              </div>
+              <div class="members" *ngIf="clan.members.length > 0">
+                CLAN MEMBERS:
+                <div *ngFor="let member of clan.members" class="member">    
+                  <div class="item-name">
+                    <a href="/obj-ranking/{{ member.username }}" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">{{ clan.clantag }} {{ member.playername }}</a>
+                  </div>
+                  <div class="item-leader">
+                    <img [src]='"assets/images/flags_svg/" + member.flag + ".SVG"' [style.width.px]="20">
+                  </div>
+                  <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                    <span title="Obj ranking" title="Current mix ELO">{{member.elo}} </span>
+                  </div>
+                  <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                    <span title="War count">{{ member.mixwars }}</span>
+                  </div>
+                  <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                    <span title="Current place in MIX">{{ member.placemix }} </span>
+                  </div>
+                  <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                    <span title="Avarage Frags per War in MIX">{{ member.fpw }}</span>
+                  </div>     
+                  <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                    <span title="Avarage Frags per War in MIX">{{ member.clanwars }}</span>
+                  </div>     
                 </div>
-                <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
-                  <span title="Obj ranking" title="Current mix ELO">{{member.elo}} </span>
+              </div>
+              <div class="clanname">
+                  <!-- {{clan.clan_image}}
+                  <img [src]="'assets/images/clans/' + clan?.clan_image" *ngIf="clan?.clan_image"/> -->
+                  <img width="200" [src]="'assets/images/clans/' + clan?.clan_image" *ngIf="clan?.clan_image"/>               
+                <div class="tag">
+                  <span>Clan tag: </span>{{ clan.clantag }}
                 </div>
-                <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
-                  <span title="War count">{{ member.mixwars }}</span>
+                <div class="fullname">
+                  <span>Clan name: </span>{{ clan.clanname }}
                 </div>
-                <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
-                  <span title="Current place in MIX">{{ member.placemix }} </span>
+              </div>
+            </div>                       
+          </ng-container>
+        </ng-container>
+        <!-- <ng-container *ngIf="filteredClans.length < 1">          
+          <div style="font-size: 20px; padding: 20px; text-align: center;">
+            No Clan matches.
+          </div>
+        </ng-container> -->
+      </div>     
+      <div class="clans-inactive" *ngIf="isVisible">
+        <h3>These Clans haven't played a single war yet.</h3>
+        <ng-container *ngIf="filteredClansWithoutMatch$ | async as filteredClansWithoutMatch">
+          <ng-container *ngFor="let clan of filteredClansWithoutMatch; let i = index;">                   
+            <div class="row-ranking" (click)="toggleClanDetailsInactive(i)">
+              <div class="item">{{ i + 1}}</div>
+              <div class="item clantag" matTooltip="{{clan.clanname}} clan.">{{ clan.clantag }}</div>
+              <div class="item">
+                <img [src]='"assets/images/flags_svg/" + clan.flag + ".SVG"' [style.width.px]="20">
+              </div>
+              <div class="item">{{ clan.elo }}</div>
+              <div class="item">{{ clan.win }}</div>
+              <div class="item">{{ clan.loss }}</div>
+              <div class="item">{{ clan.draw }}</div>
+              <div class="item" [ngClass]="{'streak-up': clan.streak.streakType == 'W', 'streak-down': clan.streak.streakType == 'L', 'streak-draw': clan.streak.streakType == 'D'}">{{ clan.streak.streakCount }}{{ clan.streak.streakType }}</div>
+              <div class="item">
+                <div 
+                class="act" 
+                [style.background]="getActivityGradient(clan.last30days)" 
+                matTooltip="{{ clan.last30days }} wars in the last 30 days." 
+                matTooltipPosition="above">
                 </div>
-                <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
-                  <span title="Avarage Frags per War in MIX">{{ member.fpw }}</span>
-                </div>     
+              </div>           
+              <div class="item">
+                <div 
+                class="act" 
+                [style.background]="getActivityGradient(clan.last365days)" 
+                matTooltip="{{ clan.last365days }} wars in the last year." 
+                matTooltipPosition="above">
+                </div>
               </div>
             </div>
-            <div class="clanname">
-              {{ clan.clantag }}
-            </div>
-          </div> 
+            <div class="more-clan" *ngIf="expandedClanIndexInactive === i">
+              <div class="members">
+                <div class="member">
+                  <div class=""></div>
+                  <div class=""></div>
+                  <div class="item-leader">MIX ELO</div>
+                  <div class="item-leader">MIX Wars</div>
+                  <div class="item-leader">MIX Place</div>
+                  <div class="item-leader">MIX FpW</div>
+                  <div class="item-leader">Clan Wars</div>
+                </div>              
+              </div>
+              <div class="members">
+                <strong>CLAN LEADER:</strong> 
+                <div class="member">
+                  <div class="item-name">
+                    <a href="/obj-ranking/{{ clan.cl.username }}" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}">
+                      {{ clan.clantag }} {{ clan.cl.playername }}</a>
+                  </div> 
+                  <div class="item-leader">
+                    <img [src]='"assets/images/flags_svg/" + clan.cl.flag + ".SVG"' [style.width.px]="20">
+                  </div> 
+                  <div class="item-leader" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}" title="Current mix ELO">{{clan.cl.elo}} </div> 
+                  <div class="item-leader" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}" title="War count">{{ clan.cl.mixwars }}</div> 
+                  <div class="item-leader" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}" title="Current place in MIX">{{ clan.cl.placemix }}</div>
+                  <div class="item-leader" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}" title="Avarage Frags per War in MIX">{{ clan.cl.fpw }}</div>
+                  <div class="item-leader" [ngClass]="{'active': clan.cl.active == 'TRUE', 'inactive': clan.cl.active != 'TRUE', 'ban': clan.cl.ban == 'TRUE'}" title="Total Clan wars">{{ clan.cl.clanwars }}</div>
+                </div>           
+              </div>          
+              <div class="members">
+                <strong>WAR ARRANGER:</strong>
+                <div class="member-wa">
+                  <div class="item-name">
+                    <a href="/obj-ranking/{{ clan.wa.username }}" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}">{{ clan.clantag }} {{ clan.wa.playername }}</a>
+                  </div> 
+                  <div class="item-leader">
+                    <img [src]='"assets/images/flags_svg/" + clan.wa.flag + ".SVG"' [style.width.px]="20">
+                  </div> 
+                  <div class="item-leader" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}" title="Current mix ELO">{{clan.wa.elo}}</div>
+                  <div class="item-leader" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}" title="War count">{{ clan.wa.mixwars }}</div>
+                  <div class="item-leader" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}" title="Current place in MIX">{{ clan.wa.placemix }}</div> 
+                  <div class="item-leader" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}" title="Avarage Frags per War in MIX">{{ clan.wa.fpw }}</div>
+                  <div class="item-leader" [ngClass]="{'active': clan.wa.active == 'TRUE', 'inactive': clan.wa.active != 'TRUE', 'ban': clan.wa.ban == 'TRUE'}" title="Total Clan wars">{{ clan.wa.clanwars }}</div>
+                  <div class="item-leader">
+                    <button mat-raised-button color="primary" (click)="openChallengeModal(clan)" disabled>Challenge</button>
+                  </div>
+                </div>
+              </div>
+              <div class="members" *ngIf="clan.members.length > 0">
+                CLAN MEMBERS:
+                <div *ngFor="let member of clan.members" class="member">    
+                  <div class="item-name">
+                    <a href="/obj-ranking/{{ member.username }}" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">{{ clan.clantag }} {{ member.playername }}</a>
+                  </div>
+                  <div class="item-leader">
+                    <img [src]='"assets/images/flags_svg/" + member.flag + ".SVG"' [style.width.px]="20">
+                  </div>
+                  <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                    <span title="Obj ranking" title="Current mix ELO">{{member.elo}} </span>
+                  </div>
+                  <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                    <span title="War count">{{ member.mixwars }}</span>
+                  </div>
+                  <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                    <span title="Current place in MIX">{{ member.placemix }} </span>
+                  </div>
+                  <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                    <span title="Avarage Frags per War in MIX">{{ member.fpw }}</span>
+                  </div>     
+                  <div class="item-leader" [ngClass]="{'active': member.active == 'TRUE', 'inactive': member.active != 'TRUE', 'ban': member.ban == 'TRUE'}">
+                    <span title="Avarage Frags per War in MIX">{{ member.clanwars }}</span>
+                  </div>     
+                </div>
+              </div>
+              <div class="clanname">
+                <img width="140" [src]="'assets/images/clans/' + clan?.clan_image" *ngIf="clan?.clan_image"/>
+
+                <div class="tag">
+                  <span>Clan tag: </span>{{ clan.clantag }}
+                </div>
+                <div class="fullname">
+                  <span>Clan name: </span>{{ clan.clanname }}
+                </div>
+              </div>
+            </div>                       
+          </ng-container>
         </ng-container>
       </div>
-    </div>    
+      <button mat-button (click)="toggleVisibility()">
+        {{ isVisible ? 'Hide inactive clans' : 'Show inactive clans' }}
+      </button>
+    </div>        
   </div>
 </section>
+

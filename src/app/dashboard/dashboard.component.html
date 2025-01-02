@@ -777,7 +777,63 @@
         </ng-container>
       </div>
     </div>
-
+    <div *ngIf="loading" class="loading">
+      Ładowanie danych...
+    </div>
+    
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+    
+    <table *ngIf="!loading && !error" class="players-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Użytkownik</th>
+          <th>Tag</th>
+          <th>Pseudonim</th>
+          <th>Role</th>
+          <th>Avatar</th>
+          <th>Global Name</th>
+          <th>Status</th>
+          <th>Dołączył</th>
+          <th>Baner</th>
+          <th>Kolor akcentu</th>
+          <th>Flagi publiczne</th>
+          <th>Bot</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.user.id }}</td>
+          <td>{{ user.user.username }}</td>
+          <td>#{{ user.user.discriminator }}</td>
+          <td>{{ user.nick || 'Brak' }}</td>
+          <td>
+            <span *ngFor="let role of user.roles" class="role" [style.color]="'#' + role.color.toString(16).padStart(6, '0')">
+              {{ role.name }}
+            </span>
+          </td>
+          <td>
+            <img *ngIf="user.user.avatar" [src]="user.user.avatar" alt="{{ user.user.username }}" class="avatar">
+            <span *ngIf="!user.user.avatar">Brak</span>
+          </td>
+          <td>{{ user.user.global_name || 'Brak' }}</td>
+          <td>{{ user.status || 'Nieznany' }}</td>
+          <td>{{ user.joined_at | date: 'yyyy-MM-dd HH:mm' }}</td>
+          <td>
+            <img *ngIf="user.user.banner" [src]="user.user.banner" alt="Banner" class="banner">
+            <span *ngIf="!user.user.banner">Brak</span>
+          </td>
+          <td [style.color]="user.user.accent_color ? '#' + user.user.accent_color.toString(16).padStart(6, '0') : 'inherit'">
+            {{ user.user.accent_color ? '#' + user.user.accent_color.toString(16).padStart(6, '0') : 'Brak' }}
+          </td>
+          <td>{{ user.user.public_flags || 'Brak' }}</td>
+          <td>{{ user.user.bot ? 'Tak' : 'Nie' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    
     <router-outlet></router-outlet>
 
   </div>

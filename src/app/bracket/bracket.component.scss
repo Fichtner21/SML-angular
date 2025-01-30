@@ -1,0 +1,59 @@
+section {
+  padding-top: 180px;
+}
+
+.tournament-container {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+
+   
+}
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  
+}
+::ng-deep .jQBracket {
+  transform: scale(1.5); /* 🔹 Powiększenie całej drabinki */
+  transform-origin: top left; /* 🔹 Punkt odniesienia w lewym górnym rogu */
+}
+/* Powiększenie pola drużyny */
+/* Kontener drużyny */
+/* Kontener drużyny */
+::ng-deep .team-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Odstęp między avatarem a nazwą */
+  justify-content: flex-start;
+}
+
+/* Stylizacja avatara drużyny */
+::ng-deep .team-avatar {
+  width: 20px !important;  /* Szerokość avatara */
+  height: 20px !important; /* Wysokość avatara */
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  object-fit: cover; /* Zapewnia, że obrazek jest proporcjonalnie dopasowany */
+}
+
+// /* Nazwa drużyny */
+// ::ng-deep .team-name {
+//   font-weight: bold;
+//   font-size: 14px;
+//   color: #333;
+//   white-space: nowrap; /* Zapobiega łamaniu tekstu */
+// }
+
+// /* Powiększenie pola drużyn */
+// ::ng-deep .jQBracket .team {
+//   // width: 270px !important;
+//   // height: 60px !important;
+//   display: flex;
+//   align-items: center;
+//   justify-content: flex-start;
+//   padding: 5px;
+//   background: #f8f8f8;
+//   border-radius: 10px;
+//   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+// }
+

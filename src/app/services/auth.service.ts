@@ -29,33 +29,24 @@ export class AuthService {
   private userData: any = null; // Przechowuj dane użytkownika
   private loginStatus = new BehaviorSubject<boolean>(this.isLoggedIn());
   loginStatus$ = this.loginStatus.asObservable();
-  private userRolesSubject = new BehaviorSubject<string[] | null>(null);
+  // private userRolesSubject = new BehaviorSubject<string[] | null>(null);
+  private userRolesSubject = new BehaviorSubject<{ roles: string[] } | null>(null);
   userRoles$ = this.userRolesSubject.asObservable();
   private guildId = '716723661909786690';
+  private userRolesInitialized = false;
 
   // Login by google (MUST!!)
   private accessTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private loggedInSubject = new BehaviorSubject<boolean>(this.isLoggedInGoogle());
   
-
-  
   constructor(private oAuthService: OAuthService, private http: HttpClient, private router: Router) {
-    oAuthService.configure(authCodeFlowConfig);
-
-    // this.oAuthService.loadDiscoveryDocumentAndTryLogin().then(() => {
-    //   this.isAuthenticatedSubject.next(this.oAuthService.hasValidAccessToken());
-    // });
-
-    // this.oAuthService.events.subscribe(() => {
-    //   this.isAuthenticatedSubject.next(this.oAuthService.hasValidAccessToken());
-    // });
+    oAuthService.configure(authCodeFlowConfig);   
     this.oAuthService.events.subscribe(event => {
       if (event.type === 'token_received') {
         this.accessTokenSubject.next(this.oAuthService.getAccessToken());
         this.loggedInSubject.next(true);  // Ustawienie statusu logowania na true
       }
-    });
-    
+    });    
   } 
 
   // Uruchomienie logowania po kliknięciu w przycisk
@@ -153,31 +144,63 @@ export class AuthService {
     return userDataDiscord?.id || null;
   }
 
+  // getUserRoles3(): Observable<{ roles: string[] }> {
+  //   const userId = this.getUserIdFromLocalStorage();
+  
+  //   if (!userId) {
+  //     console.error('Brak userId. Użytkownik może nie być zalogowany.');
+  //     return of({ roles: [] }); // Zwróć pusty obiekt z pustą tablicą ról
+  //   }
+  
+  //   if (this.userRolesSubject.getValue()) {
+  //     return of({ roles: this.userRolesSubject.getValue() });
+  //   }
+  
+  //   return this.http.get<{ roles: string[] }>(`${environment.externalApiUrl}discord/user-roles`, {
+  //     params: { userId, guildId: this.guildId }
+  //   }).pipe(
+  //     tap(response => {
+  //       this.userRolesSubject.next(response.roles); // Zapisz role w BehaviorSubject
+  //     }),
+  //     catchError(error => {
+  //       console.error('Błąd podczas pobierania ról użytkownika:', error);
+  //       return of({ roles: [] }); // Zwróć pusty obiekt w razie błędu
+  //     })
+  //   );
+  // }
+
   getUserRoles3(): Observable<{ roles: string[] }> {
     const userId = this.getUserIdFromLocalStorage();
   
     if (!userId) {
       console.error('Brak userId. Użytkownik może nie być zalogowany.');
-      return of({ roles: [] }); // Zwróć pusty obiekt z pustą tablicą ról
+      return of({ roles: [] });
     }
   
-    if (this.userRolesSubject.getValue()) {
-      return of({ roles: this.userRolesSubject.getValue() });
+    const currentRoles = this.userRolesSubject.getValue();
+    if (currentRoles) {
+      return of(currentRoles);
     }
   
-    return this.http.get<{ roles: string[] }>(`${environment.externalApiUrl}discord/user-roles`, {
-      params: { userId, guildId: this.guildId }
-    }).pipe(
-      tap(response => {
-        this.userRolesSubject.next(response.roles); // Zapisz role w BehaviorSubject
-      }),
-      catchError(error => {
-        console.error('Błąd podczas pobierania ról użytkownika:', error);
-        return of({ roles: [] }); // Zwróć pusty obiekt w razie błędu
+    return this.http
+      .get<{ roles: string[] }>(`${environment.externalApiUrl}discord/user-roles`, {
+        params: { userId, guildId: this.guildId },
       })
-    );
+      .pipe(
+        tap((response) => {
+          this.userRolesSubject.next(response); // Zapisz cały obiekt w BehaviorSubject
+        }),
+        catchError((error) => {
+          console.error('Błąd podczas pobierania ról użytkownika:', error);
+          this.userRolesSubject.next({ roles: [] }); // Zapisz pusty obiekt w przypadku błędu
+          return of({ roles: [] });
+        })
+      );
+  } 
+
+  getUserRolesPublic(): Observable<{ roles: string[] } | null> {
+    return this.userRolesSubject.asObservable();
   }
-  
 
   clearRoles(): void {
     this.userRolesSubject.next(null);
@@ -229,12 +252,12 @@ export class AuthService {
     // const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('http://localhost:4500/discord-callback')}&response_type=code&scope=identify%20guilds`;
 
     //WORKING localhost
-    // const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('http://localhost:4500/discord-callback')}&response_type=code&scope=identify%20guilds%20guilds.members.read
-    // `;
+    const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('http://localhost:4500/discord-callback')}&response_type=code&scope=identify%20guilds%20guilds.members.read
+    `;
 
     //PRODUCTION
-    const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('https://mohsh.pl/discord-callback')}&response_type=code&scope=identify%20guilds%20guilds.members.read
-    `;
+    // const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('https://mohsh.pl/discord-callback')}&response_type=code&scope=identify%20guilds%20guilds.members.read
+    // `;
     
     window.location.href = discordAuthUrl; // Redirect to Discord's OAuth page
   }

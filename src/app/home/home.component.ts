@@ -49,9 +49,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void { 
     Chart.plugins.register(annotationPlugin);
-    // this.openDialogIfBeforeDeadline();
-    this.user = this.authService.getUserDataGoogle();
-    console.log('User:', this.user.email_verified);
+    // this.openDialogIfBeforeDeadline();   
     
 
     // this.teamOneSelection$ = this.playersApiService.getPlayers('TeamSelectionOne').pipe(

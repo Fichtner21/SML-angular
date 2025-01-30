@@ -81,9 +81,32 @@ export class AddClanMatchComponent implements OnInit {
       })
     );  
 
-    this.authService.getUserRoles3().subscribe({
+    // this.authService.getUserRoles3().subscribe({
+    //   next: (response) => {
+    //     if (Array.isArray(response.roles)) {
+    //       this.userRoles = response.roles; // Pobierz tablicę ról
+    //       this.role = this.getRoleNames(); // Ustal rolę do wyświetlenia
+    //       this.roleDisplay = this.getDisplayRole(this.userRoles); // Ustal rolę do wyświetlenia
+    //     } else {
+    //       console.error('Błąd: Pobierane role nie są tablicą.', response);
+    //       this.userRoles = [];
+    //       this.role = 'Guest'; // Ustaw domyślną rolę
+    //     }
+    //     this.playersApiService.getPlayersFinal('Players').subscribe(data => {
+    //       this.players = data;      
+    //       this.mergeData();
+    //     });
+    //     // this.cdr.detectChanges();
+    //     console.log('Role użytkownika:', this.userRoles);
+    //   },
+    //   error: (err) => {
+    //     console.error('Błąd podczas pobierania ról użytkownika:', err);
+    //   }
+    // }); 
+    
+    this.authService.getUserRolesPublic().subscribe({
       next: (response) => {
-        if (Array.isArray(response.roles)) {
+        if (response && Array.isArray(response.roles)) {
           this.userRoles = response.roles; // Pobierz tablicę ról
           this.role = this.getRoleNames(); // Ustal rolę do wyświetlenia
           this.roleDisplay = this.getDisplayRole(this.userRoles); // Ustal rolę do wyświetlenia
@@ -92,17 +115,20 @@ export class AddClanMatchComponent implements OnInit {
           this.userRoles = [];
           this.role = 'Guest'; // Ustaw domyślną rolę
         }
+    
+        // Pobierz dane graczy z obu arkuszy
         this.playersApiService.getPlayersFinal('Players').subscribe(data => {
           this.players = data;      
-          this.mergeData();
-        });
-        // this.cdr.detectChanges();
-        console.log('Role użytkownika:', this.userRoles);
+          this.mergeData(); // Scal dane
+        });       
+    
+        this.cdr.detectChanges(); // Wymuś wykrycie zmian
       },
       error: (err) => {
         console.error('Błąd podczas pobierania ról użytkownika:', err);
       }
-    });    
+    });
+    
  
     // Inicjalizuj formularz z walidacją
     this.clanForm = this.fb.group({
@@ -185,7 +211,7 @@ export class AddClanMatchComponent implements OnInit {
         }      
         
         return player;
-      }).filter(player => player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name);
+      }).filter(player => player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name || player.discord_id === this.userDataDiscord.id);
 
       if (this.roleDisplay === 'admin' || this.roleDisplay === 'OWNER') {
         console.log('User role is admin. Showing all clans.');

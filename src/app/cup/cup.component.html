@@ -1,8 +1,12 @@
-<section *ngIf="false">
+<section>
   <div class="">
     <h1 style="width: 100%; text-align: center">
       <!-- <ng-container *ngIf=" renderedTree === 'se'">Single Elimination Example</ng-container> -->
-      <ng-container *ngIf=" renderedTree === 'de'">MoH:SH Mix Cup 3on3 / <a routerLink="rules">Rules</a></ng-container>
+      <ng-container *ngIf=" renderedTree === 'de'">
+        MoH:SH Cup 3on3+ / 
+        <a routerLink="rules">Rules</a> / 
+        <a routerLink="teams">Teams</a>
+      </ng-container>
       <br>     
       <!-- <div *ngFor="let t of tt">
         {{ t | json }}
@@ -76,11 +80,23 @@
             <div *ngIf="team.score" class="ngtt__team-score">{{team.score}}</div>
           </div>
         </ng-container>
-      </div>      
+      </div>  
+          
     </ng-template>
+    <div style="border: 3px solid red"_ngcontent-you-c361="" class="ngtt-de__match-component-container"><div _ngcontent-you-c362="" class="ngtt__match-wrapper ng-star-inserted"><div _ngcontent-you-c362="" class="ngtt__team-wrapper ng-star-inserted"><div _ngcontent-you-c362="" class="ngtt__team-avatar"></div><h3 _ngcontent-you-c362="" class="ngtt__team-title Team6" ng-reflect-ng-class="Team6"><span _ngcontent-you-c362=""> </span>no name   </h3><div _ngcontent-you-c362="" class="ngtt__team-score ng-star-inserted">1</div><!--bindings={
+      "ng-reflect-ng-if": "1"
+    }--></div><!--ng-container--><div _ngcontent-you-c362="" class="ngtt__team-wrapper ng-star-inserted"><div _ngcontent-you-c362="" class="ngtt__team-avatar"></div><h3 _ngcontent-you-c362="" class="ngtt__team-title Team8" ng-reflect-ng-class="Team8"><span _ngcontent-you-c362=""> </span>egypt   </h3><div _ngcontent-you-c362="" class="ngtt__team-score ng-star-inserted">2</div><!--bindings={
+      "ng-reflect-ng-if": "2"
+    }--></div><!--ng-container--><!--bindings={
+      "ng-reflect-ng-for-of": "[object Object],[object Object"
+    }--></div><!--bindings={
+      "ng-reflect-ng-template-outlet-context": "[object Object]"
+    }-->
+    </div>
   </div>
 </section>
-<section>
+
+<!-- <section>
   <div>
     <h1 style="width: 100%; text-align: center">
       MoH:SH Mix Cup 3on3 / <a routerLink="rules">Rules</a>
@@ -92,7 +108,7 @@
       <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQwPqewjKb8rymhWCc-LUBZiFzA_iOQlvOSSLKX38UUCMziOyev9D9hSHM7UplLRRYxFVa5jB1p1e5q/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false" width="1694" height="980" style="border:0;" #cupFrame></iframe>
     </div>    
   </div>
-</section>
+</section> -->
 <ng-http-loader 
     [backdrop]="false"
     [backgroundColor]="'#010141'"

@@ -17,7 +17,7 @@ html {
 section {
   background-color: #40415f;
   min-height: 100vh;
-  padding-top: 70px;
+  padding-top: 100px;
 
   h1 {
     color: #ffffc8;
@@ -235,4 +235,12 @@ section {
     font-size: 14px;
     font-weight: 400;
   }
+}
+
+.highlight-text {
+  color: red !important;
+}
+
+.highlight-bg {
+  background-color: yellow !important;
 }

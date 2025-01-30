@@ -47,6 +47,7 @@ export class PlayerViewComponent implements OnInit {
   season6wars: number;
   season7wars: number;
   season8wars: number;
+  season9wars: number;
   currentActivePlayers: number = 0;
   aaa = [];
   resultCanvas: any;
@@ -77,6 +78,7 @@ export class PlayerViewComponent implements OnInit {
   playerCard: any;
   private playerDetailToCompare$ = new BehaviorSubject<any>(null);
   selectedPlayer: boolean = false;
+  groupedWars: { [year: string]: any[] } = {};
 
   public countryCodeMap: CountryCodeMap = {
     'AF': 'Afghanistan',
@@ -149,8 +151,8 @@ export class PlayerViewComponent implements OnInit {
 
     this.numOfPlayers$ = this.playersApiService.getPlayers('NumPlayers').pipe(
       map((response: any) => {
-        this.season8wars = response.values[1][5];
-        return this.season8wars;
+        this.season9wars = response.values[1][6];
+        return this.season9wars;
       })
     );
 
@@ -264,6 +266,7 @@ export class PlayerViewComponent implements OnInit {
         let listwars6: any[] = [];
         let listwars7: any[] = [];
         let listwars8: any[] = [];
+        let listwars9: any[] = [];
         let rankings: any[] = [];
         let resultPerPlayer: any[] = [];
         let s1wars: string;
@@ -275,6 +278,7 @@ export class PlayerViewComponent implements OnInit {
         let s6fpw: string;
         let s7fpw: string;
         let s8fpw: string;
+        let s9fpw: string;
         let active: string;
         let place: string;
         let ban: string;
@@ -300,6 +304,9 @@ export class PlayerViewComponent implements OnInit {
         let s7wars_win: number;
         let s7fpw_win: number;
         let s7ranking_win: number;
+        let s8wars_win: number;
+        let s8fpw_win: number;
+        let s8ranking_win: number;
 
         const foundPlayerArray = this.filterUsername(player, matches);
         const fragsPerPlayerArray:any[] = [];
@@ -394,6 +401,8 @@ export class PlayerViewComponent implements OnInit {
 
             listwars8.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
 
+            listwars9.push({idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100})
+
             rankings.push(Math.round(rankHistory * 100) / 100);
             playerArray.push([el.idwar, el.timestamp, fragPerWar]);
             timestampArray.push(new Date(el.timestamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }));
@@ -416,6 +425,7 @@ export class PlayerViewComponent implements OnInit {
             s6fpw = el.s6fpw;
             s7fpw = el.s7fpw;
             s8fpw = el.s8fpw;
+            s9fpw = el.s9fpw;
             place = el.place;
             ban = el.ban;
             banDue = el.ban_due;
@@ -436,6 +446,8 @@ export class PlayerViewComponent implements OnInit {
             s6ranking_win = el.s6ranking_win,
             s7fpw_win = el.s7fpw_win,
             s7ranking_win = el.s7ranking_win,
+            s8fpw_win = el.s8fpw_win,
+            s8ranking_win = el.s8ranking_win,
             active = el.active
           }
         });
@@ -461,6 +473,7 @@ export class PlayerViewComponent implements OnInit {
           listwars6: this.filterObjectsByDateRange(listwars6, new Date(2024, 3, 1), new Date(2024, 5, 30)), // Kwiecień - Czerwiec 2024
           listwars7: this.filterObjectsByDateRange(listwars7, new Date(2024, 6, 1), new Date(2024, 8, 31)), // Lipiec - Wrzesień 2024
           listwars8: this.filterObjectsByDateRange(listwars8, new Date(2024, 9, 1), new Date(2024, 11, 31)), // Październik - Grudzień 2024
+          listwars9: this.filterObjectsByDateRange(listwars9, new Date(2025, 0, 1), new Date(2025, 2, 31)), // Styczeń - Marzec 2025
           win: win,
           lose: lose,
           draw: draw,
@@ -481,6 +494,7 @@ export class PlayerViewComponent implements OnInit {
           s6fpw: parseFloat(s6fpw),
           s7fpw: parseFloat(s7fpw),
           s8fpw: parseFloat(s8fpw),
+          s9fpw: parseFloat(s9fpw),
           active: (active == 'FALSE') ? false : true,
           ban: (ban == 'FALSE') ? false : true,
           place: place !== '' ? place : '-',
@@ -505,10 +519,14 @@ export class PlayerViewComponent implements OnInit {
           s6ranking_win: s6ranking_win ? s6ranking_win : '',
           s7wars_win: s7wars_win ? s7wars_win : '',
           s7fpw_win: s7fpw_win ? s7fpw_win : '',
-          s7ranking_win: s7ranking_win ? s7ranking_win : ''
+          s7ranking_win: s7ranking_win ? s7ranking_win : '',
+          s8wars_win: s7wars_win ? s7wars_win : '',
+          s8fpw_win: s7fpw_win ? s7fpw_win : '',
+          s8ranking_win: s7ranking_win ? s7ranking_win : ''
         }
         console.log('playerCardNative', playerCard)
-        return playerCard;
+        this.groupedWars = this.groupWarsByYear(playerCard.wars);
+        return playerCard;        
       }),
       shareReplay(1)
     )
@@ -1041,6 +1059,7 @@ export class PlayerViewComponent implements OnInit {
         let listwars6: any[] = [];
         let listwars7: any[] = [];
         let listwars8: any[] = [];
+        let listwars9: any[] = [];
         let rankings: any[] = [];
         let resultPerPlayer: any[] = [];
         let s1wars: string;
@@ -1052,6 +1071,7 @@ export class PlayerViewComponent implements OnInit {
         let s6fpw: string;
         let s7fpw: string;
         let s8fpw: string;
+        let s9fpw: string;
         let active: string;
         let place: string;
         let ban: string;
@@ -1077,6 +1097,9 @@ export class PlayerViewComponent implements OnInit {
         let s7wars_win: number;
         let s7fpw_win: number;
         let s7ranking_win: number;
+        let s8wars_win: number;
+        let s8fpw_win: number;
+        let s8ranking_win: number;
 
         const foundPlayerArray = this.filterUsername(selectedPlayer, matches);
         const fragsPerPlayerArray: any[] = [];
@@ -1169,6 +1192,8 @@ export class PlayerViewComponent implements OnInit {
 
             listwars8.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
 
+            listwars9.push({ idwar: Number(el.idwar), timestamp: el.timestamp, frags: fragPerWar, ranking: Math.round(rankHistory * 100) / 100 })
+
             rankings.push(Math.round(rankHistory * 100) / 100);
             playerArray.push([el.idwar, el.timestamp, fragPerWar]);
             timestampArray.push(new Date(el.timestamp).toLocaleDateString('pl-PL', { hour: '2-digit', minute: '2-digit' }));
@@ -1191,6 +1216,7 @@ export class PlayerViewComponent implements OnInit {
             s6fpw = el.s6fpw;
             s7fpw = el.s7fpw;
             s8fpw = el.s8fpw;
+            s9fpw = el.s9fpw;
             place = el.place;
             ban = el.ban;
             banDue = el.ban_due;
@@ -1211,6 +1237,8 @@ export class PlayerViewComponent implements OnInit {
             s6ranking_win = el.s6ranking_win,
             s7fpw_win = el.s7fpw_win,
             s7ranking_win = el.s7ranking_win,
+            s8fpw_win = el.s8fpw_win,
+            s8ranking_win = el.s8ranking_win,
             active = el.active
           }
         });
@@ -1236,6 +1264,7 @@ export class PlayerViewComponent implements OnInit {
           listwars6: this.filterObjectsByDateRange(listwars6, new Date(2024, 3, 1), new Date(2024, 5, 30)), // Kwiecień - Czerwiec 2024
           listwars7: this.filterObjectsByDateRange(listwars7, new Date(2024, 6, 1), new Date(2024, 8, 31)), // Lipiec - Wrzesień 2024
           listwars8: this.filterObjectsByDateRange(listwars8, new Date(2024, 9, 1), new Date(2024, 11, 31)), // Październik - Grudzień 2024
+          listwars9: this.filterObjectsByDateRange(listwars9, new Date(2025, 0, 1), new Date(2025, 2, 31)), // Październik - Grudzień 2024
           win: win,
           lose: lose,
           draw: draw,
@@ -1255,7 +1284,8 @@ export class PlayerViewComponent implements OnInit {
           s5fpw: parseFloat(s5fpw),
           s6fpw: parseFloat(s6fpw),
           s7fpw: parseFloat(s7fpw),
-          s8fpw: parseFloat(s7fpw),
+          s8fpw: parseFloat(s8fpw),
+          s9fpw: parseFloat(s9fpw),
           active: (active == 'FALSE') ? false : true,
           ban: (ban == 'FALSE') ? false : true,
           place: place !== '' ? place : '-',
@@ -1280,12 +1310,26 @@ export class PlayerViewComponent implements OnInit {
           s6ranking_win: s6ranking_win ? s6ranking_win : '',
           s7wars_win: s7wars_win ? s7wars_win : '',
           s7fpw_win: s7fpw_win ? s7fpw_win : '',
-          s7ranking_win: s7ranking_win ? s7ranking_win : ''
+          s7ranking_win: s7ranking_win ? s7ranking_win : '',
+          s8wars_win: s8wars_win ? s8wars_win : '',
+          s8fpw_win: s8fpw_win ? s8fpw_win : '',
+          s8ranking_win: s8ranking_win ? s8ranking_win : ''
         }
         console.log('playerCard', playerCard);
         this.playerCard = playerCard;
       }),
     ).subscribe();
+  }
+
+  groupWarsByYear(wars: any[]): { [year: string]: any[] } {
+    return wars.reduce((acc, war) => {
+      const year = new Date(war[1]).getFullYear(); // Pobierz rok z daty
+      if (!acc[year]) {
+        acc[year] = [];
+      }
+      acc[year].push(war); // Dodaj wojnę do odpowiedniego roku
+      return acc;
+    }, {} as { [year: string]: any[] });
   }
 
 // Subskrybujemy się do strumienia playerDetailToCompare$ i dodajemy console.log

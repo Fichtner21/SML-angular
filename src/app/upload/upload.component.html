@@ -1,0 +1,22 @@
+<p>upload works!</p>
+<div>  
+  <h2>Prześlij zrzuty ekranu do analizy</h2>  
+  <input type="file" (change)="onFileChange($event)" multiple />  
+  <button (click)="uploadFiles()">Wyślij</button>  
+</div>  
+
+<div *ngIf="results">  
+  <h3>Wyniki analizy:</h3>  
+  <h4>Drużyna Allies:</h4>  
+  <ul>  
+    <li *ngFor="let player of results.allies | keyvalue">  
+      {{ player.key }}: {{ player.value }}  
+    </li>  
+  </ul>  
+  <h4>Drużyna Axis:</h4>  
+  <ul>  
+    <li *ngFor="let player of results.axis | keyvalue">  
+      {{ player.key }}: {{ player.value }}  
+    </li>  
+  </ul>  
+</div>

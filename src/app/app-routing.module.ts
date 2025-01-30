@@ -13,6 +13,10 @@ import { UpdateEloComponent } from './update-elo/update-elo.component';
 import { DiscordAuthGuard } from './discord-auth.guard';
 import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 import { AdminComponent } from './admin/admin.component';
+import { RankingObjAaComponent } from './ranking-obj-aa/ranking-obj-aa.component';
+import { UploadComponent } from './upload/upload.component';
+import { HistoryObjAaComponent } from './history-obj-aa/history-obj-aa.component';
+import { BracketComponent } from './bracket/bracket.component';
 
 const routes: Routes = [{
   path: '',
@@ -30,6 +34,10 @@ const routes: Routes = [{
   path: 'obj-matches',
   loadChildren: () => import('./history-obj/history-obj.module').then(m => m.HistoryObjModule)
 }, 
+{
+  path: 'matches-aa',
+  component: HistoryObjAaComponent
+},
 {
   path: 'about',
   loadChildren: () => import('./about/about.module').then(m => m.AboutModule)
@@ -65,9 +73,21 @@ const routes: Routes = [{
   canActivate: [DiscordAuthGuard]
 },
 {
+  path: 'upload',
+  component: UploadComponent
+},
+{
   path: 'add-clan-war',
   component: AddClanMatchComponent,
   canActivate: [DiscordAuthGuard]
+},
+{
+  path: 'tournament',
+  component: BracketComponent
+},
+{
+  path: 'obj-aa',
+  component: RankingObjAaComponent,
 },
 {
   path: 'admin',

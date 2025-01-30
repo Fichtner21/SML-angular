@@ -1,355 +1,564 @@
 <section>
-  <div class="container">
-    <!-- <div style="border: 3px solid red; padding: 20px;">
-      <div *ngIf="!isAuthenticated2()">
-        <button (click)="loginWithDiscord()">Log with Discord</button>
+  <mat-tab-group (selectedTabChange)="onTabChange($event)">
+  <!-- Pierwsza zakładka -->
+    <mat-tab label="Tab 1" class="sh" [ngClass]="{'mohsh': activeTabIndex === 0}">
+      <ng-template mat-tab-label >
+        <img src="assets/images/sh_log70x70.png" alt="Spearhead" class="tab-icon" />
+        <span>Medal of Honor: Spearhead</span>
+      </ng-template>
+      <!-- Obecny kod komponentu -->
+      <div class="tab-content">      
+        <div class="container">  
+          <div class="mix">
+            <button mat-raised-button (click)="toggleSticky()" class="sticky-btn">        
+              <span *ngIf="!isStickyShown"><fa-icon [icon]="arrowLeftCircle"></fa-icon> Show Teams</span>
+              <span *ngIf="isStickyShown">Hide Teams <fa-icon [icon]="arrowRightCircle"></fa-icon> </span>
+            </button>
+            <div class="mix-list">       
+              <mat-form-field>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
+              </mat-form-field>
+              <!-- Przycisk lub przełącznik do ukrywania/pokazywania nieaktywnych graczy -->
+              <mat-checkbox [(ngModel)]="showInactivePlayers" style="padding-left: 10px" [color]="task.color">
+                {{ showInactivePlayers ? 'Hide' : 'Show' }} inactive players
+              </mat-checkbox>
+              <!-- Tabela z graczami -->
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef [style.width.px]="50"></th>
+                  <td mat-cell *matCellDef="let row" [style.width.px]="50">
+                    <mat-checkbox *ngIf="!row.ban" (click)="$event.stopPropagation()"
+                                  (change)="selectUser(row)"
+                                  [checked]="selectedUsers.indexOf(row) > -1" [color]="task.color">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+      
+                <!-- Nr Column -->
+                <ng-container matColumnDef="nr">
+                  <th mat-header-cell *matHeaderCellDef [style.width.px]="50"> No. </th>
+                  <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="50"> {{row.nr}} </td>
+                </ng-container>
+      
+                <!-- Username Column -->
+                <ng-container matColumnDef="playername">
+                  <th mat-header-cell *matHeaderCellDef [style.width.px]="150"> Playername </th>
+                  <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="150"> {{row.playername}} </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="flag">
+                  <th mat-header-cell *matHeaderCellDef [style.width.px]="50"> </th>
+                  <td mat-cell *matCellDef="let row" [style.width.px]="50"> <img [src]='"assets/images/flags_svg/" + row.flag + ".SVG"'></td>
+                </ng-container>
+      
+                <!-- Username Column -->
+                <ng-container matColumnDef="ranking">
+                  <th mat-header-cell *matHeaderCellDef [style.width.px]="100"> Ranking </th>
+                  <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="100"> {{row.ranking}} </td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <!-- Wiersz gracza z warunkowym ukrywaniem -->
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" [style.display]="showInactivePlayers || row.active ? 'table-row' : 'none'"></tr>
+              </table>
+            </div>
+            <div class="mix-result">        
+              <div class="mix-sticky" [ngClass]="{ 'show': isStickyShown }">
+                <h2 class="imp">
+                  <img src="/assets/images/checkbox_example.png" alt="The Bridge" width="24" height="24">
+                  <div>Mark players on the left and make MIX!</div>
+                </h2>
+                <div class="instructions instructionsSH">
+                  <h3>Follow this steps to make MIX.</h3>
+                  <ol>
+                    <li>Add minimum <strong>6 players.</strong></li>
+                    <li>Click on <strong>MIX by Nations (NT)</strong> or <strong>High Precision (HP).</strong></li>
+                    <li>Select Maps.</li>
+                    <li>Send Teams to Discord.</li>
+                    <li><strong>PLAY!</strong> - After war send screens to <img src="/assets/images/m_and_s.png" alt=""> channel on Discord.</li>
+                  </ol>
+                </div>         
+                <div class="selectedTeams">
+                  <h2 class="h2Select">Selected Players</h2>            
+                  <div class="btn-cont">
+                    <button mat-raised-button color="primary" class="lp lp-mix" [disabled]="selectedUsers.length < 6" (click)="    
+                    splitNationalities(selectedUsers)">Mix NT <fa-icon [icon]="faFlag"></fa-icon></button>
+                    <div>NT - by Nations.</div>
+                  </div>
+                  <div class="btn-cont">
+                    <button mat-raised-button color="warn" class="hp" (click)="          
+                  splitArrayIntoTwo(selectedUsers)" [disabled]="selectedUsers.length < 6 || selectedUsers.length > 15">Mix HP <fa-icon [icon]="starSolid"></fa-icon></button>
+                    <div>HP - Higher precision.</div>
+                  </div>
+                </div>
+                <div class="selected-cont">
+                  <div *ngFor="let player of selectedUsers; let i = index;" class="selected">          
+                    <div style="display: flex; align-items:center;" class="selectedPlayer">
+                      <span class="playername">{{ i + 1}}. {{player.playername}}</span> 
+                      <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
+                      <span>({{ player.ranking }})</span>                
+                        <fa-icon [icon]="xmark" (click)="removePlayer(i)" class="minus" matTooltip="Remove player"></fa-icon>                
+                    </div>
+                  </div>  
+                </div>
+                <div class="teams">
+                  <div class="team"> 
+                    <h2>Team 1</h2>
+                    <div *ngFor="let player of array1; let i = index;" class="player">        
+                      <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>                    
+                    </div>
+                    <div>Cumulative: {{ sumTeam1 | number : '1.2-2' }}</div>  
+                    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShow > chanceOfWinTeamOneShow), 'teamNotFavorite': (chanceOfWinTeamTwoShow < chanceOfWinTeamOneShow), 'teamWithoutFavorite': (chanceOfWinTeamTwoShow == chanceOfWinTeamOneShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamTwoShow | number : '.2-2' }} %</div>
+                  </div>
+                  <div class="team">
+                    <h2>Team 2</h2> 
+                    <div *ngFor="let player of array2; let i = index;" class="player">          
+                      <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>        
+                    </div>
+                    <div>Cumulative: {{ sumTeam2 | number : '1.2-2' }}</div>
+                    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>  
+                  </div>
+                </div> 
+                <div class="restricted-btn">            
+                  <mat-form-field appearance="outline" class="mat-select-container">
+                    <mat-label>MAPS</mat-label>
+                    <mat-select [(ngModel)]="selectedOption" class="mat-select">
+                      <!-- <mat-option value="Random">Random</mat-option> -->
+                      <mat-option value="TwoStockMaps">Two Stock Maps</mat-option>
+                      <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
+                      <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
+                      <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
+                      <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>
+                      <mat-option value="Teams-decide">Teams decide</mat-option>
+                      <mat-option value="extraRandom">Random</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  
+                  <div class="single-btn">
+                  
+                    <button mat-raised-button color="primary" class="lp" (click)="sendToDiscord()" [disabled]="!isValid()">
+                      <img src="assets/images/sh_log70x70.png" alt="" width="20"> Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
+                    <div>Send squads to Discord</div>
+                    <img src="/assets/images/g_chat.png" alt="">
+                  </div>                       
+                
+                  <div class="single-btn">
+                    <button mat-raised-button color="accent" class="lp" 
+                            (click)="getDiscordUsers()" 
+                            [disabled]="!isLoggedIn">
+                      Get from Discord <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowDown"></fa-icon>
+                    </button>
+                    
+                    <div *ngIf="!(authService.isAuthenticated$ | async)">
+                      <button mat-raised-button color="primary" (click)="authService.login()">
+                        Log in with Google
+                      </button>
+                      <p>You need to log in to access this feature.</p>
+                    </div>
+                  
+                    <div *ngIf="authService.isAuthenticated$ | async">
+                      <p>Welcome back!</p>
+                      <button mat-raised-button color="warn" (click)="authService.logout()">Logout</button>
+                    </div>
+                  </div>
+                  
+                  <div class="single-btn">
+                    <button mat-raised-button color="accent" class="lp" (click)="sendToVoiceChannels()" [disabled]="!isAuthenticated()">Send to Voice Channels <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowUp"></fa-icon></button>
+                    <div>
+                      Send players to 
+                      <mat-radio-group [(ngModel)]="selectedChannels" [disabled]="!isAuthenticated()">
+                        <mat-radio-button *ngFor="let channels of availableChannels" [value]="channels">{{ channels }}</mat-radio-button>
+                      </mat-radio-group>
+                      voice channels.
+                    </div>
+                  </div>
+                  <div style="grid-column: span 2;">
+                    <form (ngSubmit)="sendMessageRcon()" #messageForm="ngForm">
+                      <mat-form-field>
+                        <mat-label>IP:</mat-label>
+                        <input
+                          type="text"
+                          id="ip"
+                          name="ip"
+                          [(ngModel)]="ip"
+                          matInput
+                          required
+                        />
+                      </mat-form-field>
+                      <mat-form-field>
+                        <mat-label>Repeat (1-5):</mat-label>
+                        <input
+                          type="number"
+                          id="counter"
+                          name="counter"
+                          [(ngModel)]="counter"
+                          matInput
+                          min="1"
+                          max="5"
+                          required
+                        />
+                      </mat-form-field>
+                      
+                      <mat-form-field>
+                        <mat-label>Delay (10s-3min):</mat-label>
+                        <input
+                          type="number"
+                          id="delay"
+                          name="delay"
+                          [(ngModel)]="delay"
+                          matInput
+                          min="10"
+                          max="180"
+                          required
+                        />
+                      </mat-form-field>
+                      
+                      <mat-form-field>
+                        <mat-label>Interval (30s-1min):</mat-label>
+                        <input
+                          type="number"
+                          id="interval"
+                          name="interval"
+                          [(ngModel)]="interval"
+                          matInput
+                          min="30"
+                          max="60"
+                          required
+                        />
+                      </mat-form-field>
+                      <button [disabled]="!isAuthenticated()" type="submit" mat-raised-button color="primary">Send Squads to SH</button>
+                    </form>
+                  </div>           
+                  
+                  <p class="col-span-3 without-mb">Bucket stock: 
+                    <img src="/assets/images/maps/TheHunt_text.jpg" alt="The Hunt Map">
+                    <img src="/assets/images/maps/v2_text.jpg" alt="V2 Map">
+                    <img src="/assets/images/maps/bridge_text.jpg" alt="The Bridge Map">
+                  <p class="col-span-3 without-mb">Bucket customMp (MP - more popular): <strong>VSUK Abbey, Stlo, Renan, The Church Final</strong></p>
+                  <p class="col-span-3 without-mb">Bucket customLp (LP - less popular): <strong>V2 Shelter, Navarone, Dessau1946, The Bridge OMG, The Lost Town, Stlo4, The Village, Harbor, Holland</strong></p>
+                  
+                </div>
+                <ng-container *ngIf="isAuthenticated()">                      
+                  <div class="restricted-btn-bottom">
+                    <h1>Restricted Content</h1>
+                    <p>This content is only visible to authenticated users.</p>
+                    <button mat-raised-button color="primary" class="lp" (click)="    
+                    confirmTeams()">Confirm Teams <fa-icon [icon]="stamp"></fa-icon></button>
+                    <div>Click here to send balanced teams to database. Go to <button routerLink="/dashboard" mat-raised-button color="warn">Dashboard <fa-icon [icon]="arrowRightCircle"></fa-icon></button> to fill score after war.</div>                          
+                  </div>            
+                </ng-container>
+                <ng-container *ngIf="!isAuthenticated()">
+                  <h1>Access Denied</h1>
+                  <p>You need to be authenticated to view this content.</p>
+                </ng-container>
+              </div>        
+            </div>
+          </div>
+        </div>         
       </div>
-      <div *ngIf="isAuthenticated2()">
-        <button (click)="logout()">Log out</button>
+    </mat-tab>
+
+    <!-- Druga zakładka -->
+    <mat-tab label="Tab 2" class="aa"  [ngClass]="{'mohaa': activeTabIndex === 1}">
+      <ng-template mat-tab-label>
+        <img src="assets/images/mohaa.png" alt="MOHAA" class="tab-icon" />
+        <span>Medal of Honor: Allied Assault</span>
+      </ng-template>
+      <div class="tab-content mohaa-tab">
+        <div class="container">
+          <div class="mix">
+            <button mat-raised-button (click)="toggleSticky()" class="sticky-btn">        
+              <span *ngIf="!isStickyShown"><fa-icon [icon]="arrowLeftCircle"></fa-icon> Show Teams</span>
+              <span *ngIf="isStickyShown">Hide Teams <fa-icon [icon]="arrowRightCircle"></fa-icon> </span>
+            </button>
+            <div class="mix-list">       
+              <mat-form-field>
+                <input matInput (keyup)="applyFilterAA($event)" placeholder="Filter">
+              </mat-form-field>
+              <!-- Przycisk lub przełącznik do ukrywania/pokazywania nieaktywnych graczy -->
+              <mat-checkbox [(ngModel)]="showInactivePlayersAA" style="padding-left: 10px" [color]="task.color">
+                {{ showInactivePlayersAA ? 'Hide' : 'Show' }} inactive players
+              </mat-checkbox>
+              <!-- Tabela z graczami -->
+              <table mat-table [dataSource]="dataSourceAA" class="mat-elevation-z8">
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef [style.width.px]="50"></th>
+                  <td mat-cell *matCellDef="let row" [style.width.px]="50">
+                    <mat-checkbox *ngIf="!row.ban" (click)="$event.stopPropagation()"
+                                  (change)="selectUserAA(row)"
+                                  [checked]="selectedUsersAA.indexOf(row) > -1" [color]="task.color">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+      
+                <!-- Nr Column -->
+                <ng-container matColumnDef="nr">
+                  <th mat-header-cell *matHeaderCellDef [style.width.px]="50"> No. </th>
+                  <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="50"> {{row.nr}} </td>
+                </ng-container>
+      
+                <!-- Username Column -->
+                <ng-container matColumnDef="playername">
+                  <th mat-header-cell *matHeaderCellDef [style.width.px]="150"> Playername </th>
+                  <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="150"> {{row.playername}} </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="flag">
+                  <th mat-header-cell *matHeaderCellDef [style.width.px]="50"> </th>
+                  <td mat-cell *matCellDef="let row" [style.width.px]="50"> <img [src]='"assets/images/flags_svg/" + row.flag + ".SVG"'></td>
+                </ng-container>
+      
+                <!-- Username Column -->
+                <ng-container matColumnDef="ranking">
+                  <th mat-header-cell *matHeaderCellDef [style.width.px]="100"> Ranking </th>
+                  <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="100"> {{row.ranking}} </td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <!-- Wiersz gracza z warunkowym ukrywaniem -->
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" [style.display]="showInactivePlayersAA || row.active ? 'table-row' : 'none'"></tr>
+              </table>
+            </div>
+            <div class="mix-result">        
+              <div class="mix-sticky" [ngClass]="{ 'show': isStickyShown }">
+                <h2 class="imp">
+                  <img src="/assets/images/checkbox_example.png" alt="The Bridge" width="24" height="24">
+                  <div>Mark players on the left and make MIX!</div>
+                </h2>
+                <div class="instructions instructionsAA">
+                  <h3>Follow this steps to make MIX.</h3>
+                  <ol>
+                    <li>Add minimum <strong>6 players.</strong></li>
+                    <li>Click on <strong>MIX by Nations (NT)</strong> or <strong>High Precision (HP).</strong></li>
+                    <li>Select Maps.</li>
+                    <li>Send Teams to Discord.</li>
+                    <li><strong>PLAY!</strong> - After war send screens to <img src="/assets/images/m_and_s.png" alt=""> channel on Discord.</li>
+                  </ol>
+                </div>         
+                <div class="selectedTeams">
+                  <h2 class="h2Select">Selected Players</h2>            
+                  <div class="btn-cont">
+                    <button mat-raised-button color="primary" class="lp lp-mix" [disabled]="selectedUsersAA.length < 6" (click)="    
+                    splitNationalitiesAA(selectedUsersAA)">Mix NT <fa-icon [icon]="faFlag"></fa-icon></button>
+                    <div>NT - by Nations.</div>
+                  </div>
+                  <div class="btn-cont">
+                    <button mat-raised-button color="warn" class="hp" (click)="          
+                  splitArrayIntoTwoAA(selectedUsersAA)" [disabled]="selectedUsersAA.length < 6 || selectedUsersAA.length > 15">Mix HP <fa-icon [icon]="starSolid"></fa-icon></button>
+                    <div>HP - Higher precision.</div>
+                  </div>
+                </div>
+                <div class="selected-cont">
+                  <div *ngFor="let player of selectedUsersAA; let i = index;" class="selected">          
+                    <div style="display: flex; align-items:center;" class="selectedPlayer">
+                      <span class="playername">{{ i + 1}}. {{player.playername}}</span> 
+                      <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
+                      <span>({{ player.ranking }})</span>                
+                        <fa-icon [icon]="xmark" (click)="removePlayerAA(i)" class="minus" matTooltip="Remove player"></fa-icon>                
+                    </div>
+                  </div>  
+                </div>
+                <div class="teams">
+                  <div class="team"> 
+                    <h2>Team 1</h2>
+                    <div *ngFor="let player of array1AA; let i = index;" class="player">        
+                      <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>                    
+                    </div>
+                    <div>Cumulative: {{ sumTeam1AA | number : '1.2-2' }}</div>  
+                    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShowAA > chanceOfWinTeamOneShowAA), 'teamNotFavorite': (chanceOfWinTeamTwoShowAA < chanceOfWinTeamOneShowAA), 'teamWithoutFavorite': (chanceOfWinTeamTwoShowAA == chanceOfWinTeamOneShowAA) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamTwoShowAA | number : '.2-2' }} %</div>
+                  </div>
+                  <div class="team">
+                    <h2>Team 2</h2> 
+                    <div *ngFor="let player of array2AA; let i = index;" class="player">          
+                      <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>        
+                    </div>
+                    <div>Cumulative: {{ sumTeam2AA | number : '1.2-2' }}</div>
+                    <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShowAA > chanceOfWinTeamTwoShowAA), 'teamNotFavorite': (chanceOfWinTeamOneShowAA < chanceOfWinTeamTwoShowAA), 'teamWithoutFavorite': (chanceOfWinTeamOneShowAA == chanceOfWinTeamTwoShowAA) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShowAA | number : '.2-2'}} %</div>  
+                  </div>
+                </div> 
+                <div class="restricted-btn">            
+                  <mat-form-field appearance="outline" class="mat-select-container">
+                    <mat-label>MAPS</mat-label>
+                    <mat-select [(ngModel)]="selectedOption" class="mat-select">
+                      <!-- <mat-option value="Random">Random</mat-option> -->
+                      <mat-option value="TwoStockMaps">Two Stock Maps</mat-option>
+                      <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
+                      <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
+                      <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
+                      <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>
+                      <mat-option value="Teams-decide">Teams decide</mat-option>
+                      <mat-option value="extraRandom">Random</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  
+                  <div class="single-btn">
+                  
+                    <button mat-raised-button color="primary" class="lp" (click)="sendToDiscordAA()" [disabled]="!isValid()">
+                      <img src="assets/images/mohaa.png" alt="" width="20">
+                      Send Teams to Discord 
+                      <fa-icon [icon]="sendIcon"></fa-icon>
+                    </button>
+                    <div>Send squads to Discord</div>
+                    <img src="/assets/images/g_chat.png" alt="">
+                  </div>                       
+                
+                  <div class="single-btn">
+                    <button mat-raised-button color="accent" class="lp" 
+                            (click)="getDiscordUsers()" 
+                            disabled>
+                      Get from Discord <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowDown"></fa-icon>
+                    </button>
+                    
+                    <div *ngIf="!isLoggedIn">
+                      <button mat-raised-button color="primary" (click)="authService.login()">
+                        Log in with Google
+                      </button>
+                      <p>You need to log in to access this feature.</p>
+                    </div>
+                    
+                    <div *ngIf="isLoggedIn">
+                      <p>Welcome back!</p>
+                      <button mat-raised-button color="warn" (click)="authService.logout()">Logout</button>
+                    </div>
+                    
+                  </div>
+                  
+                  <div class="single-btn">
+                    <button mat-raised-button color="accent" class="lp" (click)="sendToVoiceChannels()" disabled>Send to Voice Channels <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowUp"></fa-icon></button>
+                    <div>
+                      Send players to 
+                      <mat-radio-group [(ngModel)]="selectedChannels" [disabled]="!isAuthenticated()">
+                        <mat-radio-button *ngFor="let channels of availableChannels" [value]="channels">{{ channels }}</mat-radio-button>
+                      </mat-radio-group>
+                      voice channels.
+                    </div>
+                  </div>
+                  <!-- <div style="grid-column: span 2;">
+                    <form (ngSubmit)="sendMessageRcon()" #messageForm="ngForm">
+                      <mat-form-field>
+                        <mat-label>IP:</mat-label>
+                        <input
+                          type="text"
+                          id="ip"
+                          name="ip"
+                          [(ngModel)]="ip"
+                          matInput
+                          required
+                        />
+                      </mat-form-field>
+                      <mat-form-field>
+                        <mat-label>Repeat (1-5):</mat-label>
+                        <input
+                          type="number"
+                          id="counter"
+                          name="counter"
+                          [(ngModel)]="counter"
+                          matInput
+                          min="1"
+                          max="5"
+                          required
+                        />
+                      </mat-form-field>
+                      
+                      <mat-form-field>
+                        <mat-label>Delay (10s-3min):</mat-label>
+                        <input
+                          type="number"
+                          id="delay"
+                          name="delay"
+                          [(ngModel)]="delay"
+                          matInput
+                          min="10"
+                          max="180"
+                          required
+                        />
+                      </mat-form-field>
+                      
+                      <mat-form-field>
+                        <mat-label>Interval (30s-1min):</mat-label>
+                        <input
+                          type="number"
+                          id="interval"
+                          name="interval"
+                          [(ngModel)]="interval"
+                          matInput
+                          min="30"
+                          max="60"
+                          required
+                        />
+                      </mat-form-field>
+                      <button [disabled]="!isAuthenticated()" type="submit" mat-raised-button color="primary">Send Squads to SH</button>
+                    </form>
+                  </div>           
+                  -->
+                  <p class="col-span-3 without-mb">Bucket stock: 
+                    <img src="/assets/images/maps/TheHunt_text.jpg" alt="The Hunt Map">
+                    <img src="/assets/images/maps/v2_text.jpg" alt="V2 Map">
+                    <img src="/assets/images/maps/bridge_text.jpg" alt="The Bridge Map">
+                  <p class="col-span-3 without-mb">Bucket customMp (MP - more popular): <strong>VSUK Abbey, Stlo, Renan, The Church Final</strong></p>
+                  <p class="col-span-3 without-mb">Bucket customLp (LP - less popular): <strong>V2 Shelter, Navarone, Dessau1946, The Bridge OMG, The Lost Town, Stlo4, The Village, Harbor, Holland</strong></p>
+                  
+                </div>
+                <ng-container *ngIf="isAuthenticated()">                      
+                  <div class="restricted-btn-bottom">
+                    <h1>Restricted Content</h1>
+                    <p>This content is only visible to authenticated users.</p>
+                    <button mat-raised-button color="primary" class="lp" (click)="    
+                    confirmTeams()">Confirm Teams <fa-icon [icon]="stamp"></fa-icon></button>
+                    <div>Click here to send balanced teams to database. Go to <button routerLink="/dashboard" mat-raised-button color="warn">Dashboard <fa-icon [icon]="arrowRightCircle"></fa-icon></button> to fill score after war.</div>                          
+                  </div>            
+                </ng-container>
+                <ng-container *ngIf="!isAuthenticated()">
+                  <h1>Access Denied</h1>
+                  <p>You need to be authenticated to view this content.</p>
+                </ng-container>
+              </div>        
+            </div>
+          </div>
+        </div>
+        <ng-template [ngIf]="showOverlay">
+          <div class="overlay">
+            <div class="overlay-content">
+              <button mat-icon-button class="close-btn" (click)="closeOverlay()">
+                <mat-icon>close</mat-icon>
+              </button>
+              <h2>Would you like us to add your favorite game<br> Medal of Honor: Allied Assault? Donate to the league!</h2>
+              <img src="assets/images/mohaa_logo2.jpg" alt="" width="300">
+              <p>Collected: <span class="collected">{{collectedAmount | async | number : '1.0-2'}} </span> / 100 <span>&#8364;</span></p>
+              <div class="button-group">
+                <a href="https://zrzutka.pl/en/t4ujr8" target="_blank">
+                  <button mat-raised-button color="primary">Donate via Zrzutka.pl</button>
+                </a>
+                <a href="https://www.paypal.com/donate/?hosted_button_id=K5HHU9LGEWULS" target="_blank">
+                  <button mat-raised-button color="accent">Donate via PayPal</button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        
+      </div>
+    </mat-tab>
+    <!-- <div class="overlay" *ngIf="activeTabIndex === 1 && showOverlay">
+      <div class="overlay-content">
+        <h2>Would you like us to add your favorite game Medal of Honor: Allied Assault? Donate to the league!</h2>
+        <p>Collected: {{ collectedAmount | number : '1.0-2' }} / 100 euros</p>
+        <div class="button-group">
+          <a href="https://zrzutka.pl/en/t4ujr8" target="_blank">
+            <button mat-raised-button color="primary">Donate via Zrzutka.pl</button>
+          </a>
+          <a href="https://www.paypal.com/donate/?hosted_button_id=K5HHU9LGEWULS" target="_blank">
+            <button mat-raised-button color="accent">Donate via PayPal</button>
+          </a>
+        </div>
       </div>
     </div> -->
-    <div class="mix">
-      <button mat-raised-button (click)="toggleSticky()" class="sticky-btn">        
-        <span *ngIf="!isStickyShown"><fa-icon [icon]="arrowLeftCircle"></fa-icon> Show Teams</span>
-        <span *ngIf="isStickyShown">Hide Teams <fa-icon [icon]="arrowRightCircle"></fa-icon> </span>
-      </button>
-      <div class="mix-list">
-        <!-- <div id="g_id_onload"
-          data-client_id="326844544836-6tqb426dh5sl8opmnh7difha0t0lgq9t.apps.googleusercontent.com"
-          data-context="signin"
-          data-ux_mode="popup"
-          data-login_uri="https://mohsh.pl/dashboard"
-          data-auto_select="true"
-          data-itp_support="true">
-      </div>
-
-      <div class="g_id_signin"
-          data-type="standard"
-          data-shape="rectangular"
-          data-theme="filled_black"
-          data-text="signin_with,"
-          data-size="medium"
-          data-logo_alignment="left">
-      </div> -->
-        <mat-form-field>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
-        </mat-form-field>
-        <!-- Przycisk lub przełącznik do ukrywania/pokazywania nieaktywnych graczy -->
-        <mat-checkbox [(ngModel)]="showInactivePlayers" style="padding-left: 10px" [color]="task.color">
-          {{ showInactivePlayers ? 'Hide' : 'Show' }} inactive players
-        </mat-checkbox>
-        
-
-
-<!-- Tabela z graczami -->
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-  <!-- Checkbox Column -->
-  <ng-container matColumnDef="select">
-    <th mat-header-cell *matHeaderCellDef [style.width.px]="50"></th>
-    <td mat-cell *matCellDef="let row" [style.width.px]="50">
-      <mat-checkbox *ngIf="!row.ban" (click)="$event.stopPropagation()"
-                    (change)="selectUser(row)"
-                    [checked]="selectedUsers.indexOf(row) > -1" [color]="task.color">
-      </mat-checkbox>
-    </td>
-  </ng-container>
-
-  <!-- Nr Column -->
-  <ng-container matColumnDef="nr">
-    <th mat-header-cell *matHeaderCellDef [style.width.px]="50"> No. </th>
-    <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="50"> {{row.nr}} </td>
-  </ng-container>
-
-  <!-- Username Column -->
-  <ng-container matColumnDef="playername">
-    <th mat-header-cell *matHeaderCellDef [style.width.px]="150"> Playername </th>
-    <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="150"> {{row.playername}} </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="flag">
-    <th mat-header-cell *matHeaderCellDef [style.width.px]="50"> </th>
-    <td mat-cell *matCellDef="let row" [style.width.px]="50"> <img [src]='"assets/images/flags_svg/" + row.flag + ".SVG"'></td>
-  </ng-container>
-
-  <!-- Username Column -->
-  <ng-container matColumnDef="ranking">
-    <th mat-header-cell *matHeaderCellDef [style.width.px]="100"> Ranking </th>
-    <td mat-cell *matCellDef="let row" [ngClass]="{ 'inactive': row.active != true }" [style.width.px]="100"> {{row.ranking}} </td>
-  </ng-container>
-  
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <!-- Wiersz gracza z warunkowym ukrywaniem -->
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;" [style.display]="showInactivePlayers || row.active ? 'table-row' : 'none'"></tr>
-</table>
-      </div>
-      <div class="mix-result">        
-        <div class="mix-sticky" [ngClass]="{ 'show': isStickyShown }">
-          <h2 class="imp">
-            <img src="/assets/images/checkbox_example.png" alt="The Bridge" width="24" height="24">
-            <div>Mark players on the left and make MIX!</div>
-          </h2>
-          <div class="instructions">
-            <h3>Follow this steps to make MIX.</h3>
-            <ol>
-              <li>Add minimum <strong>6 players.</strong></li>
-              <li>Click on <strong>MIX by Nations (NT)</strong> or <strong>High Precision (HP).</strong></li>
-              <li>Select Maps.</li>
-              <li>Send Teams to Discord.</li>
-              <li><strong>PLAY!</strong> - After war send screens to <img src="/assets/images/m_and_s.png" alt=""> channel on Discord.</li>
-            </ol>
-          </div>         
-          <div class="selectedTeams">
-            <h2 class="h2Select">Selected Players</h2>
-            <!-- <div class="btn-cont">
-              <button mat-raised-button color="primary" class="lp lp-mix" [disabled]="selectedUsers.length < 6" (click)="    
-              splitRanking2(selectedUsers)">Mix LP <fa-icon [icon]="starEmpty"></fa-icon></button>
-              <div>LP - Lower precision, no limit players.</div>
-            </div> -->
-            <div class="btn-cont">
-              <button mat-raised-button color="primary" class="lp lp-mix" [disabled]="selectedUsers.length < 6" (click)="    
-              splitNationalities(selectedUsers)">Mix NT <fa-icon [icon]="faFlag"></fa-icon></button>
-              <div>NT - by Nations.</div>
-            </div>
-            <div class="btn-cont">
-              <button mat-raised-button color="warn" class="hp" (click)="          
-            splitArrayIntoTwo(selectedUsers)" [disabled]="selectedUsers.length < 6 || selectedUsers.length > 15">Mix HP <fa-icon [icon]="starSolid"></fa-icon></button>
-              <div>HP - Higher precision.</div>
-            </div>          
-            <!-- <div class="btn-cont">
-              <button mat-raised-button color="warn" class="hp" (click)="          
-              splitRanking2(selectedUsers)">Mix teams! Experimental</button>
-              <div>Experimental - Experimental precision, limit?</div>
-            </div>           -->
-          </div>    
-          <!-- <div class="selected-cont">
-            <div *ngFor="let player of selectedUsers; let i = index;" class="selected">          
-              <div style="display: flex;" class="selectedPlayer">
-                <span class="playername">  {{ i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span> 
-              </div>
-            </div>  
-          </div> -->
-          <div class="selected-cont">
-            <div *ngFor="let player of selectedUsers; let i = index;" class="selected">          
-              <div style="display: flex; align-items:center;" class="selectedPlayer">
-                <span class="playername">{{ i + 1}}. {{player.playername}}</span> 
-                <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'>
-                <span>({{ player.ranking }})</span>
-                <!-- <button > -->
-                  <!-- <mat-icon aria-label="Remove player">close</mat-icon> -->
-                  <fa-icon [icon]="xmark" (click)="removePlayer(i)" class="minus" matTooltip="Remove player"></fa-icon>
-                <!-- </button> -->
-              </div>
-            </div>  
-          </div>
-          <div class="teams">
-            <div class="team"> 
-              <h2>Team 1</h2>
-              <div *ngFor="let player of array1; let i = index;" class="player">        
-                <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>                    
-              </div>
-              <div>Cumulative: {{ sumTeam1 | number : '1.2-2' }}</div>  
-              <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamTwoShow > chanceOfWinTeamOneShow), 'teamNotFavorite': (chanceOfWinTeamTwoShow < chanceOfWinTeamOneShow), 'teamWithoutFavorite': (chanceOfWinTeamTwoShow == chanceOfWinTeamOneShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamTwoShow | number : '.2-2' }} %</div>
-            </div>
-            <div class="team">
-              <h2>Team 2</h2> 
-              <div *ngFor="let player of array2; let i = index;" class="player">          
-                <span class="playername">{{i + 1}}. {{player.playername}}</span> <img [src]='"assets/images/flags_svg/" + player.flag + ".SVG"'><span> ({{ player.ranking }})</span>        
-              </div>
-              <div>Cumulative: {{ sumTeam2 | number : '1.2-2' }}</div>
-              <div [ngClass]="{ 'teamFavorite': (chanceOfWinTeamOneShow > chanceOfWinTeamTwoShow), 'teamNotFavorite': (chanceOfWinTeamOneShow < chanceOfWinTeamTwoShow), 'teamWithoutFavorite': (chanceOfWinTeamOneShow == chanceOfWinTeamTwoShow) }">{{ 'home.chance' | translate }} {{ chanceOfWinTeamOneShow | number : '.2-2'}} %</div>  
-            </div>
-          </div> 
-          <div class="restricted-btn">
-            <!-- <div class="single-btn">
-              <button mat-raised-button color="primary" class="lp" (click)="    
-              sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
-              <div>Send squads for next war to discord.</div>
-            </div> -->
-            <!-- <mat-form-field class="col-span-3">
-              <mat-label>MAPS:</mat-label>
-              <mat-select [(ngModel)]="selectedOption" name="selectedOption" [disabled]="!isValid()">
-                <mat-option value="Random" color="primary">Random</mat-option>
-                <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
-                <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
-                <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>
-                <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
-                <mat-option value="TwoStockMaps">
-                  Two Stock Maps
-                  <mat-icon class="mat-icon" aria-hidden="true" [ngStyle]="{ 'font-size': customSize + 'px' }">
-                    <img src="/assets/images/maps/TheHunt_text.jpg" alt="The Hunt" width="50" height="24">
-                  </mat-icon>
-                  <mat-icon class="mat-icon" aria-hidden="true">
-                    <img src="/assets/images/maps/v2_text.jpg" alt="V2" width="50" height="24">
-                  </mat-icon>
-                  <mat-icon class="mat-icon" aria-hidden="true">
-                    <img src="/assets/images/maps/bridge_text.jpg" alt="The Bridge" width="50" height="24">
-                  </mat-icon>                 
-                </mat-option>
-                <mat-option value="Teams-decide">Teams decide</mat-option>
-              </mat-select>
-            </mat-form-field> -->
-            <mat-form-field appearance="outline" class="mat-select-container">
-              <mat-label>MAPS</mat-label>
-              <mat-select [(ngModel)]="selectedOption" class="mat-select">
-                <!-- <mat-option value="Random">Random</mat-option> -->
-                <mat-option value="TwoStockMaps">Two Stock Maps</mat-option>
-                <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
-                <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
-                <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
-                <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>
-                <mat-option value="Teams-decide">Teams decide</mat-option>
-                <mat-option value="extraRandom">Random</mat-option>
-              </mat-select>
-            </mat-form-field>
-            
-            <div class="single-btn">
-             
-              <button mat-raised-button color="primary" class="lp" (click)="sendToDiscord()" [disabled]="!isValid()">Send Teams to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>
-              <div>Send squads to Discord</div>
-               <img src="/assets/images/g_chat.png" alt="">
-            </div>
-                       
-            <!-- <div class="single-btn">
-              <button mat-raised-button color="accent" class="lp" (click)="getDiscordUsers()" [disabled]="!isAuthenticated()">Get from Discord <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowDown"></fa-icon></button>
-              <div>Get players from WANT TO PLAY channel.</div>
-            </div>             -->
-            <div class="single-btn">
-              <button mat-raised-button color="accent" class="lp" 
-                      (click)="getDiscordUsers()" 
-                      [disabled]="!isLoggedIn">
-                Get from Discord <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowDown"></fa-icon>
-              </button>
-              
-              <div *ngIf="!(authService.isAuthenticated$ | async)">
-                <button mat-raised-button color="primary" (click)="authService.login()">
-                  Log in with Google
-                </button>
-                <p>You need to log in to access this feature.</p>
-              </div>
-            
-              <div *ngIf="authService.isAuthenticated$ | async">
-                <p>Welcome back!</p>
-                <button mat-raised-button color="warn" (click)="authService.logout()">Logout</button>
-              </div>
-            </div>
-            <!-- <div class="single-btn">
-              <button mat-raised-button color="accent" class="lp" (click)="sendToVoiceChannels()" [disabled]="!isAuthenticated()">Send to Voice Channels <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowUp"></fa-icon></button>
-              <div>Send players to TEAM 1 and TEAM 2 voice channels.</div>
-            </div>             -->
-            <div class="single-btn">
-              <button mat-raised-button color="accent" class="lp" (click)="sendToVoiceChannels()" [disabled]="!isAuthenticated()">Send to Voice Channels <fa-icon [icon]="people"></fa-icon><fa-icon [icon]="arrowUp"></fa-icon></button>
-              <div>
-                Send players to 
-                <mat-radio-group [(ngModel)]="selectedChannels" [disabled]="!isAuthenticated()">
-                  <mat-radio-button *ngFor="let channels of availableChannels" [value]="channels">{{ channels }}</mat-radio-button>
-                </mat-radio-group>
-                voice channels.
-              </div>
-            </div>
-            <div style="grid-column: span 2;">
-              <form (ngSubmit)="sendMessageRcon()" #messageForm="ngForm">
-                <mat-form-field>
-                  <mat-label>IP:</mat-label>
-                  <input
-                    type="text"
-                    id="ip"
-                    name="ip"
-                    [(ngModel)]="ip"
-                    matInput
-                    required
-                  />
-                </mat-form-field>
-                <mat-form-field>
-                  <mat-label>Repeat (1-5):</mat-label>
-                  <input
-                    type="number"
-                    id="counter"
-                    name="counter"
-                    [(ngModel)]="counter"
-                    matInput
-                    min="1"
-                    max="5"
-                    required
-                  />
-                </mat-form-field>
-                
-                <mat-form-field>
-                  <mat-label>Delay (10s-3min):</mat-label>
-                  <input
-                    type="number"
-                    id="delay"
-                    name="delay"
-                    [(ngModel)]="delay"
-                    matInput
-                    min="10"
-                    max="180"
-                    required
-                  />
-                </mat-form-field>
-                
-                <mat-form-field>
-                  <mat-label>Interval (30s-1min):</mat-label>
-                  <input
-                    type="number"
-                    id="interval"
-                    name="interval"
-                    [(ngModel)]="interval"
-                    matInput
-                    min="30"
-                    max="60"
-                    required
-                  />
-                </mat-form-field>
-                <button [disabled]="!isAuthenticated()" type="submit" mat-raised-button color="primary">Send Squads to SH</button>
-              </form>
-            </div>
-            <!-- <div class="only-maps">
-              <h3>Draw only maps</h3>
-              <mat-form-field appearance="outline" class="mat-select-container">
-                <mat-label>MAPS</mat-label>
-                <mat-select [(ngModel)]="selectedOption2" class="mat-select">
-                  <mat-option value="Random">Random</mat-option>
-                  <mat-option value="TwoStockMaps">Two Stock Maps</mat-option>
-                  <mat-option value="TwoCustomMapsMp">Two Custom Maps MP</mat-option>
-                  <mat-option value="TwoCustomMapsLp">Two Custom Maps LP</mat-option>
-                  <mat-option value="OneStockOneCustomMp">One Stock, One Custom MP</mat-option>
-                  <mat-option value="OneStockOneCustomLp">One Stock, One Custom LP</mat-option>               
-                   <mat-option value="extraRandom">Extra Random</mat-option> 
-                </mat-select>             
-              </mat-form-field>
-              <div class="single-btn">             
-                <button mat-raised-button color="primary" class="lp" (click)="sendToDiscord2()" [disabled]="!isValid()">Send Maps to Discord <fa-icon [icon]="sendIcon"></fa-icon></button>                               
-              </div>             
-            </div> -->
-           
-            
-            <p class="col-span-3 without-mb">Bucket stock: 
-              <img src="/assets/images/maps/TheHunt_text.jpg" alt="The Hunt Map">
-              <img src="/assets/images/maps/v2_text.jpg" alt="V2 Map">
-              <img src="/assets/images/maps/bridge_text.jpg" alt="The Bridge Map">
-            <p class="col-span-3 without-mb">Bucket customMp (MP - more popular): <strong>VSUK Abbey, Stlo, Renan, The Church Final</strong></p>
-            <p class="col-span-3 without-mb">Bucket customLp (LP - less popular): <strong>V2 Shelter, Navarone, Dessau1946, The Bridge OMG, The Lost Town, Stlo4, The Village, Harbor, Holland</strong></p>
-            
-          </div>
-          <ng-container *ngIf="isAuthenticated()">                      
-            <div class="restricted-btn-bottom">
-              <h1>Restricted Content</h1>
-              <p>This content is only visible to authenticated users.</p>
-              <button mat-raised-button color="primary" class="lp" (click)="    
-              confirmTeams()">Confirm Teams <fa-icon [icon]="stamp"></fa-icon></button>
-              <div>Click here to send balanced teams to database. Go to <button routerLink="/dashboard" mat-raised-button color="warn">Dashboard <fa-icon [icon]="arrowRightCircle"></fa-icon></button> to fill score after war.</div>                          
-            </div>            
-          </ng-container>
-          <ng-container *ngIf="!isAuthenticated()">
-            <h1>Access Denied</h1>
-            <p>You need to be authenticated to view this content.</p>
-          </ng-container>
-        </div>        
-      </div>
-    </div>
-  </div>  
+    
+  </mat-tab-group>
 </section>
+
 <notifier-container></notifier-container>
 <ng-http-loader>    
 </ng-http-loader>
-<!-- <script src="https://accounts.google.com/gsi/client" async defer></script> -->

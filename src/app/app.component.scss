@@ -477,3 +477,15 @@ nav {
 .admin {
   color: #ed4245;
 }
+
+.menu-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px; /* Odstęp między ikoną a tekstem */
+}
+
+.custom-ranking-mix,
+.custom-ranking-clans {
+  display: flex; /* Ustawia elementy w jednej linii */
+  align-items: center; /* Wyrównanie ikon i tekstu */
+}

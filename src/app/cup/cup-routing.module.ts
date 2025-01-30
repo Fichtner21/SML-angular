@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CupComponent } from './cup.component';
 import { MatchComponent } from './match/match.component';
 import { RulesComponent } from './rules/rules.component';
+import { SquadsComponent } from './squads/squads.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'rules',
     component: RulesComponent
+  },
+  {
+    path: 'teams',
+    component: SquadsComponent
   }
 ];
 

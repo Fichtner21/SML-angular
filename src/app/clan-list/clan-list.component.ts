@@ -287,7 +287,7 @@ interface StreakInfo {
 // }
 
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { PlayersApiService } from '../services/players-api.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -310,6 +310,8 @@ export class ClanListComponent implements OnInit {
   expandedClanIndex: number | null = null;
   expandedClanIndexInactive: number | null = null;
   isVisible = false;
+  matchesHistoryClan$: Observable<any>;
+  displayedColumns: string[] = ['id', 'date', 'opponent', 'us', 'them', 'points'];
 
   constructor(private clanService: PlayersApiService, private dialog: MatDialog) {}
 
@@ -319,6 +321,8 @@ export class ClanListComponent implements OnInit {
 
     // Pobieramy dane klanów i obliczamy ich właściwości
     this.fetchClans();
+    // this.loadClanMatches('heroes')
+    this.clanService.getClanInfo('heroes').subscribe()
   }
 
   fetchClans(): void {
@@ -346,8 +350,7 @@ export class ClanListComponent implements OnInit {
         );
       })
     ).subscribe();
-  }
-  
+  }  
 
   fetchPlayers(): void {
     this.clanService.getPlayersDetails().pipe(
@@ -363,17 +366,18 @@ export class ClanListComponent implements OnInit {
     const membersArray = membersString.split(',').map(member => member.trim());
   
     // Otrzymujemy informacje o graczach
-    const players = this.players$.getValue();
+    const players = this.players$.getValue();    
   
     // Liderzy klanu (cl) oraz osoby odpowiedzialne za WoT (wa)
-    const clUsername = clan[3];  // Lider klanu
-    const waUsername = clan[4];  // Osoba odpowiedzialna za WoT
+    const clUsername = clan[3]; // Lider klanu
+    const waUsername = clan[4]; // Osoba odpowiedzialna za WoT
   
     // Filtrowanie członków, aby wykluczyć cl i wa
     const enrichedMembers = membersArray
-      .filter(member => member !== clUsername && member !== waUsername)  // Usuwamy cl i wa
+      .filter(member => member !== clUsername && member !== waUsername) // Usuwamy cl i wa
       .map(member => {
-        const playerDetails = players.find(player => player.username === member);
+        const playerDetails = players.find(player => player.username === member);     
+        // console.log('PL det', playerDetails)   
         return {
           name: member,
           playername: playerDetails?.playername || null,
@@ -392,16 +396,16 @@ export class ClanListComponent implements OnInit {
     // Sortowanie graczy, aby aktywni byli na górze, a nieaktywni na dole
     const sortedMembers = enrichedMembers.sort((a, b) => {
       if (a.active === "FALSE" && b.active !== "FALSE") {
-        return 1;  // a (nieaktywny) pójdzie na dół
+        return 1; // a (nieaktywny) pójdzie na dół
       }
       if (a.active !== "FALSE" && b.active === "FALSE") {
-        return -1;  // b (nieaktywny) pójdzie na dół
+        return -1; // b (nieaktywny) pójdzie na dół
       }
-      return 0;  // jeśli oba są aktywne lub oba nieaktywne, nie zmieniamy ich pozycji
+      return 0; // jeśli oba są aktywne lub oba nieaktywne, nie zmieniamy ich pozycji
     });
   
     const leaderDetails = players.find(player => player.username === clUsername) || {};
-    const waDetails = players.find(player => player.username === waUsername) || {};
+    const waDetails = players.find(player => player.username === waUsername) || {};   
   
     const clanData = {
       ranking: index + 1,
@@ -418,17 +422,19 @@ export class ClanListComponent implements OnInit {
       loss: clan[10],
       draw: clan[11],
       streak: streak,
-      members: sortedMembers,  // Posortowani członkowie
+      members: sortedMembers, // Posortowani członkowie
       diff: Number(clan[1]) - Number(clan[13]),
       totalwars: Number(clan[14]),
       wa_discord_id: clan[15],
       desc: clan[16],
-      clanname: clan[17]
+      clanname: clan[17],
+      matches: [], // Dodane mecze
     };
   
     console.log('Clan processed:', clanData);
     return clanData;
-  }  
+  }
+  
 
   // calculateStreak(clanName: string, matchHistory: any[]): string {
   //   let streakCount = 0;
@@ -536,90 +542,142 @@ export class ClanListComponent implements OnInit {
             this.sendChallenge(challengedClan, result.challenger, result.formats);
           }
         });
-      }
+  }
     
-      sendChallenge(challengedClan: any, challengerClan: string, formats: string[]): void {
-        console.log('challengedClan', challengedClan.wa_discord_id)
-        const waId = challengedClan.wa_discord_id;
-        const message = `${challengerClan} has challenged ${challengedClan.clan} in formats: ${formats.join(', ')}`;
+  sendChallenge(challengedClan: any, challengerClan: string, formats: string[]): void {
+    console.log('challengedClan', challengedClan.wa_discord_id)
+    const waId = challengedClan.wa_discord_id;
+    const message = `${challengerClan} has challenged ${challengedClan.clan} in formats: ${formats.join(', ')}`;
+
+    // this.http.post(`${environment.externalApiUrl}send-message-to-wa`, { message, waId }).subscribe(
+    //   response => {
+    //     console.log('Challenge sent successfully:', response);
+    //   },
+    //   error => {
+    //     console.error('Error sending challenge:', error);
+    //   }
+    // );
+  }
     
-        // this.http.post(`${environment.externalApiUrl}send-message-to-wa`, { message, waId }).subscribe(
-        //   response => {
-        //     console.log('Challenge sent successfully:', response);
-        //   },
-        //   error => {
-        //     console.error('Error sending challenge:', error);
-        //   }
-        // );
-      }
-    
-      toggleClanDetails(index: number) {
-        // Jeśli kliknięto ten sam klan, zamknij go, w przeciwnym razie otwórz nowy
-        this.expandedClanIndex = this.expandedClanIndex === index ? null : index;
-      }
-      toggleClanDetailsInactive(index: number) {
-        // Jeśli kliknięto ten sam klan, zamknij go, w przeciwnym razie otwórz nowy
-        this.expandedClanIndexInactive = this.expandedClanIndexInactive === index ? null : index;
-      }
-    
-      getActivityGradient(activity: number): string {
-        let percentage = 0;
+  // toggleClanDetails(index: number, clanName: string) {
+  //   // Jeśli kliknięto ten sam klan, zamknij go, w przeciwnym razie otwórz nowy
+  //   this.expandedClanIndex = this.expandedClanIndex === index ? null : index;
+  // }
+
+  toggleClanDetails(index: number, clan: any): void {
+    if (this.expandedClanIndex === index) {
+      // Jeśli klan jest już rozwinięty, zamknij szczegóły
+      this.expandedClanIndex = null;
+  
+      // Wyczyszczenie meczów w tym klanie w filteredClans$
+      const updatedClans = [...this.filteredClans$.getValue()];
+      updatedClans[index].matches = [];  // Czyścimy mecze
+      this.filteredClans$.next(updatedClans); // Zaktualizuj filteredClans$
+    } else {
+      // Ustaw nowy klan jako rozwinięty
+      this.expandedClanIndex = index;
+  
+      // Pobierz mecze dla klanu z metody getMatchHistoryByClans
+      this.clanService.getMatchHistoryByClans(clan).pipe(
+        tap(matchHistoryData => {
+          const matches = matchHistoryData.map(match => { 
+            return {
+              id: match.id,
+              clan: clan,
+              date: match.date, // Data meczu
+              opponent: match.opponent, // Przeciwnik
+              us: Number(match.us), // Wynik klanu
+              them: Number(match.them), // Wynik przeciwnika
+              points: match.points, // Różnica punktów
+               // Wynik: Win, Loss, Draw
+            };
+          });
       
-        // Obliczenia dla przedziałów
-        if (activity === 1) {
-          percentage = 1;  // Minimalny procent dla 1 w przedziale 1-5
-        } else if (activity >= 1 && activity <= 5) {
-          percentage = ((activity - 1) / 4) * 100;  // Dla przedziału 1-5
-        } else if (activity === 6) {
-          percentage = 1;  // Minimalny procent dla 6 w przedziale 6-10
-        } else if (activity >= 6 && activity <= 10) {
-          percentage = ((activity - 6) / 4) * 100;  // Dla przedziału 6-10
-        } else if (activity === 11) {
-          percentage = 1;  // Minimalny procent dla 11 w przedziale 11-20
-        } else if (activity >= 11 && activity <= 20) {
-          percentage = ((activity - 11) / 9) * 100; // Dla przedziału 11-20
-        } else if (activity === 21) {
-          percentage = 1;  // Minimalny procent dla 21 w przedziale 21-40
-        } else if (activity >= 21 && activity <= 40) {
-          percentage = ((activity - 21) / 19) * 100; // Dla przedziału 21-40
-        } else if (activity === 41) {
-          percentage = 1;  // Minimalny procent dla 41 w przedziale 41-60
-        } else if (activity >= 41 && activity <= 60) {
-          percentage = ((activity - 41) / 19) * 100; // Dla przedziału 41-60
-        } else if (activity === 61) {
-          percentage = 1;  // Minimalny procent dla 61 w przedziale 61-90
-        } else if (activity >= 61 && activity <= 90) {
-          percentage = ((activity - 61) / 29) * 100; // Dla przedziału 61-90
-        } else if (activity > 90) {
-          percentage = 100; // Dla wartości powyżej 90
-        }
+          console.log('matches', matches);
       
-        const color = this.getActivityColor(activity);
-        
-        // Upewnijmy się, że zawsze jest minimalna widoczna wartość dla gradientu
-        return `linear-gradient(to top, ${color} ${percentage + 10}%, gray ${percentage + 5}%)`;
-      }
+          // Zaktualizuj pole matches dla tego klanu w filteredClans$
+          const updatedClans = [...this.filteredClans$.getValue()];
+          updatedClans[index].matches = matches;  // Ustaw mecze w tym klanie
+          this.filteredClans$.next(updatedClans); // Zaktualizuj filteredClans$
+        })
+      ).subscribe();
       
-      getActivityColor(activity: number): string {
-        if (activity === 0) {
-          return '#003200'; // Zielony dla braku aktywności
-        } else if (activity >= 1 && activity <= 5) {
-          return '#050'; // Zielony dla bardzo niskiej aktywności
-        } else if (activity >= 6 && activity <= 10) {
-          return '#00a100'; // Zielony dla umiarkowanej aktywności
-        } else if (activity >= 11 && activity <= 20) {
-          return '#8aff1a'; // Żółto-zielony dla średniej aktywności
-        } else if (activity >= 21 && activity <= 40) {
-          return '#ffff00'; // Żółty dla średniej aktywności
-        } else if (activity >= 41 && activity <= 60) {
-          return 'orange'; // Pomarańczowy dla wyższej aktywności
-        } else if (activity >= 61 && activity <= 90) {
-          return '#ff4500'; // Czerwono-pomarańczowy dla bardzo wysokiej aktywności
-        } else {
-          return '#ff0000'; // Czerwony dla maksymalnej aktywności
-        }
-      }
-      toggleVisibility() {
-        this.isVisible = !this.isVisible;  // Przełącza widoczność elementu
-      }
+    }
+  }      
+
+  toggleClanDetailsInactive(index: number) {
+    // Jeśli kliknięto ten sam klan, zamknij go, w przeciwnym razie otwórz nowy
+    this.expandedClanIndexInactive = this.expandedClanIndexInactive === index ? null : index;
+  }
+
+  getActivityGradient(activity: number): string {
+    let percentage = 0;
+  
+    // Obliczenia dla przedziałów
+    if (activity === 1) {
+      percentage = 1;  // Minimalny procent dla 1 w przedziale 1-5
+    } else if (activity >= 1 && activity <= 5) {
+      percentage = ((activity - 1) / 4) * 100;  // Dla przedziału 1-5
+    } else if (activity === 6) {
+      percentage = 1;  // Minimalny procent dla 6 w przedziale 6-10
+    } else if (activity >= 6 && activity <= 10) {
+      percentage = ((activity - 6) / 4) * 100;  // Dla przedziału 6-10
+    } else if (activity === 11) {
+      percentage = 1;  // Minimalny procent dla 11 w przedziale 11-20
+    } else if (activity >= 11 && activity <= 20) {
+      percentage = ((activity - 11) / 9) * 100; // Dla przedziału 11-20
+    } else if (activity === 21) {
+      percentage = 1;  // Minimalny procent dla 21 w przedziale 21-40
+    } else if (activity >= 21 && activity <= 40) {
+      percentage = ((activity - 21) / 19) * 100; // Dla przedziału 21-40
+    } else if (activity === 41) {
+      percentage = 1;  // Minimalny procent dla 41 w przedziale 41-60
+    } else if (activity >= 41 && activity <= 60) {
+      percentage = ((activity - 41) / 19) * 100; // Dla przedziału 41-60
+    } else if (activity === 61) {
+      percentage = 1;  // Minimalny procent dla 61 w przedziale 61-90
+    } else if (activity >= 61 && activity <= 90) {
+      percentage = ((activity - 61) / 29) * 100; // Dla przedziału 61-90
+    } else if (activity > 90) {
+      percentage = 100; // Dla wartości powyżej 90
+    }
+  
+    const color = this.getActivityColor(activity);
+    
+    // Upewnijmy się, że zawsze jest minimalna widoczna wartość dla gradientu
+    return `linear-gradient(to top, ${color} ${percentage + 10}%, gray ${percentage + 5}%)`;
+  }
+  
+  getActivityColor(activity: number): string {
+    if (activity === 0) {
+      return '#003200'; // Zielony dla braku aktywności
+    } else if (activity >= 1 && activity <= 5) {
+      return '#050'; // Zielony dla bardzo niskiej aktywności
+    } else if (activity >= 6 && activity <= 10) {
+      return '#00a100'; // Zielony dla umiarkowanej aktywności
+    } else if (activity >= 11 && activity <= 20) {
+      return '#8aff1a'; // Żółto-zielony dla średniej aktywności
+    } else if (activity >= 21 && activity <= 40) {
+      return '#ffff00'; // Żółty dla średniej aktywności
+    } else if (activity >= 41 && activity <= 60) {
+      return 'orange'; // Pomarańczowy dla wyższej aktywności
+    } else if (activity >= 61 && activity <= 90) {
+      return '#ff4500'; // Czerwono-pomarańczowy dla bardzo wysokiej aktywności
+    } else {
+      return '#ff0000'; // Czerwony dla maksymalnej aktywności
+    }
+  }
+  toggleVisibility() {
+    this.isVisible = !this.isVisible;  // Przełącza widoczność elementu
+  }       
+
+  getResultClass(us: number, them: number): string {
+    if (us < them) {
+      return 'red'; // Klasa CSS dla przegranej
+    } else if (us > them) {
+      return 'green'; // Klasa CSS dla wygranej
+    } else {
+      return 'gray'; // Klasa CSS dla remisu
+    }
+  }
 }

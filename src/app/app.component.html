@@ -22,25 +22,41 @@
             <span [ngClass]="{'active': isActive('obj-ranking') || isActive('clan-ranking')}">Ranking</span>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item class="custom-ranking-mix" routerLink="obj-ranking" (click)="closeMenu()">Ranking MIX</button>
-            <button mat-menu-item class="custom-ranking-clans" routerLink="clan-ranking" (click)="closeMenu()">Ranking Clans</button>
-            <!-- <button mat-raised-button color="primary" routerLink="/add-clan-war" class="add">Add Clan War <mat-icon>add_box</mat-icon></button>
-            <button mat-raised-button color="primary" routerLink="/update-elo">
-              Add MIX War <mat-icon>group_add</mat-icon>
-            </button>  -->
+            <!-- Pierwszy element -->
+            <button mat-menu-item class="custom-ranking-mix" routerLink="/obj-ranking" (click)="closeMenu()">
+              <img src="assets/images/sh_log70x70.png" alt="Icon" class="menu-icon" />
+              Ranking MIX
+            </button>
+          
+            <!-- Drugi element -->
+            <button mat-menu-item class="custom-ranking-clans" routerLink="/clan-ranking" (click)="closeMenu()">
+              <img src="assets/images/sh_log70x70.png" alt="Icon" class="menu-icon" />
+              Ranking Clans
+            </button>
+          
+            <!-- Trzeci element -->
+            <button mat-menu-item class="custom-ranking-clans" routerLink="/obj-aa" (click)="closeMenu()">
+              <img src="assets/images/mohaa.png" alt="Icon" class="menu-icon" />
+              Ranking MIX AA
+            </button>
           </mat-menu>
+          
         
           <button mat-button [matMenuTriggerFor]="matches">
             <span [ngClass]="{'active': isActive('obj-matches') || isActive('clan-matches')}">Matches</span>
           </button>
           <mat-menu #matches="matMenu">
-            <button mat-menu-item class="custom-ranking-mix" routerLink="obj-matches" (click)="closeMenu()">{{ 'nav.matches_obj' | translate }}</button>
-            <button mat-menu-item class="custom-ranking-mix" routerLink="clan-matches" (click)="closeMenu()">Matches Clans</button>
+            <button mat-menu-item class="custom-ranking-mix" routerLink="/obj-matches" (click)="closeMenu()">
+              <img src="assets/images/sh_log70x70.png" alt="Icon" class="menu-icon" />
+              {{ 'nav.matches_obj' | translate }}</button>
+            <button mat-menu-item class="custom-ranking-mix" routerLink="/clan-matches" (click)="closeMenu()"><img src="assets/images/sh_log70x70.png" alt="Icon" class="menu-icon" />Matches Clans</button>
+            <button mat-menu-item class="custom-ranking-mix" routerLink="/matches-aa" (click)="closeMenu()"><img src="assets/images/mohaa.png" alt="Icon" class="menu-icon" />Matches MIX AA</button>
           </mat-menu>
           <button mat-button routerLink="obj-inactive" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.inactive_obj' | translate }}</button>
           <button mat-button routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</button>        
-          
-            <a routerLink="mix" routerLinkActive="active" class="mix" (click)="closeMenu()">Mix</a>          
+          <button mat-button routerLink="cup" routerLinkActive="active" (click)="closeMenu()">Cup</button>        
+        
+          <a routerLink="mix" routerLinkActive="active" class="mix" (click)="closeMenu()">Mix</a>          
         </div>
       </div>
       <form action="">
@@ -84,7 +100,7 @@
           <div *ngIf="numOfMatches.length > 0">
             <a routerLink="obj-matches" routerLinkActive="active">
               <img src="../assets/images/icons/avarage.png" alt="">
-              <span class="curr-season" matTooltip="SEASON 8 WARS">{{ s8_wars }}</span> <!-- Wyświetlenie ilości wojen z sezonu 5 -->
+              <span class="curr-season" matTooltip="SEASON 9 WARS">{{ s9_wars }}</span> <!-- Wyświetlenie ilości wojen z sezonu 5 -->
               &middot;&middot;&middot;
               <span class="total-seasons" matTooltip="TOTAL WARS">{{ total_wars }}</span> <!-- Wyświetlenie łącznej liczby wojen -->
             </a>
@@ -111,7 +127,7 @@
               'league': mergedDataPlayer?.displayRole === 'League player',
               'friend': mergedDataPlayer?.displayRole === 'Friend'
               }">
-              {{ mergedDataPlayer?.playername }} ({{ mergedDataPlayer?.displayRole }})
+              {{ mergedDataPlayer?.playername }} ({{ mergedDataPlayer?.displayRole }}) 
             </div>                    
           </div>
         </button>
@@ -169,7 +185,7 @@
       </div>
       <div class="login-panel">
         <a href="https://zrzutka.pl/en/t4ujr8" matTooltip="Donate with zrzutka.pl" target="_blank" class="donation">
-          <span>Donate League</span>
+          <span>Donate</span>
           <fa-icon [icon]="euro"></fa-icon>
         </a>
         <a href="https://www.paypal.com/donate/?hosted_button_id=K5HHU9LGEWULS" target="_blank" matTooltip="Donate with PayPal" class="donation">

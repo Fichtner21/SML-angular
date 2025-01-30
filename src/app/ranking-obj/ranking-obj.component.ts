@@ -131,6 +131,7 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
   isThirdPanelExpandedLeft: boolean;
   matchRow:any;
   showAllPlayers: boolean = false;
+  season9 = { name: 'Season #9', startDate: '01.01.2025', endDate: '31.03.2025' };
   season8 = { name: 'Season #8', startDate: '01.10.2024', endDate: '31.12.2024' };
   season7 = { name: 'Season #7', startDate: '01.07.2024', endDate: '30.09.2024' };
   season6 = { name: 'Season #6', startDate: '01.04.2024', endDate: '30.06.2024' };
@@ -261,8 +262,10 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
       switchMap(option => {
         if (option === 'currentSeason') {
           return combineLatest([this.playersTest$, this.historyMatches$]);
+        } else if (option === 'season8'){
+          return this.loadSeasonData('31_12_2024');
         } else if (option === 'season7'){
-          return this.loadSeasonData('30_09_2024')
+          return this.loadSeasonData('30_09_2024');
         } else if (option === 'season6'){
           return this.loadSeasonData('30_06_2024');
         } else if (option === 'season5') {
@@ -275,7 +278,7 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
           return this.loadSeasonData('30_06_2023');
         } else if (option === 'season1') {
           return this.loadSeasonData('31_03_2023');
-        } else if (option === 'season9') {
+        } else if (option === 'season99') {
           return this.loadSeasonData('31_12_2022');
         } else {
           return combineLatest([this.playersTest$, this.historyMatches$])
@@ -312,8 +315,10 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
               s6fpw: name.s6fpw ? Math.round(name.s6fpw * 100) / 100 : '',
               s7wars: name.s7wars ? parseFloat(name.s7wars) : '',
               s8wars: name.s8wars ? parseFloat(name.s8wars) : '',
+              s9wars: name.s9wars ? parseFloat(name.s9wars) : '',
               s7fpw: name.s7fpw ? Math.round(name.s7fpw * 100) / 100 : '',
               s8fpw: name.s8fpw ? Math.round(name.s8fpw * 100) / 100 : '',
+              s9fpw: name.s9fpw ? Math.round(name.s9fpw * 100) / 100 : '',
               s4_22wars: name.s4_22wars ? name.s4_22wars : '',
               s4_22fpw: name.s4_22fpw ? name.s4_22fpw : '',
               activity: name.last30days,
@@ -332,6 +337,7 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
               s5ranking_win: name.s5ranking_win ? parseInt(name.s5ranking_win) : undefined,
               s6ranking_win: name.s6ranking_win ? parseInt(name.s6ranking_win) : undefined,
               s7ranking_win: name.s7ranking_win ? parseInt(name.s7ranking_win) : undefined,
+              s8ranking_win: name.s8ranking_win ? parseInt(name.s8ranking_win) : undefined,
               winPercentage: this.handleData(this.receivedData),
               streak: this.calculateStreak(name.username, v2),
               donatorS4: name.donate_s4,
@@ -339,6 +345,7 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
               donatorS6: name.donate_s6,
               donatorS7: name.donate_s7,
               donatorS8: name.donate_s8,
+              donatorS9: name.donate_s9,
               lastMatches: [],
               last10ranking: []
             };
@@ -612,7 +619,7 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s8wars) - parseFloat(a.s8wars))
+        res => res.sort((a:any,b:any) => parseFloat(b.s9wars) - parseFloat(a.s9wars))
       )
     )
   }
@@ -623,7 +630,7 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Wars: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s8wars) - parseFloat(b.s8wars))
+        res => res.sort((a:any,b:any) => parseFloat(a.s9wars) - parseFloat(b.s9wars))
       )
     )
   }
@@ -633,7 +640,7 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'DESC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(b.s8fpw) - parseFloat(a.s8fpw))
+        res => res.sort((a:any,b:any) => parseFloat(b.s9fpw) - parseFloat(a.s9fpw))
       )
     )
   }
@@ -644,7 +651,7 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/obj-ranking'], { queryParams: { sortByS1Fpw: 'ASC' } });
     return this.lastWarOfPlayer$ = res.pipe(
       map(
-        res => res.sort((a:any,b:any) => parseFloat(a.s8fpw) - parseFloat(b.s8fpw))
+        res => res.sort((a:any,b:any) => parseFloat(a.s9fpw) - parseFloat(b.s9fpw))
       )
     )
   }
@@ -918,6 +925,8 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
     // Sprawdź wybrany sezon z dropdown i zwróć odpowiednią wartość fpw
     switch (this.selectedOption.value) {
       case 'currentSeason':
+        return player.s9fpw;
+      case 'season8':
         return player.s8fpw;
       case 'season7':
         return player.s7fpw;
@@ -933,7 +942,7 @@ export class RankingObjComponent implements OnInit, AfterViewInit {
         return player.s2fpw;
       case 'season1':
         return player.s1fpw;
-      case 'season9':
+      case 'season99':
         return player.s4_22fpw;
       default:
         return player.s8fpw; // Domyślnie zwracamy wartość s8fpw

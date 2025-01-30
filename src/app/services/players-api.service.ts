@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
+
 const SCRIPT_ID = 'AKfycbw1UM_u6MgkD_a9P2yHtUdhCkz5kxBX-BuVDCA8tXQ';
 const ENDPOINT = `https://script.googleapis.com/v1/scripts/${SCRIPT_ID}:run`;
 
@@ -139,11 +140,50 @@ export class PlayersApiService {
             active: player[11], //active
             ban: player[12], //ban
             fpw: player[14],  //fpw  
-            clanwars: player[73]        
+            clanwars: player[78]        
           }))
         })
       );
   }
+
+  getDraws(limit: number): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.localApiUrl}api/get-draws?limit=${limit}`);
+  }
+
+  saveDraw(draw: any) {
+    return this.http.post(`${environment.externalApiUrl}/api/save-draw`, draw);
+  }
+
+  public getContributorDetails(): Observable<string> {
+    // Odczytanie danych z localStorage
+    const userData = localStorage.getItem('userData');
+    let usernameFromLocalStorage = ''; // Zmienna na domyślną nazwę użytkownika
+  
+    // Jeśli userData jest dostępne, parsuj je i pobierz 'id' (discord_id)
+    if (userData) {
+      const parsedData = JSON.parse(userData);  // Parsowanie JSON na obiekt
+      usernameFromLocalStorage = parsedData.id;  // Załóżmy, że id to discord_id w userData
+    }
+  
+    return this.http.get<any>(
+      `https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Players_AA?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU`
+    ).pipe(
+      map(response => {
+        const players = response.values.slice(1);
+        
+        // Znalezienie gracza, którego discord_id odpowiada id z userData
+        const matchingPlayer = players.find(player => player[9] === usernameFromLocalStorage); // Porównanie z discord_id
+  
+        // Jeśli znaleziono gracza, zwróć jego playername, w przeciwnym razie zwróć username z userData
+        if (matchingPlayer) {
+          return matchingPlayer[0]; // playername
+        } else {
+          return usernameFromLocalStorage; // Zwróć username z userData, jeśli discord_id się nie zgadza
+        }
+      })
+    );
+  }
+  
 
   public getClans(): Observable<any> {
     return this.http.get<any>(
@@ -179,6 +219,79 @@ export class PlayersApiService {
       })
     );
   }
+
+  public getClanInfo(clanName: string): Observable<any> {
+    return this.http.get<any>('https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Clans?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU').pipe(
+      map(response => {
+        // Zakładamy, że response.values to tablica wierszy
+        const clans = response.values.slice(1); // Pomijamy pierwszy wiersz (nagłówki)
+        
+        // Filtrujemy klany, gdzie nazwa klanu jest w odpowiedniej kolumnie (np. w pierwszej kolumnie)
+        const filteredClan = clans.find(clan => clan[0] === clanName); // Używamy 'find', żeby znaleźć pierwszy dopasowany wiersz
+        
+        // Jeśli klan nie został znaleziony, zwracamy null lub pusty obiekt
+        if (!filteredClan) {
+          return null;
+        }
+        
+        // Mapowanie danych klanu
+        return {
+          clanname: filteredClan[0], // Zakładam, że nazwa klanu jest w pierwszej kolumnie
+          clantag: filteredClan[2], // Zakładam, że tag klanu jest w trzeciej kolumnie
+          fullname: filteredClan[17], // Zakładam, że pełna nazwa jest w 18-tej kolumnie (indeks 17)
+          image: filteredClan[5], // Zakładam, że obrazek klanu jest w 6-tej kolumnie
+          flag: filteredClan[6] // Zakładam, że flaga jest w 7-mej kolumnie
+        };
+      })
+    );
+}
+
+
+  public getMatchHistoryByClans(clanName: string): Observable<any[]> {
+    return this.http.get<any>('https://sheets.googleapis.com/v4/spreadsheets/1w_WHqCutkp_S6KveKyu4mNaG76C5dIlDwKw-A-dEOLo/values/Match+History+Clans?key=AIzaSyD6eJ4T-ztIfyFn-h2oDAGTnNNYhNRziLU').pipe(
+      map(response => {
+        // Pomijamy pierwszy wiersz (nagłówki) i przetwarzamy tylko mecze
+        const matches = response.values.slice(1);
+  
+        // Filtrujemy mecze, gdzie klan występuje w polach 'clan1' lub 'clan2'
+        const filteredMatches = matches.filter(match =>
+          match[1] === clanName || match[2] === clanName
+        );
+  
+        // Odwracamy kolejność meczów
+        const reversedMatches = filteredMatches.reverse();
+  
+        // Mapowanie przefiltrowanych meczów do odpowiedniego formatu
+        return reversedMatches.map((match, index) => {
+          const isClan1 = match[1] === clanName;
+          const isClan2 = match[2] === clanName;
+  
+          // Obliczanie różnicy punktów (points) w zależności od pozycji klanu
+          const points = isClan1
+            ? parseInt(match[6]) - parseInt(match[5]) // Różnica punktów dla clan1
+            : isClan2
+            ? parseInt(match[8]) - parseInt(match[7]) // Różnica punktów dla clan2
+            : 0;
+  
+          // Ustalanie wyników 'us' i 'them'
+          const us = isClan1 ? match[3] : match[4];
+          const them = isClan1 ? match[4] : match[3];
+  
+          return {
+            id: match[24],
+            date: match[0], // Data meczu
+            opponent: isClan1 ? match[2] : match[1], // Przeciwnik
+            us: `${us}`, // Wynik dla klanu
+            them: `${them}`, // Wynik dla przeciwnika
+            points: points // Różnica punktów
+          };
+        });
+      })
+    );
+  }
+  
+  
+  
   
   // New method to get specific clan details
   public getClanDetails(clanName: string): Observable<any> {

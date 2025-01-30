@@ -11,12 +11,17 @@ import { RulesComponent } from './rules/rules.component';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule } from '@angular/common/http';
+import { SquadsComponent } from './squads/squads.component';
 // import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
     CupComponent,
     RulesComponent,
+    SquadsComponent,
   ],
   imports: [
     CommonModule,
@@ -26,7 +31,10 @@ import { HttpClientModule } from '@angular/common/http';
     MatchModule,
     NgxLodashPipesModule,   
     NgHttpLoaderModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    MatGridListModule,
+    MatCardModule,
+    MatIconModule
     // NgxDocViewerModule
   ], 
 })

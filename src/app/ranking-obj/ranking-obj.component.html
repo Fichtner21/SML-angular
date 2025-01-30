@@ -2,14 +2,7 @@
   <ng-container *ngIf="lastWarOfPlayers.length > 0">
     <section class="example">
       <div class="container">
-        <div class="cont">
-          <!-- <mat-select [(ngModel)]="selectedOption" (ngModelChange)="onSeasonChange($event)">
-            <mat-option value="currentSeason">Current Season</mat-option>
-            <mat-option value="season5">Season 5</mat-option>
-            <mat-option value="season4">Season 4</mat-option>
-            <mat-option value="season3">Season 3</mat-option>
-            <mat-option value="season2">Season 2</mat-option>
-          </mat-select> -->
+        <div class="cont">          
           <div class="ranking-head">
             <div class="">{{ 'ranking.place' | translate }}</div>
             <div class="ranking-head__playername">{{ 'ranking.player_name' | translate }}</div>
@@ -29,12 +22,13 @@
               FpW
             </div> -->
             <div style="display: block;">
-              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" matTooltip="sort by Frags per War in Season #8: 01-10-2024 - 31-12-2024">s8 FpW<span></span></div>
+              <div class="fpw" (click)="booleanVarS1Fpw ? sortByS1FpwAsc(lastWarOfPlayer$) : sortByS1FpwDesc(lastWarOfPlayer$)" matTooltip="sort by Frags per War in Season #9: 01-01-2025 - 31-03-2025">s9 FpW<span></span></div>
               <div class="s1wars" *ngIf="isInfo" (click)="booleanVarFpW ? sortByFpWAsc(lastWarOfPlayer$) : sortByFpWDesc(lastWarOfPlayer$)" matTooltip="sort by Frags per War">FpW total:</div>
             </div>
             <div style="display:block;">
               <!-- <div class="wars" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #6: 01-04-2024 - 30-06-2024">s6 Wars<span></span></div> -->
-              <div class="wars" *ngIf="selectedOption.value === 'currentSeason'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #8: 01-10-2024 - 31-12-2024">s8 Wars<span></span></div>
+              <div class="wars" *ngIf="selectedOption.value === 'currentSeason'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #9: 01-01-2025 - 31-03-2025">s9 Wars<span></span></div>
+              <div class="wars" *ngIf="selectedOption.value === 'season8'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #8: 01-10-2024 - 31-12-2024">s8 Wars<span></span></div>
               <div class="wars" *ngIf="selectedOption.value === 'season7'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #7: 01-07-2024 - 30-09-2024">s7 Wars<span></span></div>
               <div class="wars" *ngIf="selectedOption.value === 'season6'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #6: 01-04-2024 - 30-06-2024">s6 Wars<span></span></div>
               <div class="wars" *ngIf="selectedOption.value === 'season5'" (click)="booleanVarS1Wars ? sortByS1WarsAsc(lastWarOfPlayer$) : sortByS1WarsDesc(lastWarOfPlayer$)" matTooltip="sort by Wars in Season #5: 01-03-2024 - 31-03-2024">s5 Wars<span></span></div>
@@ -67,15 +61,15 @@
                     <div class="wars-bar" *ngIf="isInfo"  [style.width.%]="getPercentage(player.wars)" [ngClass]="getBarColor(player.wars)"></div>
                     <div class="wars-bar" *ngIf="!isInfo"></div>
                     <a routerLink="/obj-ranking/{{player.username}}" class=" playername" [matTooltip]="player.username === 'mtc'
-                    ? 'Winner s7'
-                    : player.username === 'Cronic'
-                        ? '2nd in s7'
-                        : player.username === 'zazuuuu'
-                            ? '3rd in s7'
+                    ? 'Winner s8'
+                    : player.username === 'watson'
+                        ? '2nd in s8'
+                        : player.username === 'fontex'
+                            ? '3rd in s8'
                             : ''">
                     <span matTooltip="View profile {{player.playername}}">{{ player.playername }}</span>
-                    <ng-container *ngIf="player.donatorS8 == 1">
-                      <fa-icon [icon]="dolar" class="donator" matTooltip="Donator Season 8"></fa-icon>
+                    <ng-container *ngIf="player.donatorS9 == 1">
+                      <fa-icon [icon]="dolar" class="donator" matTooltip="Donator Season 9"></fa-icon>
                     </ng-container>
                     <!-- <ng-container *ngIf="player.donatorS6 == 1 && player.username == 'wicio'">
                       <fa-icon [icon]="cent" class="centator" matTooltip="Centator Season 5"></fa-icon>
@@ -111,13 +105,13 @@
                     <ng-container *ngIf="i == 2">
                       <img [src]='"assets/images/ladder3.gif"'>
                     </ng-container>
-                    <ng-container *ngIf="player.s7ranking_win === 1">
+                    <ng-container *ngIf="player.s8ranking_win === 1">
                       <fa-icon [icon]="number1" class="number number1"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="player.s7ranking_win === 2">
+                    <ng-container *ngIf="player.s8ranking_win === 2">
                       <fa-icon [icon]="number2" class="number number2"></fa-icon>
                     </ng-container>
-                    <ng-container *ngIf="player.s7ranking_win === 3">
+                    <ng-container *ngIf="player.s8ranking_win === 3">
                       <fa-icon [icon]="number3" class="number number3"></fa-icon>
                     </ng-container>
                     <ng-container>
@@ -178,7 +172,8 @@
                   <div class="item item-block wars">
                     <!-- <div matTooltip="Season played wars">{{ player.s6wars }}</div>
                     <div class="season-wars" *ngIf="isInfo"> <span matTooltip="Total played wars">{{ player.wars }}</span></div> -->
-                    <div matTooltip="Season played wars" *ngIf="selectedOption.value === 'currentSeason'">{{ player.s8wars }} </div>
+                    <div matTooltip="Season played wars" *ngIf="selectedOption.value === 'currentSeason'">{{ player.s9wars }} </div>
+                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season8'">{{ player.s8wars }} </div>
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season7'">{{ player.s7wars }} </div>
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season6'">{{ player.s6wars }} </div>
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season5'">{{ player.s5wars }} </div>
@@ -186,7 +181,7 @@
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season3'">{{ player.s3wars }} </div>
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season2'">{{ player.s2wars }} </div>
                     <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season1'">{{ player.s1wars }} </div>
-                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season9'">{{ player.s4_22wars }} </div>
+                    <div matTooltip="Season played wars" *ngIf="isInfo &&selectedOption.value === 'season99'">{{ player.s4_22wars }} </div>
                     <div class="season-wars" *ngIf="isInfo"><span matTooltip="Total played wars" matTooltipPosition="right">{{ player.wars }}</span> </div>
 
                   </div>
@@ -277,21 +272,15 @@
         <mat-form-field class="cont">
           <mat-label>Select season</mat-label>
           <mat-select [formControl]="selectedOption">
-            <mat-option value="currentSeason">Season 8: 01.10.2024 - Current</mat-option>
+            <mat-option value="currentSeason">Season 9: 01.01.2025 - Current</mat-option>
+            <mat-option value="season8">Season 8: 01.10.2024 - 31.12.2024</mat-option>
             <mat-option value="season7">Season 7: 01.07.2024 - 30.09.2024</mat-option>
             <mat-option value="season6">Season 6: 01.04.2024 - 30.06.2024</mat-option>
             <mat-option value="season5">Season 5: 01.01.2024 - 31.03.2024</mat-option>
             <mat-option value="season4">Season 4: 01.10.2023 - 31.12.2023</mat-option>
             <mat-option value="season3">Season 3: 01.07.2023 - 30.09.2023</mat-option>
             <mat-option value="season2">Season 2: 01.04.2023 - 30.06.2023</mat-option>
-            <mat-option value="season1">Season 1: 01.01.2023 - 31.03.2023</mat-option>
-            <!-- <mat-option [value]="season6">Season 6: {{ season6.startDate }} - {{ season6.endDate }}</mat-option>
-            <mat-option [value]="season5">Season 5: {{ season5.startDate }} - {{ season5.endDate }}</mat-option>
-            <mat-option [value]="season4">Season 4: {{ season4.startDate }} - {{ season4.endDate }}</mat-option>
-            <mat-option [value]="season3">Season 3: {{ season3.startDate }} - {{ season3.endDate }}</mat-option>
-            <mat-option [value]="season2">Season 2: {{ season2.startDate }} - {{ season2.endDate }}</mat-option>
-            <mat-option [value]="season1">Season 1: {{ season1.startDate }} - {{ season1.endDate }}</mat-option> -->
-            <!-- <mat-option value="season9">Season 9: 01.10.2022 - 31.12.2022</mat-option> -->
+            <mat-option value="season1">Season 1: 01.01.2023 - 31.03.2023</mat-option>            
           </mat-select>
         </mat-form-field>
       </div>
@@ -374,11 +363,11 @@
         <div class="legend donators-info">
           <div>
             <h3>High donator</h3>
-            <fa-icon [icon]="dolar" class="donator" matTooltip="Donator Season 6"></fa-icon>
+            <fa-icon [icon]="dolar" class="donator" matTooltip="Donator Season 9"></fa-icon>
           </div>
           <div>
             <h3>Troll donator</h3>
-            <fa-icon [icon]="cent" class="centator" matTooltip="Donator Season 6"></fa-icon>
+            <fa-icon [icon]="cent" class="centator" matTooltip="Donator Season 9"></fa-icon>
           </div>
         </div>
         <!-- <div class="legend" *ngIf="isInfo">
@@ -390,8 +379,8 @@
       </div>
       <div class="container">
         <div class="down">
-          <div class="big-name">Season #8</div>          
-          <div class="small-date">01.10.2024 - 31.12.2024</div>
+          <div class="big-name">Season #9</div>          
+          <div class="small-date">01.01.2024 - 31.03.2025</div>
         </div>
       </div>
       <div class="floating-icon-container">

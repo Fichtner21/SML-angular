@@ -70,7 +70,15 @@ import { LoginModalComponent } from './shared/login-modal/login-modal.component'
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AdminComponent } from './admin/admin.component';
 import { ConfirmUpdateEloComponent } from './shared/confirm-update-elo/confirm-update-elo.component';
-import { CdkTableModule } from '@angular/cdk/table'; 
+import { CdkTableModule } from '@angular/cdk/table';
+import { RankingObjAaComponent } from './ranking-obj-aa/ranking-obj-aa.component'; 
+import { MatSortModule } from '@angular/material/sort';
+import { UploadComponent } from './upload/upload.component';
+import { HistoryObjAaComponent } from './history-obj-aa/history-obj-aa.component';  // Importujemy MatSort
+import { MatTabsModule } from '@angular/material/tabs';
+import { BracketComponent } from './bracket/bracket.component';
+import { ConfirmUpdateEloAaComponent } from './shared/confirm-update-elo-aa/confirm-update-elo-aa.component';
+import { OverlayComponent } from './shared/overlay/overlay.component';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -123,7 +131,7 @@ const customNotifierOptions: NotifierOptions = {
     AppComponent,
     HomeComponent,
     DateFormatPipePipe,
-    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent, UpdateEloComponent, AuthCallbackComponent, DiscordLoginDialogComponent, LoginModalComponent, AdminComponent, ConfirmUpdateEloComponent
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent, UpdateEloComponent, AuthCallbackComponent, DiscordLoginDialogComponent, LoginModalComponent, AdminComponent, ConfirmUpdateEloComponent, RankingObjAaComponent, UploadComponent, HistoryObjAaComponent, BracketComponent, ConfirmUpdateEloAaComponent, OverlayComponent
   ],
   imports: [
     CommonModule,
@@ -150,6 +158,7 @@ const customNotifierOptions: NotifierOptions = {
     MatSelectModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatTabsModule,
     MatIconModule,
     CdkTableModule,
     MatMenuModule,
@@ -160,6 +169,7 @@ const customNotifierOptions: NotifierOptions = {
     RankingObjModule,
     MatProgressBarModule,
     MatPaginatorModule,
+    MatSortModule,
     MatListModule,
     MatDialogModule,      
     NotifierModule.withConfig(customNotifierOptions),

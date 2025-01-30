@@ -64,6 +64,14 @@
             <div class="seasons">
               <!-- <ng-container *ngIf="playerDetail$ | async as playerDetails;"> -->
                 <mat-tab-group animationDuration="0ms">
+                  <mat-tab label="Season 9" title="Season 9" *ngIf="playerDetails.listwars9.length > 0">
+                    <h2>01.01.2025 - 31.03.2025</h2>
+                    <h3>Summary</h3>
+                    <ul class="achievments">
+                      <li><span>Rank:</span> {{playerDetails.place}} / {{currentActivePlayers}}</li>
+                      <li><span>Wars:</span> {{ playerDetails.listwars9.length }} / {{numOfPlayers$ | async}}</li>
+                    </ul>
+                  </mat-tab>
                   <mat-tab label="Season 8" title="Season 8" *ngIf="playerDetails.listwars8.length > 0">
                     <h2>01.10.2024 - 31.12.2024</h2>
                     <h3>Summary</h3>
@@ -136,13 +144,24 @@
               <!-- </ng-container> -->
             </div>
           </div>
-          <div class="wars-cont">
+          <!-- <div class="wars-cont">
             <h3>{{ 'playerview.wars_id' | translate }}</h3>
             <div class="details__wars">
               <div class="details__wars--war" *ngFor="let war of playerDetails.wars"><a href="/obj-matches/{{ war[0] }}" title="{{war[1] | date:'dd.MM.yyyy HH:mm'}} Frags: {{ war[2] }}">#{{ war[0] }} </a></div>
             </div>
+          </div> -->
+          <div class="wars-cont" *ngFor="let year of groupedWars | keyvalue">
+            <h3>Wars in {{ year.key }}</h3>
+            <div class="details__wars">
+              <div class="details__wars--war" *ngFor="let war of year.value">
+                <a href="/obj-matches/{{ war[0] }}" title="{{ war[1] | date:'dd.MM.yyyy HH:mm' }} Frags: {{ war[2] }}">
+                  #{{ war[0] }}
+                </a>
+              </div>
+            </div>
           </div>
-          <div>
+          
+        <div>
 
             <!-- <button (click)="showHorizontalScrolling(playerDetails.frags, playerDetails.listwars)">Horizontal</button>
             <div class="chartWrapper" >
@@ -215,7 +234,7 @@
                             playerCard?.listwars.length - playerDetails.listwars.length }})
                       </span>
                     </div>
-                    <div *ngFor="let season of [1, 2, 3, 4, 5, 6, 7, 8]; let i = index" class="item">
+                    <div *ngFor="let season of [1, 2, 3, 4, 5, 6, 7, 8, 9]; let i = index" class="item">
                       <span>Season {{ i + 1 }}:</span>
                       <span> wars </span>
                       <span class="item__value" [ngClass]="{
@@ -259,7 +278,7 @@
                         ({{ playerDetails.listwars.length < playerCard?.listwars.length ? '+' : '-' }}{{ Math.abs(playerDetails.listwars.length - playerCard?.listwars.length) }})
                       </span>
                     </div>
-                    <div *ngFor="let season of [1, 2, 3, 4, 5, 6, 7, 8]; let i = index" class="item">
+                    <div *ngFor="let season of [1, 2, 3, 4, 5, 6, 7, 8, 9]; let i = index" class="item">
                       <span>Season {{ i + 1 }}:</span>
                       <span> wars </span>
                       <span class="item__value" [ngClass]="{
@@ -345,6 +364,12 @@
             </div>
             <canvas id="rank8Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
           </div>
+          <div *ngIf="playerDetails.listwars9.length > 0">
+            <div class="chart-info">
+              <button (click)="showRankingSeason(playerDetails.listwars9, 'rank9Chart')">Load season <span>9</span>rankings ({{playerDetails.listwars9.length}} wars)</button>
+            </div>
+            <canvas id="rank9Chart" width="1320" height="400" style="overflow-x: scroll;"></canvas>
+          </div>
           <div *ngIf="playerDetails.listwars.length > 0">
             <div class="chart-info">
               <button (click)="showFrags(playerDetails.frags, playerDetails.listwars,'myChart')">{{ 'playerview.frags_chart' | translate }} TOTAL</button>
@@ -398,6 +423,12 @@
               <button (click)="showFragsSeason(playerDetails.listwars8,'myChart8')">Load season <span>8</span> frags ({{playerDetails.listwars8.length}} wars)</button>
             </div>
             <canvas id="myChart8" width="1320" height="400" style="overflow-x: scroll;"></canvas>
+          </div>
+          <div *ngIf="playerDetails.listwars9.length > 0">
+            <div class="chart-info">
+              <button (click)="showFragsSeason(playerDetails.listwars9,'myChart9')">Load season <span>9</span> frags ({{playerDetails.listwars9.length}} wars)</button>
+            </div>
+            <canvas id="myChart9" width="1320" height="400" style="overflow-x: scroll;"></canvas>
           </div>
         </div>
         <div class="big-name">{{playerDetails.playername}}</div>

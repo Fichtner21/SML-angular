@@ -1,0 +1,26 @@
+<section>
+  <div class="container">
+    <h1 class="title">Teams</h1>
+
+    <div class="teams-grid">
+      <div class="team-card" *ngFor="let team of teams">
+        <div class="team-header">
+          <div class="team-logo" [style.backgroundImage]="'url(assets/images/clans/' + team.logo + ')'"></div>
+
+          <h2 class="team-name">{{ team.name }}</h2>
+        </div>
+        <div class="team-players">
+          <ul>
+            <li *ngFor="let player of team.players" class="player-item">
+              <a href="/obj-ranking/{{player.username}}" class="player-link">
+                {{ player.playername }}
+              </a>
+              <img src="assets/images/flags_svg/{{player.countryFlag}}.SVG" alt="{{ player.name }} flag" class="player-flag">
+            </li>
+          </ul>
+        </div>
+      </div>         
+    </div>
+  </div>
+</section>
+

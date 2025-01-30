@@ -229,8 +229,7 @@ section {
         // border-right: 1px solid #010141;
 
         &:not(:last-child) {
-          border-right: 1px solid #010141; /* Prawy border */
-          
+          border-right: 1px solid #010141; /* Prawy border */          
         }
       }
 
@@ -380,4 +379,94 @@ section {
 
 .negative-diff {
   color: red; /* Przykładowy kolor dla ujemnej różnicy */
+}
+
+.red {
+  background-color: red;
+  color: #fff;
+}
+
+.green {
+  background-color: green;
+  color: #fff;
+}
+
+.gray {
+  background-color: gray;
+  color: #fff;
+}
+
+table {  
+  border-collapse: collapse;
+  width: 100%;
+}
+
+::ng-deep .mat-table td {
+  text-align: center;
+  color: rgb(211,211,211);
+}
+
+::ng-deep .mat-table tr th {
+  text-align: center;
+  color: rgb(211,211,211);
+}
+
+/* Wewnętrzne granice tabeli */
+.mat-header-cell, .mat-cell {
+  border: 1px solid #010141;
+}
+
+/* Co drugi nagłówek tabeli z tłem #2f3060 */
+::ng-deep .mat-header-row:nth-child(odd) .mat-header-cell {
+  background-color: #2f3060;
+}
+
+/* Tła wierszy w tabeli z gradientem */
+::ng-deep .mat-row {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      #1f2136 0px,
+      #1f2136 100px,
+      transparent 20px,
+      transparent 200px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #1f2136 0px,
+      #1f2136 100px,
+      transparent 150px,
+      transparent 200px
+    ),
+    linear-gradient(90deg, #2c2f4e, #2c2f4e);
+}
+
+/* Co drugi wiersz z jaśniejszym efektem cieniowania */
+::ng-deep .mat-row:nth-child(even) {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      #1f203c 0px,
+      #1f203c 200px,
+      transparent 100px,
+      transparent 300px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #1f203c 0px,
+      #1f203c 200px,
+      transparent 100px,
+      transparent 300px
+    ),
+    linear-gradient(90deg, #292b4b, #292b4b);
+}
+
+/* Wysokość wierszy */
+.mat-row, .mat-header-row {
+  height: 28px; /* Możesz dostosować do własnych preferencji */
+}
+
+/* Ograniczenie szerokości tabeli do 600px */
+.mat-table-container {
+  max-width: 600px;  
 }

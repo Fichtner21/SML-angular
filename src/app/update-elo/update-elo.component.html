@@ -1,357 +1,265 @@
+
 <section>
-  <!-- <div class="user">
-    {{ userDataDiscord | json }}
-    <img [src]="avatarUrl" alt="" width="50">
+  <mat-tab-group>
+  <!-- Pierwsza zakładka -->
+    <mat-tab label="Medal of Honor: Spearhead">
+      <ng-template mat-tab-label >
+        <img src="assets/images/sh_log70x70.png" alt="Spearhead" class="tab-icon" />
+        <span>Medal of Honor: Spearhead</span>
+      </ng-template>
     
-  </div> -->
-
-  <!-- <mat-accordion>
-    <mat-expansion-panel *ngFor="let player of mergedData">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <img [src]="getAvatarUrl(player)" alt="{{ player.playername }}'s avatar" class="avatar" />
-          {{ player.playername }}
-        </mat-panel-title>
-        <mat-panel-description>
-          Click to toggle player details
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-  
-      <ul>
-        <li>
-          <p>Username: {{ player.username }}</p>
-          <p>Ranking: {{ player.ranking }}</p>
-          <p>Role: {{ player.role }}</p>
+      <div class="container">  
+        <form *ngIf="isDataLoaded && mergedDataPlayer?.authorized" [formGroup]="updateEloForm" (ngSubmit)="updateElo()" class="sh">
+          <div class="teams">
+            <div class="team">
+              <h2>Team One</h2>
+              <div formArrayName="teamOnePlayers">
+                <div *ngFor="let player of teamOnePlayers.controls; let i = index" [formGroupName]="i">
+                  <mat-form-field>
+                    <mat-label>Player Name</mat-label>
+                    <input matInput formControlName="playerName" (input)="filterPlayers('teamOne', $event.target.value)" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let player of filteredPlayers" [value]="player.playername" (click)="selectPlayer('teamOne', player, i)">
+                        <img *ngIf="player.nationality" [src]="'assets/images/flags_svg/' + player.nationality + '.SVG'" alt="{{ player.nationality }}" class="flag-icon" width="20"/>
+                        {{ player.playername }} ({{ player.ranking }})
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+        
+                  <mat-form-field>
+                    <mat-label>Frags</mat-label>
+                    <input matInput formControlName="combatScore" type="number" [pattern]="numberPattern">
+                    <mat-error *ngIf="player.controls.combatScore.invalid && player.controls.combatScore.touched">
+                      Invalid score, only numbers allowed.
+                    </mat-error>
+                  </mat-form-field>
+        
+                  <button mat-icon-button (click)="removePlayer('teamOne', i)">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                </div>
+        
+                <button mat-raised-button type="button" class="add-player" (click)="addPlayer('teamOne')">Add Player</button>
+                <div *ngIf="limitPlayerOne"> {{ limitPlayerOne }} </div>
+              </div>
+        
+              <mat-form-field>
+                <mat-label>Rounds Won</mat-label>
+                <input matInput formControlName="teamOneRoundsWon" type="number" [pattern]="numberPattern">
+                <mat-error *ngIf="updateEloForm.get('teamOneRoundsWon').invalid && updateEloForm.get('teamOneRoundsWon').touched">
+                  Rounds won must be a valid number.
+                </mat-error>
+              </mat-form-field>
+            </div>
+        
+            <div class="team">
+              <h2>Team Two</h2>
+              <div formArrayName="teamTwoPlayers">
+                <div *ngFor="let player of teamTwoPlayers.controls; let i = index" [formGroupName]="i">
+                  <mat-form-field>
+                    <mat-label>Player Name</mat-label>
+                    <input matInput formControlName="playerName" (input)="filterPlayers('teamTwo', $event.target.value)" [matAutocomplete]="auto2">
+                    <mat-autocomplete #auto2="matAutocomplete">
+                      <mat-option *ngFor="let player of filteredPlayers" [value]="player.playername" (click)="selectPlayer('teamTwo', player, i)">
+                        <!-- Dodanie flagi obok nazwy gracza -->
+                        <img *ngIf="player.nationality" [src]="'assets/images/flags_svg/' + player.nationality + '.SVG'" alt="{{ player.nationality }}" class="flag-icon" width="20"/>
+                        {{ player.playername }} ({{ player.ranking }})
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                  
+        
+                  <mat-form-field>
+                    <mat-label>Frags</mat-label>
+                    <input matInput formControlName="combatScore" type="number" [pattern]="numberPattern">
+                    <mat-error *ngIf="player.controls.combatScore.invalid && player.controls.combatScore.touched">
+                      Invalid score, only numbers allowed.
+                    </mat-error>
+                  </mat-form-field>
+        
+                  <button mat-icon-button (click)="removePlayer('teamTwo', i)">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                </div>
+        
+                <button mat-raised-button type="button" class="add-player" (click)="addPlayer('teamTwo')">Add Player</button>
+                <div *ngIf="limitPlayerTwo"> {{ limitPlayerTwo }} </div>
+              </div>
+        
+              <mat-form-field>
+                <mat-label>Rounds Won</mat-label>
+                <input matInput formControlName="teamTwoRoundsWon" type="number" [pattern]="numberPattern">
+                <mat-error *ngIf="updateEloForm.get('teamTwoRoundsWon').invalid && updateEloForm.get('teamTwoRoundsWon').touched">
+                  Rounds won must be a valid number.
+                </mat-error>
+              </mat-form-field>
+            </div>  
+          </div>   
           
-        </li>
-      </ul>
-    </mat-expansion-panel>
-  </mat-accordion> -->
+          <div class="submit">
+            <button mat-raised-button type="submit" class="submit" color="accent" [disabled]="!updateEloForm.valid">Update ELO</button>
+            <button mat-raised-button type="button" class="clear-form submit" (click)="clearForm()">Clear Form</button>
+          </div>       
+        </form>
+        
+        <!-- <div *ngIf="isDataLoaded && mergedDataPlayer?.authorized" class="hint">
+          To add the result correctly, make sure you are logged in via Google. 
+          <img src="../../assets/images/logout.png" alt="">
+        </div> -->
+        <div *ngIf="!userVerified" style="padding: 20px; color:red; border: 2px solid red; background-color: #fff;">
+          Login via Google is requried to add score from war.
+        </div>
+      <!-- Wyświetl komunikat o braku uprawnień, jeśli dane nie zostały jeszcze załadowane lub użytkownik nie jest autoryzowany -->
+        <div *ngIf="isLoading" class="loading-message">
+          <p>Loading...</p>  <!-- Tutaj możesz pokazać komunikat ładowania, jeśli dane są jeszcze w trakcie ładowania -->
+        </div>
 
-  <div class="container">
-    <!-- <form [formGroup]="updateEloForm" (ngSubmit)="updateElo()">
-      <div class="teams">
-        <div class="team">
-          <h2>Team One</h2>
-        
-          <div formArrayName="teamOnePlayers">
-            <div *ngFor="let player of teamOnePlayers.controls; let i = index" [formGroupName]="i">
-              <mat-form-field>
-                <mat-label>Player Name</mat-label>
-                <input matInput formControlName="playerName" (input)="filterPlayers('teamOne', $event.target.value)" [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let player of filteredPlayers" [value]="player.playername" (click)="selectPlayer('teamOne', player, i)">
-                    {{ player.playername }} ({{ player.ranking }})
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-        
-              <mat-form-field>
-                <mat-label>Frags</mat-label>
-                <input matInput formControlName="combatScore" type="number">
-              </mat-form-field>
-        
-              <button mat-icon-button (click)="removePlayer('teamOne', i)">
-                <mat-icon>remove</mat-icon>
-              </button>
-            </div>
-            
-            <button mat-raised-button type="button" class="add-player" (click)="addPlayer('teamOne')">Add Player</button>
-          </div>
-        
-          <mat-form-field>
-            <mat-label>Rounds Won</mat-label>
-            <input matInput formControlName="teamOneRoundsWon" type="number">
-          </mat-form-field>
+        <div *ngIf="!isLoading && !mergedDataPlayer?.authorized" class="unauthorized-message">
+          <p class="denied">You do not have permission to access this form.</p>
+          <p>Allowed roles to fill the score is only:</p>
+          <p class="owner">OWNER</p>
+          <p class="league-player">League player</p>
+          <p class="admin">Admin</p>
         </div>
-        <div class="team">
-          <h2>Team Two</h2>
-      
-          <div formArrayName="teamTwoPlayers">
-            <div *ngFor="let player of teamTwoPlayers.controls; let i = index" [formGroupName]="i">
-              <mat-form-field>
-                <mat-label>Player Name</mat-label>
-                <input matInput formControlName="playerName" (input)="filterPlayers('teamTwo', $event.target.value)" [matAutocomplete]="auto2">
-                <mat-autocomplete #auto2="matAutocomplete">
-                  <mat-option *ngFor="let player of filteredPlayers" [value]="player.playername" (click)="selectPlayer('teamTwo', player, i)">
-                    {{ player.playername }} ({{ player.ranking }})
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-        
-              <mat-form-field>
-                <mat-label>Frags</mat-label>
-                <input matInput formControlName="combatScore" type="number">
-              </mat-form-field>
-        
-              <button mat-icon-button (click)="removePlayer('teamTwo', i)">
-                <mat-icon>remove</mat-icon>
-              </button>
-            </div>
-        
-            <button mat-raised-button type="button" class="add-player" (click)="addPlayer('teamTwo')">Add Player</button>
-          </div>
-        
-          <mat-form-field>
-            <mat-label>Rounds Won</mat-label>
-            <input matInput formControlName="teamTwoRoundsWon" type="number">
-          </mat-form-field>
-        </div>  
-      </div>   
-      <div class="submit">
-        <button mat-raised-button type="submit" class="submit" color="accent">Update ELO</button>
-      </div>       
-    </form> -->
-    <!-- <form *ngIf="isDataLoaded && mergedDataPlayer?.authorized" [formGroup]="updateEloForm" (ngSubmit)="updateElo()">
-      <div class="teams">
-        <div class="team">
-          <h2>Team One</h2>
-          <div formArrayName="teamOnePlayers">
-            <div *ngFor="let player of teamOnePlayers.controls; let i = index" [formGroupName]="i">
-              <mat-form-field>
-                <mat-label>Player Name</mat-label>
-                <input matInput formControlName="playerName" (input)="filterPlayers('teamOne', $event.target.value)" [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let player of filteredPlayers" [value]="player.playername" (click)="selectPlayer('teamOne', player, i)">
-                    {{ player.playername }} ({{ player.ranking }})
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-    
-              <mat-form-field>
-                <mat-label>Frags</mat-label>
-                <input matInput formControlName="combatScore" type="number">
-              </mat-form-field>
-    
-              <button mat-icon-button (click)="removePlayer('teamOne', i)">
-                <mat-icon>remove</mat-icon>
-              </button>
-            </div>
-    
-            <button mat-raised-button type="button" class="add-player" (click)="addPlayer('teamOne')">Add Player</button>
-          </div>
-    
-          <mat-form-field>
-            <mat-label>Rounds Won</mat-label>
-            <input matInput formControlName="teamOneRoundsWon" type="number">
-          </mat-form-field>
-        </div>
-    
-        <div class="team">
-          <h2>Team Two</h2>
-          <div formArrayName="teamTwoPlayers">
-            <div *ngFor="let player of teamTwoPlayers.controls; let i = index" [formGroupName]="i">
-              <mat-form-field>
-                <mat-label>Player Name</mat-label>
-                <input matInput formControlName="playerName" (input)="filterPlayers('teamTwo', $event.target.value)" [matAutocomplete]="auto2">
-                <mat-autocomplete #auto2="matAutocomplete">
-                  <mat-option *ngFor="let player of filteredPlayers" [value]="player.playername" (click)="selectPlayer('teamTwo', player, i)">
-                    {{ player.playername }} ({{ player.ranking }})
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Frags</mat-label>
-                <input matInput formControlName="combatScore" type="number">
-              </mat-form-field>
-    
-              <button mat-icon-button (click)="removePlayer('teamTwo', i)">
-                <mat-icon>remove</mat-icon>
-              </button>
-            </div>
-    
-            <button mat-raised-button type="button" class="add-player" (click)="addPlayer('teamTwo')">Add Player</button>
-          </div>
-    
-          <mat-form-field>
-            <mat-label>Rounds Won</mat-label>
-            <input matInput formControlName="teamTwoRoundsWon" type="number">
-          </mat-form-field>
-        </div>  
-      </div>   
-    
-      <div class="submit">
-        <button mat-raised-button type="submit" class="submit" color="accent">Update ELO</button>
-        <button mat-raised-button type="button" class="clear-form submit" (click)="clearForm()">Clear Form</button>
-      </div>       
-    </form> -->
-    <form *ngIf="isDataLoaded && mergedDataPlayer?.authorized" [formGroup]="updateEloForm" (ngSubmit)="updateElo()">
-      <div class="teams">
-        <div class="team">
-          <h2>Team One</h2>
-          <div formArrayName="teamOnePlayers">
-            <div *ngFor="let player of teamOnePlayers.controls; let i = index" [formGroupName]="i">
-              <mat-form-field>
-                <mat-label>Player Name</mat-label>
-                <input matInput formControlName="playerName" (input)="filterPlayers('teamOne', $event.target.value)" [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let player of filteredPlayers" [value]="player.playername" (click)="selectPlayer('teamOne', player, i)">
-                    <img *ngIf="player.nationality" [src]="'assets/images/flags_svg/' + player.nationality + '.SVG'" alt="{{ player.nationality }}" class="flag-icon" width="20"/>
-                    {{ player.playername }} ({{ player.ranking }})
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-    
-              <mat-form-field>
-                <mat-label>Frags</mat-label>
-                <input matInput formControlName="combatScore" type="number" [pattern]="numberPattern">
-                <mat-error *ngIf="player.controls.combatScore.invalid && player.controls.combatScore.touched">
-                  Invalid score, only numbers allowed.
-                </mat-error>
-              </mat-form-field>
-    
-              <button mat-icon-button (click)="removePlayer('teamOne', i)">
-                <mat-icon>remove</mat-icon>
-              </button>
-            </div>
-    
-            <button mat-raised-button type="button" class="add-player" (click)="addPlayer('teamOne')">Add Player</button>
-            <div *ngIf="limitPlayerOne"> {{ limitPlayerOne }} </div>
-          </div>
-    
-          <mat-form-field>
-            <mat-label>Rounds Won</mat-label>
-            <input matInput formControlName="teamOneRoundsWon" type="number" [pattern]="numberPattern">
-            <mat-error *ngIf="updateEloForm.get('teamOneRoundsWon').invalid && updateEloForm.get('teamOneRoundsWon').touched">
-              Rounds won must be a valid number.
-            </mat-error>
-          </mat-form-field>
-        </div>
-    
-        <div class="team">
-          <h2>Team Two</h2>
-          <div formArrayName="teamTwoPlayers">
-            <div *ngFor="let player of teamTwoPlayers.controls; let i = index" [formGroupName]="i">
-              <mat-form-field>
-                <mat-label>Player Name</mat-label>
-                <input matInput formControlName="playerName" (input)="filterPlayers('teamTwo', $event.target.value)" [matAutocomplete]="auto2">
-                <mat-autocomplete #auto2="matAutocomplete">
-                  <mat-option *ngFor="let player of filteredPlayers" [value]="player.playername" (click)="selectPlayer('teamTwo', player, i)">
-                    <!-- Dodanie flagi obok nazwy gracza -->
-                    <img *ngIf="player.nationality" [src]="'assets/images/flags_svg/' + player.nationality + '.SVG'" alt="{{ player.nationality }}" class="flag-icon" width="20"/>
-                    {{ player.playername }} ({{ player.ranking }})
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-              
-    
-              <mat-form-field>
-                <mat-label>Frags</mat-label>
-                <input matInput formControlName="combatScore" type="number" [pattern]="numberPattern">
-                <mat-error *ngIf="player.controls.combatScore.invalid && player.controls.combatScore.touched">
-                  Invalid score, only numbers allowed.
-                </mat-error>
-              </mat-form-field>
-    
-              <button mat-icon-button (click)="removePlayer('teamTwo', i)">
-                <mat-icon>remove</mat-icon>
-              </button>
-            </div>
-    
-            <button mat-raised-button type="button" class="add-player" (click)="addPlayer('teamTwo')">Add Player</button>
-            <div *ngIf="limitPlayerTwo"> {{ limitPlayerTwo }} </div>
-          </div>
-    
-          <mat-form-field>
-            <mat-label>Rounds Won</mat-label>
-            <input matInput formControlName="teamTwoRoundsWon" type="number" [pattern]="numberPattern">
-            <mat-error *ngIf="updateEloForm.get('teamTwoRoundsWon').invalid && updateEloForm.get('teamTwoRoundsWon').touched">
-              Rounds won must be a valid number.
-            </mat-error>
-          </mat-form-field>
-        </div>  
-      </div>   
-      
-      <div class="submit">
-        <button mat-raised-button type="submit" class="submit" color="accent" [disabled]="!updateEloForm.valid">Update ELO</button>
-        <button mat-raised-button type="button" class="clear-form submit" (click)="clearForm()">Clear Form</button>
-      </div>       
-    </form>
-    
-    <div *ngIf="isDataLoaded && mergedDataPlayer?.authorized" class="hint">
-      To add the result correctly, make sure you are logged in via Google. 
-      <img src="../../assets/images/logout.png" alt="">
-    </div>
-    <div *ngIf="!userVerified" style="padding: 20px; color:red; border: 2px solid red; background-color: #fff;">
-      Login via Google is requried to add score from war.
-    </div>
-   <!-- Wyświetl komunikat o braku uprawnień, jeśli dane nie zostały jeszcze załadowane lub użytkownik nie jest autoryzowany -->
-    <div *ngIf="isLoading" class="loading-message">
-      <p>Loading...</p>  <!-- Tutaj możesz pokazać komunikat ładowania, jeśli dane są jeszcze w trakcie ładowania -->
-    </div>
-
-    <div *ngIf="!isLoading && !mergedDataPlayer?.authorized" class="unauthorized-message">
-      <p class="denied">You do not have permission to access this form.</p>
-      <p>Allowed roles to fill the score is only:</p>
-      <p class="owner">OWNER</p>
-      <p class="league-player">League player</p>
-      <p class="admin">Admin</p>
-    </div>
-    <!-- <div *ngIf="last10mixes.length" class="mixes">
-      <h3>Last 10 Mixes</h3>
-      <div class="selected-cont">
-        <div *ngFor="let mixes of last10mixes; let i = index;" class="selected">          
-          <div style="display: flex; align-items:center;" class="selectedPlayer">
-            <div *ngFor="let mix of mixes">
-              <div class="team">
-                <div class="player" [ngClass]="{ 'teamOne': mix.team === 1, 'teamTwo': mix.team === 2}">
-                  <span>{{mix.playername}}</span>
-                  <img [src]='"assets/images/flags_svg/" + mix.flag + ".SVG"'>
+        <button mat-raised-button color="primary" (click)="loadDraws(10)">Load Last 10 Draws</button>
+        <div *ngIf="last10mixes.length" class="mixes">
+          <h3>Last 10 Mixes</h3>
+          <div class="selected-cont">
+            <div *ngFor="let mixes of last10mixes; let i = index;" class="selected">
+              <div class="selectedPlayer">
+                <div class="number">{{ i + 1 }}</div>
+                <div class="mix-cont">
+                  <div *ngFor="let mix of mixes; let j = index;" class="mix">
+                    <div class="createdAt" *ngIf="j === 0">
+                      {{ mix.createdAt | date:'dd.MM.yyyy HH:mm' }}
+                    </div>
+                    <div class="team">
+                      <div class="player" [ngClass]="{ 'teamOne': mix.team === 1, 'teamTwo': mix.team === 2 }">
+                        <span>{{ mix.playername }}</span>
+                        <img [src]="'assets/images/flags_svg/' + mix.flag + '.SVG'">
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <sup *ngIf="mix.team === 1">Team 1</sup>
-                <sup *ngIf="mix.team === 2">Team 2</sup>
-              </div>
-            </div> 
-            <div>
-              <button mat-raised-button type="submit" class="submit" color="primary">Add to Form</button> 
-            </div>                      
-          </div>
-        </div>        
-      </div>
-    </div>     -->
-    <div *ngIf="last10mixes.length" class="mixes">
-      <h3>Last 10 Mixes</h3>
-      <div class="selected-cont">
-        <div *ngFor="let mixes of last10mixes; let i = index;" class="selected">          
-          <div class="selectedPlayer">
-            <div class="number">{{ i + 1 }}</div>
-            <!-- Iteracja po graczach w miksie -->
-            <div class="mix-cont">
-              <div *ngFor="let mix of mixes; let i = index;" class="mix">
-                <div class="createdAt" *ngIf="i === 0"> <!-- Sprawdzenie, czy to pierwszy element -->
-                  {{ mix.createdAt | date:'dd.MM.yyyy HH:mm'}} <!-- Wyświetlenie createdAt tylko dla pierwszego elementu -->
-                </div>
-                <div class="team">
-                  <div class="player" [ngClass]="{ 'teamOne': mix.team === 1, 'teamTwo': mix.team === 2}">
-                    <span>{{ mix.playername }}</span>
-                    <img [src]="'assets/images/flags_svg/' + mix.flag + '.SVG'">
-                  </div>                
+                <div class="addToForm">
+                  <button mat-raised-button type="button" class="submit" color="accent" (click)="addAllPlayersToForm(mixes)">
+                    Add to Form
+                  </button>
                 </div>
               </div>
             </div>
-            
-    
-            <!-- Przycisk dodawania wszystkich graczy do formularza -->
-            <div class="addToForm">
-              <button mat-raised-button type="button" class="submit" color="accent" (click)="addAllPlayersToForm(mixes)">Add to Form</button> 
-            </div>            
           </div>
-        </div>        
+        </div>
+        
+   
       </div>
-    </div>
-    <!-- <div class="role">
-      Logged as <span>{{ role }}.</span>
-    </div> -->
-    <!-- <div *ngIf="userData">
-      <h2>Witaj, {{ userData.username }}!</h2>
-      <p>Twoja rola: 
-        <span *ngFor="let role of userRolesElo; let last = last">
-          {{ rolesMap[role] || 'Nieznana rola' }} 
-          <span *ngIf="!last">, </span> 
-        </span>
-      </p>
-    </div> -->
-  </div>
-  <notifier-container></notifier-container>
-</section>
+      <notifier-container></notifier-container>
+    
 <!-- <ng-http-loader> </ng-http-loader> -->
+  </mat-tab>
+
+<!-- Druga zakładka -->
+  <mat-tab label="Medal of Honor: Allied Assault">
+    <ng-template mat-tab-label>
+      <img src="assets/images/mohaa.png" alt="MOHAA" class="tab-icon" />
+      <span>Medal of Honor: Allied Assault</span>
+    </ng-template>
+      <!-- Dodaj nową treść tutaj -->
+      <div class="container">        
+        <form *ngIf="isDataLoaded && mergedDataPlayerAA?.authorized" [formGroup]="updateEloFormAA" (ngSubmit)="updateEloAA()" class="aa">
+          <div class="teams">
+            <div class="team">
+              <h2>Team One</h2>
+              <div formArrayName="teamOnePlayersAA">
+                <div *ngFor="let player of teamOnePlayersAA.controls; let i = index" [formGroupName]="i">
+                  <mat-form-field>
+                    <mat-label>Player Name</mat-label>
+                    <input matInput formControlName="playerNameAA" (input)="filterPlayersAA('teamOne', $event.target.value)" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let player of filteredPlayersAA" [value]="player.playername" (click)="selectPlayerAA('teamOne', player, i)">
+                        <img *ngIf="player.nationality" [src]="'assets/images/flags_svg/' + player.nationality + '.SVG'" alt="{{ player.nationality }}" class="flag-icon" width="20"/>
+                        {{ player.playername }} ({{ player.ranking }})
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+        
+                  <mat-form-field>
+                    <mat-label>Frags</mat-label>
+                    <input matInput formControlName="combatScoreAA" type="number" [pattern]="numberPattern">
+                    <mat-error *ngIf="player.controls.combatScoreAA.invalid && player.controls.combatScoreAA.touched">
+                      Invalid score, only numbers allowed.
+                    </mat-error>
+                  </mat-form-field>
+        
+                  <button mat-icon-button (click)="removePlayerAA('teamOne', i)">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                </div>
+        
+                <button mat-raised-button type="button" class="add-player" (click)="addPlayerAA('teamOne')">Add Player</button>
+                <div *ngIf="limitPlayerOne"> {{ limitPlayerOne }} </div>
+              </div>
+        
+              <mat-form-field>
+                <mat-label>Rounds Won</mat-label>
+                <input matInput formControlName="teamOneRoundsWonAA" type="number" [pattern]="numberPattern">
+                <mat-error *ngIf="updateEloFormAA.get('teamOneRoundsWonAA').invalid && updateEloFormAA.get('teamOneRoundsWonAA').touched">
+                  Rounds won must be a valid number.
+                </mat-error>
+              </mat-form-field>
+            </div>
+        
+            <div class="team">
+              <h2>Team Two</h2>
+              <div formArrayName="teamTwoPlayersAA">
+                <div *ngFor="let player of teamTwoPlayersAA.controls; let i = index" [formGroupName]="i">
+                  <mat-form-field>
+                    <mat-label>Player Name</mat-label>
+                    <input matInput formControlName="playerNameAA" (input)="filterPlayersAA('teamTwo', $event.target.value)" [matAutocomplete]="auto2">
+                    <mat-autocomplete #auto2="matAutocomplete">
+                      <mat-option *ngFor="let player of filteredPlayersAA" [value]="player.playername" (click)="selectPlayerAA('teamTwo', player, i)">
+                        <!-- Dodanie flagi obok nazwy gracza -->
+                        <img *ngIf="player.nationality" [src]="'assets/images/flags_svg/' + player.nationality + '.SVG'" alt="{{ player.nationality }}" class="flag-icon" width="20"/>
+                        {{ player.playername }} ({{ player.ranking }})
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                  
+        
+                  <mat-form-field>
+                    <mat-label>Frags</mat-label>
+                    <input matInput formControlName="combatScoreAA" type="number" [pattern]="numberPattern">
+                    <mat-error *ngIf="player.controls.combatScoreAA.invalid && player.controls.combatScoreAA.touched">
+                      Invalid score, only numbers allowed.
+                    </mat-error>
+                  </mat-form-field>
+        
+                  <button mat-icon-button (click)="removePlayerAA('teamTwo', i)">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                </div>
+        
+                <button mat-raised-button type="button" class="add-player" (click)="addPlayerAA('teamTwo')">Add Player</button>
+                <div *ngIf="limitPlayerTwo"> {{ limitPlayerTwo }} </div>
+              </div>
+        
+              <mat-form-field>
+                <mat-label>Rounds Won</mat-label>
+                <input matInput formControlName="teamTwoRoundsWonAA" type="number" [pattern]="numberPattern">
+                <mat-error *ngIf="updateEloFormAA.get('teamTwoRoundsWonAA').invalid && updateEloFormAA.get('teamTwoRoundsWonAA').touched">
+                  Rounds won must be a valid number.
+                </mat-error>
+              </mat-form-field>
+            </div>  
+          </div>   
+          
+          <div class="submit">
+            <button mat-raised-button type="submit" class="submit" color="accent" [disabled]="!updateEloFormAA.valid">Update ELO</button>
+            <button mat-raised-button type="button" class="clear-form submit" (click)="clearForm()">Clear Form</button>
+          </div>       
+        </form>
+      </div>
+   
+    </mat-tab>
+  </mat-tab-group>
+</section>

@@ -132,56 +132,56 @@ export class CupComponent implements OnInit, AfterViewInit {
   
   public teamA = {
     indexTeam: 0,
-    user1: 'Zielony',
-    user2: 'jojo',
-    user3: 'GlowaF1!' 
+    user1: `Pills N' Whine`,
+    user2: '',
+    user3: '' 
   };
   public teamB = {
     indexTeam: 1,
-    user1: 'Wariat',
-    user2: 'Jim',
-    user3: 'Farnoy'
+    user1: 'exclus1ve gaming',
+    user2: '',
+    user3: ''
   };
   public teamC = {
     indexTeam: 2,
-    user1: 'Cronic^',
-    user2: 'Evildude',
-    user3: 'Meg@Sh!ra'
+    user1: 'Quinas',
+    user2: '',
+    user3: ''
   }
   public teamD = {
     indexTeam: 3,
-    user1: 'ZielakPr0',
-    user2: '-Illu$ioN-',
-    user3: 'MaDiNfO'
+    user1: 'TeamForce',
+    user2: '',
+    user3: ''
   }
   public teamE = {
     indexTeam: 4,
-    user1: 'SzyCha',
-    user2: 'P3dr0',
-    user3: 'ManikE'
+    user1: 'ĆIPA',
+    user2: '',
+    user3: ''
   }
   public teamF = {
     indexTeam: 5,
-    user1: 'gRaBaRz',
-    user2: 'bAtOn',
-    user3: 'Neo'
+    user1: 'no name',
+    user2: '',
+    user3: ''
   }
   public teamG = {
     indexTeam: 6,
-    user1: 'Wicio',
-    user2: 'BL@DY',
-    user3: 'KaPsEL'
+    user1: 'wanksluts',
+    user2: '',
+    user3: ''
   }
   public teamH = {
     indexTeam: 7,
-    user1: 'Helm0r',
-    user2: 'omega',
-    user3: 'kurier'
+    user1: 'egypt',
+    user2: '',
+    user3: ''
   }
 
   public renderedTree: 'se' | 'de' = 'de';
   @Output() elemHovered: EventEmitter<any> = new EventEmitter<any>();
-  @ViewChild('cupFrame') public cupFrame: any;
+  @ViewChild('cupFrame') public cupFrame: any;  
 
   constructor(private playersApiService: PlayersApiService, @Inject(DOCUMENT) private document: any) {
     
@@ -212,11 +212,7 @@ export class CupComponent implements OnInit, AfterViewInit {
       // }
       // return res;
     });
-
-    // console.log('teamA', this.teamA);
-    
-    // console.log('teamsAllToShow', this.teamsAllToShow[0]);
-    // console.log('teamsAllToShow', this.teamsAllToShow);
+   
     this.doubleEliminationTournament = {
       
       rounds: [
@@ -225,54 +221,54 @@ export class CupComponent implements OnInit, AfterViewInit {
           matches: [
             {
               // teams: [{name: 'Team  A', score: 1}, {name: 'Team  B', score: 2}]              
-              teams: [{name: this.teamA, score: null, title: 'Team 1: ', class: "Team1"}, {name: this.teamB, score: null, title: 'Team 2: ', class: "Team2"}]              
+              teams: [{name: this.teamA, score: 1, title: 'Team 1: ', class: "Team1"}, {name: this.teamB, score: 2, title: 'Team 2: ', class: "Team2"}]              
             },
             {
               // teams: [{name: 'Team  3', score: null}, {name: 'Team  4', score: null}]
-              teams: [{name: this.teamC, score: null, title: 'Team 3: ', class: "Team3"}, {name: this.teamD, score: null, title: 'Team 4: ', class: "Team4"}] 
+              teams: [{name: this.teamC, score: 3, title: 'Team 3: ', class: "Team3"}, {name: this.teamD, score: 4, title: 'Team 4: ', class: "Team4"}] 
             },
             {
               // teams: [{name: 'Team  5', score: null}, {name: 'Team  6', score: null}]
-              teams: [{name: this.teamE, score: null, title: 'Team 5', class: "Team5"}, {name: this.teamF, score: null, title: 'Team 6: ', class: "Team6"}] 
+              teams: [{name: this.teamE, score: 5, title: 'Team 5', class: "Team5"}, {name: this.teamF, score: 6, title: 'Team 6: ', class: "Team6"}] 
             },
             {
               // teams: [{name: 'Team  7', score: null}, {name: 'Team  8', score: null}]
-              teams: [{name: this.teamG, score: null, title: 'Team 7: ', class: "Team7"}, {name: this.teamH, score: null, title: 'Team 8: ', class: "Team8"}] 
+              teams: [{name: this.teamG, score: 7, title: 'Team 7: ', class: "Team7"}, {name: this.teamH, score: 8, title: 'Team 8: ', class: "Team8"}] 
             }
           ]
         },
         {
           type: 'Winnerbracket',
           matches: [
-            // {
-            //   teams: [{name: 'Team  B', score: 1}, {name: 'Team  D', score: 2}]
-            // },
-            // {
-            //   teams: [{name: 'Team  F', score: 1}, {name: 'Team  H', score: 2}]
-            // }
-            {           
-              teams: [{}]
+            {
+              teams: [{name: this.teamB, score: 1, class: 'Team2'}, {name: this.teamD, score: 2, class: 'Team4'}]
             },
             {
-              teams: [{}]
+              teams: [{name: this.teamF, score: 1, class: 'Team6'}, {name: this.teamH, score: 2, class: 'Team8'}]
             }
+            // {           
+            //   teams: [{}]
+            // },
+            // {
+            //   teams: [{}]
+            // }
           ]
         },
         {
           type: 'Loserbracket',
           matches: [
-            // {
-            //   teams: [{name: 'Team  A', score: 1}, {name: 'Team  C', score: 2}]
-            // },
-            // {
-            //   teams: [{name: 'Team  E', score: 1}, {name: 'Team  G', score: 2}]
-            // }
             {
-              teams: [{}]
+              teams: [{name: this.teamA, score: 1, class: 'Team1'}, {name: this.teamC, score: 2}]
             },
             {
-              teams: [{}]
+              teams: [{name: this.teamE, score: 1}, {name: this.teamG, score: 2}]
             }
+            // {
+            //   teams: [{}]
+            // },
+            // {
+            //   teams: [{}]
+            // }
           ]
         },
         {
@@ -353,42 +349,35 @@ export class CupComponent implements OnInit, AfterViewInit {
           ]
         }
       ]
-    };  
-
-    // console.log('*** =>', this.doubleEliminationTournament.rounds);
-    // console.log('teamsAll', this.teamsAll[0]);
-    
+    };      
   }
 
   public stylingFrame = '<style>#top-bar {background-color: red;</style>';
 
   ngAfterViewInit() {  
-    const iframDoc = this.cupFrame.nativeElement.contentWindow.document;
-    console.log('iframeDoc', iframDoc.head);
-    iframDoc.head.appendChild(this.stylingFrame);
+    // const iframDoc = this.cupFrame.nativeElement.contentWindow.document;
+    // console.log('iframeDoc', iframDoc.head);
+    // iframDoc.head.appendChild(this.stylingFrame);
   }
 
-  mouseHover(e:any) {
-    
-    // e.target.classList.add('active');
-    // console.log('doc root', e.target.classList[1]);
-    const ngtt__teamTitle = document.querySelectorAll('.ngtt__team-title');
-    ngtt__teamTitle.forEach(el => {
-      if(el.classList.contains(e.target.classList[1])){
-        el.classList.add('active');
-      }
-    })
+  mouseHover(e: any) {   
+    const className = e.target.classList[1]; // Pobieramy klasę drużyny np. "team1"
+    if (!className) return;
+  
+    const elements = document.querySelectorAll(`.${className}`);
+    elements.forEach(el => {
+      el.classList.add('highlight-text', 'highlight-bg');
+    });
   }
-
-  mouseOver(e:any){
-    // console.log('e!', e);
-    const ngtt__teamTitle = document.querySelectorAll('.ngtt__team-title');
-    ngtt__teamTitle.forEach(el => {
-      if(el.classList.contains(e.target.classList[1])){
-        el.classList.remove('active');
-      }
-    })
-    
+  
+  mouseOver(e: any) {    
+    const className = e.target.classList[1];
+    if (!className) return;
+  
+    const elements = document.querySelectorAll(`.${className}`);
+    elements.forEach(el => {
+      el.classList.remove('highlight-text', 'highlight-bg');
+    });
   }
   
   public sortBracket(arr:any){
@@ -399,10 +388,7 @@ export class CupComponent implements OnInit, AfterViewInit {
 
   public showHidden(user:any, ask:boolean, i:any){    
     ask = true;
-    // console.log('showHidden user', user);
-    // console.log('showHidden ask', ask);
-    // console.log('showHidden i', i);        
-    
+       
     if(this.teamA.indexTeam == i){
       if(this.teamA.user1 == ''){
         this.teamA.user1 = user;

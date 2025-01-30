@@ -1,0 +1,95 @@
+<section style="padding-top: 100px;">
+  <div class="container">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <!-- Place Column -->
+      <ng-container matColumnDef="place">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Place</th>
+        <td mat-cell *matCellDef="let element">{{ element.place }}</td>
+      </ng-container>
+    
+      <!-- Playername Column -->
+      <ng-container matColumnDef="playername">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Playername</th>
+        <td mat-cell *matCellDef="let element">{{ element.playername }}</td>
+      </ng-container>
+    
+      <!-- Nationality Column -->
+      <ng-container matColumnDef="nationality">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nationality</th>
+        <td mat-cell *matCellDef="let element">
+          <img [src]='"assets/images/flags_svg/" + element.nationality + ".SVG"' width="25" style="border: 1px solid #000;">     
+        </td>
+      </ng-container>
+    
+      <!-- Ranking Column -->
+      <ng-container matColumnDef="ranking">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Ranking</th>
+        <td mat-cell *matCellDef="let element">{{ element.ranking }}</td>
+      </ng-container>
+    
+      <!-- S8FPW Column -->
+      <ng-container matColumnDef="s8fpw">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>S8FPW</th>
+        <td mat-cell *matCellDef="let element">{{ element.s8fpw }}</td>
+      </ng-container>
+      <!-- Total Wars (widoczne tylko gdy showMore = true) -->
+      <ng-container matColumnDef="totalwars" *ngIf="showMore">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Wars</th>
+        <td mat-cell *matCellDef="let player">{{ player.warcount }}</td>
+      </ng-container>
+    
+     
+      <ng-container matColumnDef="fpw">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>FpW</th>
+        <td mat-cell *matCellDef="let element">{{ element.fpw }}</td>
+      </ng-container>
+    
+      <!-- S8WARS Column -->
+      <ng-container matColumnDef="s8wars">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>S8Wars</th>
+        <td mat-cell *matCellDef="let element">{{ element.s8wars }}</td>
+      </ng-container>
+    
+      <!-- Lastwar Column -->
+      <ng-container matColumnDef="lastwar">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Last War</th>
+        <td mat-cell *matCellDef="let element">{{ element.lastwar | date:'dd.MM.yyyy HH:mm' }}</td>
+      </ng-container>
+    
+      <ng-container matColumnDef="last30_365_days">
+        <th mat-header-cell *matHeaderCellDef> Act </th>
+        <td mat-cell *matCellDef="let row">      
+          <div class="activity">
+            <div class="act-month" [attr.data-activity]="row.last30days" [style.background]="getActivityGradient(row.last30days)" matTooltip="{{ row.last30days }} wars in last month." matTooltipPosition="before" [ngClass]="{'over80': row.last30days > 80}">
+            </div>
+            <div class="act-year" [attr.data-activity]="row.last365days" [ngClass]="{
+              'green0': row.last365days == 0,
+              'green1_5': (row.last365days > 0 && row.last365days <= 30), 'green6_10': (row.last365days > 30 && row.last365days <= 90), 'green11_20': (row.last365days > 90 && row.last365days <= 150), 'green21_40': (row.last365days > 150 && row.last365days <= 250), 'green41_70': (row.last365days > 250 && row.last365days <= 365), 'green71': (row.last365days > 365) }" matTooltip="{{ row.last365days }} wars in last year." matTooltipPosition="before"></div>
+          </div>           
+        </td>
+      </ng-container>
+    
+      <!-- Header and Row Definitions -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+    </table>
+    <div class="lessMore">
+      <button mat-button (click)="toggleShowMore()">
+        {{ showMore ? 'Show less' : 'Show more' }}
+      </button>
+    </div>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+  <app-overlay
+  [title]="'Support Medal of Honor: Allied Assault!'"
+  [targetAmount]="100"
+  [imageSrc]="'assets/images/mohaa_logo2.jpg'"
+  [links]="[
+    { label: 'Donate via Zrzutka.pl', url: 'https://zrzutka.pl/en/t4ujr8', color: 'primary' },
+    { label: 'Donate via PayPal', url: 'https://www.paypal.com/donate/?hosted_button_id=K5HHU9LGEWULS', color: 'accent' }
+  ]"
+  (closed)="onOverlayClosed()"
+></app-overlay>
+</section>

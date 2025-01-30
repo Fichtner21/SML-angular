@@ -17,7 +17,7 @@
       <div class="clans">
         <ng-container *ngIf="filteredClans$ | async as filteredClans">
           <ng-container *ngFor="let clan of filteredClans; let i = index;">                   
-            <div class="row-ranking" (click)="toggleClanDetails(i)">
+            <div class="row-ranking" (click)="toggleClanDetails(i, clan.clan)">
               <div class="item">{{ i + 1}}</div>
               <div class="item clantag" matTooltip="{{clan.clanname}} clan.">{{ clan.clantag }}</div>
               <div class="item">
@@ -117,7 +117,7 @@
                     <button mat-raised-button color="primary" (click)="openChallengeModal(clan)" disabled>Challenge</button>
                   </div>
                 </div>
-              </div>
+              </div>            
               <div class="members" *ngIf="clan.members.length > 0">
                 CLAN MEMBERS:
                 <div *ngFor="let member of clan.members" class="member">    
@@ -144,6 +144,60 @@
                   </div>     
                 </div>
               </div>
+              <div *ngIf="clan.matches && clan.matches.length > 0; else noMatches">
+                <h3>Matches:</h3>
+                <div class="mat-table-container">
+                  <table mat-table [dataSource]="clan.matches" class="mat-table">
+                    <!-- Kolumna ID -->
+                    <ng-container matColumnDef="id">
+                      <th mat-header-cell *matHeaderCellDef> ID </th>
+                      <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+                    </ng-container>
+                
+                    <!-- Kolumna Date -->
+                    <ng-container matColumnDef="date">
+                      <th mat-header-cell *matHeaderCellDef> Date </th>
+                      <td mat-cell *matCellDef="let element"> {{ element.date | date:'dd.MM.yyyy HH:mm'}} </td>
+                    </ng-container>
+                
+                    <!-- Kolumna Opponent -->
+                    <ng-container matColumnDef="opponent">
+                      <th mat-header-cell *matHeaderCellDef> Opponent </th>
+                      <td mat-cell *matCellDef="let element"> {{ element.opponent }} </td>
+                    </ng-container>
+                
+                    <!-- Kolumna US -->
+                    <ng-container matColumnDef="us">
+                      <th mat-header-cell *matHeaderCellDef> US </th>
+                      <td mat-cell *matCellDef="let element" [ngClass]="{'red': element.us < element.them, 'green': element.us > element.them, 'gray': element.us === element.them}">
+                        {{ element.us }}
+                      </td>
+                    </ng-container>
+                
+                    <!-- Kolumna THEM -->
+                    <ng-container matColumnDef="them">
+                      <th mat-header-cell *matHeaderCellDef> THEM </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.them }}
+                      </td>
+                    </ng-container>
+                
+                    <!-- Kolumna Points -->
+                    <ng-container matColumnDef="points">
+                      <th mat-header-cell *matHeaderCellDef> Points </th>
+                      <td mat-cell *matCellDef="let element"><span *ngIf="element.points > 0">+</span>{{ element.points }} </td>
+                    </ng-container>
+                
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </div>
+                
+              </div>
+              <ng-template #noMatches>
+                <p>Brak meczów dla tego klanu.</p>
+              </ng-template>
+              
               <div class="clanname">
                   <!-- {{clan.clan_image}}
                   <img [src]="'assets/images/clans/' + clan?.clan_image" *ngIf="clan?.clan_image"/> -->

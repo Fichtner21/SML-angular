@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subscription, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { PlayersApiService } from './services/players-api.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -55,6 +55,7 @@ export class AppComponent implements OnInit, OnDestroy  {
   s6_wars: any;
   s7_wars: any;
   s8_wars: any;
+  s9_wars: any;
   total_clans: any;
   total_clanwars: any;
   progressValue: number;
@@ -82,7 +83,8 @@ export class AppComponent implements OnInit, OnDestroy  {
   userDataDiscord: any;
   avatarUrl: string | null = null;
   mergedData: any[] = [];
-  players: any[] = [];
+  // players: any[] = [];
+  players: any;
   mergedDataPlayer: any;
   isLoggedIn: boolean;
   roleDisplay: any;
@@ -122,30 +124,55 @@ export class AppComponent implements OnInit, OnDestroy  {
 
     
 
-    this.authService.getUserRoles3().subscribe({
-      next: (response) => {
-        if (Array.isArray(response.roles)) {
-          this.userRoles = response.roles; // Pobierz tablicę ról
-          this.role = this.getRoleNames(); // Ustal rolę do wyświetlenia
-          this.roleDisplay = this.getDisplayRole(this.userRoles); // Ustal rolę do wyświetlenia
-        } else {
-          console.error('Błąd: Pobierane role nie są tablicą.', response);
-          this.userRoles = [];
-          this.role = 'Guest'; // Ustaw domyślną rolę
-        }
-        this.playersApiService.getPlayersFinal('Players').subscribe(data => {
-          this.players = data;      
-          this.mergeData();
-        });
-        this.cdr.detectChanges();
-        // console.log('Role użytkownika:', this.userRoles);
-      },
-      error: (err) => {
-        console.error('Błąd podczas pobierania ról użytkownika:', err);
-      }
-    });    
-
-         
+          // this.authService.getUserRoles3().subscribe({
+          //   next: (response) => {
+          //     if (Array.isArray(response.roles)) {
+          //       this.userRoles = response.roles; // Pobierz tablicę ról
+          //       this.role = this.getRoleNames(); // Ustal rolę do wyświetlenia
+          //       this.roleDisplay = this.getDisplayRole(this.userRoles); // Ustal rolę do wyświetlenia
+          //     } else {
+          //       console.error('Błąd: Pobierane role nie są tablicą.', response);
+          //       this.userRoles = [];
+          //       this.role = 'Guest'; // Ustaw domyślną rolę
+          //     }
+          //     this.playersApiService.getPlayersFinal('Players').subscribe(data => {
+          //       this.players = data;      
+          //       this.mergeData();
+          //     });
+          //     this.cdr.detectChanges();
+          //     // console.log('Role użytkownika:', this.userRoles);
+          //   },
+          //   error: (err) => {
+          //     console.error('Błąd podczas pobierania ról użytkownika:', err);
+          //   }
+          // });  
+          this.authService.getUserRoles3()
+          .pipe(
+            switchMap((response) => {
+              if (Array.isArray(response.roles)) {
+                this.userRoles = response.roles; // Ustaw role
+                this.role = this.getRoleNames(); // Ustal rolę do wyświetlenia
+                this.roleDisplay = this.getDisplayRole(this.userRoles); // Ustal wyświetlaną rolę
+                return this.playersApiService.getPlayersFinal('Players'); // Pobierz graczy
+              } else {
+                console.error('Błąd: Pobierane role nie są tablicą.', response);
+                this.userRoles = [];
+                this.role = 'Guest'; // Ustaw domyślną rolę
+                return of([]); // Zwróć pustą tablicę jako fallback
+              }
+            })
+          )
+          .subscribe({
+            next: (players) => {
+              this.players = players;
+              this.mergeData(); // Scal dane
+              this.cdr.detectChanges(); // Wymuś wykrywanie zmian
+            },
+            error: (err) => {
+              console.error('Błąd podczas ładowania danych:', err);
+            }
+          });
+        
         }
       }
     );
@@ -185,6 +212,7 @@ export class AppComponent implements OnInit, OnDestroy  {
         this.s6_wars = response.values[1][3];
         this.s7_wars = response.values[1][4];
         this.s8_wars = response.values[1][5];
+        this.s9_wars = response.values[1][6];
         this.total_wars = response.values[1][1];
         this.num_Players = response.values[1][0];
 
@@ -288,7 +316,7 @@ export class AppComponent implements OnInit, OnDestroy  {
           // console.log(this.mergedDataPlayer)
         }
         return player; // Zwróć oryginalny obiekt, jeśli nie ma dopasowania
-      }).filter(player => player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name); // Filtruj tylko dopasowane obiekty
+      }).filter(player => player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name || player.discord_id === this.userDataDiscord.id); // Filtruj tylko dopasowane obiekty
       this.cdr.detectChanges();
     }
   }

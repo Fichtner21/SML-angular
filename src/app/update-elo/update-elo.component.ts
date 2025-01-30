@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { environment } from 'src/environments/environment';
 import { NotifierService } from 'angular-notifier';
@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmUpdateEloComponent } from '../shared/confirm-update-elo/confirm-update-elo.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmUpdateEloAaComponent } from '../shared/confirm-update-elo-aa/confirm-update-elo-aa.component';
 
 @Component({
   selector: 'app-update-elo',
@@ -20,35 +21,45 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./update-elo.component.scss']
 })
 export class UpdateEloComponent implements OnInit {
-  updateEloForm: FormGroup;
+  updateEloForm: FormGroup; //sh
+  updateEloFormAA: FormGroup; //aa
   players: any[] = [];
+  playersAA: any[] = [];
   filteredPlayers: any[] = [];
+  filteredPlayersAA: any[] = [];
   teamOnePlayersMix = [];
+  teamOnePlayersMixAA = [];
   teamTwoPlayersMix = [];  
+  teamTwoPlayersMixAA = [];  
   last10mixes: any[] = [];    
+  last10mixesAA: any[] = [];    
   last10mixesApi = environment.externalApiUrl + 'last-10-matches';
-  private apiUrl = 'https://script.googleapis.com/v1/scripts/AKfycbw8qilDg04_sl1MEdbm5KC3fVlkrsaI85DSjFyxbqQNM8-pvotrvreOi2dmhC7wtjN0:run';
+  last10mixesApiAA = environment.externalApiUrl + 'last-10-matches';
+  private apiUrl = 'https://script.googleapis.com/v1/scripts/AKfycbz8Cxn1Y0OtkBwaUdHAa_VaB8f5IuFHtMix30Hv76g9Z82k8h90tTcXNzdCfWMTkXIw:run';
   userRoles: string[] = [];
-
   rolesMap: { [key: string]: string } = {
     '1059920877044629614': 'OWNER',
     '716736352359809095': 'admin',
     '915354110302249011': 'League players'
   };
-
   role: any;
   userDataString: any;
   userDataDiscord: any;
   avatarUrl: string | null = null;
   mergedData: any[] = [];
+  mergedDataAA: any[] = [];
   roleDisplay: any;
   mergedDataPlayer: any;
+  mergedDataPlayerAA: any;
   isDataLoaded: boolean = false;  // Flaga kontrolująca załadowanie danych
   isLoading: boolean = true;      // Flaga kontrolująca, czy dane są w trakcie ładowania
   numberPattern: string = '^[0-9]*$'; // Pattern do walidacji liczb
   limitPlayerOne: any;
+  limitPlayerOneAA: any;
   limitPlayerTwo: any;
+  limitPlayerTwoAA: any;
   samePlayer: string;
+  samePlayerAA: string;
   userVerified: any;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private readonly oAuthService: OAuthService, private notifier: NotifierService, public authService: AuthService, private router: Router, private cdr: ChangeDetectorRef, private playersApiService: PlayersApiService, private snackBar: MatSnackBar, private dialog: MatDialog) {  
@@ -58,16 +69,21 @@ export class UpdateEloComponent implements OnInit {
       teamOneRoundsWon: ['', [Validators.required, Validators.pattern(this.numberPattern)]],
       teamTwoRoundsWon: ['', [Validators.required, Validators.pattern(this.numberPattern)]],
     }, { validators: this.playersMatchValidator });
-    
+
+    this.updateEloFormAA = this.fb.group({
+      teamOnePlayersAA: this.fb.array([], [Validators.minLength(3), Validators.maxLength(7)]),
+      teamTwoPlayersAA: this.fb.array([], [Validators.minLength(3), Validators.maxLength(7)]),
+      teamOneRoundsWonAA: ['', [Validators.required, Validators.pattern(this.numberPattern)]],
+      teamTwoRoundsWonAA: ['', [Validators.required, Validators.pattern(this.numberPattern)]],
+    }, { validators: this.playersMatchValidatorAA });    
   }
 
   ngOnInit() {    
     this.getToken().subscribe(token => {
       this.authService.saveToken(token); // Zapisz token w localStorage
-    });
+    });   
 
-    this.userVerified = this.authService.getUserDataGoogle();
-    // console.log('User:', this.userVerified.email_verified);
+    this.userVerified = this.authService.getUserDataGoogle();  
 
     const userId = '649159865213780006'; // Wstaw user ID użytkownika
     const guildId = '716723661909786690'; // Wstaw ID serwera
@@ -77,9 +93,35 @@ export class UpdateEloComponent implements OnInit {
     
     console.log('userData', this.userDataDiscord)   
 
-    this.authService.getUserRoles3().subscribe({
+    // this.authService.getUserRoles3().subscribe({
+    //   next: (response) => {
+    //     if (Array.isArray(response.roles)) {
+    //       this.userRoles = response.roles; // Pobierz tablicę ról
+    //       this.role = this.getRoleNames(); // Ustal rolę do wyświetlenia
+    //       this.roleDisplay = this.getDisplayRole(this.userRoles); // Ustal rolę do wyświetlenia
+    //     } else {
+    //       console.error('Błąd: Pobierane role nie są tablicą.', response);
+    //       this.userRoles = [];
+    //       this.role = 'Guest'; // Ustaw domyślną rolę
+    //     }
+    //     this.playersApiService.getPlayersFinal('Players').subscribe(data => {
+    //       this.players = data;      
+    //       this.mergeData();
+    //     });
+    //     this.playersApiService.getPlayersFinal('Players_AA').subscribe(data => {
+    //       this.playersAA = data;      
+    //       this.mergeDataAA();
+    //     });
+    //     this.cdr.detectChanges();
+    //     console.log('Role użytkownika:', this.userRoles);
+    //   },
+    //   error: (err) => {
+    //     console.error('Błąd podczas pobierania ról użytkownika:', err);
+    //   }
+    // });
+    this.authService.getUserRolesPublic().subscribe({
       next: (response) => {
-        if (Array.isArray(response.roles)) {
+        if (response && Array.isArray(response.roles)) {
           this.userRoles = response.roles; // Pobierz tablicę ról
           this.role = this.getRoleNames(); // Ustal rolę do wyświetlenia
           this.roleDisplay = this.getDisplayRole(this.userRoles); // Ustal rolę do wyświetlenia
@@ -88,17 +130,25 @@ export class UpdateEloComponent implements OnInit {
           this.userRoles = [];
           this.role = 'Guest'; // Ustaw domyślną rolę
         }
+    
+        // Pobierz dane graczy z obu arkuszy
         this.playersApiService.getPlayersFinal('Players').subscribe(data => {
           this.players = data;      
-          this.mergeData();
+          this.mergeData(); // Scal dane
         });
-        this.cdr.detectChanges();
-        console.log('Role użytkownika:', this.userRoles);
+    
+        this.playersApiService.getPlayersFinal('Players_AA').subscribe(data => {
+          this.playersAA = data;      
+          this.mergeDataAA(); // Scal dane
+        });
+    
+        this.cdr.detectChanges(); // Wymuś wykrycie zmian
       },
       error: (err) => {
         console.error('Błąd podczas pobierania ról użytkownika:', err);
       }
     });
+    
     this.getLast10Mixes()
     this.cdr.detectChanges();
   }
@@ -135,9 +185,47 @@ export class UpdateEloComponent implements OnInit {
         }
         
         return player;
-      }).filter(player => player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name);
+      }).filter(player => player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name || player.discord_id === this.userDataDiscord.id);
     
       console.log('mergedDataPlayer:', this.mergedDataPlayer);
+    }
+  }
+  
+  mergeDataAA(): void {
+    if (this.userDataDiscord && this.playersAA.length > 0) {
+      this.mergedDataAA = this.playersAA.map(player => {
+        const isMatching = player.username === this.userDataDiscord.username || 
+                           player.playername === this.userDataDiscord.global_name || 
+                           player.username === this.userDataDiscord.global_name || 
+                           player.playername === this.userDataDiscord.username ||
+                           player.discord_id === this.userDataDiscord.id;
+
+        if (isMatching) {
+          const mergedPlayer = { 
+            ...player, 
+            ...this.userDataDiscord, 
+            usernameurl: player.username, 
+            role: this.role, 
+            displayRole: this.roleDisplay, 
+          };
+
+          // Zapisz mergedPlayer w mergedDataPlayer
+          this.mergedDataPlayerAA = mergedPlayer;
+
+          // Możesz wywołać isAuthorized() po zapisaniu mergedPlayer
+          mergedPlayer.authorized = this.isAuthorizedAA();  // Tutaj przypisujemy wartość "authorized"
+
+          // Zmieniamy flage na false, gdy dane są już załadowane
+          this.isLoading = false;
+          this.isDataLoaded = true;
+
+          return mergedPlayer;
+        }
+        
+        return player;
+      }).filter(player => player.username === this.userDataDiscord.username || player.playername === this.userDataDiscord.global_name || player.discord_id === this.userDataDiscord.id);
+    
+      console.log('mergedDataPlayerAA:', this.mergedDataPlayerAA);
     }
   }
   
@@ -161,11 +249,25 @@ export class UpdateEloComponent implements OnInit {
     }
     const allowedRoles = ['OWNER','admin', 'League player'];
     const userRole = this.mergedDataPlayer.displayRole || '';
-    console.log('Allowed roles:', allowedRoles);
-    console.log('User role:', userRole);
+    // console.log('Allowed roles:', allowedRoles);
+    // console.log('User role:', userRole);
 
     const isAuthorized = allowedRoles.includes(userRole);
-    console.log('isAuthorized result:', isAuthorized);
+    // console.log('isAuthorized result:', isAuthorized);
+    return isAuthorized;
+  }
+
+  isAuthorizedAA(): boolean {
+    if (!this.mergedDataPlayerAA) {
+      return false; // Jeśli mergedDataPlayer nie jest dostępne, zwróć false
+    }
+    const allowedRoles = ['OWNER','admin', 'League player'];
+    const userRole = this.mergedDataPlayerAA.displayRole || '';
+    // console.log('Allowed roles:', allowedRoles);
+    // console.log('User role:', userRole);
+
+    const isAuthorized = allowedRoles.includes(userRole);
+    // console.log('isAuthorized result:', isAuthorized);
     return isAuthorized;
   }
   
@@ -212,12 +314,29 @@ export class UpdateEloComponent implements OnInit {
     });
   }  
 
+  createPlayerFormGroupAA(): FormGroup {
+    return this.fb.group({
+      playerNameAA: ['', Validators.required],  // Pole imienia gracza musi być wymagane
+      usernameAA: ['', Validators.required],    // Pole username musi być wymagane
+      rankingAA: ['', Validators.required],     // Ranking musi być wymagany
+      combatScoreAA: [null, [Validators.required, Validators.min(0)]]  // combatScore musi być liczbą >= 0
+    });
+  }  
+
   get teamOnePlayers(): FormArray {
     return this.updateEloForm.get('teamOnePlayers') as FormArray;
   }
   
   get teamTwoPlayers(): FormArray {
     return this.updateEloForm.get('teamTwoPlayers') as FormArray;
+  }
+
+  get teamOnePlayersAA(): FormArray {
+    return this.updateEloFormAA.get('teamOnePlayersAA') as FormArray;
+  }
+  
+  get teamTwoPlayersAA(): FormArray {
+    return this.updateEloFormAA.get('teamTwoPlayersAA') as FormArray;
   }
 
   getPlayersFinal(name: string): Observable<any> {
@@ -259,8 +378,7 @@ export class UpdateEloComponent implements OnInit {
         }));
       })
     );
-  }
-  
+  }  
 
   addPlayer(team: 'teamOne' | 'teamTwo') {
     const playersArray = this.updateEloForm.get(`${team}Players`) as FormArray;
@@ -279,10 +397,41 @@ export class UpdateEloComponent implements OnInit {
       // console.log('Max players reached for', team);
     }
   }
+
+  addPlayerAA(team: 'teamOne' | 'teamTwo') {
+    const playersArray = this.updateEloFormAA.get(`${team}PlayersAA`) as FormArray;
+  
+    // Sprawdzamy, czy liczba graczy nie przekroczyła maksymalnej liczby
+    if (playersArray.length < 7) {
+      playersArray.push(this.createPlayerFormGroupAA());
+    } else {
+      // Możesz dodać logikę wyświetlania komunikatu, jeśli liczba graczy przekroczyła limit
+      if(team === 'teamOne'){
+        this.limitPlayerOneAA = 'Max players reached for Team One.';
+      } 
+      if(team === 'teamTwo'){
+        this.limitPlayerTwoAA = 'Max players reached for Team Two.';
+      }      
+      // console.log('Max players reached for', team);
+    }
+  }
   
   playerValidation: Validators[] = [(control: FormArray) => {
     const teamOnePlayers = this.updateEloForm.get('teamOnePlayers').value;
     const teamTwoPlayers = this.updateEloForm.get('teamTwoPlayers').value;
+  
+    // Sprawdzenie, czy gracze w teamOne nie są w teamTwo i odwrotnie
+    for (let player of teamOnePlayers) {
+      if (teamTwoPlayers.includes(player)) {
+        return { playerConflict: true }; // Zwrócenie błędu, jeśli gracz występuje w obu drużynach
+      }
+    }
+    return null;
+  }];
+
+  playerValidationAA: Validators[] = [(control: FormArray) => {
+    const teamOnePlayers = this.updateEloFormAA.get('teamOnePlayersAA').value;
+    const teamTwoPlayers = this.updateEloFormAA.get('teamTwoPlayersAA').value;
   
     // Sprawdzenie, czy gracze w teamOne nie są w teamTwo i odwrotnie
     for (let player of teamOnePlayers) {
@@ -315,8 +464,40 @@ export class UpdateEloComponent implements OnInit {
     this.updateEloForm.reset();
   }
 
+  clearFormAA() {
+    const teamOnePlayers = this.updateEloFormAA.get('teamOnePlayersAA') as FormArray;
+    const teamTwoPlayers = this.updateEloFormAA.get('teamTwoPlayersAA') as FormArray;
+  
+    // Usunięcie wszystkich kontrolerów z tablicy
+    while (teamOnePlayers.length !== 0) {
+      teamOnePlayers.removeAt(0);
+    }
+  
+    while (teamTwoPlayers.length !== 0) {
+      teamTwoPlayers.removeAt(0);
+    }
+  
+    // Resetowanie wartości formularza
+    this.updateEloFormAA.reset({
+      teamOneRoundsWonAA: 0,
+      teamTwoRoundsWonAA: 0
+    });
+    this.samePlayerAA = '';
+    this.updateEloFormAA.reset();
+  }
+
   removePlayer(team: 'teamOne' | 'teamTwo', index: number) {
     const playersArray = this.updateEloForm.get(`${team}Players`) as FormArray;
+    if (playersArray.length > 3) {  // Minimalna liczba graczy w drużynie to 3
+      playersArray.removeAt(index);
+    } else {
+      // Możesz dodać logikę, aby wyświetlić komunikat, jeśli liczba graczy jest mniejsza niż 3
+      console.log('Minimum players required in', team);
+    }
+  }  
+
+  removePlayerAA(team: 'teamOne' | 'teamTwo', index: number) {
+    const playersArray = this.updateEloFormAA.get(`${team}PlayersAA`) as FormArray;
     if (playersArray.length > 3) {  // Minimalna liczba graczy w drużynie to 3
       playersArray.removeAt(index);
     } else {
@@ -336,6 +517,17 @@ export class UpdateEloComponent implements OnInit {
     );
   }
 
+  filterPlayersAA(team: 'teamOne' | 'teamTwo', searchTerm: string) {
+    if (!searchTerm) {
+      this.filteredPlayersAA = [];
+      return;
+    }
+    
+    this.filteredPlayersAA = this.playersAA.filter(player => 
+      player.playername.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
   selectPlayer(team: 'teamOne' | 'teamTwo', player: any, index: number) {
     const playerControl = (this.updateEloForm.get(`${team}Players`) as FormArray).at(index);   
   
@@ -348,16 +540,51 @@ export class UpdateEloComponent implements OnInit {
   
     playerControl.setValue(selectedPlayer);    
   }  
+  selectPlayerAA(team: 'teamOne' | 'teamTwo', player: any, index: number) {
+    const playerControl = (this.updateEloFormAA.get(`${team}PlayersAA`) as FormArray).at(index);   
+  
+    const selectedPlayer = {
+      playerNameAA: player.playername,
+      usernameAA: player.username,
+      rankingAA: parseFloat(player.ranking.replace(/,/g, '')), // Ensure ranking is set as a number
+      combatScoreAA: player.combatScore || null
+    };
+  
+    playerControl.setValue(selectedPlayer);    
+  }  
   
   addPlayerControl(team: 'teamOne' | 'teamTwo') {
     const teamArray = this.updateEloForm.get(`${team}Players`) as FormArray;
     teamArray.push(this.createPlayerFormGroup());
+  }  
+
+  addPlayerControlAA(team: 'teamOne' | 'teamTwo') {
+    const teamArray = this.updateEloFormAA.get(`${team}PlayersAA`) as FormArray;
+    teamArray.push(this.createPlayerFormGroupAA());
   }  
   
   addAllPlayersToForm(mixes: any[]) {
     mixes.forEach(mix => {
       const team = mix.team === 1 ? 'teamOne' : 'teamTwo';
       const playersArray = this.updateEloForm.get(`${team}Players`) as FormArray;
+  
+      // Sprawdź, czy nie przekroczono limitu graczy
+      if (playersArray.length < 7) {
+        const selectedPlayer = {
+          playerName: mix.playername,
+          username: mix.username || '', // Upewnij się, że masz właściwość username w obiekcie mix
+          ranking: parseFloat(mix.ranking.replace(/,/g, '')) || 0, // Upewnij się, że ranking jest liczbą
+          combatScore: mix.combatScore || null
+        };
+  
+        playersArray.push(this.fb.group(selectedPlayer));
+      }
+    });
+  }
+  addAllPlayersToFormAA(mixes: any[]) {
+    mixes.forEach(mix => {
+      const team = mix.team === 1 ? 'teamOne' : 'teamTwo';
+      const playersArray = this.updateEloFormAA.get(`${team}PlayersAA`) as FormArray;
   
       // Sprawdź, czy nie przekroczono limitu graczy
       if (playersArray.length < 7) {
@@ -395,80 +622,29 @@ export class UpdateEloComponent implements OnInit {
   }
 
    // Walidator, aby liczba graczy w obu drużynach była równa
-   playersMatchValidator(group: FormGroup) {
+  playersMatchValidator(group: FormGroup) {
     const teamOnePlayers = group.get('teamOnePlayers').value;
     const teamTwoPlayers = group.get('teamTwoPlayers').value;
     return teamOnePlayers.length === teamTwoPlayers.length ? null : { teamsMismatch: true };
+  } 
+  playersMatchValidatorAA(group: FormGroup) {
+    const teamOnePlayers = group.get('teamOnePlayersAA').value;
+    const teamTwoPlayers = group.get('teamTwoPlayersAA').value;
+    return teamOnePlayers.length === teamTwoPlayers.length ? null : { teamsMismatch: true };
+  } 
+
+  loadDraws(limit: number) {
+    this.playersApiService.getDraws(limit).subscribe(
+        (data) => {
+            console.log('Data received:', data); // Loguj dane tutaj
+            this.last10mixes = data; // Przypisz dane do zmiennej
+            console.log('Last 10 mixes:', this.last10mixes); // Loguj wynik
+        },
+        (error) => {
+            console.error('Error loading draws:', error);
+        }
+    );
   }
-
-  // updateElo() {
-  //   const formValue = this.updateEloForm.value;
-  
-  //   const data = {
-  //     teamOne: {
-  //       players: formValue.teamOnePlayers.map(p => p.username),
-  //       elos: formValue.teamOnePlayers.map(p => parseFloat(p.ranking)), // Ensure ranking is treated as a number
-  //       combatScores: formValue.teamOnePlayers.map(p => p.combatScore),
-  //       roundsWon: formValue.teamOneRoundsWon
-  //     },
-  //     teamTwo: {
-  //       players: formValue.teamTwoPlayers.map(p => p.username),
-  //       elos: formValue.teamTwoPlayers.map(p => parseFloat(p.ranking)), // Ensure ranking is treated as a number
-  //       combatScores: formValue.teamTwoPlayers.map(p => p.combatScore),
-  //       roundsWon: formValue.teamTwoRoundsWon
-  //     },
-  //     responsibilityFactor: 22,
-  //     outperformThreshold: 12,
-  //     contributor: this.userDataDiscord.global_name ? this.userDataDiscord.global_name : ''
-  //   };
-  //   console.log('data', data)
-
-  //   const intersection = data.teamOne.players.filter(player => data.teamTwo.players.includes(player));
-  //   const intersection2 = data.teamTwo.players.filter(player => data.teamOne.players.includes(player));
-
-  //   if (intersection.length > 0 || intersection2.length > 0) {
-  //     this.samePlayer = 'The same player is in both teams.'
-  //     // Możesz dodać tutaj np. wyświetlanie komunikatu o błędzie w UI
-  //     return;
-  //   }
-  
-  //   const body = {
-  //     function: 'calculateELO',
-  //     parameters: [data]      
-  //   };
-  
-  //   console.log('body', body);
-  //   // console.log('this.authHeader()',this.authHeader())
-  //   // Uncomment the line below to enable the actual HTTP request
-  //   this.http.post(this.apiUrl, body, { headers: this.authHeader() })
-  //   .subscribe(
-  //     response => {
-  //       console.log('ELO updated successfully', response);
-  //       // this.notifier.notify('success', `Mix war added!.`);
-  //       this.snackBar.open('War successfully added!', 'Close', {
-  //           // Czas trwania powiadomienia w milisekundach
-  //         horizontalPosition: 'right',  // Pozycja pozioma
-  //         verticalPosition: 'top',  // Pozycja pionowa
-  //         panelClass: ['success-snackbar'],  // Styl powiadomienia
-  //         duration: undefined
-  //       });
-  //       this.getPlayersFinal('Players').subscribe(data => {
-  //         this.players = data;
-  //         console.log('PLAYERS', data);
-  //         this.mergeData();
-  //       });
-  //     },
-  //     error => {
-  //       // console.error('Error updating ELO', error);
-  //       this.snackBar.open('Something went wrong, try again!', 'Close', {
-  //         duration: undefined,
-  //         horizontalPosition: 'right',
-  //         verticalPosition: 'top',
-  //         panelClass: ['error-snackbar']  // Styl powiadomienia w przypadku błędu
-  //       });
-  //     }
-  //   );
-  // }
 
   updateElo() {
     const formValue = this.updateEloForm.value;
@@ -505,11 +681,78 @@ export class UpdateEloComponent implements OnInit {
         this.submitElo(data);
       }
     });
+  } 
+
+  updateEloAA() {
+    const formValue = this.updateEloFormAA.value;
+  console.log('formValue', formValue)
+    // Przygotowanie danych do wysłania
+    const data = {
+      teamOne: {
+        players: formValue.teamOnePlayersAA.map(p => p.usernameAA),
+        elos: formValue.teamOnePlayersAA.map(p => parseFloat(p.rankingAA)),
+        combatScores: formValue.teamOnePlayersAA.map(p => p.combatScoreAA),
+        roundsWon: formValue.teamOneRoundsWonAA
+      },
+      teamTwo: {
+        players: formValue.teamTwoPlayersAA.map(p => p.usernameAA),
+        elos: formValue.teamTwoPlayersAA.map(p => parseFloat(p.rankingAA)),
+        combatScores: formValue.teamTwoPlayersAA.map(p => p.combatScoreAA),
+        roundsWon: formValue.teamTwoRoundsWonAA
+      },
+      responsibilityFactor: 22,
+      outperformThreshold: 12,
+      contributor: this.userDataDiscord.global_name || ''
+    };
+  
+    // Otwórz dialog
+    const dialogRef = this.dialog.open(ConfirmUpdateEloAaComponent, {
+      width: '600px',
+      data: data
+    });
+  
+    // Obsługa wyniku z dialogu
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Jeśli użytkownik potwierdził, wykonaj POST
+        this.submitEloAA(data);
+      }
+    });
   }
 
   private submitElo(data: any) {
     const body = {
       function: 'calculateELO',
+      parameters: [data]
+    };
+  console.log('body', body)
+    this.http.post(this.apiUrl, body, { headers: this.authHeader() }).subscribe(
+      response => {
+        this.snackBar.open('War successfully added!', 'Close', {
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+          duration: 3000
+        });
+        this.getPlayersFinal('Players').subscribe(data => {
+          this.players = data;
+          this.mergeData();
+        });
+      },
+      error => {
+        this.snackBar.open('Something went wrong, try again!', 'Close', {
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+          duration: 3000
+        });
+      }
+    );
+  } 
+
+  private submitEloAA(data: any) {
+    const body = {
+      function: 'calculateELOAA',
       parameters: [data]
     };
   console.log('body', body)

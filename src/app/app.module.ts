@@ -79,6 +79,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { BracketComponent } from './bracket/bracket.component';
 import { ConfirmUpdateEloAaComponent } from './shared/confirm-update-elo-aa/confirm-update-elo-aa.component';
 import { OverlayComponent } from './shared/overlay/overlay.component';
+import { TeamModalComponent } from './shared/team-modal/team-modal.component';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -131,7 +132,7 @@ const customNotifierOptions: NotifierOptions = {
     AppComponent,
     HomeComponent,
     DateFormatPipePipe,
-    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent, UpdateEloComponent, AuthCallbackComponent, DiscordLoginDialogComponent, LoginModalComponent, AdminComponent, ConfirmUpdateEloComponent, RankingObjAaComponent, UploadComponent, HistoryObjAaComponent, BracketComponent, ConfirmUpdateEloAaComponent, OverlayComponent
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent, UpdateEloComponent, AuthCallbackComponent, DiscordLoginDialogComponent, LoginModalComponent, AdminComponent, ConfirmUpdateEloComponent, RankingObjAaComponent, UploadComponent, HistoryObjAaComponent, BracketComponent, ConfirmUpdateEloAaComponent, OverlayComponent, TeamModalComponent
   ],
   imports: [
     CommonModule,

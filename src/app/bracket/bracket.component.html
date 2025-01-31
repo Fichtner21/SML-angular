@@ -1,10 +1,161 @@
 <section>
  
   <!-- <div id="bracket"></div> -->
-  <div class="bracket-container">
+  <!-- <div class="bracket-container">
     <h1>I Edition MoH:SH MIX LEAGUE CUP 3v3+</h1>
     <div id="bracket"></div>
-  </div>
+  </div> -->
+  <mat-tab-group [(selectedIndex)]="selectedTab" (selectedTabChange)="onTabChange($event)">
+
+    <!-- Timeline -->
+    <mat-tab label="Timeline">
+      <div class="tab-content tab-custom">
+        <h2>📅 Timeline</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">📝 February 2, 2025</div>
+            <div class="timeline-content">Registration closes</div>
+          </div>
+          <div class="arrow">
+            <span>→</span>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">🎲 February 2, 20:00 - 22:00</div>
+            <div class="timeline-content">Final pairings draw and elimination draw (if needed)</div>
+          </div>
+          <div class="arrow">
+            <span>→</span>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">🏆 March 15, 2025</div>
+            <div class="timeline-content">Expected tournament conclusion and final match</div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  
+    <!-- Teams -->
+    <mat-tab label="Teams">
+      <div class="tab-content teams">
+        <h2>👥 Teams</h2>
+        <div class="teams-grid">
+          <div class="team-card" *ngFor="let team of teams">
+            <div class="team-header">
+              <div class="team-logo" [style.backgroundImage]="'url(assets/images/clans/' + team.logo + ')'"></div>
+    
+              <h2 class="team-name">{{ team.name }}</h2>
+            </div>
+            <div class="team-players">
+              <ul>
+                <li *ngFor="let player of team.players" class="player-item">
+                  <a href="/obj-ranking/{{player.username}}" class="player-link">
+                    {{ player.playername }}
+                  </a>
+                  <img src="assets/images/flags_svg/{{player.countryFlag}}.SVG" alt="{{ player.name }} flag" class="player-flag">
+                </li>
+              </ul>
+            </div>
+          </div>         
+        </div>
+      </div>
+    </mat-tab>
+  
+    <!-- Draw -->
+    <mat-tab label="Draw">
+      <div class="tab-content tab-custom">
+        <h2>🎲 Draw</h2>
+        <p>Bracket draw and initial matchups.</p>
+        <button mat-raised-button color="primary" (click)="drawTeams()">Draw Teams</button>
+        <button *ngIf="revealedTeams < drawnTeams.length" mat-raised-button color="accent" (click)="revealNextTeam()">Reveal Next Team</button>
+
+      
+        <div class="draw-container">
+          <div *ngFor="let match of drawnPairs; let i = index" class="match-card">            
+            
+            <div class="team" *ngIf="revealedTeams > i * 2">
+              <img [src]="'https://mohsh.pl/assets/images/clans/' + match.team1.logo" alt="{{ match.team1.name }}">
+              <span>{{ match.team1.name }}</span>
+            </div>
+    
+            <span class="vs" *ngIf="revealedTeams > i * 2 + 1">VS</span>
+    
+            <div class="team" *ngIf="revealedTeams > i * 2 + 1">
+              <img [src]="'https://mohsh.pl/assets/images/clans/' + match.team2.logo" alt="{{ match.team2.name }}">
+              <span>{{ match.team2.name }}</span>
+            </div>
+            <div class="num" *ngIf="revealedTeams > i * 2 + 1">
+              Match: #{{i + 1}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  
+    <!-- Eliminations to best of 8 -->
+    <mat-tab label="Eliminations to best of 8">
+      <div class="tab-content tab-custom elimination">
+        <h2>⚔️ Eliminations to best of 8</h2>
+        <p>Here are the elimination matches before the main event.</p>
+        <div class="elimination-bracket">
+          <div *ngFor="let match of eliminationMatches" class="match-card">
+            <div class="match-stage">{{ match.stage }}</div>
+            <div class="teams">
+              <div class="team" *ngIf="match.team1">
+                <img [src]="'https://mohsh.pl/assets/images/clans/' + match.team1.logo" alt="{{ match.team1.name }}">
+                <span>{{ match.team1.name }}</span>
+                <input type="number" min="0" [(ngModel)]="match.score1">
+              </div>
+      
+              <span class="vs">VS</span>
+      
+              <div class="team" *ngIf="match.team2">
+                <img [src]="'https://mohsh.pl/assets/images/clans/' + match.team2.logo" alt="{{ match.team2.name }}">
+                <span>{{ match.team2.name }}</span>
+                <input type="number" min="0" [(ngModel)]="match.score2">
+              </div>
+            </div>
+    
+            
+    
+            <button mat-button color="primary" (click)="updateScore(match, match.score1, match.score2)">Submit Result</button>
+    
+            <div *ngIf="match.winner">
+              <p class="winner">Winner: {{ match.winner.name }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  
+    <!-- Rules -->
+    <mat-tab label="Rules">
+      <div class="tab-content tab-custom">
+        <h2>📜 Rules</h2>
+        <ul class="rules-list">
+          <li *ngFor="let rule of rules; let i = index" [attr.data-index]="i + 1">
+            <div class="content">
+              <strong class="index">{{ i + 1 }}</strong>
+              <strong class="rule-title">{{ rule.title }}</strong> {{ rule.description }}
+            </div>            
+            <ul *ngIf="rule.subpoints">
+              <li *ngFor="let sub of rule.subpoints" class="sub-content">{{ sub }}</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </mat-tab>
+  
+    <!-- Cup -->
+    <mat-tab label="Cup">
+      <div class="tab-content cup">
+        <h2>🏆 Cup</h2>
+        <p>The final rounds leading to the championship!</p>
+        <div class="bracket-container">
+          <div id="bracket"></div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
   
   
 </section>

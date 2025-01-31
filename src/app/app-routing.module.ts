@@ -44,8 +44,9 @@ const routes: Routes = [{
 },
 {
   path: 'cup',
-  loadChildren: () => import('./cup/cup.module').then(m => m.CupModule)
+  // loadChildren: () => import('./cup/cup.module').then(m => m.CupModule)
   // component: HomeComponent
+  component: BracketComponent
 },
 {
   path: 'dashboard',

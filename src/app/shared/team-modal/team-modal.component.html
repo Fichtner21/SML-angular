@@ -1,0 +1,40 @@
+<!-- <h2 mat-dialog-title>{{ team.name }}</h2>
+<div mat-dialog-content>
+  <img [src]="'https://mohsh.pl/assets/images/clans/' + team.logo" alt="{{ team.name }}" class="team-logo">
+  <p><strong>Tag:</strong> {{ team.tag }}</p>
+
+  <h3>Players</h3>
+  <ul>
+    <li *ngFor="let player of team.players">
+      <img [src]="'assets/images/flags_svg/' + player.countryFlag + '.SVG'" alt="{{ player.countryFlag }}">
+      {{ player.playername }} ({{ player.username }})
+    </li>
+  </ul>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="closeModal()">Close</button>
+</div> -->
+
+<div class="team-card">
+  <div class="team-header">
+    <div class="team-logo" [style.backgroundImage]="'url(assets/images/clans/' + team.logo + ')'"></div>
+    <h2 class="team-name">{{ team.name }}</h2>
+    <p><strong>Tag:</strong> {{ team.tag }}</p>
+  </div>
+  <div class="team-players">
+    <ul>
+      <li *ngFor="let player of team.players" class="player-item">
+        <a href="/obj-ranking/{{player.username}}" class="player-link">
+          {{ player.playername }}
+        </a>
+        <img src="assets/images/flags_svg/{{player.countryFlag}}.SVG" alt="{{ player.name }} flag" class="player-flag">
+      </li>
+    </ul>
+  </div>
+</div>  
+<div class="footer">
+  <img src="assets/images/sh_icon.png" alt="">
+  <div mat-dialog-actions>
+    <button mat-button (click)="closeModal()">Close</button>
+  </div>
+</div>

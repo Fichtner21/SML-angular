@@ -1,0 +1,141 @@
+// .team-logo {
+//   width: 100px;
+//   height: auto;
+//   margin-bottom: 10px;
+// }
+
+// ul {
+//   list-style: none;
+//   padding: 0;
+// }
+
+// li {
+//   display: flex;
+//   align-items: center;
+//   gap: 10px;
+//   margin-bottom: 5px;
+// }
+::ng-deep mat-dialog-container {
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #061533 0%, #0958e0 100%) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.team-card {  
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 10.01%);
+    background-size: 20px 20px;
+    transform: rotate(45deg);
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+
+    .team-logo {
+      overflow: hidden;
+      transform: scale(1.1);
+    }
+  }
+
+  .team-question {
+    padding-top: 50px;
+    font-size: 80px;
+  }
+}
+
+.team-header {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.team-logo {
+  width: 200px;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  transition: transform .3s;
+  overflow: hidden;
+}
+
+.team-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+  border-bottom: 2px dashed lightblue;
+}
+
+p {
+  font-size: 1.4rem;
+  color: #ccc;
+}
+
+.team-players ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px;
+}
+
+.player-link {
+  text-decoration: none;
+  // color: #007bff;
+  color: lightgray;
+  font-weight: bold;
+  transition: color 0.2s;
+
+  &:hover {
+    // color: #0056b3;
+    color: lightcyan;
+  }
+}
+
+.player-flag {
+  width: 25px;
+  height: 18px;
+  border-radius: 2px;    
+  object-fit: cover;
+}  
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  img {
+    width: 50px;
+  }
+}

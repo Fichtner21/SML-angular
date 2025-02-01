@@ -54,7 +54,7 @@
           </mat-menu>
           <button mat-button routerLink="obj-inactive" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.inactive_obj' | translate }}</button>
           <button mat-button routerLink="about" routerLinkActive="active" (click)="closeMenu()">{{ 'nav.about' | translate }}</button>        
-          <button mat-button routerLink="cup" routerLinkActive="active" (click)="closeMenu()">Cup</button>        
+          <button mat-button routerLink="cup" routerLinkActive="active" (click)="closeMenu()" class="cupper" matTooltip="Cup"><span></span></button>        
         
           <a routerLink="mix" routerLinkActive="active" class="mix" (click)="closeMenu()">Mix</a>          
         </div>

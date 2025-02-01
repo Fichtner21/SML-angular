@@ -489,3 +489,19 @@ nav {
   display: flex; /* Ustawia elementy w jednej linii */
   align-items: center; /* Wyrównanie ikon i tekstu */
 }
+
+.cupper {
+  background-image: url("../assets/images/winner-cup-7807.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+
+  span {
+    color:rgba(47, 48, 96, .5);
+    background-color: gold;
+    // padding: 2px;
+    // display: inline-block;
+    border-radius: 2px;
+    border: 1px solid rgba(47, 48, 96, .5);
+  }
+}

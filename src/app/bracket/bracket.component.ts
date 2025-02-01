@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TournamentService } from '../services/tournament.service';
 import * as $ from 'jquery';
 import { TeamModalComponent } from '../shared/team-modal/team-modal.component';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class BracketComponent implements OnInit {
     { title: "Please provide:", description: "", subpoints: ["🏆 Team name", "👥 Members", "📸 Logo (optional)"] },
     { title: "Cup Format:", description: "Double elimination bracket – Lose a match and have a last chance in the lower bracket." },
     { title: "Match format:", description: "Flexible 3v3-7v7." },
+    { title: "Game server", description: "Same game server as we play in league, location: germany, france, belgium, holland, switzerland, poland."},
     { title: "⏳ Time limit:", description: "4 minutes per round." },
     { title: "🔫 Weapons:", description: "", subpoints: ["1 Sniper allowed per team.", "1 Shotgun is allowed if 4v4+."] },
     { title: "🗺️ Map pool:", description: "Hunt, V2, Bridge, AbbeyBeta, Renan, Stlo." },
@@ -56,28 +58,42 @@ export class BracketComponent implements OnInit {
     { name: "Proper Instruction Motivates People", logo: "jkf.jpg" },
     { name: "Sixth Sense", logo: "s6.png" },
     // Dodaj 1 lub 2 drużyny więcej do testów:
-    { name: "New Challengers", logo: "sh_icon.png" },
-    { name: "Elite Squad", logo: "sh_icon.png" }
+    // { name: "New Challengers", logo: "sh_icon.png" },
+    // { name: "Elite Squad", logo: "sh_icon.png" }
   ];
   drawnPairs: { team1: any, team2: any }[] = [];
   drawnTeams: any[] = [];
   revealedTeams: number = 0;
   eliminationMatches: { team1: any, team2?: any, stage: string, score1?: number, score2?: number, winner?: any }[] = [];
 
-  constructor(private tournamentService: TournamentService, public dialog: MatDialog) {
+  userRoles: any;
+  canEditScores = false; // 🛑 Domyślnie użytkownik nie może edytować wyników
+
+  // 🔹 Role uprawnione do edycji wyników
+  allowedRoles = ["1059920877044629614", "716736352359809095"];
+
+  constructor(private tournamentService: TournamentService, public dialog: MatDialog, private authService: AuthService) {
     
   }
 
   ngOnInit(): void {
-    // this.tournamentService.getTeamsWithPlayers().subscribe(data => {
-    //   this.teams = data;
-    //   console.log('data', data)
-    // });
+   
   }
 
   ngAfterViewInit(): void {
-    this.loadBracket();
-    
+    // this.loadBracket();  
+    this.authService.getUserRoles3().subscribe((data) => {
+      console.log('AAA', data);
+      this.userRoles = data;
+
+      // ✅ Sprawdzamy, czy użytkownik ma jedną z dozwolonych ról
+      this.canEditScores = this.userRoles.roles.filter(role => this.allowedRoles.includes(role)).length > 0;
+      this.loadBracket();
+
+      // ✅ Po pobraniu ról ładujemy drabinkę i ustawiamy blokady edycji
+      
+    });  
+    // this.loadBracket();
   }
 
   loadBracket(): void {
@@ -90,7 +106,7 @@ export class BracketComponent implements OnInit {
 
       this.tournamentService.getTeamsWithPlayers().subscribe((teamsData) => {
         this.teams = teamsData;
-        console.log("📢 Pobranie drużyn:", this.teams);
+        // console.log("📢 Pobranie drużyn:", this.teams);
       });
     
       // **Konwersja drużyn na obiekty `{name, avatar}`**
@@ -109,8 +125,11 @@ export class BracketComponent implements OnInit {
     
       (jQuery('#bracket') as any).bracket({
         init: this.bracketData,
-        
-        save: this.saveMatchResult.bind(this),
+        // save: this.canEditScores ? this.saveMatchResult.bind(this) : null, // 🔹 Tylko uprawnieni użytkownicy mogą zapisywać wyniki!
+        // save: this.saveMatchResult.bind(this),
+        // save: function(){},
+        // save: this.canEditScores ? this.saveMatchResult.bind(this) : null,
+        save: this.canEditScores ? this.saveMatchResult.bind(this) : this.saveMatchResult.bind(this),
         disableToolbar: true,
         disableTeamEdit: true,
         teamWidth: 155,
@@ -129,6 +148,9 @@ export class BracketComponent implements OnInit {
           const teamName = event.target.innerText.trim();
           this.openTeamModal(teamName);
         });
+      }, 500);
+      setTimeout(() => {
+        this.disableScoreEdit();
       }, 500);
     });
   } 
@@ -152,11 +174,30 @@ export class BracketComponent implements OnInit {
     `);
   }  
 
+  // saveMatchResult(data: any): void {
+  //   console.log("Sending data to backend:", data);
+  //   this.tournamentService.updateBracketData(data).subscribe(() => {
+  //     console.log('Bracket data saved successfully');
+  //   });
+  // }
   saveMatchResult(data: any): void {
+    if (!this.canEditScores) {
+      console.warn("⚠️ Brak uprawnień do edytowania wyników!");
+      return;
+    }
+
     console.log("Sending data to backend:", data);
     this.tournamentService.updateBracketData(data).subscribe(() => {
       console.log('Bracket data saved successfully');
     });
+  }
+
+  disableScoreEdit(): void {
+    if (!this.canEditScores) {
+      jQuery('.editable').off('click'); // 🛑 Blokujemy możliwość kliknięcia w pola wyników
+      jQuery('.editable').css('pointer-events', 'none'); // 🔹 Usuwamy interaktywność
+      jQuery('.editable').css('opacity', '0.99'); // 🔹 Wyszarzamy pola wyników
+    }
   }
 
   openTeamModal(teamName: string): void {

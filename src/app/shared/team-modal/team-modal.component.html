@@ -1,20 +1,3 @@
-<!-- <h2 mat-dialog-title>{{ team.name }}</h2>
-<div mat-dialog-content>
-  <img [src]="'https://mohsh.pl/assets/images/clans/' + team.logo" alt="{{ team.name }}" class="team-logo">
-  <p><strong>Tag:</strong> {{ team.tag }}</p>
-
-  <h3>Players</h3>
-  <ul>
-    <li *ngFor="let player of team.players">
-      <img [src]="'assets/images/flags_svg/' + player.countryFlag + '.SVG'" alt="{{ player.countryFlag }}">
-      {{ player.playername }} ({{ player.username }})
-    </li>
-  </ul>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="closeModal()">Close</button>
-</div> -->
-
 <div class="team-card">
   <div class="team-header">
     <div class="team-logo" [style.backgroundImage]="'url(assets/images/clans/' + team.logo + ')'"></div>

@@ -147,7 +147,7 @@ export class PlayersApiService {
   }
 
   getDraws(limit: number): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.localApiUrl}api/get-draws?limit=${limit}`);
+    return this.http.get<any[]>(`${environment.externalApiUrl}api/get-draws?limit=${limit}`);
   }
 
   saveDraw(draw: any) {

@@ -1,0 +1,54 @@
+<div class="match-card">
+  <div class="team-wrapper">
+    <div class="team-header">
+      <div class="team-logo" [style.backgroundImage]="'url(' + match.team1.logo + ')'"></div>
+      <h2 class="team-name">{{ match.team1.name }}</h2>
+    </div>
+    <div class="team-players">
+      <ul>
+        <li *ngFor="let player of match.team1.players">
+          <a href="/obj-ranking/{{player.username}}" class="player-link">
+            {{ player.playername }}
+          </a>
+          <img src="assets/images/flags_svg/{{player.countryFlag}}.SVG" alt="{{ player.name }} flag" class="player-flag">
+        </li>
+      </ul>
+    </div>
+    <div class="score" [ngClass]="{'win': (match.team1.score > match.team2.score), 'lost' : (match.team1.score < match.team2.score) }">
+      {{ match.team1.score }}
+    </div>
+    
+   
+    
+  </div>
+
+  <div class="vs-section">
+    <h3>VS</h3>    
+  </div>
+
+  <div class="team-wrapper">
+    <div class="team-header">
+      <div class="team-logo" [style.backgroundImage]="'url(' + match.team2.logo + ')'"></div>
+      <h2 class="team-name">{{ match.team2.name }}</h2>
+    </div>
+    <div class="team-players">
+      <ul>
+        <li *ngFor="let player of match.team2.players">
+          <a href="/obj-ranking/{{player.username}}" class="player-link">
+            {{ player.playername }}
+          </a>
+          <img src="assets/images/flags_svg/{{player.countryFlag}}.SVG" alt="{{ player.name }} flag" class="player-flag">
+        </li>
+      </ul>
+    </div>
+    <div class="score" [ngClass]="{'win': (match.team2.score > match.team1.score), 'lost' : (match.team2.score < match.team1.score) }">
+      {{ match.team2.score }}
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div mat-dialog-actions>
+    <button mat-button (click)="closeModal()">Close</button>
+  </div>
+</div>

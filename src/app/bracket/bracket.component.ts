@@ -4,6 +4,8 @@ import { TournamentService } from '../services/tournament.service';
 import * as $ from 'jquery';
 import { TeamModalComponent } from '../shared/team-modal/team-modal.component';
 import { AuthService } from '../services/auth.service';
+import { TeamMatchModalComponent } from '../shared/team-match-modal/team-match-modal.component';
+import { ScreenshotModalComponent } from '../shared/screenshot-modal/screenshot-modal.component';
 
 
 @Component({
@@ -14,7 +16,8 @@ import { AuthService } from '../services/auth.service';
 export class BracketComponent implements OnInit {
   bracketData: any;
   teams: any[] = [];
-  selectedTab: number = 5; // 🔹 Ustawia "Cup" jako domyślną zakładkę
+  filteredTeams: any[] = []; // 🔹 Lista drużyn BEZ Wildcardów
+  selectedTab: number = 4; // 🔹 Ustawia "Cup" jako domyślną zakładkę
   rules = [
     { title: "Registration:", description: "Ends at 15:00 CET on Februar 2, 2025 (Sunday)." },
     { title: "Please provide:", description: "", subpoints: ["🏆 Team name", "👥 Members", "📸 Logo (optional)"] },
@@ -49,10 +52,16 @@ export class BracketComponent implements OnInit {
     { name: "TeamForce", logo: "teamforce.webp" },
     { name: "ĆIPA", logo: "cipa.png" },
     { name: "no name", logo: "no_name.webp" },
-    { name: "wanksluts", logo: "wanksluts.png" },
-    { name: "Winner Elm. match #1", logo: "sh_icon.png"}
-    // { name: "Proper Instruction Motivates People", logo: "jkf.jpg" },
-    // { name: 'Sixth Sense', logo: "s6.png"}  
+    { name: "wanksluts", logo: "wanksluts.png" },    
+    { name: "Proper Instruction Motivates People", logo: "jkf.jpg" },
+    { name: 'Sixth Sense', logo: "s6.png"},
+    { name: 'UpRising I', logo: "UpRising11.png"},  
+    { name: 'UpRising II', logo: "UpRising22.png"}, 
+    { name: 'Wildcard 1', logo: "w1.webp"}, 
+    { name: 'Wildcard 2', logo: "w2.webp"}, 
+    { name: 'Wildcard 3', logo: "w3.webp"}, 
+    { name: 'Wildcard 4', logo: "w4.webp"}, 
+    { name: 'Wildcard 5', logo: "w5.webp"} 
   ];
   eliminationTeams = [
     { name: "Proper Instruction Motivates People", logo: "jkf.jpg" },
@@ -62,6 +71,7 @@ export class BracketComponent implements OnInit {
     // { name: "Elite Squad", logo: "sh_icon.png" }
   ];
   drawnPairs: { team1: any, team2: any }[] = [];
+  nextRoundPairs: { team1: any, team2: any }[] = [];
   drawnTeams: any[] = [];
   revealedTeams: number = 0;
   eliminationMatches: { team1: any, team2?: any, stage: string, score1?: number, score2?: number, winner?: any }[] = [];
@@ -71,29 +81,38 @@ export class BracketComponent implements OnInit {
 
   // 🔹 Role uprawnione do edycji wyników
   allowedRoles = ["1059920877044629614", "716736352359809095"];
+  canSeeDraw = false;
+  matches: any[] = [];
 
   constructor(private tournamentService: TournamentService, public dialog: MatDialog, private authService: AuthService) {
     
   }
 
   ngOnInit(): void {
-   
+    this.canEditScores = localStorage.getItem('access') === '1';
+    this.canSeeDraw = localStorage.getItem('access') === '1'; 
+    this.loadBracket();
+    this.loadMatches();
   }
 
   ngAfterViewInit(): void {
     // this.loadBracket();  
-    this.authService.getUserRoles3().subscribe((data) => {
-      console.log('AAA', data);
-      this.userRoles = data;
+    // this.authService.getUserRoles3().subscribe((data) => {
+    //   // console.log('AAA', data);
+    //   this.userRoles = data;
 
-      // ✅ Sprawdzamy, czy użytkownik ma jedną z dozwolonych ról
-      this.canEditScores = this.userRoles.roles.filter(role => this.allowedRoles.includes(role)).length > 0;
-      this.loadBracket();
+    //   // ✅ Sprawdzamy, czy użytkownik ma jedną z dozwolonych ról
+    //   this.canEditScores = this.userRoles.roles.filter(role => this.allowedRoles.includes(role)).length > 0;
+    //   this.loadBracket();      
+    // });  
 
-      // ✅ Po pobraniu ról ładujemy drabinkę i ustawiamy blokady edycji
-      
-    });  
-    // this.loadBracket();
+    
+    // setTimeout(() => {
+    //   jQuery('.teamContainer').on('click', (event: any) => {
+    //     console.log('asdasd');
+    //     this.openMatchModal(event);
+    //   });
+    // }, 500);
   }
 
   loadBracket(): void {
@@ -106,6 +125,7 @@ export class BracketComponent implements OnInit {
 
       this.tournamentService.getTeamsWithPlayers().subscribe((teamsData) => {
         this.teams = teamsData;
+        this.filteredTeams = this.teams.filter(team => !team.name.startsWith("Wildcard"));
         // console.log("📢 Pobranie drużyn:", this.teams);
       });
     
@@ -132,7 +152,7 @@ export class BracketComponent implements OnInit {
         save: this.canEditScores ? this.saveMatchResult.bind(this) : this.saveMatchResult.bind(this),
         disableToolbar: true,
         disableTeamEdit: true,
-        teamWidth: 155,
+        teamWidth: 135,
         scoreWidth: 50,
         matchMargin: 20,
         roundMargin: 40,
@@ -143,15 +163,19 @@ export class BracketComponent implements OnInit {
         }
       });
 
-      setTimeout(() => {
-        jQuery('.team-name').on('click', (event: any) => {
-          const teamName = event.target.innerText.trim();
-          this.openTeamModal(teamName);
-        });
-      }, 500);
+      // setTimeout(() => {
+      //   jQuery('.team-name').on('click', (event: any) => {
+      //     const teamName = event.target.innerText.trim();
+      //     this.openTeamModal(teamName);
+      //   });
+      // }, 500);
       setTimeout(() => {
         this.disableScoreEdit();
       }, 500);
+
+      document.querySelectorAll('.team-wrapper').forEach(team => {
+        team.addEventListener('click', (event) => this.openMatchModal(event));
+      });
     });
   } 
 
@@ -200,15 +224,111 @@ export class BracketComponent implements OnInit {
     }
   }
 
-  openTeamModal(teamName: string): void {
-    const team = this.teams.find(t => t.name === teamName);
-    if (team) {
-      this.dialog.open(TeamModalComponent, {
-        data: team,
+  // openTeamModal(teamName: string): void {
+  //   const team = this.teams.find(t => t.name === teamName);
+  //   if (team) {
+  //     this.dialog.open(TeamModalComponent, {
+  //       data: team,
+  //       width: '600px'
+  //     });
+  //   }
+  // }
+
+  // openMatchModal(event: any): void {
+  //   const clickedElement = (event.target as HTMLElement).closest('.teamContainer'); // Pobieramy cały mecz
+  //   if (!clickedElement) return;
+  
+  //   const teams = clickedElement.querySelectorAll('.team-wrapper');
+  //   if (teams.length < 2) return;
+  //   const teamOver = clickedElement.querySelectorAll('.team');
+  
+  //   // Pobieramy dane pierwszej drużyny
+  //   const team1Name = teams[0].querySelector('.team-name')?.textContent?.trim();
+  //   const team1Logo = teams[0].querySelector('.team-avatar')?.getAttribute('src');
+  //   const team1Score = teamOver[0].querySelector('.score')?.textContent.trim();
+  //   console.log('team1Score', team1Score)
+  
+  //   // Pobieramy dane drugiej drużyny
+  //   const team2Name = teams[1].querySelector('.team-name')?.textContent?.trim();
+  //   const team2Logo = teams[1].querySelector('.team-avatar')?.getAttribute('src');
+  //   const team2Score = teamOver[1].querySelector('.score')?.textContent.trim();
+  //   console.log('team1Score', team2Score)
+  
+  //   if (!team1Name || !team1Logo || !team2Name || !team2Logo) return;
+  
+  //   this.tournamentService.getTeamsWithPlayers().subscribe((teamsData) => {
+  //     const team1Data = teamsData.find(t => t.name === team1Name) || { name: team1Name, logo: team1Logo, score: team1Score, players: [] };
+  //     const team2Data = teamsData.find(t => t.name === team2Name) || { name: team2Name, logo: team2Logo, score: team2Score, players: [] };
+  
+  //     const matchData = {
+  //       team1: team1Data,
+  //       team2: team2Data
+  //     };
+  
+  //     this.dialog.open(TeamMatchModalComponent, {
+  //       data: matchData,
+  //       width: '600px'
+  //     });
+  //   });
+  // }  
+
+  loadMatches(): void {
+    this.tournamentService.getMatchReports().subscribe((data) => {
+      this.matches = data;
+      console.log("📢 Match reports loaded:", this.matches);
+    });
+  }
+
+  openMatchModal(event: any): void {
+    const clickedElement = (event.target as HTMLElement).closest('.teamContainer'); // Pobieramy cały mecz
+    if (!clickedElement) return;
+  
+    const teams = clickedElement.querySelectorAll('.team-wrapper');
+    if (teams.length < 2) return;
+    const teamOver = clickedElement.querySelectorAll('.team');
+  
+    // Pobieramy dane pierwszej drużyny
+    const team1Name = teams[0].querySelector('.team-name')?.textContent?.trim();
+    const team1Logo = teams[0].querySelector('.team-avatar')?.getAttribute('src');
+    const team1Score = teamOver[0].querySelector('.score')?.textContent?.trim();    
+  
+    // Pobieramy dane drugiej drużyny
+    const team2Name = teams[1].querySelector('.team-name')?.textContent?.trim();
+    const team2Logo = teams[1].querySelector('.team-avatar')?.getAttribute('src');
+    const team2Score = teamOver[1].querySelector('.score')?.textContent?.trim();    
+  
+    if (!team1Name || !team1Logo || !team2Name || !team2Logo) return;
+  
+    this.tournamentService.getTeamsWithPlayers().subscribe((teamsData) => {
+      const foundTeam1 = teamsData.find(t => t.name === team1Name);
+      const foundTeam2 = teamsData.find(t => t.name === team2Name);
+  
+      const team1Data = {
+        name: team1Name,
+        logo: team1Logo,
+        score: team1Score,
+        players: foundTeam1 ? foundTeam1.players : [] // Jeśli znaleziono drużynę, przypisz jej graczy
+      };
+  
+      const team2Data = {
+        name: team2Name,
+        logo: team2Logo,
+        score: team2Score,
+        players: foundTeam2 ? foundTeam2.players : []
+      };
+  
+      const matchData = {
+        team1: team1Data,
+        team2: team2Data
+      };      
+  
+      this.dialog.open(TeamMatchModalComponent, {
+        data: matchData,
         width: '600px'
       });
-    }
+    });
   }
+  
 
   onTabChange(event: any): void {
     if (event.index === 5) { // "Cup" ma index 5
@@ -224,23 +344,146 @@ export class BracketComponent implements OnInit {
     }
   }
 
+ 
+
+  // drawTeams(): void {
+  //   const wildcardTeams = this.teamsDraw.filter(team => team.name.startsWith("Wildcard"));
+  //   const nonWildcardTeams = this.teamsDraw.filter(team => !team.name.startsWith("Wildcard"));
+
+  //   this.drawnPairs = [];
+  //   this.drawnTeams = [];
+  //   this.revealedTeams = 0; // Resetujemy licznik odkrytych drużyn
+
+  //   const shuffledWildcardTeams = [...wildcardTeams].sort(() => Math.random() - 0.5);
+  //   const shuffledNonWildcardTeams = [...nonWildcardTeams].sort(() => Math.random() - 0.5);
+
+  //   const shuffledTeams: any[] = [];
+
+  //   // 🔹 Losujemy pary tak, aby Wildcardy nie były razem
+  //   while (shuffledWildcardTeams.length > 0 && shuffledNonWildcardTeams.length > 0) {
+  //       shuffledTeams.push(shuffledNonWildcardTeams.pop());
+  //       shuffledTeams.push(shuffledWildcardTeams.pop());
+  //   }
+
+  //   // 🔹 Jeśli zostały jeszcze drużyny, dodajemy je losowo
+  //   while (shuffledNonWildcardTeams.length > 0) {
+  //       shuffledTeams.push(shuffledNonWildcardTeams.pop());
+  //   }
+  //   while (shuffledWildcardTeams.length > 0) {
+  //       shuffledTeams.push(shuffledWildcardTeams.pop());
+  //   }
+
+  //   // 🔹 Tworzymy pary z losowanych drużyn
+  //   for (let i = 0; i < shuffledTeams.length; i += 2) {
+  //       this.drawnPairs.push({ team1: shuffledTeams[i], team2: shuffledTeams[i + 1] });
+  //       this.drawnTeams.push(shuffledTeams[i], shuffledTeams[i + 1]); // Dodajemy drużyny pojedynczo
+  //   }
+  // }
+
   drawTeams(): void {
-    const shuffledTeams = [...this.teamsDraw].sort(() => Math.random() - 0.5);
+    const wildcardTeams = this.teamsDraw.filter(team => team.name.startsWith("Wildcard"));
+    const nonWildcardTeams = this.teamsDraw.filter(team => !team.name.startsWith("Wildcard"));
+
     this.drawnPairs = [];
     this.drawnTeams = [];
-    this.revealedTeams = 0; // Resetujemy licznik odkrytych drużyn
+    this.revealedTeams = 0; // Resetujemy licznik ujawnionych drużyn
 
+    const shuffledWildcardTeams = [...wildcardTeams].sort(() => Math.random() - 0.5);
+    const shuffledNonWildcardTeams = [...nonWildcardTeams].sort(() => Math.random() - 0.5);
+
+    const shuffledTeams: any[] = [];
+
+    // 🔹 Tworzymy pary Wildcard + zwykła drużyna
+    while (shuffledWildcardTeams.length > 0 && shuffledNonWildcardTeams.length > 0) {
+        shuffledTeams.push(shuffledNonWildcardTeams.pop());
+        shuffledTeams.push(shuffledWildcardTeams.pop());
+    }
+
+    // 🔹 Jeśli zostały jeszcze drużyny, dodajemy je losowo
+    while (shuffledNonWildcardTeams.length > 0) {
+        shuffledTeams.push(shuffledNonWildcardTeams.pop());
+    }
+    while (shuffledWildcardTeams.length > 0) {
+        shuffledTeams.push(shuffledWildcardTeams.pop());
+    }
+
+    // 🔹 Tworzenie par i zabezpieczenie przed Wildcard vs Wildcard
     for (let i = 0; i < shuffledTeams.length; i += 2) {
-      this.drawnPairs.push({ team1: shuffledTeams[i], team2: shuffledTeams[i + 1] });
-      this.drawnTeams.push(shuffledTeams[i], shuffledTeams[i + 1]); // Dodajemy drużyny pojedynczo
+        // Jeśli ostatnia para to Wildcard vs Wildcard, zamieniamy jednego Wildcarda z drużyną nie-Wildcard
+        if (i + 1 < shuffledTeams.length &&
+            shuffledTeams[i].name.startsWith("Wildcard") &&
+            shuffledTeams[i + 1].name.startsWith("Wildcard")) {
+
+            // Szukamy pierwszej dostępnej drużyny nie-Wildcard do wymiany
+            for (let j = i + 2; j < shuffledTeams.length; j++) {
+                if (!shuffledTeams[j].name.startsWith("Wildcard")) {
+                    // Zamiana Wildcarda z inną drużyną
+                    [shuffledTeams[i + 1], shuffledTeams[j]] = [shuffledTeams[j], shuffledTeams[i + 1]];
+                    break;
+                }
+            }
+        }
+
+        this.drawnPairs.push({ team1: shuffledTeams[i], team2: shuffledTeams[i + 1] });
+        this.drawnTeams.push(shuffledTeams[i], shuffledTeams[i + 1]); // Dodajemy drużyny pojedynczo
     }
   }
+
+
+
+  generateNextRound(): void {
+    this.nextRoundPairs = [];
+
+    // 🔹 Sprawdzamy, czy wszystkie mecze pierwszej rundy zostały ujawnione
+    if (this.revealedTeams < this.drawnTeams.length) {
+        return;
+    }
+
+    for (let i = 0; i < this.drawnPairs.length; i += 2) {
+        if (i + 1 < this.drawnPairs.length) {
+            const match1 = this.drawnPairs[i];
+            const match2 = this.drawnPairs[i + 1];
+
+            const winner1 = this.determineWinner(match1);
+            const winner2 = this.determineWinner(match2);
+
+            this.nextRoundPairs.push({ team1: winner1, team2: winner2 });
+        }
+    }
+}
+
+
+determineWinner(match: { team1: any, team2: any }): any {
+    const isWildcard1 = match.team1.name.startsWith("Wildcard");
+    const isWildcard2 = match.team2.name.startsWith("Wildcard");
+
+    if (isWildcard1 && !isWildcard2) {
+        return match.team2;
+    } else if (!isWildcard1 && isWildcard2) {
+        return match.team1;
+    } else {
+        return { name: `${match.team1.name} / ${match.team2.name}`, logo: "unknown.png" };
+    }
+}
+
+
+  // revealNextTeam(): void {
+  //   if (this.revealedTeams < this.drawnTeams.length) {
+  //     this.revealedTeams++;
+  //   }
+  // }
 
   revealNextTeam(): void {
     if (this.revealedTeams < this.drawnTeams.length) {
-      this.revealedTeams++;
+        this.revealedTeams++;
     }
-  }
+
+    // 🔹 Jeśli wszystkie drużyny zostały ujawnione, generujemy drugą rundę
+    if (this.revealedTeams === this.drawnTeams.length) {
+        this.generateNextRound();
+    }
+}
+
 
   //ELIMINATION
   generateEliminationBracket(): void {
@@ -320,6 +563,14 @@ export class BracketComponent implements OnInit {
         }
       }
     }
+  }
+
+  openScreenshotModal(imageUrl: string): void {
+    this.dialog.open(ScreenshotModalComponent, {
+      data: { imageUrl },
+      width: '80%',
+      maxHeight: '90vh'
+    });
   }
 
   // ngAfterViewInit(): void {

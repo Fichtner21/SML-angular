@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TournamentService {
-  private apiUrl = 'http://localhost:5000/api';
+  private apiUrlLocal = 'http://localhost:5000';
+  private apiUrl = 'https://mohsh-discord.onrender.com';
  
 
   constructor(private http: HttpClient) {}
@@ -19,6 +21,11 @@ export class TournamentService {
   updateBracketData(data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/bracket`, data);
   }
+
+  getMatchReports(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/matches`);
+  }
+  
 
    // Pobiera drużyny i ich składy
    public getTeamsWithPlayers(): Observable<any> {

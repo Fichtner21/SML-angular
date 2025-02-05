@@ -40,7 +40,7 @@ section {
   overflow: hidden;
   position: relative;
   transform-origin: top left;
-  min-width: 1800px;
+  min-width: 1900px;
   
 
   &::before {
@@ -60,7 +60,7 @@ section {
     background-image: url("/assets/images/sh_icon.png");
     width: 120px;
     height: 120px;
-    bottom: 300px;
+    bottom: 100px;
     right: 70px;
     opacity: 0.5;
     position: absolute;
@@ -80,12 +80,28 @@ h1 {
   margin-bottom: 20px;  
 }
 
+h3 {
+  font-size: 30px;
+  color: #fff;
+  padding: 10px; 
+  border-radius: 10px;
+}
+
+.first > *:nth-last-child(-n+3) {
+  border: 5px solid green;
+}
+
+.second > *:nth-child(-n+2) {
+  border: 5px solid green;
+}
+
+
 ::ng-deep .team-name {
   cursor: pointer;
 }
 
 ::ng-deep .jQBracket {
-  transform: scale(1.5); /* 🔹 Powiększenie całej drabinki */
+  transform: scale(1.2); /* 🔹 Powiększenie całej drabinki */
   transform-origin: top left; /* 🔹 Punkt odniesienia w lewym górnym rogu */
 }
 /* Powiększenie pola drużyny */
@@ -140,6 +156,7 @@ li {
   display: flex;
   align-items: center;
   gap: 8px;
+  color: lightblue;
 }
 
 //TEAMS
@@ -252,10 +269,6 @@ li {
   }  
 }
 
-::ng-deep .tab-custom {
-  height: 100vh !important;  
-}
-
 ::ng-deep .mat-tab-label-content {
   color: #ccc !important;
 }
@@ -320,7 +333,8 @@ h2, p {
     font-size: 18px;
     margin-bottom: 10px;
     padding-left: 25px;
-    position: relative;    
+    position: relative; 
+    color: lightblue;   
   }
   
   .rules-list li::before {
@@ -364,7 +378,7 @@ h2, p {
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;  
-  max-width: 1300px;
+  max-width: 1800px;
   margin: 0 auto;
   padding-top: 20px;
 
@@ -575,4 +589,123 @@ h2, p {
     }
   }
   
+}
+
+//MATCH RAPORTS
+.matches-raport {
+
+  .match-report {
+    background: #2e0e0e;
+    border: 1px solid #844;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 10.01%);
+      background-size: 20px 20px;
+      transform: rotate(45deg);
+      pointer-events: none;
+    }
+  }
+  
+  .match-title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .match-meta {
+    font-size: 14px;
+    color: #ccc;
+  }
+  
+  .match-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .team-info {
+    text-align: center;
+    width: 40%;
+
+    h4 {
+      font-size: 22px;
+    }
+
+    .player-list {
+      display: flex;
+      flex-direction: column; 
+      align-items: center; /* Centruje całą listę */
+    }
+    
+    .player-item {
+      display: flex;
+      align-items: center; /* Wyrównuje flagę i tekst w pionie */
+      gap: 8px; /* Dodaje odstęp między flagą a nazwą */
+      width: 200px; /* Szerokość dla równego wyrównania */
+      text-align: left; /* Wyrównanie tekstu do lewej */
+      justify-content: center;
+    }
+    
+  }
+  
+  .team-logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  
+  .flag-icon {
+    width: 24px;
+    height: 16px;
+    margin-right: 5px;
+  }
+  
+  .match-score {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .match-report-details {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #ddd;
+  }
+  
+  .match-media {
+    margin-top: 15px;
+  }
+  
+  .screenshots {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .screenshot-thumbnail {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .screenshot-thumbnail:hover {
+    transform: scale(1.1);
+  }
+   
 }

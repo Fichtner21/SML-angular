@@ -14,9 +14,24 @@ body {
   padding: 0;
   font-family: 'Rajdhani';  
 }
-html, body { height: 100%; }
+// html, body { height: 100%; }
 body { margin: 0; font-family: Rajdhani, "Helvetica Neue", sans-serif; }
 // body { margin: 0; font-family: Rajdhani, "Helvetica Neue", sans-serif; }
+
+/* 🔹 Usuwa nadmiarowe przewijanie w Angular Material Tabs */
+::ng-deep .mat-tab-body-wrapper {
+  overflow: hidden !important;
+}
+
+/* 🔹 Zapewnia przewijanie tylko dla całej strony */
+html, body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 
 
 .modal {

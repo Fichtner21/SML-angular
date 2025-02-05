@@ -1,0 +1,18 @@
+.screenshot-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.screenshot-image {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 8px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}

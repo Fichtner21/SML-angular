@@ -17,6 +17,7 @@ import { RankingObjAaComponent } from './ranking-obj-aa/ranking-obj-aa.component
 import { UploadComponent } from './upload/upload.component';
 import { HistoryObjAaComponent } from './history-obj-aa/history-obj-aa.component';
 import { BracketComponent } from './bracket/bracket.component';
+import { LoginCupComponent } from './login-cup/login-cup.component';
 
 const routes: Routes = [{
   path: '',
@@ -89,6 +90,10 @@ const routes: Routes = [{
 {
   path: 'obj-aa',
   component: RankingObjAaComponent,
+},
+{
+  path: 'cup-login',
+  component: LoginCupComponent
 },
 {
   path: 'admin',

@@ -39,7 +39,7 @@
       <div class="tab-content teams">
         <!-- <h2>👥 Teams</h2> -->
         <div class="teams-grid">
-          <div class="team-card" *ngFor="let team of teams">
+          <div class="team-card" *ngFor="let team of filteredTeams">
             <div class="team-header">
               <div class="team-logo" [style.backgroundImage]="'url(assets/images/clans/' + team.logo + ')'"></div>
     
@@ -61,7 +61,7 @@
     </mat-tab>
   
     <!-- Draw -->
-    <mat-tab label="Draw">
+    <!-- <mat-tab label="Draw" *ngIf="canSeeDraw"> 
       <div class="tab-content tab-custom">
         <h2>🎲 Draw</h2>
         <p>Bracket draw and initial matchups.</p>
@@ -72,14 +72,14 @@
         <div class="draw-container">
           <div *ngFor="let match of drawnPairs; let i = index" class="match-card">            
             
-            <div class="team" *ngIf="revealedTeams > i * 2">
+            <div class="team" *ngIf="revealedTeams > i * 2" (click)="openTeamModal(match.team1.name)">
               <img [src]="'https://mohsh.pl/assets/images/clans/' + match.team1.logo" alt="{{ match.team1.name }}">
               <span>{{ match.team1.name }}</span>
             </div>
     
             <span class="vs" *ngIf="revealedTeams > i * 2 + 1">VS</span>
     
-            <div class="team" *ngIf="revealedTeams > i * 2 + 1">
+            <div class="team" *ngIf="revealedTeams > i * 2 + 1" (click)="openTeamModal(match.team2.name)">
               <img [src]="'https://mohsh.pl/assets/images/clans/' + match.team2.logo" alt="{{ match.team2.name }}">
               <span>{{ match.team2.name }}</span>
             </div>
@@ -89,10 +89,62 @@
           </div>
         </div>
       </div>
+    </mat-tab> -->
+    <!-- <mat-tab label="Draw" *ngIf="canSeeDraw">
+      <div class="tab-content tab-custom">
+        <h2>🎲 Draw</h2>
+        <p>Bracket draw and initial matchups.</p>
+        <button mat-raised-button color="primary" (click)="drawTeams()">Draw Teams</button>
+        <button *ngIf="revealedTeams < drawnTeams.length" mat-raised-button color="accent" (click)="revealNextTeam()">Reveal Next Team</button>
+    
+        <div class="draw-container first">
+          <h3>First Round Matches</h3>
+          <div *ngFor="let match of drawnPairs; let i = index" class="match-card">
+            <div class="team" *ngIf="revealedTeams > i * 2" (click)="openTeamModal(match.team1.name)">
+              <img [src]="'https://mohsh.pl/assets/images/clans/' + match.team1.logo" alt="{{ match.team1.name }}">
+              <span class="team-name">{{ match.team1.name }}</span>
+            </div>
+    
+            <span class="vs" *ngIf="revealedTeams > i * 2 + 1">VS</span>
+    
+            <div class="team" *ngIf="revealedTeams > i * 2 + 1" (click)="openTeamModal(match.team2.name)">
+              <img [src]="'https://mohsh.pl/assets/images/clans/' + match.team2.logo" alt="{{ match.team2.name }}">
+              <span class="team-name">{{ match.team2.name }}</span>
+            </div>
+    
+            <div class="num" *ngIf="revealedTeams > i * 2 + 1">
+              Match: #{{i + 1}}
+            </div>
+          </div>
+        </div>
+    
+        🔹 Druga runda meczów -->
+        <!--<div *ngIf="revealedTeams === drawnTeams.length" class="next-round-container draw-container second">
+          <h3>Next Round Matches</h3>
+          <div *ngFor="let match of nextRoundPairs; let i = index" class="match-card">
+            <div class="team">
+              <img [src]="'https://mohsh.pl/assets/images/clans/' + match.team1.logo" alt="{{ match.team1.name }}">
+              <span class="team-name">{{ match.team1.name }}</span>
+            </div>
+    
+            <span class="vs">VS</span>
+    
+            <div class="team">
+              <img [src]="'https://mohsh.pl/assets/images/clans/' + match.team2.logo" alt="{{ match.team2.name }}">
+              <span class="team-name">{{ match.team2.name }}</span>
+            </div>
+    
+            <div class="num">Match: #{{i + 1}}</div>
+          </div>
+        </div>
+      </div>
     </mat-tab>
+     -->
+    
+    
   
     <!-- Eliminations to best of 8 -->
-    <mat-tab label="Eliminations to best of 8">
+    <!-- <mat-tab label="Eliminations to best of 8">
       <div class="tab-content tab-custom elimination">
         <h2>⚔️ Eliminations to best of 8</h2>
         <p>Here are the elimination matches before the main event.</p>
@@ -125,13 +177,13 @@
           </div>
         </div>
       </div>
-    </mat-tab>
+    </mat-tab> -->
   
     <!-- Rules -->
     <mat-tab label="Rules">
       <div class="tab-content tab-custom">
         <h2>📜 Rules</h2>
-        <ul class="rules-list">
+        <!-- <ul class="rules-list">
           <li *ngFor="let rule of rules; let i = index" [attr.data-index]="i + 1">
             <div class="content">
               <strong class="index">{{ i + 1 }}</strong>
@@ -141,10 +193,167 @@
               <li *ngFor="let sub of rule.subpoints" class="sub-content">{{ sub }}</li>
             </ul>
           </li>
-        </ul>
+        </ul> -->
+        <h2>🎮 Format</h2>
+    <p>The format will be double elimination.</p>
+
+    <h2>📡 Streaming</h2>
+    <ul class="rules-list">
+        <li>📺 Stream is mandatory via Discord, Twitch, or YouTube.</li>
+        <li>⏳ Stream must use delays of at least 120s.</li>
+        <li>💡 For slow connections, try OBS with low quality: 360p, 30fps, 500 bitrate.</li>
+    </ul>
+
+    <h2>👥 Teams</h2>
+    <ul class="rules-list">
+        <li>👤 A player can only be in one team.</li>
+        <li>👥 The maximum number of players per team is 6.</li>
+        <li>🛑 Players must be on the team to be allowed to play.</li>
+        <li>⚠️ If a player from Team A is caught playing for Team B, both teams will be disqualified.</li>
+    </ul>
+
+    <h2>⚔️ Matches</h2>
+    <ul class="rules-list">
+        <li>📍 2 maps in a first-to-5 rounds setting.</li>
+        <li>🔄 Teams switch sides after one team gets 5 rounds.</li>
+        <li>🔁 Round draw is replayed.</li>
+        <li>🎌 3 maps in case of final draw. If drawn after the 3rd map, the winner is decided via bashing.</li>
+        <li>⏳ Time limit: 4 minutes per round.</li>
+        <li>👥 All matches should be 3v3+.</li>
+        <li>📊 All rounds need to be played, even if a team has already won the war.</li>
+        <li>📸 Team captains are responsible for sharing final screenshots with the cup admins.</li>
+        <li>⌛ Teams have 15 minutes to have all players on the server. After this period, the match is forced to start unless the opponent team agrees to wait.</li>
+    </ul>
+
+    <h2>🔫 Weapons</h2>
+    <ul class="rules-list">
+        <li>🎯 1 sniper and 1 shotgun allowed per team.</li>
+        <li>💣 1 grenade per player.</li>
+        <li>🚫 No bazooka.</li>
+    </ul>
+
+    <h2>🗺️ Maps</h2>
+    <ul class="rules-list">
+        <li>📌 Map pool: V2, Bridge, Hunt, VSUK Abbey, St Renan, St Lo.</li>
+        <li>🎲 Teams bash to veto/pick map.</li>
+        <li>🛑 Bash winner bans first.</li>
+        <li>🗺️ Bash winner picks the 1st map, the loser picks the 2nd.</li>
+        <li>↔️ Bash loser decides the side for the 1st map.</li>
+        <li>🎯 Bash winner decides the side for the 2nd map.</li>
+        <li>🗺️ In case of a draw, bash winner decides the 3rd map.</li>
+    </ul>
+
+    <h2>⏸️ Holds</h2>
+    <ul class="rules-list">
+        <li>🛑 A match can only be paused if a player disconnects and their team types "hold next" during the round.</li>
+        <li>⏳ You can "hold" the current round ONLY in the first 10s of the match AND if no damage was taken.</li>
+    </ul>
+
+    <h2>⚠️ Violations</h2>
+    <ul class="rules-list">
+        <li>🟨 Yellow card: Warning card. A second yellow card equals one red card.</li>
+        <li>🟥 Red card: A red card means you are not allowed to play the next match.</li>
+        <li>🟥🟥 Two red cards: Two red cards mean you are banned from the cup.</li>
+    </ul>
+
+    <h2>📜 Rules</h2>
+    <ul class="rules-list">
+        <li>🚫 [🟥🟥] The use of scripts that change the way Spearhead was made is not allowed.</li>
+        <li>🚫 [🟥🟥] With the exception of the custom crosshair menu, all programs or files that edit the game, add to its functionality, or interact with the game in any way are not allowed.</li>
+        <li>🚫 [🟥🟥] Bad behavior, such as trashing, killing teammates on purpose, messing with the server, etc., will be monitored and will result in a ban.</li>
+        <li>🚫 [🟨] Custom models and skins are not allowed.</li>
+        <li>🚫 [🟨] CVARs for having brighter skins or removing fog are not allowed.</li>
+        <li>🚫 [🟨] It is not allowed to use a PICMIP setting above 2. PICMIP 2 is the maximum value you can choose.</li>
+        <li>🚫 [🟨] Offensive language and trash-talking will not be tolerated.</li>
+        <li>🚫 [🟨] Sharking is not allowed.</li>
+        <li>🚫 [🟨] Going under the map is not allowed. Players that go under the map should type <code>kill</code> immediately.</li>
+    </ul>
+
+    <h2>🏆 Achievements</h2>
+    <ul class="rules-list">
+        <li>🥇 1st place: All players get a gold medal.</li>
+        <li>🥈 2nd place: All players get a silver medal.</li>
+        <li>🥉 3rd place: All players get a bronze medal.</li>
+        <li>🏅 Player with the highest ELO.</li>
+        <li>📊 Player with the highest FpW.</li>
+        <li>🎖️ And more :)</li>
+    </ul>
       </div>
     </mat-tab>
-  
+    <mat-tab label="Reports">
+      <div class="tab-content tab-custom matches-raport">
+        <h2>📜 Match Reports</h2>
+        <p>Full reports of matches played in the tournament.</p>
+    
+        <div *ngFor="let match of matches" class="match-report">
+          <h3 class="match-title">{{ match.team1_name }} vs {{ match.team2_name }}</h3>
+    
+          <div class="match-meta">
+            <p><strong>Time:</strong> {{ match.match_time | date:'dd MMM yyyy, HH:mm' }} CET</p>
+            <p><strong>Bracket:</strong> {{ match.bracket_stage }}</p>
+            <p><strong>Maps:</strong> {{ match.maps.join(', ') }}</p>
+          </div>
+    
+          <div class="match-summary">
+            <div class="team-info">
+              <img [src]="match.team1_logo" class="team-logo">
+              <h4>{{ match.team1_name }}</h4>
+              <p><strong>Players:</strong></p>
+              <ul class="player-list">
+                <li *ngFor="let player of match.team1_players" class="player-item">
+                  <img [src]="'assets/images/flags_svg/' + player.flag + '.SVG'" class="flag-icon">
+                  {{ player.playername }}
+                </li>
+              </ul>              
+            </div>
+    
+            <div class="match-score">
+              <p class="score">{{ match.team1_score }} - {{ match.team2_score }}</p>
+            </div>
+    
+            <div class="team-info">
+              <img [src]="match.team2_logo" class="team-logo">
+              <h4>{{ match.team2_name }}</h4>
+              <p><strong>Players:</strong></p>
+              <ul class="player-list">
+                <li *ngFor="let player of match.team2_players" class="player-item">
+                  <img [src]="'assets/images/flags_svg/' + player.flag + '.SVG'" class="flag-icon">
+                  {{ player.playername }}
+                </li>
+              </ul>
+            </div>
+          </div>
+    
+          <div class="match-report-details">
+            <h4>Original:</h4>
+            <p>{{ match.match_report }}</p>
+          </div>
+          <div class="match-report-details">
+            <h4>English:</h4>
+            <p>{{ match.match_report_eng }}</p>
+          </div>
+    
+          <div class="match-media">
+            <p><strong>Links:</strong></p>
+            <ul>
+              <li *ngFor="let link of match.media_links">
+                <a [href]="link" target="_blank">{{ link }}</a>
+              </li>
+            </ul>
+    
+            <p><strong>Screenshots:</strong></p>
+            <div class="screenshots">
+              <img *ngFor="let screenshot of match.screenshots" 
+                   [src]="screenshot" 
+                   alt="Match Screenshot" 
+                   class="screenshot-thumbnail"
+                   (click)="openScreenshotModal(screenshot)">
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </mat-tab>
     <!-- Cup -->
     <mat-tab label="Cup">
       <div class="tab-content cup">
@@ -155,6 +364,8 @@
         </div>       
       </div>
     </mat-tab>
+   
+    
   </mat-tab-group>
   
   

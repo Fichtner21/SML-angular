@@ -18,6 +18,7 @@ import { UploadComponent } from './upload/upload.component';
 import { HistoryObjAaComponent } from './history-obj-aa/history-obj-aa.component';
 import { BracketComponent } from './bracket/bracket.component';
 import { LoginCupComponent } from './login-cup/login-cup.component';
+import { JoinComponent } from './join/join.component';
 
 const routes: Routes = [{
   path: '',
@@ -56,6 +57,10 @@ const routes: Routes = [{
 {
   path: 'mix',
   component: MixUsComponent  
+},
+{ 
+  path: 'join', 
+  component: JoinComponent 
 },
 { 
   path: 'clan-ranking',

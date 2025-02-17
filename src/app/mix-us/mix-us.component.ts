@@ -1,7 +1,7 @@
 import { Component, OnInit, Renderer2, ElementRef, HostListener, ViewChild  } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { PlayersApiService } from '../services/players-api.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -223,20 +223,21 @@ export class MixUsComponent implements OnInit {
 
       // console.log('data =>', data)
       for(let [index, value] of data.entries()){
-
-        const obj = {
-          // nr: Number(index) + 1,
+        const obj = {          
           nr: (index + 1).toString(),
           username: value.username,
           playername: value.playername,
           ranking: value.ranking,
-          active: value.active == 'TRUE' ? true : false,
-          // active: value.active,
-          ban: value.ban == 'TRUE' ? true : false,
-          // ban: value.ban,
+          active: value.active == 'TRUE' ? true : false,          
+          ban: value.ban == 'TRUE' ? true : false,          
           flag: value.nationality,
-          discord_id: value.discord_id
-          // wars: value.warcount
+          discord_id: value.discord_id,
+          fpw: value.fpw,
+          season_fpw: value.s9fpw,
+          wars: value.warcount,
+          season_wars: value.s9wars,
+          clan: value.clan,
+          clan2: value.clan2          
         }
         // console.log('OBJ', obj)
         this.playerRowArray.push(obj)
@@ -279,11 +280,11 @@ export class MixUsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.isAuthenticated$.subscribe(authenticated => {
-      console.log('User authenticated:', authenticated);      
-    });
+    // this.authService.isAuthenticated$.subscribe(authenticated => {
+    //   console.log('User authenticated:', authenticated);      
+    // });
  
-  // this.oAuthService.loadDiscoveryDocumentAndLogin();
+  
     this.authService.loggedIn$.subscribe(loggedIn => {
       this.isLoggedIn = loggedIn;
       console.log('loggedIn', loggedIn)
@@ -324,7 +325,7 @@ export class MixUsComponent implements OnInit {
             }
           });
         }
-      }, 1000)
+      }, 500)
 
     });
     
@@ -484,7 +485,7 @@ export class MixUsComponent implements OnInit {
   
           // Tworzymy mapę dla `playerRowArray` z username, playername i discord_id jako kluczami
           const playerMap = new Map<string, any>();
-          this.playerRowArray.forEach((player: any) => {            
+          this.playerRowArray.forEach((player: any) => {                  
             playerMap.set(player.username, player);
             playerMap.set(player.playername, player);
             if (player.discord_id) {
@@ -670,7 +671,7 @@ export class MixUsComponent implements OnInit {
     //   console.log('Dane zostały wysłane do backendu', response);
     // });
     console.log('mergedArray', mergedArray)
-    this.http.post<any>(`${environment.localApiUrl}api/save-draw`, mergedArray).subscribe(response => {
+    this.http.post<any>(`${environment.externalApiUrl}api/save-draw`, mergedArray).subscribe(response => {
       console.log('Dane zostały wysłane do backendu', response);
     });
     // Dodaj tablice do URL
@@ -1018,7 +1019,7 @@ export class MixUsComponent implements OnInit {
     this.notifier.notify('success', 'MIX TEAMS NT has finished executing');
     console.log('firstArray', firstArray, 'secondArray', secondArray);
     const mergedArray = this.array1.concat(this.array2);
-    this.http.post<any>(`${environment.localApiUrl}api/save-draw`, mergedArray).subscribe(response => {
+    this.http.post<any>(`${environment.externalApiUrl}api/save-draw`, mergedArray).subscribe(response => {
       console.log('Dane zostały wysłane do backendu', response);
     });
     // Przekazywanie wyników do URL

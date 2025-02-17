@@ -1160,3 +1160,15 @@ td img {
   right: 10px;
   z-index: 1001;
 }
+
+.gradient-btn {
+  background: linear-gradient(45deg, #c0c0c0, #333);
+  color: white; /* Biały tekst dla kontrastu */
+  font-weight: bold;
+  border: none;
+  transition: 0.3s;
+}
+
+.gradient-btn:hover {
+  background: linear-gradient(45deg, #dcdcdc, #000);
+}

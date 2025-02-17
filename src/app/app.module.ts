@@ -83,6 +83,7 @@ import { TeamModalComponent } from './shared/team-modal/team-modal.component';
 import { LoginCupComponent } from './login-cup/login-cup.component';
 import { TeamMatchModalComponent } from './shared/team-match-modal/team-match-modal.component';
 import { ScreenshotModalComponent } from './shared/screenshot-modal/screenshot-modal.component';
+import { JoinComponent } from './join/join.component';
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -135,7 +136,7 @@ const customNotifierOptions: NotifierOptions = {
     AppComponent,
     HomeComponent,
     DateFormatPipePipe,
-    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent, UpdateEloComponent, AuthCallbackComponent, DiscordLoginDialogComponent, LoginModalComponent, AdminComponent, ConfirmUpdateEloComponent, RankingObjAaComponent, UploadComponent, HistoryObjAaComponent, BracketComponent, ConfirmUpdateEloAaComponent, OverlayComponent, TeamModalComponent, LoginCupComponent, TeamMatchModalComponent, ScreenshotModalComponent
+    LoginComponent, LogoutComponent, TabsComponent, TabComponent, DashboardComponent, MixUsComponent, HideRowDirective, ConfirmDialogComponent, AddClanMatchComponent, ClanListComponent, ChallengeModalComponent, ClanMatchesListComponent, ClanDetailComponent, UpdateEloComponent, AuthCallbackComponent, DiscordLoginDialogComponent, LoginModalComponent, AdminComponent, ConfirmUpdateEloComponent, RankingObjAaComponent, UploadComponent, HistoryObjAaComponent, BracketComponent, ConfirmUpdateEloAaComponent, OverlayComponent, TeamModalComponent, LoginCupComponent, TeamMatchModalComponent, ScreenshotModalComponent, JoinComponent
   ],
   imports: [
     CommonModule,

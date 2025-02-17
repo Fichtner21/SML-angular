@@ -38,7 +38,7 @@ export class BracketComponent implements OnInit {
     { title: "🏷️ Clan tags:", description: "All players must use their clan tag during a match." },
     { title: "🚨 Unauthorized player:", description: "If a player is caught playing for another team, the player and the team will be banned from the cup." },
     { title: "📡 Live streaming:", description: "All players must live stream their match (Discord, YouTube, Twitch, etc.)." },
-    { title: "⏳ Streaming delay:", description: "If streaming on YouTube/Twitch, a 120-second delay must be applied." },
+    { title: "⏳ Streaming delay:", description: "If streaming on YouTube/Twitch, a 240-second (4 minuts) delay must be applied." },
     { title: "🎟️ Qualifying matches:", description: "If more than 8 teams are registered, qualifying matches will be decided by entry order.", subpoints: [
         "The 8th registered team plays an elimination match against the 9th registered team, etc."
       ]},

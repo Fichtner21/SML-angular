@@ -151,7 +151,8 @@ export class PlayersApiService {
   }
 
   saveDraw(draw: any) {
-    return this.http.post(`${environment.externalApiUrl}/api/save-draw`, draw);
+    // return this.http.post(`${environment.externalApiUrl}/api/save-draw`, draw);
+    return this.http.post(`${environment.localApiUrl}/api/save-draw`, draw);
   }
 
   public getContributorDetails(): Observable<string> {

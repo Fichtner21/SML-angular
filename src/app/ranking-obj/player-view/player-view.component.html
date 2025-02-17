@@ -435,6 +435,11 @@
       </div>
     </section>
   </div>
+  <div class="over-wasted" *ngIf="playerDetails.ban && isOverlayVisible"> 
+    <div class="wasted">
+        <div class="close" (click)="closeOverlay()">X</div>
+    </div>
+</div>
 </ng-container>
 
 

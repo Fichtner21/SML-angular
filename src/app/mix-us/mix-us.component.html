@@ -91,6 +91,26 @@
                   splitArrayIntoTwo(selectedUsers)" [disabled]="selectedUsers.length < 6 || selectedUsers.length > 15">Mix HP <fa-icon [icon]="starSolid"></fa-icon></button>
                     <div>HP - Higher precision.</div>
                   </div>
+                  <div class="btn-cont">                    
+                    <button mat-raised-button class="hp gradient-btn">MIX R</button> 
+                    <div>R - by Ranking.</div>                   
+                  </div>                 
+                  <div class="btn-cont">                    
+                    <button mat-raised-button class="hp gradient-btn">MIX FT</button> 
+                    <div>FT - by total FpW.</div>                   
+                  </div>                 
+                  <div class="btn-cont">                    
+                    <button mat-raised-button class="hp gradient-btn">MIX FS</button> 
+                    <div>FS - by seasoned FpW</div>                   
+                  </div>                 
+                  <div class="btn-cont">                    
+                    <button mat-raised-button class="hp gradient-btn">MIX W</button> 
+                    <div>W - by played Wars.</div>                   
+                  </div>                 
+                  <div class="btn-cont">                    
+                    <button mat-raised-button class="hp gradient-btn">MIX WS</button> 
+                    <div>WS - Wars seasoned.</div>                   
+                  </div>                 
                 </div>
                 <div class="selected-cont">
                   <div *ngFor="let player of selectedUsers; let i = index;" class="selected">          
@@ -348,7 +368,7 @@
                     <button mat-raised-button color="warn" class="hp" (click)="          
                   splitArrayIntoTwoAA(selectedUsersAA)" [disabled]="selectedUsersAA.length < 6 || selectedUsersAA.length > 15">Mix HP <fa-icon [icon]="starSolid"></fa-icon></button>
                     <div>HP - Higher precision.</div>
-                  </div>
+                  </div>               
                 </div>
                 <div class="selected-cont">
                   <div *ngFor="let player of selectedUsersAA; let i = index;" class="selected">          

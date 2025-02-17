@@ -52,6 +52,7 @@ export class PlayerViewComponent implements OnInit {
   aaa = [];
   resultCanvas: any;
   ctxResult: any;
+  isOverlayVisible = true;
 
   public dataToChartFrags: any;
   chart: Chart;
@@ -1124,11 +1125,13 @@ export class PlayerViewComponent implements OnInit {
           const numPlayerTeamPosition = Number(this.getKeyByValue(el, selectedPlayer).slice(3, 4));
 
           for (let i = 1; i < 8; i++) {
-            const restOfTeam = el[`t${numPlayerTeam}p${(i == numPlayerTeamPosition) ? 'continue' : i}name`];
-            if (restOfTeam != (undefined || '')) {
+            const restOfTeam = el[`t${numPlayerTeam}p${(i === numPlayerTeamPosition) ? 'continue' : i}name`];
+          
+            if (restOfTeam !== undefined && restOfTeam !== '') {
               this.mostOftenPlayed.push(restOfTeam);
             }
           }
+          
 
           const numOpponentTeam = (numPlayerTeam === 1) ? 2 : 1;
           const numPlayerTeamWon = Number(el[`t${numPlayerTeam}roundswon`]);
@@ -1330,6 +1333,10 @@ export class PlayerViewComponent implements OnInit {
       acc[year].push(war); // Dodaj wojnę do odpowiedniego roku
       return acc;
     }, {} as { [year: string]: any[] });
+  }
+
+  closeOverlay() {
+    this.isOverlayVisible = false;
   }
 
 // Subskrybujemy się do strumienia playerDetailToCompare$ i dodajemy console.log

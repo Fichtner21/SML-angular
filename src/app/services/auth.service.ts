@@ -252,12 +252,12 @@ export class AuthService {
     // const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('http://localhost:4500/discord-callback')}&response_type=code&scope=identify%20guilds`;
 
     //WORKING localhost
-    const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('http://localhost:4500/discord-callback')}&response_type=code&scope=identify%20guilds%20guilds.members.read
-    `;
+    // const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('http://localhost:4500/discord-callback')}&response_type=code&scope=identify%20guilds%20guilds.members.read
+    // `;
 
     //PRODUCTION
-    // const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('https://mohsh.pl/discord-callback')}&response_type=code&scope=identify%20guilds%20guilds.members.read
-    // `;
+    const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent('https://mohsh.pl/discord-callback')}&response_type=code&scope=identify%20guilds%20guilds.members.read
+    `;
     
     window.location.href = discordAuthUrl; // Redirect to Discord's OAuth page
   }

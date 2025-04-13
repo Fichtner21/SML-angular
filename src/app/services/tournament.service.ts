@@ -4,12 +4,21 @@ import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
+export interface TeamRanking {
+  place: number;
+  team_name: string;
+  total_scored: number;
+  total_conceded: number;
+  ratio: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class TournamentService {
   private apiUrlLocal = 'http://localhost:5000';
   private apiUrl = 'https://mohsh-discord.onrender.com';
+  private apiUrlTable = 'http://localhost:3000/api/team-rankings';
  
 
   constructor(private http: HttpClient) {}
@@ -26,6 +35,9 @@ export class TournamentService {
     return this.http.get(`${this.apiUrl}/matches`);
   }
   
+  getTeamRankings(): Observable<TeamRanking[]> {
+    return this.http.get<TeamRanking[]>(this.apiUrlTable);
+  }
 
    // Pobiera drużyny i ich składy
    public getTeamsWithPlayers(): Observable<any> {

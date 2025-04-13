@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { authCodeFlowConfig } from '../dashboard/dashboard.component';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import jwtDecode from 'jwt-decode';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
@@ -104,22 +103,6 @@ export class AuthService {
     return hasToken;
   }
 
-  // getToken(){
-  //   return localStorage.getItem('tokenLogin');
-  // }
-  //  // Metoda do logowania przez Discord
-  //  loginWithDiscord(code: string): Promise<void> {
-  //   return this.http.post<{ token: string }>('http://localhost:5000/auth/discord', { code })
-  //     .toPromise()
-  //     .then(response => {
-  //       localStorage.setItem(this.tokenKey, response.token);
-  //     })
-  //     .catch(error => {
-  //       console.error('Błąd logowania:', error);
-  //     });
-  // }
-
-
   async fetchUserData(token: string): Promise<any> {
     try {
       const response = await this.http.get('https://discord.com/api/users/@me', {
@@ -142,32 +125,7 @@ export class AuthService {
     const userDataString = localStorage.getItem('userData');
     const userDataDiscord = userDataString ? JSON.parse(userDataString) : null;
     return userDataDiscord?.id || null;
-  }
-
-  // getUserRoles3(): Observable<{ roles: string[] }> {
-  //   const userId = this.getUserIdFromLocalStorage();
-  
-  //   if (!userId) {
-  //     console.error('Brak userId. Użytkownik może nie być zalogowany.');
-  //     return of({ roles: [] }); // Zwróć pusty obiekt z pustą tablicą ról
-  //   }
-  
-  //   if (this.userRolesSubject.getValue()) {
-  //     return of({ roles: this.userRolesSubject.getValue() });
-  //   }
-  
-  //   return this.http.get<{ roles: string[] }>(`${environment.externalApiUrl}discord/user-roles`, {
-  //     params: { userId, guildId: this.guildId }
-  //   }).pipe(
-  //     tap(response => {
-  //       this.userRolesSubject.next(response.roles); // Zapisz role w BehaviorSubject
-  //     }),
-  //     catchError(error => {
-  //       console.error('Błąd podczas pobierania ról użytkownika:', error);
-  //       return of({ roles: [] }); // Zwróć pusty obiekt w razie błędu
-  //     })
-  //   );
-  // }
+  } 
 
   getUserRoles3(): Observable<{ roles: string[] }> {
     const userId = this.getUserIdFromLocalStorage();
@@ -243,7 +201,7 @@ export class AuthService {
 
   // Method to initiate login with Discord
   loginWithDiscord(): void {
-    const redirectUri = encodeURIComponent('http://localhost:5000/auth/discord/callback');
+    // const redirectUri = encodeURIComponent('http://localhost:5000/auth/discord/callback');
     //AUTH
     // const clientId = '1304093864877096970'; // Replace with your Discord client ID
     //NEXT

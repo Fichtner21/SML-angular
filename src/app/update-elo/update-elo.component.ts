@@ -35,7 +35,8 @@ export class UpdateEloComponent implements OnInit {
   last10mixesAA: any[] = [];    
   last10mixesApi = environment.externalApiUrl + 'last-10-matches';
   last10mixesApiAA = environment.externalApiUrl + 'last-10-matches';
-  private apiUrl = 'https://script.googleapis.com/v1/scripts/AKfycbz8Cxn1Y0OtkBwaUdHAa_VaB8f5IuFHtMix30Hv76g9Z82k8h90tTcXNzdCfWMTkXIw:run';
+  // private apiUrl = 'https://script.googleapis.com/v1/scripts/AKfycbz8Cxn1Y0OtkBwaUdHAa_VaB8f5IuFHtMix30Hv76g9Z82k8h90tTcXNzdCfWMTkXIw:run';
+  private apiUrl = 'https://script.googleapis.com/v1/scripts/AKfycbz9pPoMrdcVH65zZwaHfXtxp_NkqJc67_8dhPspMQeNE2bAlKI2udSK7vzoGHKB_Upr:run';
   userRoles: string[] = [];
   rolesMap: { [key: string]: string } = {
     '1059920877044629614': 'OWNER',
@@ -721,22 +722,27 @@ export class UpdateEloComponent implements OnInit {
   }
 
   private submitElo(data: any) {
+    this.isLoading = true;
+
     const body = {
       function: 'calculateELO',
       parameters: [data]
     };
-  console.log('body', body)
+
+    console.log('body', body)
     this.http.post(this.apiUrl, body, { headers: this.authHeader() }).subscribe(
       response => {
         this.snackBar.open('War successfully added!', 'Close', {
           horizontalPosition: 'right',
           verticalPosition: 'top',
           panelClass: ['success-snackbar'],
-          duration: 3000
+          // duration: 3000
         });
         this.getPlayersFinal('Players').subscribe(data => {
           this.players = data;
           this.mergeData();
+
+          this.isLoading = false;
         });
       },
       error => {
@@ -744,8 +750,9 @@ export class UpdateEloComponent implements OnInit {
           horizontalPosition: 'right',
           verticalPosition: 'top',
           panelClass: ['error-snackbar'],
-          duration: 3000
+          // duration: 3000
         });
+        this.isLoading = false;
       }
     );
   } 

@@ -84,6 +84,8 @@ import { LoginCupComponent } from './login-cup/login-cup.component';
 import { TeamMatchModalComponent } from './shared/team-match-modal/team-match-modal.component';
 import { ScreenshotModalComponent } from './shared/screenshot-modal/screenshot-modal.component';
 import { JoinComponent } from './join/join.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader{
@@ -177,6 +179,7 @@ const customNotifierOptions: NotifierOptions = {
     MatSortModule,
     MatListModule,
     MatDialogModule,      
+    MatProgressSpinnerModule,
     NotifierModule.withConfig(customNotifierOptions),
     // provideFirestore(() => getFirestore()),
     NgHttpLoaderModule.forRoot(),

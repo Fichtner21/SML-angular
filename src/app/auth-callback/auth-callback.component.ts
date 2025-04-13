@@ -23,7 +23,7 @@ export class AuthCallbackComponent implements OnInit {
   }
   
   exchangeCodeForToken(code: string): void {
-    this.http.post(`${environment.localApiUrl}auth/discord/callback`, { code }) // Send POST request with code
+    this.http.post(`${environment.externalApiUrl}auth/discord/callback`, { code }) // Send POST request with code
       .subscribe(response => {
         console.log('Token received:', response); // Handle successful response
         this.authService.setUserData(response);
@@ -54,6 +54,7 @@ export class AuthCallbackComponent implements OnInit {
 
         this.router.navigate(['/']); // Navigate to main component
       }, error => {
+        console.log(`ENVIRONMENT => ${environment.externalApiUrl}`)
         console.error('Error exchanging code for token:', error);
         alert('Failed to log in. Please try again.');
       });

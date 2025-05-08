@@ -56,6 +56,7 @@ export class AppComponent implements OnInit, OnDestroy  {
   s7_wars: any;
   s8_wars: any;
   s9_wars: any;
+  s10_wars: any;
   total_clans: any;
   total_clanwars: any;
   progressValue: number;
@@ -120,32 +121,7 @@ export class AppComponent implements OnInit, OnDestroy  {
       const avatarId = this.userDataDiscord.avatar;
       // Przyjmujemy, że format jest PNG; możesz również dodać logikę do obsługi innych formatów
       this.avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png`;
-    }   
-
-    
-
-          // this.authService.getUserRoles3().subscribe({
-          //   next: (response) => {
-          //     if (Array.isArray(response.roles)) {
-          //       this.userRoles = response.roles; // Pobierz tablicę ról
-          //       this.role = this.getRoleNames(); // Ustal rolę do wyświetlenia
-          //       this.roleDisplay = this.getDisplayRole(this.userRoles); // Ustal rolę do wyświetlenia
-          //     } else {
-          //       console.error('Błąd: Pobierane role nie są tablicą.', response);
-          //       this.userRoles = [];
-          //       this.role = 'Guest'; // Ustaw domyślną rolę
-          //     }
-          //     this.playersApiService.getPlayersFinal('Players').subscribe(data => {
-          //       this.players = data;      
-          //       this.mergeData();
-          //     });
-          //     this.cdr.detectChanges();
-          //     // console.log('Role użytkownika:', this.userRoles);
-          //   },
-          //   error: (err) => {
-          //     console.error('Błąd podczas pobierania ról użytkownika:', err);
-          //   }
-          // });  
+    }           
           this.authService.getUserRoles3()
           .pipe(
             switchMap((response) => {
@@ -213,6 +189,7 @@ export class AppComponent implements OnInit, OnDestroy  {
         this.s7_wars = response.values[1][4];
         this.s8_wars = response.values[1][5];
         this.s9_wars = response.values[1][6];
+        this.s10_wars = response.values[1][7];
         this.total_wars = response.values[1][1];
         this.num_Players = response.values[1][0];
 
